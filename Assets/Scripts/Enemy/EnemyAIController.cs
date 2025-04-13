@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public abstract class EnemyAI : ScriptableObject
+public abstract class EnemyAIController
 {
     public abstract void ExecuteBehavior();
 }
