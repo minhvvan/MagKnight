@@ -1,38 +1,44 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VFolders.Libs;
+
+public class HitInfo
+{
+    public int objectId;
+    public Vector3 hitPoint;
+    public Vector3 previousPoint;
+    public Vector3 currentPoint;
+    public float time;
+
+    public HitInfo(int id, Vector3 hit, Vector3 prev, Vector3 current)
+    {
+        objectId = id;
+        hitPoint = hit;
+        previousPoint = prev;
+        currentPoint = current;
+        time = Time.time;
+    }
+}
 
 public class OverlapDetector: MonoBehaviour
 {
     [SerializeField] private List<Vector3> hitPoints;
     [SerializeField] LayerMask layerMask;
     [SerializeField] float detectionRadius;
-
+    
     private bool _IsDetecting = false;
     private List<Vector3> _previousPoints = new List<Vector3>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
+    private List<HitInfo> _hits = new List<HitInfo>();
 
-    private List<DebugHitInfo> _debugHits = new List<DebugHitInfo>();
-
-// 히트 정보를 저장하는 클래스
-    private class DebugHitInfo
+    private void Start()
     {
-        public Vector3 hitPoint;
-        public Vector3 previousPoint;
-        public Vector3 currentPoint;
-        public float time;
-
-        public DebugHitInfo(Vector3 hit, Vector3 prev, Vector3 current)
-        {
-            hitPoint = hit;
-            previousPoint = prev;
-            currentPoint = current;
-            time = Time.time;
-        }
+        StartDetection();
     }
-    
+
     public void StartDetection()
     {
         _IsDetecting = true;
@@ -41,6 +47,7 @@ public class OverlapDetector: MonoBehaviour
     public void StopDetection()
     {
         _IsDetecting = false;
+        _hits.Clear();
     }
 
     private void FixedUpdate()
@@ -65,10 +72,8 @@ public class OverlapDetector: MonoBehaviour
                     RaycastHit hit = _hitResults[j];
                     if (hit.point != Vector3.zero)
                     {
-                        _debugHits.Add(new DebugHitInfo(hit.point, previousPos, currentPos));
+                        HandleHit(hit, previousPos, currentPos);
                     }
-                    
-                    HandleHit(hit);
                 }
             }
         }
@@ -77,32 +82,36 @@ public class OverlapDetector: MonoBehaviour
         hitPoints.ForEach(point => _previousPoints.Add(ConvertWorldTransform(point)));
     }
 
-    private void HandleHit(RaycastHit hit)
+    private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        hit.collider.gameObject.GetComponentsInChildren<MeshRenderer>().ForEach(mr=>mr.material.color = Color.red);
+        if (_hits.Any(hitted => hitted.objectId == hit.colliderInstanceID)) return;
+        
+        _hits.Add(new HitInfo(hit.colliderInstanceID, hit.point, prev, current));
+        
+        //TODO: hit 처리 + 필요시 전달
+        hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
     private Vector3 ConvertWorldTransform(Vector3 point)
     {
-        return transform.root.TransformPoint(point);
+        return transform.TransformPoint(point);
     }
 
     #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        // 현재 히트 포인트 시각화
         if (hitPoints is { Count: > 0 })
         {
             Gizmos.color = Color.blue;
             foreach (var point in hitPoints)
             {
                 Vector3 worldPoint = ConvertWorldTransform(point);
-                Gizmos.DrawSphere(worldPoint, 0.05f);
+                Gizmos.DrawSphere(worldPoint, detectionRadius);
             }
         }
 
         // 저장된 히트 정보 시각화
-        foreach (var hit in _debugHits)
+        foreach (var hit in _hits)
         {
             // 히트 포인트 (빨간색)
             Gizmos.color = Color.red;
@@ -121,9 +130,7 @@ public class OverlapDetector: MonoBehaviour
             Gizmos.DrawLine(hit.previousPoint, hit.hitPoint);
             Gizmos.DrawLine(hit.hitPoint, hit.currentPoint);
         
-            // 텍스트 정보 (Unity Editor에서만 작동)
-            UnityEditor.Handles.Label(hit.hitPoint + Vector3.up * 0.2f, 
-                $"Hit at {hit.time:F1}s");
+            UnityEditor.Handles.Label(hit.hitPoint + Vector3.up * 0.2f, $"Hit at {hit.time:F1}s");
         }
     }
     #endif
