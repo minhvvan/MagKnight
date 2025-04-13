@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum WeaponType
+{
+    None = 0,
+    SwordKatana,
+}
+
 public class MagCore: MonoBehaviour, IInteractable
 {
+    [SerializeField] private WeaponType weaponType;
+    
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
 
     private void Awake()
@@ -12,10 +20,13 @@ public class MagCore: MonoBehaviour, IInteractable
         _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
     }
 
-    public void Interact()
+    public void Interact(IInteractor interactor)
     {
-        Debug.Log("MagCore Interact");
-        Destroy(gameObject);
+        if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
+        {
+            player.SetCurrentWeapon(weaponType);
+            Destroy(gameObject);
+        }
     }
 
     public void Select()

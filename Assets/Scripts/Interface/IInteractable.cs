@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public interface IInteractable
 {
-    void Interact();
+    void Interact(IInteractor interactor);
     void Select();
     void UnSelect();
     GameObject GetGameObject();

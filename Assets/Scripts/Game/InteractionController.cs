@@ -9,16 +9,28 @@ public class InteractionController : MonoBehaviour
 {
     private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
+    private IInteractor _interactor;
+
+    private void Awake()
+    {
+        _interactor = this.GetInterfaceInParent<IInteractor>();
+    }
 
     public void Interact()
     {
         if (_currentInteractable == null)
         {
-            Debug.Log("currentInteractable is null");
+            Debug.LogError("currentInteractable is null");
             return;
         }
         
-        _currentInteractable.Interact();
+        if (_interactor == null)
+        {
+            Debug.LogError("interactor is null");
+            return;
+        }
+        
+        _currentInteractable.Interact(_interactor);
         _interactables.Remove(_currentInteractable);
         FindClosestInteractable();
     }
