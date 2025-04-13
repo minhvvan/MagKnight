@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class BaseWeapon: MonoBehaviour
 {
-    protected OverlapDetector _overlapDetector;
+    protected HitDetector HitDetector;
 
     private void Awake()
     {
-        _overlapDetector = GetComponent<OverlapDetector>();
-        _overlapDetector.OnHit += OnHit;
+        HitDetector = GetComponent<HitDetector>();
+        HitDetector.OnHit += OnHit;
     }
 
     protected virtual void OnHit(HitInfo hit)
@@ -19,11 +19,11 @@ public class BaseWeapon: MonoBehaviour
 
     public virtual void AttackStart()
     {
-        _overlapDetector.StartDetection();
+        HitDetector.StartDetection();
     }
 
     public virtual void AttackEnd()
     {
-        _overlapDetector.StopDetection();
+        HitDetector.StopDetection();
     }
 }

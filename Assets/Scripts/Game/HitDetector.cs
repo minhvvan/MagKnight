@@ -7,23 +7,21 @@ using VFolders.Libs;
 
 public class HitInfo
 {
-    public int objectId;
-    public Vector3 hitPoint;
+    public RaycastHit hit;
     public Vector3 previousPoint;
     public Vector3 currentPoint;
     public float time;
 
-    public HitInfo(int id, Vector3 hit, Vector3 prev, Vector3 current)
+    public HitInfo(RaycastHit h, Vector3 prev, Vector3 current)
     {
-        objectId = id;
-        hitPoint = hit;
+        hit = h;
         previousPoint = prev;
         currentPoint = current;
         time = Time.time;
     }
 }
 
-public class OverlapDetector: MonoBehaviour
+public class HitDetector: MonoBehaviour
 {
     [SerializeField] private List<Vector3> hitPoints;
     [SerializeField] LayerMask layerMask;
@@ -33,11 +31,8 @@ public class OverlapDetector: MonoBehaviour
     private List<Vector3> _previousPoints = new List<Vector3>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
     private List<HitInfo> _hits = new List<HitInfo>();
-
-    private void Start()
-    {
-        StartDetection();
-    }
+    
+    public Action<HitInfo> OnHit;
 
     public void StartDetection()
     {
@@ -84,11 +79,12 @@ public class OverlapDetector: MonoBehaviour
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        if (_hits.Any(hitted => hitted.objectId == hit.colliderInstanceID)) return;
+        if (_hits.Any(hitted => hitted.hit.colliderInstanceID == hit.colliderInstanceID)) return;
         
-        _hits.Add(new HitInfo(hit.colliderInstanceID, hit.point, prev, current));
+        _hits.Add(new HitInfo(hit, prev, current));
         
         //TODO: hit 처리 + 필요시 전달
+        OnHit?.Invoke(_hits.Last());
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
@@ -111,26 +107,26 @@ public class OverlapDetector: MonoBehaviour
         }
 
         // 저장된 히트 정보 시각화
-        foreach (var hit in _hits)
+        foreach (var hitInfo in _hits)
         {
             // 히트 포인트 (빨간색)
             Gizmos.color = Color.red;
-            Gizmos.DrawSphere(hit.hitPoint, 0.1f);
+            Gizmos.DrawSphere(hitInfo.hit.point, 0.1f);
         
             // 이전 위치 (노란색)
             Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(hit.previousPoint, 0.08f);
+            Gizmos.DrawSphere(hitInfo.previousPoint, 0.08f);
         
             // 현재 위치 (녹색)
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(hit.currentPoint, 0.08f);
+            Gizmos.DrawSphere(hitInfo.currentPoint, 0.08f);
         
             // 선으로 연결
             Gizmos.color = Color.white;
-            Gizmos.DrawLine(hit.previousPoint, hit.hitPoint);
-            Gizmos.DrawLine(hit.hitPoint, hit.currentPoint);
+            Gizmos.DrawLine(hitInfo.previousPoint, hitInfo.hit.point);
+            Gizmos.DrawLine(hitInfo.hit.point, hitInfo.currentPoint);
         
-            UnityEditor.Handles.Label(hit.hitPoint + Vector3.up * 0.2f, $"Hit at {hit.time:F1}s");
+            UnityEditor.Handles.Label(hitInfo.hit.point + Vector3.up * 0.2f, $"Hit at {hitInfo.time:F1}s");
         }
     }
     #endif
