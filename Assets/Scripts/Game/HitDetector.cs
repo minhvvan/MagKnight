@@ -30,7 +30,7 @@ public class HitDetector: MonoBehaviour
     private bool _IsDetecting = false;
     private List<Vector3> _previousPoints = new List<Vector3>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
-    private List<HitInfo> _hits = new List<HitInfo>();
+    private List<HitInfo> _DebugHits = new List<HitInfo>();
     
     public Action<HitInfo> OnHit;
 
@@ -42,7 +42,6 @@ public class HitDetector: MonoBehaviour
     public void StopDetection()
     {
         _IsDetecting = false;
-        _hits.Clear();
     }
 
     private void FixedUpdate()
@@ -79,12 +78,11 @@ public class HitDetector: MonoBehaviour
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        if (_hits.Any(hitted => hitted.hit.colliderInstanceID == hit.colliderInstanceID)) return;
+        if (_DebugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
         
-        _hits.Add(new HitInfo(hit, prev, current));
+        _DebugHits.Add(new HitInfo(hit, prev, current));
         
-        //TODO: hit 처리 + 필요시 전달
-        OnHit?.Invoke(_hits.Last());
+        OnHit?.Invoke(_DebugHits.Last());
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
@@ -107,7 +105,7 @@ public class HitDetector: MonoBehaviour
         }
 
         // 저장된 히트 정보 시각화
-        foreach (var hitInfo in _hits)
+        foreach (var hitInfo in _DebugHits)
         {
             // 히트 포인트 (빨간색)
             Gizmos.color = Color.red;
