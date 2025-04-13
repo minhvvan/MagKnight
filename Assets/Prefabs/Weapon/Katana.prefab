@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3736621863315942175}
   - component: {fileID: 1819913555762268755}
   - component: {fileID: 9205146889748198376}
+  - component: {fileID: 5105682781939386770}
   m_Layer: 0
   m_Name: Katana
   m_TagString: Untagged
@@ -97,12 +98,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints:
-  - {x: 0, y: 0, z: 1}
-  - {x: 0, y: 0, z: 0.8}
+  - {x: 0, y: 0, z: 1.5}
+  - {x: 0, y: 0, z: 1.2}
+  - {x: 0, y: 0, z: 0.9}
   - {x: 0, y: 0, z: 0.6}
-  - {x: 0, y: 0, z: 0.4}
-  - {x: 0, y: 0, z: 0.2}
+  - {x: 0, y: 0, z: 0.3}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
-  detectionRadius: 0
+    m_Bits: 128
+  detectionRadius: 0.2
+--- !u!114 &5105682781939386770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500518611855372604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9442c9e86b448679ce33749eb735ab5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
