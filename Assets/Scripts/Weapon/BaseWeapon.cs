@@ -14,7 +14,6 @@ public class BaseWeapon: MonoBehaviour
 
     protected virtual void OnHit(HitInfo hit)
     {
-        
     }
 
     public virtual void AttackStart()
@@ -25,5 +24,9 @@ public class BaseWeapon: MonoBehaviour
     public virtual void AttackEnd()
     {
         HitDetector.StopDetection();
+    }
+
+    public virtual void ChangePolarity()
+    {
     }
 }

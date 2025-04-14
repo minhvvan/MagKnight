@@ -54,4 +54,14 @@ public class WeaponHandler: MonoBehaviour
         
         _currentWeapon.AttackEnd();
     }
+
+    public void ActivateSkill()
+    {
+        
+    }
+
+    public void ChangePolarity()
+    {
+        _currentWeapon.ChangePolarity();
+    }
 }

@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour, IInteractor
     [SerializeField] private WeaponHandler weaponHandler;
     
     private Animator _animator;
-
+    
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour, IInteractor
         }
     }
 
+    #region Animation
     public void AttackStart()
     {
         weaponHandler.AttackStart();
@@ -63,12 +64,24 @@ public class PlayerController : MonoBehaviour, IInteractor
     {
         weaponHandler.AttackEnd();
     }
-
+    
+    #endregion
+    
+    #region Weapon
     public void SetCurrentWeapon(WeaponType weaponType)
     {
         weaponHandler.SetCurrentWeapon(weaponType);
     }
+    #endregion
 
+    #region Magnetic
+    private void ChangePolarity()
+    {
+        weaponHandler.ChangePolarity();
+    }
+
+    #endregion
+    
     public GameObject GetGameObject()
     {
         return gameObject;
