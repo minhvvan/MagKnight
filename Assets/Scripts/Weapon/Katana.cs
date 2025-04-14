@@ -1,4 +1,5 @@
 ﻿
+using System;
 using UnityEngine;
 
 public class Katana: BaseWeapon
@@ -16,11 +17,20 @@ public class Katana: BaseWeapon
 
     }
 
-    protected override void OnHit(HitInfo hitInfo)
+    public override void OnNext(HitInfo hitInfo)
     {
         Debug.Log($"{hitInfo.hit.collider.name} : Hit at {hitInfo.time:F1}s");
     }
 
+    public override void OnError(Exception error)
+    {
+        Debug.LogError(error);
+    }
+
+    public override void OnCompleted()
+    {
+    }
+    
     public override void ChangePolarity()
     {
         //TODO: 극성 스위칭 효과

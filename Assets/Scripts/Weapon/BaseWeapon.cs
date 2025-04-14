@@ -2,18 +2,14 @@
 using System;
 using UnityEngine;
 
-public class BaseWeapon: MonoBehaviour
+public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
 {
     protected HitDetector HitDetector;
 
     private void Awake()
     {
         HitDetector = GetComponent<HitDetector>();
-        HitDetector.OnHit += OnHit;
-    }
-
-    protected virtual void OnHit(HitInfo hit)
-    {
+        HitDetector.Subscribe(this);
     }
 
     public virtual void AttackStart()
@@ -27,6 +23,20 @@ public class BaseWeapon: MonoBehaviour
     }
 
     public virtual void ChangePolarity()
+    {
+    }
+
+    public virtual void OnNext(HitInfo hitInfo)
+    {
+        
+    }
+
+    public virtual void OnError(Exception error)
+    {
+        Debug.LogError(error);
+    }
+
+    public virtual void OnCompleted()
     {
     }
 }

@@ -21,7 +21,7 @@ public class HitInfo
     }
 }
 
-public class HitDetector: MonoBehaviour
+public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 {
     [SerializeField] private List<Vector3> hitPoints;
     [SerializeField] LayerMask layerMask;
@@ -30,10 +30,9 @@ public class HitDetector: MonoBehaviour
     private bool _IsDetecting = false;
     private List<Vector3> _previousPoints = new List<Vector3>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
-    private List<HitInfo> _DebugHits = new List<HitInfo>();
+    private List<HitInfo> _debugHits = new List<HitInfo>();
+    private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
     
-    public Action<HitInfo> OnHit;
-
     public void StartDetection()
     {
         _IsDetecting = true;
@@ -78,11 +77,13 @@ public class HitDetector: MonoBehaviour
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        if (_DebugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
+        if (_debugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
         
-        _DebugHits.Add(new HitInfo(hit, prev, current));
+        _debugHits.Add(new HitInfo(hit, prev, current));
         
-        OnHit?.Invoke(_DebugHits.Last());
+        Notify(_debugHits.Last());
+        
+        //*Temp Debug
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
@@ -105,7 +106,7 @@ public class HitDetector: MonoBehaviour
         }
 
         // 저장된 히트 정보 시각화
-        foreach (var hitInfo in _DebugHits)
+        foreach (var hitInfo in _debugHits)
         {
             // 히트 포인트 (빨간색)
             Gizmos.color = Color.red;
@@ -128,4 +129,20 @@ public class HitDetector: MonoBehaviour
         }
     }
     #endif
+    public void Subscribe(IObserver<HitInfo> observer)
+    {
+        if (_observers.Contains(observer)) return;
+        _observers.Add(observer);
+    }
+
+    public void Unsubscribe(IObserver<HitInfo> observer)
+    {
+        if (!_observers.Contains(observer)) return;
+        _observers.Remove(observer);
+    }
+
+    public void Notify(HitInfo hitInfo)
+    {
+        _observers.ForEach(observer => observer.OnNext(hitInfo));
+    }
 }
