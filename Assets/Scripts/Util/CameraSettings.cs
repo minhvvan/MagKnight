@@ -85,5 +85,31 @@ namespace Moon
             keyboardAndMouseCamera.Priority = inputChoice == InputChoice.KeyboardAndMouse ? 1 : 0;
             controllerCamera.Priority = inputChoice == InputChoice.Controller ? 1 : 0;
         }
+
+        public void EnableCameraMove()
+        {
+            if(keyboardAndMouseCamera != null)
+            {
+                keyboardAndMouseCamera.GetComponent<CinemachineInputProvider>().enabled = true;          
+            }
+
+            if(controllerCamera != null)
+            {
+                controllerCamera.GetComponent<CinemachineInputProvider>().enabled = true;          
+            }
+        }
+
+        public void DisableCameraMove()
+        {
+            if(keyboardAndMouseCamera != null)
+            {
+                keyboardAndMouseCamera.GetComponent<CinemachineInputProvider>().enabled = false;          
+            }
+
+            if(controllerCamera != null)
+            {
+                controllerCamera.GetComponent<CinemachineInputProvider>().enabled = false;          
+            }
+        }
     } 
 }

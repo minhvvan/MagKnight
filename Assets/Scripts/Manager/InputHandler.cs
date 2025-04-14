@@ -30,7 +30,7 @@ public class InputHandler : MonoBehaviour
     {
         get
         {
-            if(playerControllerInputBlocked || _externalInputBlocked)
+            if(IsContollerInputBlocked())
                 return Vector2.zero;
             return _movement;
         }
@@ -39,32 +39,32 @@ public class InputHandler : MonoBehaviour
     {
         get
         {
-            if(playerControllerInputBlocked || _externalInputBlocked)
+            if(IsContollerInputBlocked())
                 return Vector2.zero;
             return _cameraMovement;
         }
     }
     public bool RunInput
     {
-        get { return _run && !playerControllerInputBlocked && !_externalInputBlocked; }
+        get { return _run && !IsContollerInputBlocked(); }
     }
     public bool JumpInput
     {
-        get { return _jump && !playerControllerInputBlocked && !_externalInputBlocked; }
+        get { return _jump && !IsContollerInputBlocked(); }
     }
 
     public bool Attack1
     {
-        get { return _attack1 && !playerControllerInputBlocked && !_externalInputBlocked; }
+        get { return _attack1 && !IsContollerInputBlocked(); }
     }
 
     public bool Attack2
     {
-        get { return _attack2 && !playerControllerInputBlocked && !_externalInputBlocked; }
+        get { return _attack2 && !IsContollerInputBlocked(); }
     }
     public bool InteractInput
     {
-        get { return _interact && !playerControllerInputBlocked && !_externalInputBlocked; }
+        get { return _interact && !IsContollerInputBlocked(); }
     }
 
     WaitForSeconds _attackInputWait;
@@ -77,9 +77,8 @@ public class InputHandler : MonoBehaviour
         _attackInputWait = new WaitForSeconds(_AttackInputDuration);
 
         playerInput = GetComponent<PlayerInput>();
-        moveAction = playerInput.actions["Move"];
-        moveAction.performed += ctx => _movement = ctx.ReadValue<Vector2>();
-        moveAction.canceled += ctx => _movement = Vector2.zero;
+        playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
+        playerInput.actions["Move"].canceled += ctx => _movement = Vector2.zero;
 
         playerInput.actions["Look"].performed += ctx => _cameraMovement = ctx.ReadValue<Vector2>();
         playerInput.actions["Look"].canceled += ctx => _cameraMovement = Vector2.zero;
@@ -113,6 +112,11 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         
+    }
+    
+    public bool IsContollerInputBlocked()
+    {
+        return playerControllerInputBlocked || _externalInputBlocked;
     }
     
 

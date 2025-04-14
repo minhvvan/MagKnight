@@ -118,6 +118,7 @@ namespace Moon
             CacheAnimatorState();
 
             UpdateInputBlocking();
+            UpdateCameraHandler();
 
             EquipMeleeWeapon(IsInAttackComboState());
 
@@ -160,6 +161,18 @@ namespace Moon
             bool inputBlocked = _currentStateInfo.tagHash == _HashBlockInput && !_isAnimatorTransitioning;
             inputBlocked |= _nextStateInfo.tagHash == _HashBlockInput;
             _inputHandler.playerControllerInputBlocked = inputBlocked;
+        }
+
+        void UpdateCameraHandler()
+        {
+            if(_inputHandler.IsContollerInputBlocked())
+            {
+                cameraSettings.DisableCameraMove();
+            }
+            else
+            {
+                cameraSettings.EnableCameraMove();
+            }
         }
         
         bool IsInAttackComboState()
