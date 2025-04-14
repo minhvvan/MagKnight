@@ -7,6 +7,9 @@ using VFolders.Libs;
 
 public class InteractionController : MonoBehaviour
 {
+    [SerializeField] private float viewAngle = 90f;
+    [SerializeField] private LayerMask obstacleMask;
+    
     private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
@@ -34,7 +37,8 @@ public class InteractionController : MonoBehaviour
         _interactables.Remove(_currentInteractable);
         FindClosestInteractable();
     }
-    
+
+  
     private void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<IInteractable>(out var interactable))
@@ -70,19 +74,24 @@ public class InteractionController : MonoBehaviour
     private void FindClosestInteractable()
     {
         IInteractable closest = null;
-        float closestDistanceSqr = float.MaxValue;
-
-        foreach (var obj in _interactables)
+        
+        _interactables = _interactables.OrderBy(interactable => 
         {
-            float sqrDistance = (transform.position - obj.GetGameObject().transform.position).sqrMagnitude;
-            if (sqrDistance < closestDistanceSqr)
-            {
-                closestDistanceSqr = sqrDistance;
-                closest = obj;
-            }
-        }
+            Vector3 dirToTarget = (interactable.GetGameObject().transform.position - transform.position).normalized;
+            float angle = Vector3.Angle(transform.forward, dirToTarget);
+            float distance = Vector3.Distance(transform.position, interactable.GetGameObject().transform.position);
+    
+            // 시야각 체크
+            bool isInViewAngle = angle < viewAngle / 2;
+            bool noObstacle = !Physics.Raycast(transform.position, dirToTarget, distance, obstacleMask);
+            bool isVisible = isInViewAngle && noObstacle;
+    
+            return (isVisible ? 0f : float.MaxValue) + distance;
+        }).ToList();
 
-        if (closest == _currentInteractable) return;
+        if (_interactables.Count == 0) return;
+        closest = _interactables.First();
+        if (closest == null) return;
         
         _currentInteractable?.UnSelect();
         
