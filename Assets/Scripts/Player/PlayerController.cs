@@ -448,11 +448,11 @@ namespace Moon
 
             if (_isGrounded)
             {
-                if(_currentStateInfo.shortNameHash == _HashLocomotion)
+                // if(_currentStateInfo.shortNameHash == _HashLocomotion)
                 {
-                    movement = _forwardSpeed * transform.forward * Time.deltaTime;
+                    // movement = _forwardSpeed * transform.forward * Time.deltaTime;
                 }
-                else
+                // else
                 {                        
                     movement = _animator.deltaPosition;
                 }
