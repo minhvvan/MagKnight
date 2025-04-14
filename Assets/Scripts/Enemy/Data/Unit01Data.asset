@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6dc8461c6c5d64e981219ef363cabf, type: 3}
   m_Name: Unit01Data
   m_EditorClassIdentifier: 
-  name: Unit01
+  enemyName: 
   description: "\uC591\uC0B0\uD615 \uC720\uB2DB\uC785\uB2C8\uB2E4"
   health: 10
   atk: 5
@@ -23,9 +23,8 @@ MonoBehaviour:
   recoveryTime: 2
   staggerResistance: 1
   staggerDuration: 2
-  ai: {fileID: 11400000, guid: 68dfd1000d07d5747b7099a068b311a5, type: 2}
   abilities: 
   item: 10
   appearanceFloor: 1
   projectileSpeed: 0
-  attackRange: 0
+  attackRange: 2

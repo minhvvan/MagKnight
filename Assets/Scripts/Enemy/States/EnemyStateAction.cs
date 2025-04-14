@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyStateAction : BaseState<Enemy>
 {
+    // 공격, 자폭, 치료 등 각 enemy가 가지고 있는 행동양식 실행
     private EnemyBlackboard _blackboard;
     
     
@@ -14,16 +15,37 @@ public class EnemyStateAction : BaseState<Enemy>
 
     public override void Enter()
     {
-        
+        _controller.EnemyAnimator.SetBool("Attack", true);
     }
 
     public override void UpdateState()
     {
-        throw new System.NotImplementedException();
+        if (_blackboard.currentHealth <= 0)
+        {
+            _controller.SetState(_controller.deadState);
+            return;
+        }
+        
+        if (_blackboard.currentStaggerResistance <= 0)
+        {
+            _controller.EnemyAnimator.Play("Hit");
+            _blackboard.currentStaggerResistance = _blackboard.staggerResistance;
+            return;
+        }
+
+        if (_controller.IsCurrentAnimFinished("Attack"))
+        {
+            if (!_controller.TargetInRay())
+                _controller.SetState(_controller.aiState);
+            else
+            {
+                _controller.EnemyAnimator.Play("Attack");
+            }
+        }
     }
 
     public override void Exit()
     {
-        throw new System.NotImplementedException();
+        _controller.EnemyAnimator.SetBool("Attack", false);
     }
 }

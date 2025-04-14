@@ -1,8 +1,17 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public abstract class EnemyAIController
+public class EnemyAIController
 {
-    public abstract void ExecuteBehavior();
+    
+    
+    public void ExecuteBehavior()
+    {
+        
+    }
+
+    public void Trace()
+    {
+        
+    }
 }

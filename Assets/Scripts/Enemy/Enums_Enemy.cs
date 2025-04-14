@@ -13,8 +13,15 @@ public enum EnemyType
     Max
 }
 
-public enum EnemyAbility
+public enum EnemyAbilityType
 {
     None,
+    Max
+}
+
+public enum EnemyAIType
+{
+    None,
+    MeleeNormal,
     Max
 }
