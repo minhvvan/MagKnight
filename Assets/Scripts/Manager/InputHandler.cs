@@ -1,156 +1,160 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputHandler : MonoBehaviour
+
+namespace Moon
 {
-    [NonSerialized] public bool playerControllerInputBlocked;
-
-    //new input system
-    PlayerInput playerInput;
-    InputAction moveAction;
-    Vector2 moveInput;
-    
-    
-    /// Player Input
-    Vector2 _movement;
-    Vector2 _cameraMovement;
-    bool _run;
-    bool _jump;
-    bool _attack1;
-    bool _attack2;
-    bool _interact;
-
-    //다른 이유로 조작이 불가능한 경우 사용하는 변수
-    bool _externalInputBlocked;
-
-    public Vector2 MoveInput
+    public class InputHandler : MonoBehaviour
     {
-        get
-        {
-            if(IsContollerInputBlocked())
-                return Vector2.zero;
-            return _movement;
-        }
-    }
-    public Vector2 CameraInput
-    {
-        get
-        {
-            if(IsContollerInputBlocked())
-                return Vector2.zero;
-            return _cameraMovement;
-        }
-    }
-    public bool RunInput
-    {
-        get { return _run && !IsContollerInputBlocked(); }
-    }
-    public bool JumpInput
-    {
-        get { return _jump && !IsContollerInputBlocked(); }
-    }
+        [NonSerialized] public bool playerControllerInputBlocked;
 
-    public bool Attack1
-    {
-        get { return _attack1 && !IsContollerInputBlocked(); }
-    }
-
-    public bool Attack2
-    {
-        get { return _attack2 && !IsContollerInputBlocked(); }
-    }
-    public bool InteractInput
-    {
-        get { return _interact && !IsContollerInputBlocked(); }
-    }
-
-    WaitForSeconds _attackInputWait;
-    Coroutine _attack1WaitCoroutine;
-    Coroutine _attack2WaitCoroutine;
-    const float _AttackInputDuration = 0.03f;
-
-    void Start()
-    {
-        _attackInputWait = new WaitForSeconds(_AttackInputDuration);
-
-        playerInput = GetComponent<PlayerInput>();
-        playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
-        playerInput.actions["Move"].canceled += ctx => _movement = Vector2.zero;
-
-        playerInput.actions["Look"].performed += ctx => _cameraMovement = ctx.ReadValue<Vector2>();
-        playerInput.actions["Look"].canceled += ctx => _cameraMovement = Vector2.zero;
-
-        playerInput.actions["Jump"].performed += ctx => _jump = true;
-        playerInput.actions["Jump"].canceled += ctx => _jump = false;
-
-        playerInput.actions["Attack1"].performed += ctx => {
-            if (_attack1WaitCoroutine != null)
-                StopCoroutine(_attack1WaitCoroutine);
-
-            _attack1WaitCoroutine = StartCoroutine(Attack1Wait());
-        };
-        playerInput.actions["Attack2"].performed += ctx => {
-            if (_attack2WaitCoroutine != null)
-                StopCoroutine(_attack2WaitCoroutine);
-
-            _attack2WaitCoroutine = StartCoroutine(Attack2Wait());
-        };
-
-        playerInput.actions["Sprint"].performed += ctx => _run = true;
-        playerInput.actions["Sprint"].canceled += ctx => _run = false;
-
-
-        //Test Cursor disable
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
-
-    void Update()
-    {
+        //new input system
+        PlayerInput playerInput;
         
-    }
-    
-    public bool IsContollerInputBlocked()
-    {
-        return playerControllerInputBlocked || _externalInputBlocked;
-    }
-    
+        /// Player Input
+        Vector2 _movement;
+        Vector2 _cameraMovement;
+        bool _run;
+        bool _jump;
+        bool _attack1;
+        bool _attack2;
+        bool _interact;
 
-    IEnumerator Attack1Wait()
-    {
-        _attack1 = true;
+        //다른 이유로 조작이 불가능한 경우 사용하는 변수
+        bool _externalInputBlocked;
 
-        yield return _attackInputWait;
+        public Vector2 MoveInput
+        {
+            get
+            {
+                if(IsContollerInputBlocked())
+                    return Vector2.zero;
+                return _movement;
+            }
+        }
+        public Vector2 CameraInput
+        {
+            get
+            {
+                if(IsContollerInputBlocked())
+                    return Vector2.zero;
+                return _cameraMovement;
+            }
+        }
+        public bool RunInput
+        {
+            get { return _run && !IsContollerInputBlocked(); }
+        }
+        public bool JumpInput
+        {
+            get { return _jump && !IsContollerInputBlocked(); }
+        }
 
-        _attack1 = false;
-    }
+        public bool Attack1
+        {
+            get { return _attack1 && !IsContollerInputBlocked(); }
+        }
 
-    IEnumerator Attack2Wait()
-    {
-        _attack2 = true;
+        public bool Attack2
+        {
+            get { return _attack2 && !IsContollerInputBlocked(); }
+        }
+        public bool InteractInput
+        {
+            get { return _interact && !IsContollerInputBlocked(); }
+        }
 
-        yield return _attackInputWait;
+        WaitForSeconds _attackInputWait;
+        Coroutine _attack1WaitCoroutine;
+        Coroutine _attack2WaitCoroutine;
+        const float _AttackInputDuration = 0.03f;
 
-        _attack2 = false;
-    }
+        void Start()
+        {
+            _attackInputWait = new WaitForSeconds(_AttackInputDuration);
+
+            playerInput = GetComponent<PlayerInput>();
+            playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
+            playerInput.actions["Move"].canceled += ctx => _movement = Vector2.zero;
+
+            playerInput.actions["Look"].performed += ctx => _cameraMovement = ctx.ReadValue<Vector2>();
+            playerInput.actions["Look"].canceled += ctx => _cameraMovement = Vector2.zero;
+
+            playerInput.actions["Jump"].performed += ctx => _jump = true;
+            playerInput.actions["Jump"].canceled += ctx => _jump = false;
+
+            playerInput.actions["Attack1"].performed += ctx => {
+                if (_attack1WaitCoroutine != null)
+                    StopCoroutine(_attack1WaitCoroutine);
+
+                _attack1WaitCoroutine = StartCoroutine(Attack1Wait());
+            };
+            playerInput.actions["Attack2"].performed += ctx => {
+                if (_attack2WaitCoroutine != null)
+                    StopCoroutine(_attack2WaitCoroutine);
+
+                _attack2WaitCoroutine = StartCoroutine(Attack2Wait());
+            };
+
+            playerInput.actions["Sprint"].performed += ctx => _run = true;
+            playerInput.actions["Sprint"].canceled += ctx => _run = false;
 
 
-    public bool HaveControl()
-    {
-        return !_externalInputBlocked;
-    }
+            //Test Cursor disable
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
 
-    public void ReleaseControl()
-    {
-        _externalInputBlocked = true;
-    }
 
-    public void GainControl()
-    {
-        _externalInputBlocked = false;
+        void Update()
+        {
+            
+        }
+        
+        public bool IsContollerInputBlocked()
+        {
+            return playerControllerInputBlocked || _externalInputBlocked;
+        }
+        
+
+        IEnumerator Attack1Wait()
+        {
+            _attack1 = true;
+
+            yield return _attackInputWait;
+
+            _attack1 = false;
+        }
+
+        IEnumerator Attack2Wait()
+        {
+            _attack2 = true;
+
+            //Test Code - Camera Shake
+            CameraShake.Shake(0.2f, 0.2f);
+            yield return _attackInputWait;
+
+            _attack2 = false;
+        }
+
+
+        public bool HaveControl()
+        {
+            return !_externalInputBlocked;
+        }
+
+        public void ReleaseControl()
+        {
+            _externalInputBlocked = true;
+        }
+
+        public void GainControl()
+        {
+            _externalInputBlocked = false;
+        }
     }
 }

@@ -128,6 +128,12 @@ namespace Moon
             if (_inputHandler.Attack1 && canAttack)
                 _animator.SetTrigger(_HashMeleeAttack);
 
+            if (_inputHandler.Attack2 && canAttack)
+            {
+                // _animator.SetTrigger(_HashMeleeAttack);
+                // _animator.SetBool(_HashHurt, false);
+            }
+
             CalculateForwardMovement();
             CalculateVerticalMovement();
 
