@@ -10,7 +10,6 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
 {
     [SerializeField] private EnemyDataSO _enemyDataSO;
     public EnemyBlackboard blackboard;
-    public EnemyAIController aiController;
     public EnemyHitboxController hitboxController;
     
     public Animator EnemyAnimator { get; private set; }
@@ -23,7 +22,7 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     [NonSerialized] public EnemyStateSpawn spawnState;
     [NonSerialized] public EnemyStateAI aiState;
     [NonSerialized] public EnemyStateAction actionState;
-    [NonSerialized] public EnemyStateHit hitState;
+    [NonSerialized] public EnemyStateStagger staggerState;
     [NonSerialized] public EnemyStateDead deadState;
 
     void Awake()
@@ -43,9 +42,6 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         Agent = GetComponent<NavMeshAgent>();
         Agent.updatePosition = false;
         Agent.updateRotation = false;
-
-        // ai Controller
-        aiController = new EnemyAIController();
         
         // hitbox Controller
         hitboxController.Subscribe(this);
@@ -60,7 +56,7 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         spawnState = new EnemyStateSpawn(this);
         aiState = new EnemyStateAI(this);
         actionState = new EnemyStateAction(this);
-        hitState = new EnemyStateHit(this);
+        staggerState = new EnemyStateStagger(this);
         deadState = new EnemyStateDead(this);
 
         _stateMachine.ChangeState(spawnState);
@@ -134,6 +130,27 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         // Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, transform.forward * blackboard.attackRange);
     }
     #endregion
+
+    public void OnHit()
+    {
+        // todo: player로부터 공격력, 강직도 감소율 받아오기
+        float attackPower = 0f;
+        float resistanceDelta = 0f;
+        blackboard.currentHealth -= attackPower;
+        blackboard.currentStaggerResistance -= resistanceDelta;
+
+        if (blackboard.currentHealth <= 0)
+        {
+            SetState(deadState);
+            return;
+        }
+
+        if (blackboard.currentStaggerResistance <= 0)
+        {
+            SetState(staggerState);
+            blackboard.currentStaggerResistance = blackboard.staggerResistance;
+        }
+    }
     
     public void OnNext(GameObject value)
     {

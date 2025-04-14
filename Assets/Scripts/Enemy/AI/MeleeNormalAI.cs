@@ -6,6 +6,9 @@ public class MeleeNormalAI : IEnemyAI
 {
     private Enemy _enemy;
     private EnemyBlackboard _blackboard;
+    
+    private float destinationUpdateInterval = 0.1f;
+    private float _destinationTimer = 0f;
 
     public MeleeNormalAI(Enemy enemy)
     {
@@ -14,18 +17,39 @@ public class MeleeNormalAI : IEnemyAI
     }
     
     
-    public void OnEnter(Enemy enemy)
+    public void OnEnter()
     {
-        throw new System.NotImplementedException();
+        _enemy.EnemyAnimator.SetBool("Trace", true);
+        _enemy.Agent.SetDestination(_blackboard.target.transform.position);
     }
 
-    public void OnUpdate(Enemy enemy)
+    public void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        if(_enemy.TargetInRange())
+        {
+            _enemy.EnemyAnimator.SetFloat("Speed", 0);
+        }
+        else
+        {
+            _enemy.EnemyAnimator.SetFloat("Speed", 1);
+        }
+        if (_enemy.TargetInRay())
+        {
+            _enemy.SetState(_enemy.actionState);
+        }
+        else
+        {
+            _destinationTimer += Time.deltaTime;
+            if (_destinationTimer >= destinationUpdateInterval)
+            {
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+                _destinationTimer = 0f;
+            }
+        }
     }
 
-    public void OnExit(Enemy enemy)
+    public void OnExit()
     {
-        throw new System.NotImplementedException();
+        _enemy.EnemyAnimator.SetBool("Trace", false);
     }
 }

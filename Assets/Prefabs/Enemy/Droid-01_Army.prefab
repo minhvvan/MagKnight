@@ -1731,11 +1731,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _triggerZones:
-  - position: {x: 0.1, y: 0, z: 0}
+  - referenceTransform: {fileID: 238397485176193913}
     radius: 0.2
-  - position: {x: 0.1, y: 0.4, z: 0}
+  - referenceTransform: {fileID: 9098425608971865769}
     radius: 0.2
-  - position: {x: 0.1, y: 0.8, z: 0}
+  - referenceTransform: {fileID: 5889882352773017890}
     radius: 0.2
 --- !u!1 &8522692651950388748
 GameObject:

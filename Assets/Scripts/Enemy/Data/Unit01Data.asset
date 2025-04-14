@@ -17,6 +17,7 @@ MonoBehaviour:
   health: 10
   atk: 5
   attckType: 1
+  aiType: 1
   moveSpeed: 5
   weight: 1
   startupTime: 1

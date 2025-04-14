@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface IEnemyAI
 {
-    void OnEnter(Enemy enemy);
-    void OnUpdate(Enemy enemy);
-    void OnExit(Enemy enemy);
+    // EnemyStateAI에서 작동하는 로직을 전략패턴으로 구현
+    void OnEnter();
+    void OnUpdate();
+    void OnExit();
 }

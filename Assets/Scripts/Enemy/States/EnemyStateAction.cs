@@ -20,19 +20,6 @@ public class EnemyStateAction : BaseState<Enemy>
 
     public override void UpdateState()
     {
-        if (_blackboard.currentHealth <= 0)
-        {
-            _controller.SetState(_controller.deadState);
-            return;
-        }
-        
-        if (_blackboard.currentStaggerResistance <= 0)
-        {
-            _controller.EnemyAnimator.Play("Hit");
-            _blackboard.currentStaggerResistance = _blackboard.staggerResistance;
-            return;
-        }
-
         if (_controller.IsCurrentAnimFinished("Attack"))
         {
             if (!_controller.TargetInRay())
