@@ -23,19 +23,21 @@ public class InteractionController : MonoBehaviour
     {
         if (_currentInteractable == null)
         {
-            Debug.LogError("currentInteractable is null");
+            Debug.Log("currentInteractable is null");
             return;
         }
         
         if (_interactor == null)
         {
-            Debug.LogError("interactor is null");
+            Debug.Log("interactor is null");
             return;
         }
         
         _currentInteractable.Interact(_interactor);
         _interactables.Remove(_currentInteractable);
         FindClosestInteractable();
+
+        _currentInteractable = null;
     }
 
   
