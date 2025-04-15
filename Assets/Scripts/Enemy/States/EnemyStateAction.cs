@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class EnemyStateAction : BaseState<Enemy>
@@ -15,24 +16,17 @@ public class EnemyStateAction : BaseState<Enemy>
 
     public override void Enter()
     {
-        _controller.EnemyAnimator.SetBool("Attack", true);
+        Debug.Log("Enter Action State");
+        _blackboard.actionDelayCancellation = new CancellationTokenSource();
+        _controller.Anim.SetTrigger("Attack");
     }
 
     public override void UpdateState()
     {
-        if (_controller.IsCurrentAnimFinished("Attack"))
-        {
-            if (!_controller.TargetInRay())
-                _controller.SetState(_controller.aiState);
-            else
-            {
-                _controller.EnemyAnimator.Play("Attack");
-            }
-        }
+
     }
 
     public override void Exit()
     {
-        _controller.EnemyAnimator.SetBool("Attack", false);
     }
 }

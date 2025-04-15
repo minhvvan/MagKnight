@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class EnemyStateAI : BaseState<Enemy>
 {
-    // attack 후의 state
+    // 모든 action 뒤에는 AI state를 한번 거친다
     // 사거리 내에 target이 있으면 action으로 넘어간다
     private EnemyBlackboard _blackboard;
     
@@ -17,6 +17,7 @@ public class EnemyStateAI : BaseState<Enemy>
 
     public override void Enter()
     {
+        Debug.Log("Enter AI State");
         _blackboard.ai.OnEnter();
     }
 

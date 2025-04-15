@@ -13,22 +13,17 @@ public class EnemyStateStagger : BaseState<Enemy>
 
     public override void Enter()
     {
-        _controller.EnemyAnimator.Play("Stagger");
+        Debug.Log("Enter Stagger State");
+        _blackboard.actionDelayCancellation.Cancel();
+        _controller.Anim.SetTrigger("Stagger");
     }
 
     public override void UpdateState()
     {
-        if (_controller.IsCurrentAnimFinished("Stagger"))
-        {
-            if (_controller.TargetInRay())
-                _controller.SetState(_controller.actionState);
-            else
-                _controller.SetState(_controller.aiState);
-        }
     }
 
     public override void Exit()
     {
-        
+        Debug.Log("Exit Stagger State");
     }
 }

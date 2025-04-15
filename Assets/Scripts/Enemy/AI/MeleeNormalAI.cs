@@ -19,22 +19,15 @@ public class MeleeNormalAI : IEnemyAI
     
     public void OnEnter()
     {
-        _enemy.EnemyAnimator.SetBool("Trace", true);
+        _enemy.Anim.SetBool("Trace", true);
         _enemy.Agent.SetDestination(_blackboard.target.transform.position);
     }
 
     public void OnUpdate()
     {
-        if(_enemy.TargetInRange())
-        {
-            _enemy.EnemyAnimator.SetFloat("Speed", 0);
-        }
-        else
-        {
-            _enemy.EnemyAnimator.SetFloat("Speed", 1);
-        }
         if (_enemy.TargetInRay())
         {
+            Debug.Log("Target in Ray");
             _enemy.SetState(_enemy.actionState);
         }
         else
@@ -50,6 +43,6 @@ public class MeleeNormalAI : IEnemyAI
 
     public void OnExit()
     {
-        _enemy.EnemyAnimator.SetBool("Trace", false);
+        _enemy.Anim.SetBool("Trace", false);
     }
 }

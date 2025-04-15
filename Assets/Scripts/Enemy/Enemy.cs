@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,8 +13,11 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     public EnemyBlackboard blackboard;
     public EnemyHitboxController hitboxController;
     
-    public Animator EnemyAnimator { get; private set; }
+    // components
+    public Animator Anim { get; private set; }
     public NavMeshAgent Agent { get; private set; }
+    public Collider MainCollider { get; private set; }
+    public Rigidbody Rb { get; private set; }
     
     
     // stateMachine
@@ -38,10 +42,14 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     {
         blackboard = new EnemyBlackboard();
         blackboard.Initialize(_enemyDataSO, this);
-        EnemyAnimator = GetComponent<Animator>();
+        Anim = GetComponent<Animator>();
+        // Anim.
+        
         Agent = GetComponent<NavMeshAgent>();
         Agent.updatePosition = false;
         Agent.updateRotation = false;
+        MainCollider = GetComponent<Collider>();
+        Rb = GetComponent<Rigidbody>();
         
         // hitbox Controller
         hitboxController.Subscribe(this);
@@ -65,6 +73,8 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     void Update()
     {
         _stateMachine.Update();
+        // var state = Anim.GetCurrentAnimatorStateInfo(0);
+        // Debug.Log("현재 상태: " + state.fullPathHash);
     }
 
     public void SetState(BaseState<Enemy> newState)
@@ -74,14 +84,23 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     
     public bool IsCurrentAnimFinished(string animName)
     {
-        AnimatorStateInfo info = EnemyAnimator.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo info = Anim.GetCurrentAnimatorStateInfo(0);
         return info.IsName(animName) && info.normalizedTime >= 1f;
+    }
+
+    public bool IsCurrentAnim(string animName)
+    {
+        AnimatorStateInfo info = Anim.GetCurrentAnimatorStateInfo(0);
+        return info.IsName(animName);
     }
 
     private void OnAnimatorMove()
     {
-        Vector3 position = EnemyAnimator.rootPosition;
+        Vector3 rootDelta = Anim.deltaPosition;
+        Vector3 scaledDelta = rootDelta * blackboard.moveSpeed;
         
+        Vector3 position = transform.position + scaledDelta;
+        // Vector3 position = EnemyAnimator.rootPosition;
         position.y = Agent.nextPosition.y;
         
         Agent.nextPosition = position;
@@ -104,7 +123,9 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     public bool TargetInRay()
     {
         Vector3 origin = transform.position + Vector3.up * 0.5f;
-        return Physics.Raycast(origin,
+        float radius = 0.5f;
+        return Physics.SphereCast(origin,
+            radius,
             transform.forward,
             out _,
             blackboard.attackRange,
@@ -112,32 +133,14 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         );
     }
     #endregion
-    
-    #region debugging
-    private void OnDrawGizmos()
-    {
-        // Gizmos.color = Color.red;
-        // Gizmos.DrawSphere(transform.position, blackboard.attackRange);
-        //
-        // // Agent 목적지 시각화
-        // if (Agent != null && Agent.hasPath)
-        // {
-        //     Gizmos.color = Color.green;
-        //     Gizmos.DrawSphere(Agent.destination, 0.5f);
-        //     Gizmos.DrawLine(Agent.destination, Agent.destination);
-        // }
-        // Gizmos.color = Color.blue;
-        // Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, transform.forward * blackboard.attackRange);
-    }
-    #endregion
 
     public void OnHit()
     {
         // todo: player로부터 공격력, 강직도 감소율 받아오기
-        float attackPower = 0f;
-        float resistanceDelta = 0f;
+        float attackPower = 1f;
+        float resistanceLoss = 1f;
         blackboard.currentHealth -= attackPower;
-        blackboard.currentStaggerResistance -= resistanceDelta;
+        blackboard.currentStaggerResistance -= resistanceLoss;
 
         if (blackboard.currentHealth <= 0)
         {
@@ -168,4 +171,36 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     {
         throw new NotImplementedException();
     }
+    
+    
+    #region debugging
+    private void OnDrawGizmos()
+    {
+        // Gizmos.color = Color.red;
+        // Gizmos.DrawSphere(transform.position, blackboard.attackRange);
+        //
+        // // Agent 목적지 시각화
+        // if (Agent != null && Agent.hasPath)
+        // {
+        //     Gizmos.color = Color.green;
+        //     Gizmos.DrawSphere(Agent.destination, 0.5f);
+        //     Gizmos.DrawLine(Agent.destination, Agent.destination);
+        // }
+        // Gizmos.color = Color.blue;
+        // Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, transform.forward * blackboard.attackRange);
+    }
+    
+    private async UniTask TestCode()
+    {
+        await UniTask.WaitForSeconds(5f);
+        int i = 0;
+        while (i < 10)
+        {
+            Debug.Log("Hit");
+            OnHit();
+            i++;
+            await UniTask.WaitForSeconds(2f);
+        }
+    }
+    #endregion
 }

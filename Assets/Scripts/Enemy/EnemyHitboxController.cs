@@ -10,6 +10,7 @@ public class EnemyHitboxController : MonoBehaviour, IObservable<GameObject>
     public class HitboxZone
     {
         public Transform referenceTransform;
+        public Vector3 offset;
         public float radius;
     }
     
@@ -37,7 +38,7 @@ public class EnemyHitboxController : MonoBehaviour, IObservable<GameObject>
 
         for (int i = 0; i < _triggerZones.Length; i++)
         {
-            _previousPositions[i] = _triggerZones[i].referenceTransform.position;
+            _previousPositions[i] = _triggerZones[i].referenceTransform.position + _triggerZones[i].offset;
         }
     }
     
@@ -52,7 +53,7 @@ public class EnemyHitboxController : MonoBehaviour, IObservable<GameObject>
         {
             for (int i = 0; i < _triggerZones.Length; i++)
             {
-                var worldPosition = _triggerZones[i].referenceTransform.position;
+                var worldPosition = _triggerZones[i].referenceTransform.position + _triggerZones[i].offset;
                 var direction = worldPosition - _previousPositions[i];
                 _ray.origin = _previousPositions[i];
                 _ray.direction = direction;
@@ -111,7 +112,7 @@ public class EnemyHitboxController : MonoBehaviour, IObservable<GameObject>
         {
             for (int i = 0; i < _triggerZones.Length; i++)
             {
-                var worldPosition = _triggerZones[i].referenceTransform.position;
+                var worldPosition = _triggerZones[i].referenceTransform.position + _triggerZones[i].offset;
                 var direction = worldPosition - _previousPositions[i];
                 
                 Gizmos.color = Color.green;
@@ -125,7 +126,7 @@ public class EnemyHitboxController : MonoBehaviour, IObservable<GameObject>
         {
             foreach (var triggerZone in _triggerZones)
             {
-                var worldPosition = triggerZone.referenceTransform.position;
+                var worldPosition = triggerZone.referenceTransform.position + triggerZone.offset;
                 Gizmos.color = Color.green;
                 Gizmos.DrawSphere(worldPosition, triggerZone.radius);
             }   

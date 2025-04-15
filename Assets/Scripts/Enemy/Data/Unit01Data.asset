@@ -18,7 +18,7 @@ MonoBehaviour:
   atk: 5
   attckType: 1
   aiType: 1
-  moveSpeed: 5
+  moveSpeed: 1
   weight: 1
   startupTime: 1
   recoveryTime: 2

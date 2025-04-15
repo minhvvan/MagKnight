@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class EnemyBlackboard
@@ -15,7 +16,7 @@ public class EnemyBlackboard
     public float startupTime;
     public float recoveryTime;
     public float staggerResistance;
-    public float staggerDuration;
+    public float staggerRecoveryTime;
     public List<EnemyAbilityType> abilities;
     public float item; // todo: gold및 아이템이 생기면 바꾸기
     public int appearanceFloor; // todo: 몹을 미리 배치하기 때문에 제거 가능성 높음
@@ -33,6 +34,11 @@ public class EnemyBlackboard
     public IEnemyAI ai;
     #endregion
     
+    #region CancellationToken
+
+    public CancellationTokenSource actionDelayCancellation;
+    #endregion
+    
     public void Initialize(EnemyDataSO enemyDataSO, Enemy enemy)
     {
         name = enemyDataSO.enemyName;
@@ -46,7 +52,7 @@ public class EnemyBlackboard
         startupTime = enemyDataSO.startupTime;
         recoveryTime = enemyDataSO.recoveryTime;
         staggerResistance = enemyDataSO.staggerResistance;
-        staggerDuration = enemyDataSO.staggerDuration;
+        staggerRecoveryTime = enemyDataSO.staggerRecoveryTime;
         abilities = enemyDataSO.abilities;
         item = enemyDataSO.item;
         appearanceFloor = enemyDataSO.appearanceFloor;
@@ -64,5 +70,7 @@ public class EnemyBlackboard
                 ai = new MeleeNormalAI(enemy);
                 break;
         }
+        
+        actionDelayCancellation = new CancellationTokenSource();
     }
 }

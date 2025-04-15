@@ -19,12 +19,14 @@ public class EnemyStateSpawn : BaseState<Enemy>
     public override void Enter()
     {
         _blackboard.target = GameObject.FindWithTag("Player");
+        _controller.Anim.SetBool("Spawn", true);
     }
 
     public override void UpdateState()
     {
         if (_controller.IsCurrentAnimFinished("Spawn"))
         {
+
             if (_controller.TargetInRay()) 
                 _controller.SetState(_controller.actionState);
             else
@@ -34,6 +36,6 @@ public class EnemyStateSpawn : BaseState<Enemy>
 
     public override void Exit()
     {
-        
+        _controller.Anim.SetBool("Spawn", false);
     }
 }
