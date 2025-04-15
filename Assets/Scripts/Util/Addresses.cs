@@ -9,6 +9,11 @@ public static class Addresses
         public static class Player
         {
         }
+
+        public static class Weapon
+        {
+            public const string Katana = "data/weapon/katana";
+        }
     }
     
     public static class Prefabs
