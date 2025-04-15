@@ -4,4 +4,6 @@ using UnityEngine;
 
 public static class Constants
 {
+    public const int MaxRooms = 8;
+    public const int MinRooms = 3;
 }
