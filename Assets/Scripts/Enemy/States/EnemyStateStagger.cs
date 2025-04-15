@@ -13,7 +13,6 @@ public class EnemyStateStagger : BaseState<Enemy>
 
     public override void Enter()
     {
-        Debug.Log("Enter Stagger State");
         _blackboard.actionDelayCancellation.Cancel();
         _controller.Anim.SetTrigger("Stagger");
     }
@@ -24,6 +23,5 @@ public class EnemyStateStagger : BaseState<Enemy>
 
     public override void Exit()
     {
-        Debug.Log("Exit Stagger State");
     }
 }

@@ -27,7 +27,6 @@ public class MeleeNormalAI : IEnemyAI
     {
         if (_enemy.TargetInRay())
         {
-            Debug.Log("Target in Ray");
             _enemy.SetState(_enemy.actionState);
         }
         else

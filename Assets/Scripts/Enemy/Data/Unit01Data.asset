@@ -20,12 +20,12 @@ MonoBehaviour:
   aiType: 1
   moveSpeed: 1
   weight: 1
-  startupTime: 1
-  recoveryTime: 2
+  startupTime: 0.1
+  recoveryTime: 1
   staggerResistance: 1
-  staggerDuration: 2
+  staggerRecoveryTime: 0
   abilities: 
   item: 10
   appearanceFloor: 1
   projectileSpeed: 0
-  attackRange: 2
+  attackRange: 1

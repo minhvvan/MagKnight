@@ -17,7 +17,6 @@ public class EnemyStateAI : BaseState<Enemy>
 
     public override void Enter()
     {
-        Debug.Log("Enter AI State");
         _blackboard.ai.OnEnter();
     }
 

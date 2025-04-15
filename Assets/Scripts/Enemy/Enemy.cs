@@ -32,6 +32,7 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     void Awake()
     {
         Initialize();
+        TestCode();
     }
 
     void OnEnable()

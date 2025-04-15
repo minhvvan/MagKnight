@@ -1732,10 +1732,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _triggerZones:
   - referenceTransform: {fileID: 238397485176193913}
+    offset: {x: 0, y: 0, z: 0}
     radius: 0.2
   - referenceTransform: {fileID: 9098425608971865769}
+    offset: {x: 0, y: 0.1, z: 0}
     radius: 0.2
   - referenceTransform: {fileID: 5889882352773017890}
+    offset: {x: 0, y: 0, z: 0}
     radius: 0.2
 --- !u!1 &8522692651950388748
 GameObject:
