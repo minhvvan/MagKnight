@@ -18,13 +18,12 @@ public class EnemyAnimatorStateAction : StateMachineBehaviour
             await UniTask.Delay(TimeSpan.FromSeconds(enemy.blackboard.recoveryTime),
                 cancellationToken: enemy.blackboard.actionDelayCancellation.Token);
 
-            // ✅ 딜레이가 정상적으로 끝났을 때만 실행됨
+            // 딜레이가 정상적으로 끝났을 때만 실행됨
             enemy.SetState(enemy.aiState);
         }
         catch (OperationCanceledException)
         {
-            // ✅ 토큰이 취소됐을 때는 여기로 들어옴 → 아무 것도 안 함
-            Debug.Log("딜레이가 취소되어 상태 전이를 생략합니다.");
+            // 토큰이 취소됐을 때 -> 아무 것도 안 함
         }
     }
 }

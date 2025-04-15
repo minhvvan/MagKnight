@@ -1587,7 +1587,7 @@ GameObject:
   - component: {fileID: 3236160506085818132}
   - component: {fileID: 551608098489286697}
   - component: {fileID: 8652684576439934670}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Droid-01_Army
   m_TagString: Untagged
   m_Icon: {fileID: 0}

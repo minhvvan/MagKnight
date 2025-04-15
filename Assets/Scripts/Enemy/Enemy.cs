@@ -32,7 +32,7 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     void Awake()
     {
         Initialize();
-        TestCode();
+        // TestCode();
     }
 
     void OnEnable()
@@ -140,6 +140,7 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         // todo: player로부터 공격력, 강직도 감소율 받아오기
         float attackPower = 1f;
         float resistanceLoss = 1f;
+        Debug.Log("enemy 피격");
         blackboard.currentHealth -= attackPower;
         blackboard.currentStaggerResistance -= resistanceLoss;
 
@@ -158,8 +159,6 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
     
     public void OnNext(GameObject value)
     {
-        // value는 target
-        // player의 피격 함수를 호출
         Debug.Log("플레이어 피격");
     }
 
@@ -197,7 +196,6 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         int i = 0;
         while (i < 10)
         {
-            Debug.Log("Hit");
             OnHit();
             i++;
             await UniTask.WaitForSeconds(2f);

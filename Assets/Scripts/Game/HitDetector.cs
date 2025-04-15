@@ -29,6 +29,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     
     private bool _IsDetecting = false;
     private List<Vector3> _previousPoints = new List<Vector3>();
+    private HashSet<Collider> _hitColliders = new HashSet<Collider>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
     private List<HitInfo> _debugHits = new List<HitInfo>();
     private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
@@ -36,6 +37,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     public void StartDetection()
     {
         _IsDetecting = true;
+        _hitColliders.Clear();
     }
 
     public void StopDetection()
@@ -59,12 +61,15 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                 direction.Normalize();
             
                 int hitCount = Physics.SphereCastNonAlloc(previousPos, detectionRadius, direction, _hitResults, distance, layerMask);
-                
                 for (int j = 0; j < hitCount; j++)
                 {
                     RaycastHit hit = _hitResults[j];
-                    if (hit.point != Vector3.zero)
+
+                    // if (hit.point != Vector3.zero)
+
+                    if(!_hitColliders.Contains(hit.collider))
                     {
+                        _hitColliders.Add(hit.collider);
                         HandleHit(hit, previousPos, currentPos);
                     }
                 }
@@ -77,7 +82,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        if (_debugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
+        // if (_debugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
         
         _debugHits.Add(new HitInfo(hit, prev, current));
         
