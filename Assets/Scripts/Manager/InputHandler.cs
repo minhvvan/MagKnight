@@ -137,7 +137,7 @@ namespace Moon
             _attack2 = true;
 
             //Test Code - Camera Shake
-            CameraShake.Shake(0.2f, 0.2f);
+            //CameraShake.Shake(0.2f, 0.2f);
             yield return _attackInputWait;
 
             _attack2 = false;
