@@ -1,0 +1,498 @@
+fileFormatVersion: 2
+guid: a776af83851406646914f37d77994a4d
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: //RootNode
+  - first:
+      1: 100002
+    second: Droid-01_CalfLeft
+  - first:
+      1: 100004
+    second: Droid-01_CalfRight
+  - first:
+      1: 100006
+    second: Droid-01_ClavicleLeft
+  - first:
+      1: 100008
+    second: Droid-01_ClavicleRight
+  - first:
+      1: 100010
+    second: Droid-01_FingerA_1_Left
+  - first:
+      1: 100012
+    second: Droid-01_FingerA_1_Right
+  - first:
+      1: 100014
+    second: Droid-01_FingerA_2_Left
+  - first:
+      1: 100016
+    second: Droid-01_FingerA_2_Right
+  - first:
+      1: 100018
+    second: Droid-01_FingerB_1_Left
+  - first:
+      1: 100020
+    second: Droid-01_FingerB_1_Right
+  - first:
+      1: 100022
+    second: Droid-01_FingerB_2_Left
+  - first:
+      1: 100024
+    second: Droid-01_FingerB_2_Right
+  - first:
+      1: 100026
+    second: Droid-01_FingerC_1_Left
+  - first:
+      1: 100028
+    second: Droid-01_FingerC_1_Right
+  - first:
+      1: 100030
+    second: Droid-01_FingerC_2_Left
+  - first:
+      1: 100032
+    second: Droid-01_FingerC_2_Right
+  - first:
+      1: 100034
+    second: Droid-01_FootLeft
+  - first:
+      1: 100036
+    second: Droid-01_FootRight
+  - first:
+      1: 100038
+    second: Droid-01_ForearmLeft
+  - first:
+      1: 100040
+    second: Droid-01_ForearmRight
+  - first:
+      1: 100042
+    second: Droid-01_HandLeft
+  - first:
+      1: 100044
+    second: Droid-01_HandRight
+  - first:
+      1: 100046
+    second: Droid-01_Head
+  - first:
+      1: 100048
+    second: Droid-01_HipLeft
+  - first:
+      1: 100050
+    second: Droid-01_HipRight
+  - first:
+      1: 100052
+    second: Droid-01_Neck1
+  - first:
+      1: 100054
+    second: Droid-01_Neck2
+  - first:
+      1: 100056
+    second: Droid-01_Pelvis
+  - first:
+      1: 100058
+    second: Droid-01_Spine
+  - first:
+      1: 100060
+    second: Droid-01_ThighLeft
+  - first:
+      1: 100062
+    second: Droid-01_ThighRight
+  - first:
+      1: 100064
+    second: Droid-01_ToeLeft
+  - first:
+      1: 100066
+    second: Droid-01_ToeRight
+  - first:
+      1: 100068
+    second: Droid-01_Torso
+  - first:
+      1: 100070
+    second: Droid-01_UpperArmLeft
+  - first:
+      1: 100072
+    second: Droid-01_UpperArmRight
+  - first:
+      1: 100074
+    second: Droid-01_WeaponAction
+  - first:
+      1: 100076
+    second: Droid-01_WeaponIdle
+  - first:
+      1: 100078
+    second: Droid-01_WristLeft
+  - first:
+      1: 100080
+    second: Droid-01_WristRight
+  - first:
+      1: 100082
+    second: nub
+  - first:
+      1: 100084
+    second: nub 1
+  - first:
+      1: 100086
+    second: root
+  - first:
+      4: 400000
+    second: //RootNode
+  - first:
+      4: 400002
+    second: Droid-01_CalfLeft
+  - first:
+      4: 400004
+    second: Droid-01_CalfRight
+  - first:
+      4: 400006
+    second: Droid-01_ClavicleLeft
+  - first:
+      4: 400008
+    second: Droid-01_ClavicleRight
+  - first:
+      4: 400010
+    second: Droid-01_FingerA_1_Left
+  - first:
+      4: 400012
+    second: Droid-01_FingerA_1_Right
+  - first:
+      4: 400014
+    second: Droid-01_FingerA_2_Left
+  - first:
+      4: 400016
+    second: Droid-01_FingerA_2_Right
+  - first:
+      4: 400018
+    second: Droid-01_FingerB_1_Left
+  - first:
+      4: 400020
+    second: Droid-01_FingerB_1_Right
+  - first:
+      4: 400022
+    second: Droid-01_FingerB_2_Left
+  - first:
+      4: 400024
+    second: Droid-01_FingerB_2_Right
+  - first:
+      4: 400026
+    second: Droid-01_FingerC_1_Left
+  - first:
+      4: 400028
+    second: Droid-01_FingerC_1_Right
+  - first:
+      4: 400030
+    second: Droid-01_FingerC_2_Left
+  - first:
+      4: 400032
+    second: Droid-01_FingerC_2_Right
+  - first:
+      4: 400034
+    second: Droid-01_FootLeft
+  - first:
+      4: 400036
+    second: Droid-01_FootRight
+  - first:
+      4: 400038
+    second: Droid-01_ForearmLeft
+  - first:
+      4: 400040
+    second: Droid-01_ForearmRight
+  - first:
+      4: 400042
+    second: Droid-01_HandLeft
+  - first:
+      4: 400044
+    second: Droid-01_HandRight
+  - first:
+      4: 400046
+    second: Droid-01_Head
+  - first:
+      4: 400048
+    second: Droid-01_HipLeft
+  - first:
+      4: 400050
+    second: Droid-01_HipRight
+  - first:
+      4: 400052
+    second: Droid-01_Neck1
+  - first:
+      4: 400054
+    second: Droid-01_Neck2
+  - first:
+      4: 400056
+    second: Droid-01_Pelvis
+  - first:
+      4: 400058
+    second: Droid-01_Spine
+  - first:
+      4: 400060
+    second: Droid-01_ThighLeft
+  - first:
+      4: 400062
+    second: Droid-01_ThighRight
+  - first:
+      4: 400064
+    second: Droid-01_ToeLeft
+  - first:
+      4: 400066
+    second: Droid-01_ToeRight
+  - first:
+      4: 400068
+    second: Droid-01_Torso
+  - first:
+      4: 400070
+    second: Droid-01_UpperArmLeft
+  - first:
+      4: 400072
+    second: Droid-01_UpperArmRight
+  - first:
+      4: 400074
+    second: Droid-01_WeaponAction
+  - first:
+      4: 400076
+    second: Droid-01_WeaponIdle
+  - first:
+      4: 400078
+    second: Droid-01_WristLeft
+  - first:
+      4: 400080
+    second: Droid-01_WristRight
+  - first:
+      4: 400082
+    second: nub
+  - first:
+      4: 400084
+    second: nub 1
+  - first:
+      4: 400086
+    second: root
+  - first:
+      74: 7400000
+    second: DrawWeaponAiming
+  - first:
+      95: 9500000
+    second: //RootNode
+  externalObjects: {}
+  materials:
+    materialImportMode: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 0
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: DrawWeaponAiming
+      takeName: Take 001
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 35
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 1
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root
+        weight: 1
+      - path: root/Droid-01_Pelvis
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipLeft/Droid-01_ThighLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipLeft/Droid-01_ThighLeft/Droid-01_CalfLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipLeft/Droid-01_ThighLeft/Droid-01_CalfLeft/Droid-01_FootLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipLeft/Droid-01_ThighLeft/Droid-01_CalfLeft/Droid-01_FootLeft/Droid-01_ToeLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipRight/Droid-01_ThighRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipRight/Droid-01_ThighRight/Droid-01_CalfRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipRight/Droid-01_ThighRight/Droid-01_CalfRight/Droid-01_FootRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_HipRight/Droid-01_ThighRight/Droid-01_CalfRight/Droid-01_FootRight/Droid-01_ToeRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerA_1_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerA_1_Left/Droid-01_FingerA_2_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerB_1_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerB_1_Left/Droid-01_FingerB_2_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerC_1_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/Droid-01_FingerC_1_Left/Droid-01_FingerC_2_Left
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleLeft/Droid-01_UpperArmLeft/Droid-01_ForearmLeft/Droid-01_WristLeft/Droid-01_HandLeft/nub
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerA_1_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerA_1_Right/Droid-01_FingerA_2_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerB_1_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerB_1_Right/Droid-01_FingerB_2_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerC_1_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_FingerC_1_Right/Droid-01_FingerC_2_Right
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/Droid-01_WeaponAction
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_ClavicleRight/Droid-01_UpperArmRight/Droid-01_ForearmRight/Droid-01_WristRight/Droid-01_HandRight/nub
+          1
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_Neck1
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_Neck1/Droid-01_Neck2
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_Neck1/Droid-01_Neck2/Droid-01_Head
+        weight: 1
+      - path: root/Droid-01_Pelvis/Droid-01_Spine/Droid-01_Torso/Droid-01_WeaponIdle
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 0
+    importVisibility: 0
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 0
+    fileIdsGeneration: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 0
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 0
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: root
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 36ac9fcf34538d14583f301307731951,
+    type: 3}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 2
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 0
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

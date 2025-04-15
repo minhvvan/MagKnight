@@ -19,7 +19,7 @@ public class Katana: BaseWeapon
 
     public override void OnNext(HitInfo hitInfo)
     {
-        Debug.Log($"{hitInfo.hit.collider.name} : Hit at {hitInfo.time:F1}s");
+        hitInfo.hit.collider.gameObject.GetComponent<Enemy>().OnHit();
     }
 
     public override void OnError(Exception error)

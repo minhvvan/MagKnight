@@ -68,6 +68,7 @@ namespace Moon
         readonly int _HashHurtFromY = Animator.StringToHash("HurtFromY");
         readonly int _HashStateTime = Animator.StringToHash("StateTime");
         readonly int _HashFootFall = Animator.StringToHash("FootFall");
+        readonly int _HashAttackType = Animator.StringToHash("AttackType");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -77,6 +78,14 @@ namespace Moon
         readonly int _HashEllenCombo2 = Animator.StringToHash("EllenCombo2");
         readonly int _HashEllenCombo3 = Animator.StringToHash("EllenCombo3");
         readonly int _HashEllenCombo4 = Animator.StringToHash("EllenCombo4");
+        readonly int _HashEllenCombo5 = Animator.StringToHash("EllenCombo5");
+        readonly int _HashEllenCombo6 = Animator.StringToHash("EllenCombo6");
+        readonly int _HashEllenCombo1_Charge = Animator.StringToHash("EllenCombo1 Charge");
+        readonly int _HashEllenCombo2_Charge = Animator.StringToHash("EllenCombo2 Charge");
+        readonly int _HashEllenCombo3_Charge = Animator.StringToHash("EllenCombo3 Charge");
+        readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
+        readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
+        readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
         readonly int _HashEllenDeath = Animator.StringToHash("EllenDeath");
 
         // Tags
@@ -128,12 +137,16 @@ namespace Moon
             _animator.ResetTrigger(_HashMeleeAttack);
 
             if (_inputHandler.Attack1 && canAttack)
+            {
                 _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 0);
+            }
+
 
             if (_inputHandler.Attack2 && canAttack)
             {
-                // _animator.SetTrigger(_HashMeleeAttack);
-                // _animator.SetBool(_HashHurt, false);
+                _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 1);
             }
 
             if (_inputHandler.InteractInput)
@@ -194,6 +207,15 @@ namespace Moon
             equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo2 || _currentStateInfo.shortNameHash == _HashEllenCombo2;
             equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo3 || _currentStateInfo.shortNameHash == _HashEllenCombo3;
             equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo4 || _currentStateInfo.shortNameHash == _HashEllenCombo4;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo5 || _currentStateInfo.shortNameHash == _HashEllenCombo5;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo6 || _currentStateInfo.shortNameHash == _HashEllenCombo6;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo1_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo1_Charge;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo2_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo2_Charge;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo3_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo3_Charge;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo4_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo4_Charge;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo5_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo5_Charge;
+            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo6_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo6_Charge;
+            
 
             return equipped;
         }
@@ -502,19 +524,17 @@ namespace Moon
             }
         }
 
-#if false //애니메이션 이벤트로 데미지처리 관련 활성화/비활성화
+#if true //애니메이션 이벤트로 데미지처리 관련 활성화/비활성화
         // This is called by an animation event when Ellen swings her staff.
         public void MeleeAttackStart(int throwing = 0)
         {
-            meleeWeapon.BeginAttack(throwing != 0);
-            _InAttack = true;
+            weaponHandler.AttackStart();
         }
 
         // This is called by an animation event when Ellen finishes swinging her staff.
         public void MeleeAttackEnd()
         {
-            meleeWeapon.EndAttack();
-            _InAttack = false;
+            weaponHandler.AttackEnd();
         }
 #endif
 
