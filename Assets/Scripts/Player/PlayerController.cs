@@ -448,13 +448,23 @@ namespace Moon
 
             if (_isGrounded)
             {
-                // if(_currentStateInfo.shortNameHash == _HashLocomotion)
+                if(_currentStateInfo.shortNameHash == _HashLocomotion)
                 {
-                    // movement = _forwardSpeed * transform.forward * Time.deltaTime;
+                    movement = _forwardSpeed * transform.forward * Time.deltaTime;
                 }
-                // else
+                else
                 {                        
-                    movement = _animator.deltaPosition;
+                    RaycastHit hit;
+                    Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, -Vector3.up);
+                    if (Physics.Raycast(ray, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                    {
+                        // ... and get the movement of the root motion rotated to lie along the plane of the ground.
+                        movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+                    }
+                    else
+                    {
+                        movement = _animator.deltaPosition;
+                    }
                 }
             }
             else
