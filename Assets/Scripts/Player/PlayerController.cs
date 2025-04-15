@@ -4,11 +4,13 @@ namespace Moon
 {
     [RequireComponent(typeof(CharacterController))]
     [RequireComponent(typeof(Animator))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IInteractor
     {
         CharacterController _characterController;
         Animator _animator;
         InputHandler _inputHandler;
+        [SerializeField] private InteractionController interactionController;
+        [SerializeField] private WeaponHandler weaponHandler;
 
         [SerializeField] public float maxForwardSpeed = 8f;        
         [SerializeField] public float gravity = 20f;               
@@ -132,6 +134,11 @@ namespace Moon
             {
                 // _animator.SetTrigger(_HashMeleeAttack);
                 // _animator.SetBool(_HashHurt, false);
+            }
+
+            if (_inputHandler.InteractInput)
+            {
+                Interact();
             }
 
             CalculateForwardMovement();
@@ -486,6 +493,15 @@ namespace Moon
             _animator.SetBool(_HashGrounded, _isGrounded);
         }
         
+
+        void Interact()
+        {
+            if (interactionController != null)
+            {
+                interactionController.Interact();
+            }
+        }
+
 #if false //애니메이션 이벤트로 데미지처리 관련 활성화/비활성화
         // This is called by an animation event when Ellen swings her staff.
         public void MeleeAttackStart(int throwing = 0)
@@ -501,5 +517,17 @@ namespace Moon
             _InAttack = false;
         }
 #endif
+
+        #region Weapon
+        public void SetCurrentWeapon(WeaponType weaponType)
+        {
+            weaponHandler.SetCurrentWeapon(weaponType);
+        }
+        #endregion
+        
+        public GameObject GetGameObject()
+        {
+            return gameObject;
+        }
     }
 }

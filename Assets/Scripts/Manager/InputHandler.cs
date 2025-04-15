@@ -69,13 +69,17 @@ namespace Moon
         }
 
         WaitForSeconds _attackInputWait;
+        WaitForSeconds _inputWait;
         Coroutine _attack1WaitCoroutine;
         Coroutine _attack2WaitCoroutine;
+        Coroutine _interactWaitCoroutine;
         const float _AttackInputDuration = 0.03f;
+        const float _inputDuration = 0.1f;
 
         void Start()
         {
             _attackInputWait = new WaitForSeconds(_AttackInputDuration);
+            _inputWait = new WaitForSeconds(_inputDuration);
 
             playerInput = GetComponent<PlayerInput>();
             playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
@@ -103,17 +107,15 @@ namespace Moon
             playerInput.actions["Sprint"].performed += ctx => _run = true;
             playerInput.actions["Sprint"].canceled += ctx => _run = false;
 
+            
+            playerInput.actions["Interact"].performed += ctx => _interact = true;
+            playerInput.actions["Interact"].canceled += ctx => _interact = false;
 
             //Test Cursor disable
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
-
-        void Update()
-        {
-            
-        }
         
         public bool IsContollerInputBlocked()
         {
@@ -139,6 +141,16 @@ namespace Moon
             yield return _attackInputWait;
 
             _attack2 = false;
+        }
+
+        IEnumerator InteractWait()
+        {
+            Debug.Log("InteractWait Start");
+            _interact = true;
+
+            yield return _inputWait;
+
+            _interact = false;
         }
 
 
