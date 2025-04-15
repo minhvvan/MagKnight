@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -16,8 +17,8 @@ public class EnemyAnimatorStateAction : StateMachineBehaviour
         try
         {
             await UniTask.Delay(TimeSpan.FromSeconds(enemy.blackboard.recoveryTime),
-                cancellationToken: enemy.blackboard.actionDelayCancellation.Token);
-
+                cancellationToken: enemy.blackboard.actionRecoveryCancellation.Token);
+            
             // 딜레이가 정상적으로 끝났을 때만 실행됨
             enemy.SetState(enemy.aiState);
         }

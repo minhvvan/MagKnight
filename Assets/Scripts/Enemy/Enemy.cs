@@ -140,7 +140,6 @@ public class Enemy : MonoBehaviour, IObserver<GameObject>
         // todo: player로부터 공격력, 강직도 감소율 받아오기
         float attackPower = 1f;
         float resistanceLoss = 1f;
-        Debug.Log("enemy 피격");
         blackboard.currentHealth -= attackPower;
         blackboard.currentStaggerResistance -= resistanceLoss;
 

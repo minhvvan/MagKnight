@@ -65,8 +65,6 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                 {
                     RaycastHit hit = _hitResults[j];
 
-                    // if (hit.point != Vector3.zero)
-
                     if(!_hitColliders.Contains(hit.collider))
                     {
                         _hitColliders.Add(hit.collider);
@@ -82,11 +80,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        // if (_debugHits.Any(prevHit => prevHit.hit.colliderInstanceID == hit.colliderInstanceID)) return;
+        HitInfo hitInfo = new HitInfo(hit, prev, current);
+        _debugHits.Add(hitInfo);
         
-        _debugHits.Add(new HitInfo(hit, prev, current));
-        
-        Notify(_debugHits.Last());
+        Notify(hitInfo);
         
         //*Temp Debug
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);

@@ -16,7 +16,7 @@ public class EnemyStateAction : BaseState<Enemy>
 
     public override void Enter()
     {
-        _blackboard.actionDelayCancellation = new CancellationTokenSource();
+        _blackboard.actionRecoveryCancellation = new CancellationTokenSource();
         _controller.Anim.SetTrigger("Action");
         _startupDuration = 0f;
     }
@@ -32,5 +32,6 @@ public class EnemyStateAction : BaseState<Enemy>
 
     public override void Exit()
     {
+        _blackboard.actionRecoveryCancellation.Cancel();
     }
 }

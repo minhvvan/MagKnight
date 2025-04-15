@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class EnemyStateStagger : BaseState<Enemy>
@@ -13,15 +14,17 @@ public class EnemyStateStagger : BaseState<Enemy>
 
     public override void Enter()
     {
-        _blackboard.actionDelayCancellation.Cancel();
+        _blackboard.staggerRecoveryCancellation = new CancellationTokenSource();
         _controller.Anim.SetTrigger("Stagger");
     }
 
     public override void UpdateState()
     {
+        // Debug.Log("Stagger state입니다");
     }
 
     public override void Exit()
     {
+        _blackboard.staggerRecoveryCancellation.Cancel();
     }
 }

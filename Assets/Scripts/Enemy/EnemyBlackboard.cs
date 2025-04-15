@@ -36,7 +36,8 @@ public class EnemyBlackboard
     
     #region CancellationToken
 
-    public CancellationTokenSource actionDelayCancellation;
+    public CancellationTokenSource actionRecoveryCancellation;
+    public CancellationTokenSource staggerRecoveryCancellation;
     #endregion
     
     public void Initialize(EnemyDataSO enemyDataSO, Enemy enemy)
@@ -70,7 +71,5 @@ public class EnemyBlackboard
                 ai = new MeleeNormalAI(enemy);
                 break;
         }
-        
-        actionDelayCancellation = new CancellationTokenSource();
     }
 }

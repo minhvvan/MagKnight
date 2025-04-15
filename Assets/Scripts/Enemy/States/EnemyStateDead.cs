@@ -15,7 +15,7 @@ public class EnemyStateDead : BaseState<Enemy>
 
     public override void Enter()
     {
-        _controller.Anim.Play("Dead");
+        _controller.Anim.SetTrigger("Dead");
         _controller.Rb.Sleep();
         _controller.MainCollider.enabled = false;
     }
