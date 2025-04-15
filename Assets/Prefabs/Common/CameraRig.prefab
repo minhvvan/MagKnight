@@ -152,7 +152,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 255665763008014980}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.26579657, y: 0, z: 0, w: 0.9640292}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -231,7 +231,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 370694960954380167}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.082480535, y: 0, z: 0, w: 0.9965927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.00000071525574, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -297,6 +297,7 @@ GameObject:
   - component: {fileID: 6293875882651868108}
   - component: {fileID: 2847367469353968259}
   - component: {fileID: 1054732136572162537}
+  - component: {fileID: 2067772757481744010}
   m_Layer: 0
   m_Name: KeyboardAndMouseFreeLookRig
   m_TagString: Untagged
@@ -473,6 +474,18 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &2067772757481744010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785891161319248226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5413f0bdd1cfd4a6b9e715cdb33569b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &924043564699982578
 GameObject:
   m_ObjectHideFlags: 3
@@ -498,7 +511,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924043564699982578}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04622492, y: 0, z: 0, w: 0.99893105}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.00000023841858, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1017,7 +1030,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2625864619812327440}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06433937, y: 0, z: 0, w: 0.9979281}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.00000023841858, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1223,7 +1236,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4077230408570007396}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.30063945, y: 0, z: 0, w: 0.9537379}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.00000023841858, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1302,7 +1315,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4500624543552356007}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2832417, y: 0, z: 0, w: 0.95904857}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1384,8 +1397,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4658318250711514419}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06433937, y: -0.0000000074351445, z: 4.793657e-10, w: 0.9979281}
-  m_LocalPosition: {x: -1.7464219, y: 2.0361104, z: -12.194354}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.7464219, y: 2.0361106, z: -12.194354}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1667,6 +1680,7 @@ GameObject:
   - component: {fileID: 5885930654010739990}
   - component: {fileID: 5444096296041011210}
   - component: {fileID: 1240780537153224799}
+  - component: {fileID: 5105531338936232509}
   m_Layer: 0
   m_Name: ControllerFreeLookRig
   m_TagString: Untagged
@@ -1843,3 +1857,15 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &5105531338936232509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7712787051863304106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5413f0bdd1cfd4a6b9e715cdb33569b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
