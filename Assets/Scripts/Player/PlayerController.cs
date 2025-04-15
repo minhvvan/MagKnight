@@ -524,19 +524,17 @@ namespace Moon
             }
         }
 
-#if false //애니메이션 이벤트로 데미지처리 관련 활성화/비활성화
+#if true //애니메이션 이벤트로 데미지처리 관련 활성화/비활성화
         // This is called by an animation event when Ellen swings her staff.
         public void MeleeAttackStart(int throwing = 0)
         {
-            meleeWeapon.BeginAttack(throwing != 0);
-            _InAttack = true;
+            weaponHandler.AttackStart();
         }
 
         // This is called by an animation event when Ellen finishes swinging her staff.
         public void MeleeAttackEnd()
         {
-            meleeWeapon.EndAttack();
-            _InAttack = false;
+            weaponHandler.AttackEnd();
         }
 #endif
 
