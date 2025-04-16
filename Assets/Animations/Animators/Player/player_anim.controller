@@ -666,7 +666,7 @@ BlendTree:
     m_DirectBlendParameter: LateralSpeed
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 7400000, guid: 200686346df7eaa488431e7e2951567b, type: 3}
+    m_Motion: {fileID: 7400000, guid: fb49da7be2340234fa190528dcdb21e3, type: 3}
     m_Threshold: 0.4
     m_Position: {x: 1.5, y: -7}
     m_TimeScale: 1
@@ -685,7 +685,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: fb49da7be2340234fa190528dcdb21e3, type: 3}
     m_Threshold: 0.8
     m_Position: {x: 7, y: -7}
-    m_TimeScale: 1
+    m_TimeScale: 1.5
     m_CycleOffset: 0
     m_DirectBlendParameter: LateralSpeed
     m_Mirror: 0
@@ -693,7 +693,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: fb49da7be2340234fa190528dcdb21e3, type: 3}
     m_Threshold: 1
     m_Position: {x: 7, y: -15}
-    m_TimeScale: 1
+    m_TimeScale: 1.5
     m_CycleOffset: 0
     m_DirectBlendParameter: LateralSpeed
     m_Mirror: 0
@@ -1040,9 +1040,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.4361431
+  m_TransitionDuration: 0.1292104
   m_TransitionOffset: 0
-  m_ExitTime: 0.61039275
+  m_ExitTime: 0.2534754
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 3
@@ -1065,9 +1065,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.26114058
+  m_TransitionDuration: 0.051859763
   m_TransitionOffset: 0
-  m_ExitTime: 0.27153862
+  m_ExitTime: 0.007405464
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -2699,7 +2699,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 1102243430685148070}
-    m_Position: {x: 396, y: 12, z: 0}
+    m_Position: {x: 400, y: 10, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102917850804106804}
     m_Position: {x: 390, y: 190, z: 0}
@@ -3164,12 +3164,6 @@ AnimatorTransition:
   m_PrefabAsset: {fileID: 0}
   m_Name: 
   m_Conditions:
-  - m_ConditionMode: 4
-    m_ConditionEvent: LateralSpeed
-    m_EventTreshold: 0.1
-  - m_ConditionMode: 3
-    m_ConditionEvent: LateralSpeed
-    m_EventTreshold: -0.1
   - m_ConditionMode: 4
     m_ConditionEvent: VerticalSpeed
     m_EventTreshold: 0.1
