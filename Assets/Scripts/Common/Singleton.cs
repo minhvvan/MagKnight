@@ -34,5 +34,11 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
         {
             Destroy(gameObject);
         }
+
+        Initialize();
+    }
+
+    protected virtual void Initialize()
+    {
     }
 }

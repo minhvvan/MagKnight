@@ -66,11 +66,9 @@ public class RoomGenerator: MonoBehaviour
     {
         if (_roomData == null) await Initialize();
         
-        //seed
-        // var tick = DateTime.Now.Ticks;
-        // _seed = (int)(tick % int.MaxValue);
-
-        _seed = 10;
+        //seed 설정
+        var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
+        _seed = currentSaveData.seed;
         Random.InitState(_seed);
         
         ClearRooms();
@@ -82,6 +80,9 @@ public class RoomGenerator: MonoBehaviour
         ConnectRooms();
         
         DebugPrint();
+        
+        //* TEST
+        SaveDataManager.Instance.SaveData(Constants.CurrentRun, currentSaveData);
     }
 
     private void SetUpDefault()
