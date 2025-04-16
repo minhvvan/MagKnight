@@ -5,6 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Artifact/Artifact GAS")]
 public class ArtifactGAS : ScriptableObject
 {
+   public Sprite icon;
+   public string name;
+   
    public List<GameplayEffect> N_ArtifactEffect;
    public List<GameplayEffect> S_ArtifactEffect;
    

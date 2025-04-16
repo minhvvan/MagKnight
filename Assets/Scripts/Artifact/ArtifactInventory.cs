@@ -1,64 +1,75 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArtifactInventory : MonoBehaviour
 {
-    public List<ArtifactGAS> N_ArtifactGas = new List<ArtifactGAS>();
-    public List<ArtifactGAS> S_ArtifactGas = new List<ArtifactGAS>();
+    public ArtifactGAS[] Left_ArtifactGas = new ArtifactGAS[15];
+    public ArtifactGAS[] Right_ArtifactGas = new ArtifactGAS[15];
 
     public AbilitySystem abilitySystem;
 
+    private bool isN = true;
+    
     void Start()
     {
-        N_Apply();
-        S_Apply();
+        abilitySystem = GetComponent<AbilitySystem>();
     }
     
-    public void N_Apply()
+    public void N_Apply(ArtifactGAS[] artifactList)
     {
-        foreach (var artifact in N_ArtifactGas)
+        foreach (var artifact in artifactList)
         {
-            artifact.N_ApplyTo(abilitySystem);
+            if(artifact != null)
+                artifact.N_ApplyTo(abilitySystem);
         }
     }
 
-    public void S_Apply()
+    public void S_Apply(ArtifactGAS[] artifactList)
     {
-        foreach (var artifact in S_ArtifactGas)
+        foreach (var artifact in artifactList)
         {
-            artifact.S_ApplyTo(abilitySystem);
+            if (artifact != null)
+                artifact.S_ApplyTo(abilitySystem);
         }
     }
     
-    public void N_Remove()
+    public void N_Remove(ArtifactGAS[] artifactList)
     {
-        foreach (var artifact in N_ArtifactGas)
+        foreach (var artifact in artifactList)
         {
-            artifact.N_RemoveTo(abilitySystem);
+            if (artifact != null)
+                artifact.N_RemoveTo(abilitySystem);
         }
     }
     
-    public void S_Remove()
+    public void S_Remove(ArtifactGAS[] artifactList)
     {
-        foreach (var artifact in S_ArtifactGas)
+        foreach (var artifact in artifactList)
         {
-            artifact.S_RemoveTo(abilitySystem);
+            if (artifact != null)
+                artifact.S_RemoveTo(abilitySystem);
         }
-    }
-
-    public void TempArtifact()
-    {
-        (N_ArtifactGas, S_ArtifactGas) = (S_ArtifactGas, N_ArtifactGas);
     }
 
     public void ConvertArtifact()
     {
-        N_Remove();
-        S_Remove();
-        TempArtifact();
-        N_Apply();
-        S_Apply();
+        if(isN)
+        {
+            N_Remove(Left_ArtifactGas);
+            S_Remove(Right_ArtifactGas);
+            N_Apply(Right_ArtifactGas);
+            S_Apply(Left_ArtifactGas);
+        }
+        else
+        {
+            N_Remove(Right_ArtifactGas);
+            S_Remove(Left_ArtifactGas);
+            N_Apply(Left_ArtifactGas);
+            S_Apply(Right_ArtifactGas);
+        }
+        isN = !isN;
     }
     
 }
