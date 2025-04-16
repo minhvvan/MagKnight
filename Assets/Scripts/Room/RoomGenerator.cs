@@ -68,6 +68,12 @@ public class RoomGenerator: MonoBehaviour
         
         //seed 설정
         var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
+        if (currentSaveData == null) 
+        {
+            Debug.Log("CurrentSaveData is null");
+            return;
+        }
+        
         _seed = currentSaveData.seed;
         Random.InitState(_seed);
         
@@ -80,9 +86,6 @@ public class RoomGenerator: MonoBehaviour
         ConnectRooms();
         
         DebugPrint();
-        
-        //* TEST
-        SaveDataManager.Instance.SaveData(Constants.CurrentRun, currentSaveData);
     }
 
     private void SetUpDefault()

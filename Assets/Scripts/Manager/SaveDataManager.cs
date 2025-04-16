@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -7,42 +6,6 @@ public enum SaveDataType
 {
     Permanent,  // 영구 저장 데이터 (게임 종료 후에도 유지)
     Temporary   // 일시 저장 데이터 (게임 세션 동안만 유지)
-}
-
-public interface ISaveData
-{
-    SaveDataType DataType { get; }
-    string GetDataKey();
-}
-
-[Serializable]
-public class CurrentRunData : ISaveData
-{
-    public SaveDataType DataType => SaveDataType.Temporary;
-    
-    // 현재 게임 실행 정보
-    public int currentFloor;
-    public int currentRoom;
-    public Vector3 playerPosition;
-    public int seed;
-
-    public CurrentRunData()
-    {
-        currentFloor = 0;
-        currentRoom = 0;
-        playerPosition = Vector3.zero;
-        seed = (int)DateTime.Now.Ticks % int.MaxValue;
-    }
-
-    //TODO
-    /*
-     * 현재 스탯, 무기, 아티팩트, 재화
-     */
-    
-    public string GetDataKey()
-    {
-        return Constants.CurrentRun;
-    }
 }
 
 public class SaveDataManager: Singleton<SaveDataManager>
@@ -58,7 +21,7 @@ public class SaveDataManager: Singleton<SaveDataManager>
         }
     }
 
-    public T LoadData<T>(string key) where T : ISaveData, new()
+    public T LoadData<T>(string key) where T : class, ISaveData
     {
         if (_saveData.TryGetValue(key, out ISaveData cachedData))
         {
@@ -68,17 +31,17 @@ public class SaveDataManager: Singleton<SaveDataManager>
             }
         }
         
-        T data = new T();
-        
         string filePath = Path.Combine(SavePath, $"{key}.json");
         if (File.Exists(filePath))
         {
             string json = File.ReadAllText(filePath);
-            data = JsonUtility.FromJson<T>(json);
+            var data = JsonUtility.FromJson<T>(json);
+            _saveData.Add(key, data);
+            
+            return data;
         }
         
-        _saveData[key] = data;
-        return data;
+        return null;
     }
 
     public void SaveData(string key, ISaveData data)
@@ -88,5 +51,12 @@ public class SaveDataManager: Singleton<SaveDataManager>
         string filePath = Path.Combine(SavePath, $"{key}.json");
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(filePath, json);
+    }
+
+    public void DeleteData(string key)
+    {
+        _saveData.Remove(key);
+        string filePath = Path.Combine(SavePath, $"{key}.json");
+        File.Delete(filePath);
     }
 }
