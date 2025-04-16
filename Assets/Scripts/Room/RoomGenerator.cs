@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Managers;
 using UnityEditorInternal;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public enum RoomDirection
@@ -14,6 +15,7 @@ public enum RoomDirection
     South,
     West,
     North,
+    Max
 }
 
 public enum RoomType
@@ -31,7 +33,7 @@ public enum RoomType
 [Serializable]
 public class Room
 {
-    public string roomName;
+    public string sceneName;
     public List<int> connectedRooms = new List<int>() { Empty, Empty, Empty, Empty };
     public RoomType roomType;
 
@@ -40,18 +42,18 @@ public class Room
     
     public Room()
     {
-        roomName = "";
+        sceneName = "";
         roomType = RoomType.None;
     }
         
     public Room(Room room)
     {
-        roomName = room.roomName;
+        sceneName = room.sceneName;
         roomType = room.roomType;
     }
 }
 
-public class RoomGenerator: MonoBehaviour
+public class RoomGenerator
 {
     private List<Room> _rooms = new List<Room>();
     private int _seed;
@@ -62,7 +64,7 @@ public class RoomGenerator: MonoBehaviour
         _roomData = await DataManager.Instance.LoadDataAsync<RoomDataSO>(Addresses.Data.Room.RoomData);
     }
 
-    public async void GenerateRooms()
+    public async UniTask GenerateRooms()
     {
         if (_roomData == null) await Initialize();
         
@@ -70,8 +72,11 @@ public class RoomGenerator: MonoBehaviour
         var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
         if (currentSaveData == null) 
         {
+            //*TEST
+            currentSaveData = SaveDataManager.Instance.CreateData<CurrentRunData>(Constants.CurrentRun);
+            
             Debug.Log("CurrentSaveData is null");
-            return;
+            // return;
         }
         
         _seed = currentSaveData.seed;
@@ -108,10 +113,10 @@ public class RoomGenerator: MonoBehaviour
             {
                 if(room.connectedRooms[i] == Room.Empty) output += "empty\n";
                 else if(room.connectedRooms[i] == Room.Blocked) output += "blocked\n";
-                else output += $"{room.connectedRooms[i]}: " + _rooms[room.connectedRooms[i]].roomName + "\n";
+                else output += $"{room.connectedRooms[i]}: " + _rooms[room.connectedRooms[i]].sceneName + "\n";
             }
             
-            Debug.Log($"RoomName: {room.roomName} \n" + output);
+            Debug.Log($"RoomName: {room.sceneName} \n" + output);
         }
     }
 
@@ -123,19 +128,19 @@ public class RoomGenerator: MonoBehaviour
         //필수 지점 추가
         _rooms.Add(new Room()
         {
-            roomName = "start",
+            sceneName = "start",
             roomType = RoomType.StartRoom,
         });
         
         _rooms.Add(new Room()
         {
-            roomName = "boss",
+            sceneName = "boss",
             roomType = RoomType.BoosRoom,
         });
         
         _rooms.Add(new Room()
         {
-            roomName = "shop",
+            sceneName = "shop",
             roomType = RoomType.ShopRoom,
         });
 
@@ -245,5 +250,10 @@ public class RoomGenerator: MonoBehaviour
     private void ClearRooms()
     {
         _rooms.Clear();
+    }
+
+    public Room GetRoom(int roomIndex)
+    {
+        return roomIndex < _rooms.Count && roomIndex >= 0 ? _rooms[roomIndex] : null;
     }
 }

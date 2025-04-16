@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public enum SaveDataType
@@ -44,13 +45,13 @@ public class SaveDataManager: Singleton<SaveDataManager>
         return null;
     }
 
-    public void SaveData(string key, ISaveData data)
+    public async UniTask SaveData(string key, ISaveData data)
     {
         _saveData[key] = data;
         
         string filePath = Path.Combine(SavePath, $"{key}.json");
         string json = JsonUtility.ToJson(data);
-        File.WriteAllText(filePath, json);
+        await File.WriteAllTextAsync(filePath, json);
     }
 
     public void DeleteData(string key)
@@ -58,5 +59,12 @@ public class SaveDataManager: Singleton<SaveDataManager>
         _saveData.Remove(key);
         string filePath = Path.Combine(SavePath, $"{key}.json");
         File.Delete(filePath);
+    }
+
+    public T CreateData<T>(string key) where T: ISaveData, new()
+    {
+        var data = new T();
+        _saveData[key] = data;
+        return data;
     }
 }

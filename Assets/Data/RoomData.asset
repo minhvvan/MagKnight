@@ -16,31 +16,31 @@ MonoBehaviour:
     _serializedList:
     - Key: 1
       Value:
-        roomName: start
-        connectedRooms: []
+        sceneName: start
+        connectedRooms: 
         roomType: 1
     - Key: 2
       Value:
-        roomName: boss
-        connectedRooms: []
+        sceneName: boss
+        connectedRooms: 
         roomType: 2
     - Key: 3
       Value:
-        roomName: shop
-        connectedRooms: []
+        sceneName: shop
+        connectedRooms: 
         roomType: 3
     - Key: 4
       Value:
-        roomName: battle
-        connectedRooms: []
+        sceneName: battle
+        connectedRooms: 
         roomType: 4
     - Key: 5
       Value:
-        roomName: treasure
-        connectedRooms: []
+        sceneName: treasure
+        connectedRooms: 
         roomType: 5
     - Key: 6
       Value:
-        roomName: trap
-        connectedRooms: []
+        sceneName: trap
+        connectedRooms: 
         roomType: 6
