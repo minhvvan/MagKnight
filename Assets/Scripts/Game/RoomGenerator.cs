@@ -135,9 +135,21 @@ public class RoomGenerator: MonoBehaviour
             roomType = RoomType.ShopRoom,
         });
 
+        //treasureRoom 개수 제한
+        int treasureRoomCount = 0;
         for (int i = 0; i < generateRoomCount; i++)
         {
             var type = (RoomType)Random.Range((int)RoomType.BattleRoom, (int)RoomType.Max);
+            if (type == RoomType.TreasureRoom)
+            {
+                treasureRoomCount++;
+                if (treasureRoomCount >= Constants.MaxTreasureRoomCount)
+                {
+                    i--;
+                    continue;
+                }
+            }
+            
             var room = _roomData.rooms[type];
             
             _rooms.Add(new Room(room));
