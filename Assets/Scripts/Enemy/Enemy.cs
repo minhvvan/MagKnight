@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-public class Enemy : MonoBehaviour, IObserver<GameObject>
+public class Enemy : MagneticObject, IObserver<GameObject>
 {
     [SerializeField] private EnemyDataSO _enemyDataSO;
     public EnemyBlackboard blackboard;
