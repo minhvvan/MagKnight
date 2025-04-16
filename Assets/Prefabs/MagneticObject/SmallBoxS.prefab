@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5109533538716496966}
   - component: {fileID: 8830616386546936325}
   - component: {fileID: 2280673802386984696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SmallBoxS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,3 +150,4 @@ MonoBehaviour:
   isStructure: 0
   objectMass: 0
   magneticObjectSO: {fileID: 11400000, guid: 8ed2ebcfdd892cf4b9aaf250617fce69, type: 2}
+  rigidbody: {fileID: 0}

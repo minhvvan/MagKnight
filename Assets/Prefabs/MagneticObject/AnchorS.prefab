@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8106957206946103453}
   - component: {fileID: 8830616386546936325}
   - component: {fileID: -7432512935105020568}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AnchorS
   m_TagString: Untagged
   m_Icon: {fileID: 0}

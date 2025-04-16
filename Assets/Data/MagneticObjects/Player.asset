@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbcfc34db8606d4da5b41b480dd4acb, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  magneticObjectName: Player
   magneticType: 0
   isStructure: 0
-  objectMass: 0
+  objectMass: 1
