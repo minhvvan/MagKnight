@@ -2285,6 +2285,7 @@ GameObject:
   - component: {fileID: 7618285741710296628}
   - component: {fileID: 1895797284832264210}
   - component: {fileID: 3871821562387904727}
+  - component: {fileID: 6796001127801567281}
   - component: {fileID: 1744086792932031990}
   - component: {fileID: 8697986797843376553}
   m_Layer: 3
@@ -2395,6 +2396,36 @@ MonoBehaviour:
   idleTimeout: 5
   canAttack: 1
   cameraSettings: {fileID: 0}
+--- !u!114 &6796001127801567281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999629288266388604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d3ea42ae12f7954db6106c42403f1a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magneticType: 0
+  isStructure: 0
+  objectMass: 0
+  magneticObjectSO: {fileID: 11400000, guid: 2286fa9972cd7be4288e8f6e71a19e42, type: 2}
+  rb: {fileID: 0}
+  targetMagneticObject: {fileID: 0}
+  mainCamera: {fileID: 0}
+  magneticLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  rayDistance: 0
+  screenOffset: 0
+  structSpeed: 0
+  nonStructSpeed: 0
+  gravityBreakRange: 0
 --- !u!114 &1744086792932031990
 MonoBehaviour:
   m_ObjectHideFlags: 0
