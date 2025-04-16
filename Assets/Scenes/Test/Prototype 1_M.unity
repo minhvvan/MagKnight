@@ -257,7 +257,7 @@ PrefabInstance:
         type: 3}
       propertyPath: magneticObjectSO
       value: 
-      objectReference: {fileID: 11400000, guid: 2286fa9972cd7be4288e8f6e71a19e42,
+      objectReference: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4,
         type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -866,11 +866,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6999629288266388604, guid: f8218e57c4edd4ed786326372ca4a590,
-        type: 3}
-      insertIndex: 5
-      addedObject: {fileID: 1620579748}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8218e57c4edd4ed786326372ca4a590, type: 3}
 --- !u!1 &633188646
 GameObject:
@@ -2263,42 +2259,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60ae9527326814c4e993c3abad7b3e00, type: 3}
---- !u!1 &1620579741 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6999629288266388604, guid: f8218e57c4edd4ed786326372ca4a590,
-    type: 3}
-  m_PrefabInstance: {fileID: 626551195}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1620579748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1620579741}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3ea42ae12f7954db6106c42403f1a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  magneticType: 0
-  isStructure: 0
-  objectMass: 0
-  magneticObjectSO: {fileID: 11400000, guid: 2286fa9972cd7be4288e8f6e71a19e42, type: 2}
-  rb: {fileID: 0}
-  targetMagneticObject: {fileID: 0}
-  mainCamera: {fileID: 0}
-  magneticLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  enemyLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  rayDistance: 0
-  screenOffset: 0
-  structSpeed: 0
-  nonStructSpeed: 0
-  gravityBreakRange: 0
 --- !u!43 &1638520944
 Mesh:
   m_ObjectHideFlags: 0
@@ -2824,12 +2784,12 @@ PrefabInstance:
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.536111
+      value: 2.0361106
       objectReference: {fileID: 0}
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.194354
+      value: -12.194354
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
