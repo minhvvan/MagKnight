@@ -112,8 +112,8 @@ namespace Moon
             playerInput.actions["Interact"].canceled += ctx => _interact = false;
 
             //Test Cursor disable
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            // Cursor.lockState = CursorLockMode.Locked;
+            // Cursor.visible = false;
         }
 
         
