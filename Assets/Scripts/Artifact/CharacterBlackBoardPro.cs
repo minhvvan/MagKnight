@@ -18,7 +18,7 @@ public class CharacterBlackBoardPro : MonoBehaviour
         abilitySystem = GetComponent<AbilitySystem>();
         
         abilitySystem.Attributes.AddAttribute(AttributeType.MaxHP, 100);
-        abilitySystem.Attributes.AddAttribute(AttributeType.HP, 100, UpdateHp);
+        abilitySystem.Attributes.AddAttribute(AttributeType.HP, 100, onPostModify:UpdateHp);
         abilitySystem.Attributes.AddAttribute(AttributeType.STR, 10);
         abilitySystem.Attributes.AddAttribute(AttributeType.INT, 10);
         abilitySystem.Attributes.AddAttribute(AttributeType.LUK, 10);

@@ -9,15 +9,14 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 public class Enemy : MagneticObject, IObserver<GameObject>
 {
-    [SerializeField] private EnemyDataSO _enemyDataSO;
-    public EnemyBlackboard blackboard;
-    public EnemyHitboxController hitboxController;
-    
     // components
     public Animator Anim { get; private set; }
     public NavMeshAgent Agent { get; private set; }
     public Collider MainCollider { get; private set; }
     public Rigidbody Rb { get; private set; }
+    public AbilitySystem EnemyAbilitySystem { get; private set; }
+    public EnemyHitboxController HitboxController { get; private set; }
+    public EnemyBlackboard blackboard;
     
     
     // stateMachine
@@ -41,19 +40,18 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     }
     public void Initialize()
     {
-        blackboard = new EnemyBlackboard();
-        blackboard.Initialize(_enemyDataSO, this);
         Anim = GetComponent<Animator>();
-        // Anim.
-        
         Agent = GetComponent<NavMeshAgent>();
-        Agent.updatePosition = false;
-        Agent.updateRotation = false;
         MainCollider = GetComponent<Collider>();
         Rb = GetComponent<Rigidbody>();
+        EnemyAbilitySystem = GetComponent<AbilitySystem>();
+        HitboxController = GetComponent<EnemyHitboxController>();
+
+        Agent.updatePosition = false;
+        Agent.updateRotation = false;
         
         // hitbox Controller
-        hitboxController.Subscribe(this);
+        HitboxController.Subscribe(this);
         
         InitializeState();
     }
@@ -98,7 +96,7 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     private void OnAnimatorMove()
     {
         Vector3 rootDelta = Anim.deltaPosition;
-        Vector3 scaledDelta = rootDelta * blackboard.moveSpeed;
+        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.Attributes.GetValue(AttributeType.SPD);
         
         Vector3 position = transform.position + scaledDelta;
         // Vector3 position = EnemyAnimator.rootPosition;
@@ -137,23 +135,18 @@ public class Enemy : MagneticObject, IObserver<GameObject>
 
     public void OnHit()
     {
-        // todo: player로부터 공격력, 강직도 감소율 받아오기
-        float attackPower = 1f;
-        float resistanceLoss = 1f;
-        blackboard.currentHealth -= attackPower;
-        blackboard.currentStaggerResistance -= resistanceLoss;
+    }
 
-        if (blackboard.currentHealth <= 0)
-        {
-            SetState(deadState);
-            return;
-        }
+    public void OnDeath()
+    {
+        SetState(deadState);
+    }
 
-        if (blackboard.currentStaggerResistance <= 0)
-        {
-            SetState(staggerState);
-            blackboard.currentStaggerResistance = blackboard.staggerResistance;
-        }
+    public void OnStagger()
+    {
+        float maxRes = blackboard.abilitySystem.Attributes.GetValue(AttributeType.MAXRES);
+        SetState(staggerState);
+        blackboard.abilitySystem.Attributes.Set(AttributeType.RES, maxRes);
     }
     
     public void OnNext(GameObject value)

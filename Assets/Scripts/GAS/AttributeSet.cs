@@ -9,9 +9,9 @@ public class AttributeSet
 {
     public SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
 
-    public void AddAttribute(AttributeType type , float value, Action onModified = null)
+    public void AddAttribute(AttributeType type , float value, Action<float> onPreModify = null, Action onPostModify = null)
     {
-        Attribute instance = new Attribute{Value = value, OnModified = onModified};
+        Attribute instance = new Attribute{Value = value, OnPreModify = onPreModify, OnPostModify = onPostModify};
         attributeDictionary.Add(type, instance);
     }
     public float GetValue(AttributeType type)
@@ -32,6 +32,20 @@ public class AttributeSet
     {
         if (attributeDictionary.ContainsKey(type))
             attributeDictionary[type].Set(value);
+    }
+
+    public void AddPreModify(AttributeType type, Action<float> onPreModify)
+    {
+        if(attributeDictionary.ContainsKey(type))
+            attributeDictionary[type].OnPreModify += onPreModify;
+        else Debug.LogError($"{type} is not added to this attribute set");
+    }
+    
+    public void AddPostModify(AttributeType type, Action onPostModify)
+    {
+        if(attributeDictionary.ContainsKey(type))
+            attributeDictionary[type].OnPostModify += onPostModify;
+        else Debug.LogError($"{type} is not added to this attribute set");
     }
 }
 

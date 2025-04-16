@@ -18,6 +18,14 @@ public class GameplayEffect
     public float value;
     public float duration;
 
+    public GameplayEffect(EffectType effectType, AttributeType attributeType, float value, float duration = 0f)
+    {
+        this.effectType = effectType;
+        this.attributeType = attributeType;
+        this.value = value;
+        this.duration = duration;
+    }
+
     public virtual void Apply(AbilitySystem system)
     {
         system.Attributes.Modify(attributeType, value);
