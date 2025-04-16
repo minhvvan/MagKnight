@@ -5,9 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Artifact/Artifact GAS")]
 public class ArtifactGAS : ScriptableObject
 {
-   public List<Effect> N_ArtifactEffect;
-   public List<Effect> S_ArtifactEffect;
-   
+   public List<GameplayEffect> N_ArtifactEffect;
+   public List<GameplayEffect> S_ArtifactEffect;
    
    public void N_ApplyTo(AbilitySystem target)
    {
@@ -24,4 +23,20 @@ public class ArtifactGAS : ScriptableObject
          target.ApplyEffect(instance);
       }
    }
+
+   public void N_RemoveTo(AbilitySystem target)
+   {
+      foreach (var instance in N_ArtifactEffect)
+      {
+         target.RemoveEffect(instance);
+      }
+   }
+   public void S_RemoveTo(AbilitySystem target)
+   {
+      foreach (var instance in S_ArtifactEffect)
+      {
+         target.RemoveEffect(instance);
+      }
+   }
+   
 }

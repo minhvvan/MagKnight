@@ -1,21 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ArtifactInventory : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class ArtifactInventory : MonoBehaviour
 {
-    public void OnPointerDown(PointerEventData eventData)
+    public List<ArtifactGAS> N_ArtifactGas = new List<ArtifactGAS>();
+    public List<ArtifactGAS> S_ArtifactGas = new List<ArtifactGAS>();
+
+    public AbilitySystem abilitySystem;
+
+    void Start()
     {
-        Debug.Log(eventData.hovered[3]);
+        N_Apply();
+        S_Apply();
+    }
+    
+    public void N_Apply()
+    {
+        foreach (var artifact in N_ArtifactGas)
+        {
+            artifact.N_ApplyTo(abilitySystem);
+        }
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void S_Apply()
     {
+        foreach (var artifact in S_ArtifactGas)
+        {
+            artifact.S_ApplyTo(abilitySystem);
+        }
+    }
+    
+    public void N_Remove()
+    {
+        foreach (var artifact in N_ArtifactGas)
+        {
+            artifact.N_RemoveTo(abilitySystem);
+        }
+    }
+    
+    public void S_Remove()
+    {
+        foreach (var artifact in S_ArtifactGas)
+        {
+            artifact.N_RemoveTo(abilitySystem);
+        }
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void TempArtifact()
     {
-       
+        (N_ArtifactGas, S_ArtifactGas) = (S_ArtifactGas, N_ArtifactGas);
     }
+
+    public void ConvertArtifact()
+    {
+        N_Remove();
+        S_Remove();
+        TempArtifact();
+        N_Apply();
+        S_Apply();
+    }
+    
 }

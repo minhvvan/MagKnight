@@ -6,9 +6,14 @@ public class AbilitySystem : MonoBehaviour
 {
     public AttributeSet Attributes = new AttributeSet();
 
-    public void ApplyEffect(Effect effect)
+    public void ApplyEffect(GameplayEffect gameplayEffect)
     {
-        effect.Apply(this);
+        gameplayEffect.Apply(this);
+    }
+
+    public void RemoveEffect(GameplayEffect gameplayEffect)
+    {
+        gameplayEffect.Remove(this);
     }
 }
 

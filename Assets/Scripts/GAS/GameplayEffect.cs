@@ -11,7 +11,7 @@ public enum EffectType
 }
 
 [System.Serializable]
-public class Effect
+public class GameplayEffect
 {
     public EffectType effectType;
     public AttributeType attributeType;
