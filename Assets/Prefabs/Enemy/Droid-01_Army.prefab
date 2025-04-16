@@ -1587,6 +1587,7 @@ GameObject:
   - component: {fileID: 3236160506085818132}
   - component: {fileID: 551608098489286697}
   - component: {fileID: 8652684576439934670}
+  - component: {fileID: -5346760470181023004}
   m_Layer: 7
   m_Name: Droid-01_Army
   m_TagString: Untagged
@@ -1644,6 +1645,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656f5e89cf1ecad4f988055634d7504c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  magneticType: 0
+  isStructure: 0
+  objectMass: 0
+  magneticObjectSO: {fileID: 0}
+  rb: {fileID: 0}
   _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
   hitboxController: {fileID: 8652684576439934670}
 --- !u!195 &6121732416747469485
@@ -1740,6 +1746,21 @@ MonoBehaviour:
   - referenceTransform: {fileID: 5889882352773017890}
     offset: {x: 0, y: 0, z: 0}
     radius: 0.2
+--- !u!114 &-5346760470181023004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437106963035007079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65ec3f35472e1564988f2986133d7f05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attributes:
+    attributeDictionary:
+      _serializedList: []
 --- !u!1 &8522692651950388748
 GameObject:
   m_ObjectHideFlags: 0
