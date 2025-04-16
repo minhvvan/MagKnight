@@ -140,7 +140,6 @@ public class MagneticController : MagneticObject
 
             if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
             {
-                Debug.Log("CATCH : " + magneticObject.name);
                 _isDetectedMagnetic = true;
                 targetMagneticObject = magneticObject;
                 return;
@@ -368,12 +367,10 @@ public class MagneticController : MagneticObject
     //패링
     public async UniTask OnCounterPress()
     {
-        Debug.Log("IN");
         _onCounterPress = true;
 
         _onSearchNearMagnetic = true;
         await UniTask.WaitUntil(() => !_onSearchNearMagnetic);
-        Debug.Log("Counter Press");
         foreach (var obj in _magneticObjects)
         {
             OnSeparation(obj).Forget();
@@ -391,7 +388,6 @@ public class MagneticController : MagneticObject
         
         _onSearchNearMagnetic = true;
         await UniTask.WaitUntil(() => !_onSearchNearMagnetic);
-        Debug.Log("RELEASE ON GRAVITY BREAK");
         
         foreach (var obj in _magneticObjects)
         {
@@ -467,12 +463,10 @@ public class MagneticController : MagneticObject
             {
                 if (targetMagneticObject.GetMagneticType() != magneticType)
                 {
-                    Debug.Log("다른극");
                     OnApproach(targetMagneticObject).Forget();
                 }
                 else if (targetMagneticObject.GetMagneticType() == magneticType)
                 {
-                    Debug.Log("같은극");
                    OnSeparation(targetMagneticObject).Forget();
                 }
             }
@@ -480,20 +474,17 @@ public class MagneticController : MagneticObject
         
         if (Input.GetKeyDown(KeyCode.B))
         {
-            Debug.Log("B");
             if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
         }
         
         if (Input.GetKeyDown(KeyCode.V))
         {
-            Debug.Log("V");
             if (_isActivatedMagnetic)
             {
                 if(!_onGravityBreak && !_onCounterPress) OnGravityBreak(targetMagneticObject).Forget();
             }
             
             SwitchMagneticType();
-            Debug.Log("MagType => " + magneticType);
         }
     }
     
