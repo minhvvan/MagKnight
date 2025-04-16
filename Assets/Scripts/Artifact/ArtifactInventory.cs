@@ -43,7 +43,7 @@ public class ArtifactInventory : MonoBehaviour
     {
         foreach (var artifact in S_ArtifactGas)
         {
-            artifact.N_RemoveTo(abilitySystem);
+            artifact.S_RemoveTo(abilitySystem);
         }
     }
 
