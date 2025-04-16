@@ -10,7 +10,6 @@ using Random = UnityEngine.Random;
 
 public enum RoomDirection
 {
-    None,
     East,
     South,
     West,
@@ -33,9 +32,12 @@ public enum RoomType
 public class Room
 {
     public string roomName;
-    public List<int> connectedRooms = new List<int>() { -1, -1, -1, -1 };
+    public List<int> connectedRooms = new List<int>() { Empty, Empty, Empty, Empty };
     public RoomType roomType;
 
+    public const int Blocked = -10;
+    public const int Empty = -1;
+    
     public Room()
     {
         roomName = "";
@@ -75,9 +77,22 @@ public class RoomGenerator: MonoBehaviour
         
         CreateRooms();
 
+        SetUpDefault();
+
         ConnectRooms();
         
         DebugPrint();
+    }
+
+    private void SetUpDefault()
+    {
+        var startRoom = _rooms[0];
+        startRoom.connectedRooms[(int)RoomDirection.South] = Room.Blocked;
+        
+        var bossRoom = _rooms[1];
+        bossRoom.connectedRooms[(int)RoomDirection.North] = Room.Blocked;
+        bossRoom.connectedRooms[(int)RoomDirection.East] = Room.Blocked;
+        bossRoom.connectedRooms[(int)RoomDirection.West] = Room.Blocked;
     }
 
     private void DebugPrint()
@@ -87,7 +102,8 @@ public class RoomGenerator: MonoBehaviour
             string output = "";
             for (int i = 0; i < room.connectedRooms.Count; i++)
             {
-                if(room.connectedRooms[i] == -1) output += "empty\n";
+                if(room.connectedRooms[i] == Room.Empty) output += "empty\n";
+                else if(room.connectedRooms[i] == Room.Blocked) output += "blocked\n";
                 else output += $"{room.connectedRooms[i]}: " + _rooms[room.connectedRooms[i]].roomName + "\n";
             }
             
@@ -159,14 +175,14 @@ public class RoomGenerator: MonoBehaviour
         }
         
         //추가 연결
-        float probability = Mathf.Log(_rooms.Count) / _rooms.Count;
+        float threshold = Mathf.Log(_rooms.Count) / _rooms.Count;
         for (var i = 0; i < _rooms.Count; i++)
         {
             for (var j = i + 1; j < _rooms.Count; j++)
             {
                 //i <-> j 확률로 연결
                 var connectProb = Random.value;
-                if (connectProb <= probability)
+                if (connectProb <= threshold)
                 {
                     TryConnect(_rooms[i], _rooms[j]);
                 }
@@ -183,45 +199,33 @@ public class RoomGenerator: MonoBehaviour
         //중복 연결 방지
         if (lhs.connectedRooms.Contains(_rooms.IndexOf(rhs))) return false;
         
-        var randomIndex = -1;
-        var otherRandomIndex = -1;
-        
+        var unconnectedRoomIndexes = new List<int>();
+        for (var i = 0; i < lhs.connectedRooms.Count; i++)
         {
-            var unconnectedRoomIndexes = new List<int>();
-            for (var i = 0; i < lhs.connectedRooms.Count; i++)
+            if (lhs.connectedRooms[i] == Room.Empty)
             {
-                if (lhs.connectedRooms[i] == -1)
-                {
-                    unconnectedRoomIndexes.Add(i);
-                }
+                unconnectedRoomIndexes.Add(i);
             }
-
-            if (unconnectedRoomIndexes.Count == 0) return false;
-            
-            randomIndex = unconnectedRoomIndexes[Random.Range(0, unconnectedRoomIndexes.Count)];
         }
+
+        if (unconnectedRoomIndexes.Count == 0) return false;
+        var randomIndex = unconnectedRoomIndexes[Random.Range(0, unconnectedRoomIndexes.Count)];
+        var otherDoorIndex = GetOppositeDoor(randomIndex);
         
-        {
-            var unconnectedRoomIndexes = new List<int>();
-            for (var i = 0; i < rhs.connectedRooms.Count; i++)
-            {
-                if (rhs.connectedRooms[i] == -1)
-                {
-                    unconnectedRoomIndexes.Add(i);
-                }
-            }
-
-            if (unconnectedRoomIndexes.Count == 0) return false;
-            
-            otherRandomIndex = unconnectedRoomIndexes[Random.Range(0, unconnectedRoomIndexes.Count)];
-        }
+        //이미 연결된 방향
+        if(rhs.connectedRooms[otherDoorIndex] != Room.Empty) return false;
 
         lhs.connectedRooms[randomIndex] = _rooms.IndexOf(rhs);
-        rhs.connectedRooms[otherRandomIndex] = _rooms.IndexOf(lhs);
+        rhs.connectedRooms[otherDoorIndex] = _rooms.IndexOf(lhs);
         
         return true;
     }
     
+    private int GetOppositeDoor(int door)
+    {
+        return (door + 2) % 4;
+    }
+
     private void ClearRooms()
     {
         _rooms.Clear();
