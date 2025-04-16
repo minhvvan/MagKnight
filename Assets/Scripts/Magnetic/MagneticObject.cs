@@ -2,21 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-[RequireComponent(typeof(Rigidbody))]
 public class MagneticObject : MonoBehaviour, IMagnetic
 {
     public MagneticType magneticType; //오브젝트의 극 (N,S)
     public bool isStructure; //움직이지 않는 구조물인가?
     public float objectMass; //오브젝트 중량
     public MagneticObjectSO magneticObjectSO;
-    public Rigidbody rigidbody;
+    public Rigidbody rb; //
 
     public virtual void Initialize()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        TryGetComponent(out rb);
         SetPhysic();
+    }
+
+    public virtual async UniTask LoadMagneticObjectSO()
+    {
+        //magneticObjectSO = await DataManager.Instance.LoadDataAsync<>() 
     }
 
     public virtual void SetPhysic()
@@ -25,10 +31,10 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         isStructure = magneticObjectSO.isStructure;
         objectMass = magneticObjectSO.objectMass;
 
-        if (isStructure)
+        if (isStructure && rb != null)
         {
-            rigidbody.isKinematic = true;
-            rigidbody.useGravity = false;
+            rb.isKinematic = true;
+            rb.useGravity = false;
         }
     }
 
@@ -37,8 +43,19 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         return isStructure;
     }
 
-    public void SwitchMagneticType()
+    public MagneticType GetMagneticType()
     {
+        return magneticType;
+    }
+
+    public void SwitchMagneticType(MagneticType? type = null)
+    {
+        if (type.HasValue)
+        {
+            magneticType = type.Value;
+            return;
+        }
+        
         if(magneticType == MagneticType.N) magneticType = MagneticType.S;
         else if(magneticType == MagneticType.S) magneticType = MagneticType.N;
     }
