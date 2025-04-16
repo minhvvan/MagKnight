@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -9,6 +10,8 @@ using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+    public PlayerController Player { get; private set; }
+
     private CurrentRunData _currentRunData;
     private PlayerData _playerData;
 
@@ -31,5 +34,10 @@ public class GameManager : Singleton<GameManager>
         {
             //회차 정보대로 씬 이동 및 설정
         }
+    }
+
+    private void Start()
+    {
+        Player = FindObjectOfType<PlayerController>();
     }
 }

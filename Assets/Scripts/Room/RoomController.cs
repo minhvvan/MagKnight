@@ -32,7 +32,7 @@ public class RoomController : MonoBehaviour
 
     private async void OnGateEntered(RoomDirection direction)
     {
-        SceneController.Instance.EnterRoom(roomIndex, Room.connectedRooms[(int)direction]);
+        SceneController.Instance.EnterRoom(roomIndex, direction);
     }
 
     public void SetRoomData(Room roomData, int index)
@@ -49,5 +49,27 @@ public class RoomController : MonoBehaviour
             if(Room.connectedRooms[(int)dir] == Room.Empty || Room.connectedRooms[(int)dir] == Room.Blocked) continue; 
             gates[dir].gameObject.SetActive(isOpen);
         }
+    }
+
+    public void OnPlayerEnter(RoomDirection direction)
+    {
+        var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
+
+        var player = GameManager.Instance.Player;
+        
+        CharacterController controller = player.GetComponent<CharacterController>();
+        controller.enabled = false;
+        player.gameObject.transform.position = gates[gateDirection].playerSpawnPoint.position;
+        player.gameObject.transform.rotation = gates[gateDirection].playerSpawnPoint.rotation;
+        controller.enabled = true;
+        
+        SetGateOpen(false);
+        gameObject.SetActive(true);
+    }
+
+    public void OnPlayerExit()
+    {
+        SetGateOpen(false);
+        gameObject.SetActive(false);
     }
 }

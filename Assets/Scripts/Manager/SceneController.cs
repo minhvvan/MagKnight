@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController: Singleton<SceneController>
 {
-    private Dictionary<int, RoomController> _loadedScenes = new Dictionary<int, RoomController>();
+    private Dictionary<int, RoomController> _loadedRoomControllers = new Dictionary<int, RoomController>();
     private RoomGenerator _roomGenerator = new RoomGenerator();
     private RoomController _currentRoomController;
     
@@ -42,7 +42,7 @@ public class SceneController: Singleton<SceneController>
     private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (mode == LoadSceneMode.Additive) return;
-        _loadedScenes.Clear();
+        _loadedRoomControllers.Clear();
         
         // 룸 생성
         await _roomGenerator.GenerateRooms();
@@ -57,29 +57,28 @@ public class SceneController: Singleton<SceneController>
         _currentRoomController.SetRoomData(roomData, 0);
         _currentRoomController.gameObject.SetActive(true);
         
-        _loadedScenes.Add(0, roomController);
+        _loadedRoomControllers.Add(0, roomController);
         
         // 시작 룸에 연결된 룸들 로드
         await LoadConnectedRooms(_currentRoomController.Room.connectedRooms);
     }
 
-    public async UniTask EnterRoom(int currentRoomIndex, int targetRoomIndex)
+    public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
     {
+        var targetRoomIndex = _loadedRoomControllers[currentRoomIndex].Room.connectedRooms[(int)direction];
+        
         //targetRoom활성화 + currentRoom비활성화
-        RoomController targetController = _loadedScenes[targetRoomIndex];
+        RoomController targetController = _loadedRoomControllers[targetRoomIndex];
         if (targetController != null)
         {
-            targetController.SetGateOpen(false);
-            targetController.gameObject.SetActive(true);
-            
+            targetController.OnPlayerEnter(direction);
             _currentRoomController = targetController;
         }
 
-        RoomController currentController = _loadedScenes[currentRoomIndex];
+        RoomController currentController = _loadedRoomControllers[currentRoomIndex];
         if (currentController != null)
         {
-            currentController.SetGateOpen(false);
-            currentController.gameObject.SetActive(false);
+            currentController.OnPlayerExit();
         }
         
         var currentRoom = _roomGenerator.GetRoom(currentRoomIndex);
@@ -104,7 +103,7 @@ public class SceneController: Singleton<SceneController>
             if (room == null) continue;
             
             // 이미 로드된 씬이면 스킵
-            if (_loadedScenes.ContainsKey(roomIndex)) continue;
+            if (_loadedRoomControllers.ContainsKey(roomIndex)) continue;
             
             await LoadAndSetupRoom(room, roomIndex);
         }
@@ -123,7 +122,7 @@ public class SceneController: Singleton<SceneController>
             var loadedSceneController = FindRoomController(loadedScene);
             if (loadedSceneController != null)
             {
-                _loadedScenes.Add(roomIndex, loadedSceneController);
+                _loadedRoomControllers.Add(roomIndex, loadedSceneController);
                 loadedSceneController.SetRoomData(room, roomIndex);
                 loadedSceneController.gameObject.SetActive(false);
             }
@@ -138,10 +137,10 @@ public class SceneController: Singleton<SceneController>
             if(roomIndex == 0) continue;
             
             // _loadedScenes에서 직접 Scene 참조를 가져와 언로드
-            if (_loadedScenes.TryGetValue(roomIndex, out var roomController))
+            if (_loadedRoomControllers.TryGetValue(roomIndex, out var roomController))
             {
                 await SceneManager.UnloadSceneAsync(roomController.gameObject.scene).ToUniTask();
-                _loadedScenes.Remove(roomIndex);
+                _loadedRoomControllers.Remove(roomIndex);
             }
         }
     }
