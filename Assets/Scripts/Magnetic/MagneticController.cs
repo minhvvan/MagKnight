@@ -81,7 +81,7 @@ public class MagneticController : MagneticObject
         _minDistance = 1f;
         _outBoundDistance = 8f;
         
-        structSpeed = 20f;
+        structSpeed = 50f;
         nonStructSpeed = 2f;
         _dragValue = 1.5f;
 
