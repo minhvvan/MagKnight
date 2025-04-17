@@ -22,6 +22,10 @@ public enum AttributeType
     GOLD, // 드롭 골드량
 }
 
+/// <summary>
+/// ⚠ 내부 전용 클래스입니다. 외부에서 직접 접근하지 마세요.
+/// 반드시 <see cref="AbilitySystem"/>을 통해 Attribute를 수정해야 합니다.
+/// </summary>
 [System.Serializable]
 public class Attribute
 {

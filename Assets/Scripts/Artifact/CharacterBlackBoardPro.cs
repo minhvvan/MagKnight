@@ -16,17 +16,16 @@ public class CharacterBlackBoardPro : MonoBehaviour
     void Initalized()
     {
         abilitySystem = GetComponent<AbilitySystem>();
-        
-        abilitySystem.Attributes.AddAttribute(AttributeType.MaxHP, 100);
-        abilitySystem.Attributes.AddAttribute(AttributeType.HP, 100, onPostModify:UpdateHp);
-        abilitySystem.Attributes.AddAttribute(AttributeType.STR, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.INT, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.LUK, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.DEF, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.CRT, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.DMG, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.SPD, 10);
-        abilitySystem.Attributes.AddAttribute(AttributeType.BAS, 10);
+        abilitySystem.AddAttribute(AttributeType.MaxHP, 100);
+        abilitySystem.AddAttribute(AttributeType.HP, 100, onPostModify:UpdateHp);
+        abilitySystem.AddAttribute(AttributeType.STR, 10);
+        abilitySystem.AddAttribute(AttributeType.INT, 10);
+        abilitySystem.AddAttribute(AttributeType.LUK, 10);
+        abilitySystem.AddAttribute(AttributeType.DEF, 10);
+        abilitySystem.AddAttribute(AttributeType.CRT, 10);
+        abilitySystem.AddAttribute(AttributeType.DMG, 10);
+        abilitySystem.AddAttribute(AttributeType.SPD, 10);
+        abilitySystem.AddAttribute(AttributeType.BAS, 10);
     }
 
     public AbilitySystem GetAbilitySystem() => abilitySystem;
