@@ -90,7 +90,7 @@ public class RoomGenerator
 
         ConnectRooms();
         
-        DebugPrint();
+        // DebugPrint();
     }
 
     private void SetUpDefault()
