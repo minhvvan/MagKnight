@@ -69,6 +69,11 @@ public class RoomSceneController: Singleton<RoomSceneController>
         await Moon.ScreenFader.FadeSceneOut().ToUniTask(this);
 
         var targetRoomIndex = _loadedRoomControllers[currentRoomIndex].Room.connectedRooms[(int)direction];
+        if (targetRoomIndex < 0 || targetRoomIndex >= _loadedRoomControllers.Count)
+        {
+            Debug.Log("TargetRoomIndex is out of range");
+            return;
+        }
         
         //targetRoom활성화 + currentRoom비활성화
         RoomController targetController = _loadedRoomControllers[targetRoomIndex];
