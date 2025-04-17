@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -9,6 +10,22 @@ public class AbilitySystem : MonoBehaviour
     
     private List<GameplayEffect> _activatedEffects = new List<GameplayEffect>();
 
+    public void AddAttribute(AttributeType type, float value, Action<float> onPreModify = null,
+        Action onPostModify = null)
+    {
+        Attributes.AddAttribute(type, value, onPreModify, onPostModify);
+    }
+
+    public void AddPreModify(AttributeType type, Action<float> onPreModify)
+    {
+        Attributes.AddPreModify(type, onPreModify);
+    }
+    
+    public void AddPostModify(AttributeType type, Action onPostModify)
+    {
+        Attributes.AddPostModify(type, onPostModify);
+    }
+    
     // effect 개념으로 관리하고 싶은 것은 ApplyEffect를 한다.
     // e.g. 아티팩트 효과, 버프 디버프 등
     public void ApplyEffect(GameplayEffect gameplayEffect)
