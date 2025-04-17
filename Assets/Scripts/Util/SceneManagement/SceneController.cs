@@ -19,38 +19,59 @@ namespace Moon
         protected InputHandler _inputHandler;
         protected bool _transitioning;
 
+        bool _sceneReady = false;
+
         void Start()
         {
             _inputHandler = FindObjectOfType<InputHandler>();  
         }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            _sceneReady = true;
+        }
     
         public static void TransitionToScene(string sceneName)
         {
-            Instance.StartCoroutine(Instance.Transition(sceneName));
+            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true));
+            // Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.CommonFade));
         }
 
-        protected IEnumerator Transition(string newSceneName)
+        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float lodingDelay = 1f, bool isStopTimeScale = false)
         {
             _transitioning = true;
 
             if (_inputHandler == null)
                 _inputHandler = FindObjectOfType<InputHandler>();
             if (_inputHandler) _inputHandler.ReleaseControl();
-            yield return StartCoroutine(ScreenFader.FadeSceneOut(ScreenFader.FadeType.Loading));
+
+            if (isStopTimeScale)
+                Time.timeScale = 0f;
+
+            yield return StartCoroutine(ScreenFader.FadeSceneOut(fadeType));
+
+            _sceneReady = false;
+            SceneManager.sceneLoaded += OnSceneLoaded;
             yield return SceneManager.LoadSceneAsync(newSceneName);
+
+            yield return new WaitUntil(() => _sceneReady);
+            yield return new WaitForSecondsRealtime(lodingDelay);
             _inputHandler = FindObjectOfType<InputHandler>();
             if (_inputHandler) _inputHandler.ReleaseControl();
+
+            if (isStopTimeScale)
+                Time.timeScale = 1f;
+
             yield return StartCoroutine(ScreenFader.FadeSceneIn());
+
             if (_inputHandler)
                 _inputHandler.GainControl();
 
             _transitioning = false;
         }
 
-        IEnumerator CallWithDelay(float delay, Action call)
-        {
-            yield return new WaitForSeconds(delay);
-            call();
-        }
+        //씬전환 없이 fade만 필요한 상황에서 사용을 위한 메소드 (미구현)
+        //IEnumerator TeleportTransition
     }
 }

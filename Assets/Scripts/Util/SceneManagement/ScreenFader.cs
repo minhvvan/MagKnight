@@ -32,7 +32,7 @@ namespace Moon
             while (!Mathf.Approximately(canvasGroup.alpha, finalAlpha))
             {
                 canvasGroup.alpha = Mathf.MoveTowards(canvasGroup.alpha, finalAlpha,
-                    fadeSpeed * Time.deltaTime);
+                    fadeSpeed * Time.unscaledDeltaTime);
                 yield return null;
             }
             canvasGroup.alpha = finalAlpha;
