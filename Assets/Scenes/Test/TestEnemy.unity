@@ -201,17 +201,17 @@ PrefabInstance:
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17
+      value: 10.22
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 4.958695
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 14.1
+      value: 9.05
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
@@ -253,12 +253,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Droid-01_Army
       objectReference: {fileID: 0}
-    - target: {fileID: 8957364649605768314, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
-        type: 3}
-      propertyPath: magneticObjectSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4,
-        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

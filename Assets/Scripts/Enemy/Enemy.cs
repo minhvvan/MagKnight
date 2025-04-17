@@ -7,6 +7,9 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(EnemyHitboxController))]
+[RequireComponent(typeof(AbilitySystem))]
+[RequireComponent(typeof(EnemyBlackboard))]
 public class Enemy : MagneticObject, IObserver<GameObject>
 {
     // components
