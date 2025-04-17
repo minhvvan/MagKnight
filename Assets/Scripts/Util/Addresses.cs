@@ -14,6 +14,11 @@ public static class Addresses
         {
             public const string Katana = "data/weapon/katana";
         }
+
+        public static class Room
+        {
+            public const string RoomData = "data/room";
+        }
     }
     
     public static class Prefabs
