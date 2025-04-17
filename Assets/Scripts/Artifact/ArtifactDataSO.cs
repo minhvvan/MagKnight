@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Artifact/Artifact GAS")]
-public class ArtifactGAS : ScriptableObject
+[CreateAssetMenu(menuName = "Artifact/ArtifactDataSO")]
+public class ArtifactDataSO : ScriptableObject
 {
    public Sprite icon;
    public string name;

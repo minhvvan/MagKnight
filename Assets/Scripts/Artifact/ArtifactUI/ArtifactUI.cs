@@ -6,20 +6,15 @@ using UnityEngine.UI;
 
 public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public ArtifactGAS artifact;
+    public ArtifactDataSO artifact;
     public Image icon;
 
     Vector3 startPos;
     [HideInInspector] public Transform startParent;
     
-    [SerializeField] Transform onDragParent;
-
-    void Start()
-    {
-        SetArtifact(artifact);
-    }
-
-    void Initialized(ArtifactGAS artifact, Transform onDragParent)
+    [SerializeField] public Transform onDragParent;
+    
+    public void Initialized(ArtifactDataSO artifact, Transform onDragParent)
     {
         this.artifact = artifact;
         icon.sprite = artifact.icon;
@@ -31,14 +26,8 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         transform.SetParent(parent);
         transform.transform.position = parent.position;
-        parent.GetComponent<ArtifactSlot>().ModifyArtifact();
     }
     
-    public void SetArtifact(ArtifactGAS artifact)
-    {
-        this.artifact = artifact;
-        icon.sprite = artifact.icon;
-    }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -46,7 +35,6 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         startParent = transform.parent;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         transform.SetParent(onDragParent);
-        startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -63,6 +51,10 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             transform.position = startPos;
             transform.SetParent(startParent);
         }
-        transform.parent.GetComponent<ArtifactSlot>().ModifyArtifact();
+        else
+        {
+            startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
+            transform.parent.GetComponent<ArtifactSlot>().ModifyArtifact();
+        }
     }
 }

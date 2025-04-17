@@ -16,13 +16,57 @@ public class ArtifactInventoryUI : MonoBehaviour
 
     private ArtifactSlot beginArtifactSlot;
     private ArtifactInventory inventory;
+    private MagneticController magneticController;
     
     void Awake()
     {
         Initialized();
         inventory = FindObjectOfType<ArtifactInventory>();
+        magneticController = FindObjectOfType<MagneticController>();
+        Hide();
     }
 
+    public void Show(ArtifactDataSO artifactDataSO = null)
+    {
+        gameObject.SetActive(true);
+
+        if (magneticController.magneticType == MagneticType.N)
+        {
+            foreach (var nArtifactSlot in N_ArtifactSlots)
+            {
+                nArtifactSlot.SetBackgroundColor(Color.red);
+            }
+
+            foreach (var sArtifactSlot in S_ArtifactSlots)
+            {
+                sArtifactSlot.SetBackgroundColor(Color.blue);
+            }
+        }
+        else
+        {
+            foreach (var nArtifactSlot in N_ArtifactSlots)
+            {
+                nArtifactSlot.SetBackgroundColor(Color.blue);
+            }
+
+            foreach (var sArtifactSlot in S_ArtifactSlots)
+            {
+                sArtifactSlot.SetBackgroundColor(Color.red);
+            }
+        }
+        
+        if (artifactDataSO != null)
+        {
+            var artifactUI = Instantiate(ArtifactUIPrefab, artifactSlot.transform).GetComponent<ArtifactUI>();
+            artifactUI.Initialized(artifactDataSO, transform);
+        }
+    }
+    
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+    
     void Initialized()
     {
         for (int i = 0; i < 15; i++)
@@ -41,12 +85,12 @@ public class ArtifactInventoryUI : MonoBehaviour
         }
     }
 
-    void UpdateArtifact_N(int index, ArtifactGAS artifact)
+    void UpdateArtifact_N(int index, ArtifactDataSO artifact)
     {
         inventory.Left_ArtifactGas[index] = artifact;
     }
     
-    void UpdateArtifact_S(int index, ArtifactGAS artifact)
+    void UpdateArtifact_S(int index, ArtifactDataSO artifact)
     {
         inventory.Right_ArtifactGas[index] = artifact;
     }

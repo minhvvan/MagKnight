@@ -5,19 +5,19 @@ using UnityEngine.Serialization;
 
 public class ArtifactInventory : MonoBehaviour
 {
-    public ArtifactGAS[] Left_ArtifactGas = new ArtifactGAS[15];
-    public ArtifactGAS[] Right_ArtifactGas = new ArtifactGAS[15];
+    public ArtifactDataSO[] Left_ArtifactGas = new ArtifactDataSO[15];
+    public ArtifactDataSO[] Right_ArtifactGas = new ArtifactDataSO[15];
 
     public AbilitySystem abilitySystem;
-
-    private bool isN = true;
+    private MagneticController _magneticController;
     
     void Start()
     {
         abilitySystem = GetComponent<AbilitySystem>();
+        _magneticController = GetComponent<MagneticController>();
     }
     
-    public void N_Apply(ArtifactGAS[] artifactList)
+    public void N_Apply(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -26,7 +26,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
 
-    public void S_Apply(ArtifactGAS[] artifactList)
+    public void S_Apply(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -35,7 +35,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
     
-    public void N_Remove(ArtifactGAS[] artifactList)
+    public void N_Remove(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -44,7 +44,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
     
-    public void S_Remove(ArtifactGAS[] artifactList)
+    public void S_Remove(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -53,9 +53,36 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
 
+    public void SetLeftArtifact(ArtifactDataSO artifact, int index)
+    {
+        Left_ArtifactGas[index] = artifact;
+        if (_magneticController.magneticType == MagneticType.N)
+        {
+            artifact.N_ApplyTo(abilitySystem);
+        }
+        else
+        {
+            artifact.S_ApplyTo(abilitySystem);
+        }
+    }
+
+    public void SetRightArtifact(ArtifactDataSO artifact, int index)
+    {
+        Right_ArtifactGas[index] = artifact;
+        if (_magneticController.magneticType == MagneticType.N)
+        {
+            artifact.S_ApplyTo(abilitySystem);
+        }
+        else
+        {
+            artifact.N_ApplyTo(abilitySystem);
+        }
+    }
+
+    
     public void ConvertArtifact()
     {
-        if(isN)
+        if(_magneticController.magneticType == MagneticType.S)
         {
             N_Remove(Left_ArtifactGas);
             S_Remove(Right_ArtifactGas);
@@ -69,7 +96,6 @@ public class ArtifactInventory : MonoBehaviour
             N_Apply(Left_ArtifactGas);
             S_Apply(Right_ArtifactGas);
         }
-        isN = !isN;
     }
     
 }

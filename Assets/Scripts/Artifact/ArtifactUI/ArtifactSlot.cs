@@ -10,16 +10,16 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image backgroundSprite;
 
-    public ArtifactGAS artifact;
+    public ArtifactDataSO artifact;
     
     public int Index { get; private set; }
-    public Action<int, ArtifactGAS> OnArtifactModified;
+    public Action<int, ArtifactDataSO> OnArtifactModified;
 
     public void SetSlotIndex(int index) => Index = index;
 
     public void SetBackgroundColor(Color color) => backgroundSprite.color = color;
     
-    public ArtifactGAS GetArtifact()
+    public ArtifactDataSO GetArtifact()
     {
         return artifact;
     }

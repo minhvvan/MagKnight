@@ -57,7 +57,7 @@ public class MagneticController : MagneticObject
     private void Awake()
     {
         //테스트용
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         
         Initialize();
     }
