@@ -96,7 +96,7 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     private void OnAnimatorMove()
     {
         Vector3 rootDelta = Anim.deltaPosition;
-        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.Attributes.GetValue(AttributeType.SPD);
+        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.SPD);
         
         Vector3 position = transform.position + scaledDelta;
         // Vector3 position = EnemyAnimator.rootPosition;
@@ -133,10 +133,6 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     }
     #endregion
 
-    public void OnHit()
-    {
-    }
-
     public void OnDeath()
     {
         SetState(deadState);
@@ -144,14 +140,16 @@ public class Enemy : MagneticObject, IObserver<GameObject>
 
     public void OnStagger()
     {
-        float maxRes = blackboard.abilitySystem.Attributes.GetValue(AttributeType.MAXRES);
+        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
         SetState(staggerState);
-        blackboard.abilitySystem.Attributes.Set(AttributeType.RES, maxRes);
+        blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
     
     public void OnNext(GameObject value)
     {
-        Debug.Log("플레이어 피격");
+        float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+        value.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
@@ -182,16 +180,5 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         // Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, transform.forward * blackboard.attackRange);
     }
     
-    private async UniTask TestCode()
-    {
-        await UniTask.WaitForSeconds(5f);
-        int i = 0;
-        while (i < 10)
-        {
-            OnHit();
-            i++;
-            await UniTask.WaitForSeconds(2f);
-        }
-    }
     #endregion
 }

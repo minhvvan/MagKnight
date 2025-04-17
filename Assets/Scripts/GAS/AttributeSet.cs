@@ -7,6 +7,9 @@ using UnityEngine;
 [System.Serializable]
 public class AttributeSet
 {
+    // 직접 접근은 피하기
+    // 무조건 Ability System 통해서 접근
+    
     public SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
 
     public void AddAttribute(AttributeType type , float value, Action<float> onPreModify = null, Action onPostModify = null)
@@ -14,20 +17,22 @@ public class AttributeSet
         Attribute instance = new Attribute{Value = value, OnPreModify = onPreModify, OnPostModify = onPostModify};
         attributeDictionary.Add(type, instance);
     }
+    
     public float GetValue(AttributeType type)
     {
         if (attributeDictionary.ContainsKey(type))
             return attributeDictionary[type].Value;
         
-        return -404;
+        Debug.LogError($"{type} not found");
+        return 0;
     }
-
-    public void Modify(AttributeType type, float value)
+    
+    public void Modify(AttributeType type, float amount)
     {
         if (attributeDictionary.ContainsKey(type))
-            attributeDictionary[type].Modify(value);
+            attributeDictionary[type].Modify(amount);
     }
-
+    
     public void Set(AttributeType type, float value)
     {
         if (attributeDictionary.ContainsKey(type))
