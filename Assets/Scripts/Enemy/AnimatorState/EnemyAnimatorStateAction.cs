@@ -9,7 +9,7 @@ public class EnemyAnimatorStateAction : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        DelayAfterAttack(animator);
+        DelayAfterAttack(animator).Forget();
     }
     private async UniTask DelayAfterAttack(Animator animator)
     {

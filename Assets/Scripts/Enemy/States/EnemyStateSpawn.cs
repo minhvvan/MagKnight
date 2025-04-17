@@ -18,7 +18,6 @@ public class EnemyStateSpawn : BaseState<Enemy>
 
     public override void Enter()
     {
-        _blackboard.target = GameObject.FindWithTag("Player");
         _controller.Anim.SetBool("Spawn", true);
     }
 
@@ -36,6 +35,7 @@ public class EnemyStateSpawn : BaseState<Enemy>
 
     public override void Exit()
     {
+        _blackboard.target = GameObject.FindWithTag("Player");
         _controller.Anim.SetBool("Spawn", false);
     }
 }
