@@ -10,7 +10,7 @@ public class EnemyAnimatorStateStagger : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        DelayAfterStagger(animator);
+        DelayAfterStagger(animator).Forget();
     }
     
     private async UniTask DelayAfterStagger(Animator animator)
