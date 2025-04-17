@@ -72,10 +72,10 @@ public class RoomGenerator
         var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
         if (currentSaveData == null) 
         {
-            //*TEST
+            //*TEST: 베이스캠프에서 던전 입장시 초기화 및 저장이 되어야 함, 현재는 임시 생성
             currentSaveData = SaveDataManager.Instance.CreateData<CurrentRunData>(Constants.CurrentRun);
             
-            Debug.Log("CurrentSaveData is null");
+            // Debug.Log("CurrentSaveData is null");
             // return;
         }
         

@@ -17,13 +17,13 @@ public class SceneController: Singleton<SceneController>
         await SceneManager.LoadSceneAsync(sceneName, mode);
     }
 
-    //*TEST
+    //Singleton Awake에서 호출
     protected override void Initialize()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    //*TEST
+    //*TEST: 임시 클리어 판정 KEY = C
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
