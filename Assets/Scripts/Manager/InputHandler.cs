@@ -76,12 +76,19 @@ namespace Moon
         const float _AttackInputDuration = 0.03f;
         const float _inputDuration = 0.1f;
 
+        Action<InputAction.CallbackContext> _attack1Callback;
+        Action<InputAction.CallbackContext> _attack2Callback;
+
         void Start()
         {
+            _attack1Callback = ctx => Attack1Input(ctx);
+            _attack2Callback = ctx => Attack2Input(ctx);
+
             _attackInputWait = new WaitForSeconds(_AttackInputDuration);
             _inputWait = new WaitForSeconds(_inputDuration);
 
             playerInput = GetComponent<PlayerInput>();
+
             playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
             playerInput.actions["Move"].canceled += ctx => _movement = Vector2.zero;
 
@@ -91,18 +98,8 @@ namespace Moon
             playerInput.actions["Jump"].performed += ctx => _jump = true;
             playerInput.actions["Jump"].canceled += ctx => _jump = false;
 
-            playerInput.actions["Attack1"].performed += ctx => {
-                if (_attack1WaitCoroutine != null)
-                    StopCoroutine(_attack1WaitCoroutine);
-
-                _attack1WaitCoroutine = StartCoroutine(Attack1Wait());
-            };
-            playerInput.actions["Attack2"].performed += ctx => {
-                if (_attack2WaitCoroutine != null)
-                    StopCoroutine(_attack2WaitCoroutine);
-
-                _attack2WaitCoroutine = StartCoroutine(Attack2Wait());
-            };
+            playerInput.actions["Attack1"].performed += _attack1Callback;
+            playerInput.actions["Attack2"].performed += _attack2Callback;
 
             playerInput.actions["Sprint"].performed += ctx => _run = true;
             playerInput.actions["Sprint"].canceled += ctx => _run = false;
@@ -112,8 +109,46 @@ namespace Moon
             playerInput.actions["Interact"].canceled += ctx => _interact = false;
 
             //Test Cursor disable
-            // Cursor.lockState = CursorLockMode.Locked;
-            // Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        void OnDestroy()
+        {
+            playerInput.actions["Move"].performed -= ctx => _movement = ctx.ReadValue<Vector2>();
+            playerInput.actions["Move"].canceled -= ctx => _movement = Vector2.zero;
+
+            playerInput.actions["Look"].performed -= ctx => _cameraMovement = ctx.ReadValue<Vector2>();
+            playerInput.actions["Look"].canceled -= ctx => _cameraMovement = Vector2.zero;
+
+            playerInput.actions["Jump"].performed -= ctx => _jump = true;
+            playerInput.actions["Jump"].canceled -= ctx => _jump = false;
+
+            playerInput.actions["Attack1"].performed -= _attack1Callback;
+            playerInput.actions["Attack2"].performed -= _attack2Callback;
+
+            playerInput.actions["Sprint"].performed -= ctx => _run = true;
+            playerInput.actions["Sprint"].canceled -= ctx => _run = false;
+
+            
+            playerInput.actions["Interact"].performed -= ctx => _interact = true;
+            playerInput.actions["Interact"].canceled -= ctx => _interact = false;
+        }
+
+        void Attack1Input(InputAction.CallbackContext context)
+        {
+            if (_attack1WaitCoroutine != null)
+                StopCoroutine(_attack1WaitCoroutine);
+
+            _attack1WaitCoroutine = StartCoroutine(Attack1Wait());
+        }
+
+        void Attack2Input(InputAction.CallbackContext context)
+        {
+            if (_attack2WaitCoroutine != null)
+                StopCoroutine(_attack2WaitCoroutine);
+
+            _attack2WaitCoroutine = StartCoroutine(Attack2Wait());
         }
 
         
