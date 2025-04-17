@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using hvvan;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -67,10 +68,7 @@ public class RoomController : MonoBehaviour
         var player = GameManager.Instance.Player;
 
         CharacterController controller = player.GetComponent<CharacterController>();
-        controller.enabled = false;
-        player.gameObject.transform.position = gates[gateDirection].playerSpawnPoint.position;
-        player.gameObject.transform.rotation = gates[gateDirection].playerSpawnPoint.rotation;
-        controller.enabled = true;
+        controller.Teleport(player.gameObject, gates[gateDirection].playerSpawnPoint);
         
         gameObject.SetActive(true);
     }
