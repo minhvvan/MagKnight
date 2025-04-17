@@ -20,7 +20,6 @@ public class EnemyStateStagger : BaseState<Enemy>
 
     public override void UpdateState()
     {
-        // Debug.Log("Stagger state입니다");
     }
 
     public override void Exit()

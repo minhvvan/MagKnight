@@ -1587,6 +1587,9 @@ GameObject:
   - component: {fileID: 3236160506085818132}
   - component: {fileID: 551608098489286697}
   - component: {fileID: 8652684576439934670}
+  - component: {fileID: -5346760470181023004}
+  - component: {fileID: -5029212273671297109}
+  - component: {fileID: 8965972555179330726}
   m_Layer: 7
   m_Name: Droid-01_Army
   m_TagString: Untagged
@@ -1644,8 +1647,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656f5e89cf1ecad4f988055634d7504c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
-  hitboxController: {fileID: 8652684576439934670}
+  magneticType: 0
+  isStructure: 0
+  objectMass: 0
+  magneticObjectSO: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4, type: 2}
+  rb: {fileID: 0}
+  blackboard: {fileID: -5029212273671297109}
 --- !u!195 &6121732416747469485
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1683,7 +1690,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -1740,6 +1747,65 @@ MonoBehaviour:
   - referenceTransform: {fileID: 5889882352773017890}
     offset: {x: 0, y: 0, z: 0}
     radius: 0.2
+--- !u!114 &-5346760470181023004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437106963035007079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65ec3f35472e1564988f2986133d7f05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Attributes:
+    attributeDictionary:
+      _serializedList: []
+--- !u!114 &-5029212273671297109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437106963035007079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b60b1344990df46bcb0de46ea18aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
+  _enemy: {fileID: 8957364649605768314}
+  abilitySystem: {fileID: -5346760470181023004}
+  enemyName: 
+  description: 
+  attackType: 0
+  aiType: 0
+  weight: 0
+  startupTime: 0
+  recoveryTime: 0
+  staggerRecoveryTime: 0
+  abilities: 
+  appearanceFloor: 0
+  projectileSpeed: 0
+  attackRange: 0
+  target: {fileID: 0}
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  isDead: 0
+--- !u!114 &8965972555179330726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8437106963035007079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be86517610bfad4aa99b1cf92817fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8522692651950388748
 GameObject:
   m_ObjectHideFlags: 0

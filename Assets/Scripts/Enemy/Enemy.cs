@@ -7,17 +7,19 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(EnemyHitboxController))]
+[RequireComponent(typeof(AbilitySystem))]
+[RequireComponent(typeof(EnemyBlackboard))]
 public class Enemy : MagneticObject, IObserver<GameObject>
 {
-    [SerializeField] private EnemyDataSO _enemyDataSO;
-    public EnemyBlackboard blackboard;
-    public EnemyHitboxController hitboxController;
-    
     // components
     public Animator Anim { get; private set; }
     public NavMeshAgent Agent { get; private set; }
     public Collider MainCollider { get; private set; }
     public Rigidbody Rb { get; private set; }
+    public AbilitySystem EnemyAbilitySystem { get; private set; }
+    public EnemyHitboxController HitboxController { get; private set; }
+    public EnemyBlackboard blackboard;
     
     
     // stateMachine
@@ -41,19 +43,18 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     }
     public void Initialize()
     {
-        blackboard = new EnemyBlackboard();
-        blackboard.Initialize(_enemyDataSO, this);
         Anim = GetComponent<Animator>();
-        // Anim.
-        
         Agent = GetComponent<NavMeshAgent>();
-        Agent.updatePosition = false;
-        Agent.updateRotation = false;
         MainCollider = GetComponent<Collider>();
         Rb = GetComponent<Rigidbody>();
+        EnemyAbilitySystem = GetComponent<AbilitySystem>();
+        HitboxController = GetComponent<EnemyHitboxController>();
+
+        Agent.updatePosition = false;
+        Agent.updateRotation = false;
         
         // hitbox Controller
-        hitboxController.Subscribe(this);
+        HitboxController.Subscribe(this);
         
         InitializeState();
     }
@@ -98,7 +99,7 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     private void OnAnimatorMove()
     {
         Vector3 rootDelta = Anim.deltaPosition;
-        Vector3 scaledDelta = rootDelta * blackboard.moveSpeed;
+        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.SPD);
         
         Vector3 position = transform.position + scaledDelta;
         // Vector3 position = EnemyAnimator.rootPosition;
@@ -135,30 +136,23 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     }
     #endregion
 
-    public void OnHit()
+    public void OnDeath()
     {
-        // todo: player로부터 공격력, 강직도 감소율 받아오기
-        float attackPower = 1f;
-        float resistanceLoss = 1f;
-        blackboard.currentHealth -= attackPower;
-        blackboard.currentStaggerResistance -= resistanceLoss;
+        SetState(deadState);
+    }
 
-        if (blackboard.currentHealth <= 0)
-        {
-            SetState(deadState);
-            return;
-        }
-
-        if (blackboard.currentStaggerResistance <= 0)
-        {
-            SetState(staggerState);
-            blackboard.currentStaggerResistance = blackboard.staggerResistance;
-        }
+    public void OnStagger()
+    {
+        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
+        SetState(staggerState);
+        blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
     
     public void OnNext(GameObject value)
     {
-        Debug.Log("플레이어 피격");
+        float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+        value.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
@@ -189,16 +183,5 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         // Gizmos.DrawRay(transform.position + Vector3.up * 0.5f, transform.forward * blackboard.attackRange);
     }
     
-    private async UniTask TestCode()
-    {
-        await UniTask.WaitForSeconds(5f);
-        int i = 0;
-        while (i < 10)
-        {
-            OnHit();
-            i++;
-            await UniTask.WaitForSeconds(2f);
-        }
-    }
     #endregion
 }
