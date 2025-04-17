@@ -40,7 +40,7 @@ public class RoomController : MonoBehaviour
 
     private async void OnGateEntered(RoomDirection direction)
     {
-        SceneController.Instance.EnterRoom(roomIndex, direction);
+        _ = RoomSceneController.Instance.EnterRoom(roomIndex, direction);
     }
 
     public void SetRoomData(Room roomData, int index)

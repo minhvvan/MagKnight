@@ -1117,7 +1117,7 @@ PrefabInstance:
     - target: {fileID: 2406804651387316831, guid: 0716908eb9e5f4279a084be3e661f737,
         type: 3}
       propertyPath: m_Name
-      value: ScreenFader Cavas
+      value: ScreenFader Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8213603876987848533, guid: 0716908eb9e5f4279a084be3e661f737,
         type: 3}

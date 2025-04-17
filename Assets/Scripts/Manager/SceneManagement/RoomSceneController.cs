@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SceneController: Singleton<SceneController>
+public class RoomSceneController: Singleton<RoomSceneController>
 {
     private Dictionary<int, RoomController> _loadedRoomControllers = new Dictionary<int, RoomController>();
     private RoomGenerator _roomGenerator = new RoomGenerator();
@@ -65,6 +65,9 @@ public class SceneController: Singleton<SceneController>
 
     public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
     {
+        Time.timeScale = 0f;
+        await Moon.ScreenFader.FadeSceneOut().ToUniTask(this);
+
         var targetRoomIndex = _loadedRoomControllers[currentRoomIndex].Room.connectedRooms[(int)direction];
         
         //targetRoom활성화 + currentRoom비활성화
@@ -93,7 +96,12 @@ public class SceneController: Singleton<SceneController>
         var load = targetRoom.connectedRooms.Except(currentRoom.connectedRooms).ToList();
         load.Remove(currentRoomIndex);
         await LoadConnectedRooms(load);
+
+        await Moon.ScreenFader.FadeSceneIn().ToUniTask(this);
+        Time.timeScale = 1f;
     }
+
+
     
     private async UniTask LoadConnectedRooms(List<int> roomIndices)
     {

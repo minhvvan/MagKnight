@@ -67,8 +67,5 @@ namespace Moon
 
             _transitioning = false;
         }
-
-        //씬전환 없이 fade만 필요한 상황에서 사용을 위한 메소드 (미구현)
-        //IEnumerator TeleportTransition
     }
 }

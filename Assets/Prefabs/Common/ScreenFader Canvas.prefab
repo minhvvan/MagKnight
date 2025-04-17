@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 5900245333518136241}
   - component: {fileID: 5129612320727552347}
   m_Layer: 5
-  m_Name: ScreenFader Cavas
+  m_Name: ScreenFader Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
