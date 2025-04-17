@@ -57,7 +57,7 @@ public class MagneticController : MagneticObject
     private void Awake()
     {
         //테스트용
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         
         Initialize();
     }
@@ -485,6 +485,10 @@ public class MagneticController : MagneticObject
             }
             
             SwitchMagneticType();
+            
+            ArtifactInventory inventory = GetComponent<ArtifactInventory>();
+            if (inventory != null)
+                inventory.ConvertArtifact();
         }
     }
     

@@ -1,19 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArtifactButtonTest : MonoBehaviour
 {
     public AbilitySystem abilitySystem;
-    public ArtifactGAS artifactGas;
+    [FormerlySerializedAs("artifactGas")] public ArtifactDataSO artifactDataSo;
 
     public void ApplyN()
     {
-        artifactGas.N_ApplyTo(abilitySystem);
+        artifactDataSo.N_ApplyTo(abilitySystem);
     }
 
     public void ApplyS()
     {
-        artifactGas.S_ApplyTo(abilitySystem);
+        artifactDataSo.S_ApplyTo(abilitySystem);
     }
 }
