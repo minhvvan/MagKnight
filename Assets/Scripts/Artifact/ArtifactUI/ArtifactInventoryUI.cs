@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 public class ArtifactInventoryUI : MonoBehaviour
 {
     [SerializeField] private ArtifactSlot artifactSlot;
-    [SerializeField] private GameObject N_ArtifactInventory;
-    [SerializeField] private GameObject S_ArtifactInventory;
+    [SerializeField] private GameObject Left_ArtifactInventory;
+    [SerializeField] private GameObject Right_ArtifactInventory;
     [SerializeField] private GameObject SlotPrefab;
     [SerializeField] private GameObject ArtifactUIPrefab;
     
-    private List<ArtifactSlot> N_ArtifactSlots = new List<ArtifactSlot>();
-    private List<ArtifactSlot> S_ArtifactSlots = new List<ArtifactSlot>();
+    private List<ArtifactSlot> Left_ArtifactSlots = new List<ArtifactSlot>();
+    private List<ArtifactSlot> Right_ArtifactSlots = new List<ArtifactSlot>();
 
     private ArtifactSlot beginArtifactSlot;
     private ArtifactInventory inventory;
@@ -30,30 +31,7 @@ public class ArtifactInventoryUI : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        if (magneticController.magneticType == MagneticType.N)
-        {
-            foreach (var nArtifactSlot in N_ArtifactSlots)
-            {
-                nArtifactSlot.SetBackgroundColor(Color.red);
-            }
-
-            foreach (var sArtifactSlot in S_ArtifactSlots)
-            {
-                sArtifactSlot.SetBackgroundColor(Color.blue);
-            }
-        }
-        else
-        {
-            foreach (var nArtifactSlot in N_ArtifactSlots)
-            {
-                nArtifactSlot.SetBackgroundColor(Color.blue);
-            }
-
-            foreach (var sArtifactSlot in S_ArtifactSlots)
-            {
-                sArtifactSlot.SetBackgroundColor(Color.red);
-            }
-        }
+        SetSlotColor(magneticController.GetMagneticType());
         
         if (artifactDataSO != null)
         {
@@ -64,35 +42,66 @@ public class ArtifactInventoryUI : MonoBehaviour
     
     public void Hide()
     {
+        var artifact = artifactSlot.Icon();
+        if (artifact != null)
+            Destroy(artifact);
         gameObject.SetActive(false);
+    }
+
+    private void SetSlotColor(MagneticType magneticType)
+    {
+        if (magneticType == MagneticType.N)
+        {
+            foreach (var nArtifactSlot in Left_ArtifactSlots)
+            {
+                nArtifactSlot.SetBackgroundColor(Color.red);
+            }
+
+            foreach (var sArtifactSlot in Right_ArtifactSlots)
+            {
+                sArtifactSlot.SetBackgroundColor(Color.blue);
+            }
+        }
+        else
+        {
+            foreach (var nArtifactSlot in Left_ArtifactSlots)
+            {
+                nArtifactSlot.SetBackgroundColor(Color.blue);
+            }
+
+            foreach (var sArtifactSlot in Right_ArtifactSlots)
+            {
+                sArtifactSlot.SetBackgroundColor(Color.red);
+            }
+        }
     }
     
     void Initialized()
     {
         for (int i = 0; i < 15; i++)
         {
-            var instance1 = Instantiate(SlotPrefab, N_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
+            var instance1 = Instantiate(SlotPrefab, Left_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
             instance1.SetBackgroundColor(Color.red);
             instance1.SetSlotIndex(i);
-            instance1.OnArtifactModified = UpdateArtifact_N;
-            N_ArtifactSlots.Add(instance1);
+            instance1.OnArtifactModified = UpdateArtifact_Left;
+            Left_ArtifactSlots.Add(instance1);
             
-            var instance2 = Instantiate(SlotPrefab, S_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
+            var instance2 = Instantiate(SlotPrefab, Right_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
             instance2.SetBackgroundColor(Color.blue);
             instance2.SetSlotIndex(i);
-            instance2.OnArtifactModified = UpdateArtifact_S;
-            S_ArtifactSlots.Add(instance2);
+            instance2.OnArtifactModified = UpdateArtifact_Right;
+            Right_ArtifactSlots.Add(instance2);
         }
     }
 
-    void UpdateArtifact_N(int index, ArtifactDataSO artifact)
+    void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
     {
-        inventory.Left_ArtifactGas[index] = artifact;
+        inventory.SetLeftArtifact(index, artifact);
     }
     
-    void UpdateArtifact_S(int index, ArtifactDataSO artifact)
+    void UpdateArtifact_Right(int index, ArtifactDataSO artifact)
     {
-        inventory.Right_ArtifactGas[index] = artifact;
+        inventory.SetRightArtifact(index, artifact);
     }
     
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -30,7 +31,7 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
         if (child != null)
         {
             var artifactUI = child.GetComponent<ArtifactUI>();
-            artifact = artifactUI.artifact;
+            artifact = artifactUI.GetArtifact();
         }
         else
         {
@@ -39,7 +40,7 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
         OnArtifactModified?.Invoke(Index, artifact);
     }
 
-    GameObject Icon()
+    public GameObject Icon()
     {
         if(transform.childCount > 0)
             return transform.GetChild(0).gameObject;
@@ -49,21 +50,13 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
     public void OnDrop(PointerEventData eventData)
     {
         var icon = Icon();
-        // 슬롯에 아티팩트가 없을 때
-        if (icon == null)
-        {
-            eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.transform.position = transform.position;
-            artifact = eventData.pointerDrag.GetComponent<ArtifactUI>().artifact;
-        }
-        // 슬롯에 아티팩트가 있으면 Swap
-        else
+        // 슬롯에 아티팩트가 있을 때 Swap
+        if (icon != null)
         {
             icon.GetComponent<ArtifactUI>().SetArtifactIcon(eventData.pointerDrag.GetComponent<ArtifactUI>().startParent);
-            
-            eventData.pointerDrag.transform.SetParent(transform);
-            eventData.pointerDrag.transform.position = transform.position;
-            artifact = eventData.pointerDrag.GetComponent<ArtifactUI>().artifact;
         }
+        eventData.pointerDrag.GetComponent<ArtifactUI>().SetArtifactIcon(transform);
+        ModifyArtifact();
+        eventData.pointerDrag.GetComponent<ArtifactUI>().startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
     }
 }

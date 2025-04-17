@@ -17,7 +17,7 @@ public class ArtifactInventory : MonoBehaviour
         _magneticController = GetComponent<MagneticController>();
     }
     
-    public void N_Apply(ArtifactDataSO[] artifactList)
+    private void N_ApplyAll(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -26,7 +26,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
 
-    public void S_Apply(ArtifactDataSO[] artifactList)
+    private  void S_ApplyAll(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -35,7 +35,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
     
-    public void N_Remove(ArtifactDataSO[] artifactList)
+    private  void N_RemoveAll(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -44,7 +44,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
     
-    public void S_Remove(ArtifactDataSO[] artifactList)
+    private  void S_RemoveAll(ArtifactDataSO[] artifactList)
     {
         foreach (var artifact in artifactList)
         {
@@ -53,48 +53,83 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
 
-    public void SetLeftArtifact(ArtifactDataSO artifact, int index)
+    public void SetLeftArtifact(int index, ArtifactDataSO artifact)
     {
-        Left_ArtifactGas[index] = artifact;
-        if (_magneticController.magneticType == MagneticType.N)
+        // 현재 위치의 아티팩트가 위치하면 극에 맞게 기존 특성 지우기
+        if (Left_ArtifactGas[index] != null)
         {
-            artifact.N_ApplyTo(abilitySystem);
+            if (_magneticController.magneticType == MagneticType.N)
+            {
+                Left_ArtifactGas[index].N_RemoveTo(abilitySystem);
+            }
+            else
+            {
+                Left_ArtifactGas[index].S_RemoveTo(abilitySystem);
+
+            }   
         }
-        else
+        
+        Left_ArtifactGas[index] = artifact;
+        // 업데이트 된 아티팩트가 있으면 극에 맞게 적용
+        if (artifact != null)
         {
-            artifact.S_ApplyTo(abilitySystem);
+            if (_magneticController.magneticType == MagneticType.N)
+            {
+                Left_ArtifactGas[index].N_ApplyTo(abilitySystem);
+            }
+            else
+            {
+                Left_ArtifactGas[index].S_ApplyTo(abilitySystem);
+            }
         }
     }
 
-    public void SetRightArtifact(ArtifactDataSO artifact, int index)
+    public void SetRightArtifact(int index, ArtifactDataSO artifact)
     {
-        Right_ArtifactGas[index] = artifact;
-        if (_magneticController.magneticType == MagneticType.N)
+        // 현재 위치의 아티팩트가 위치하면 극에 맞게 기존 특성 지우기
+        if (Right_ArtifactGas[index] != null)
         {
-            artifact.S_ApplyTo(abilitySystem);
+            if (_magneticController.magneticType == MagneticType.N)
+            {
+                Right_ArtifactGas[index].S_RemoveTo(abilitySystem);
+            }
+            else
+            {
+                Right_ArtifactGas[index].N_RemoveTo(abilitySystem);
+            }   
         }
-        else
+        Right_ArtifactGas[index] = artifact;
+        // 업데이트 된 아티팩트가 있으면 극에 맞게 적용
+        if (artifact != null)
         {
-            artifact.N_ApplyTo(abilitySystem);
+            if (_magneticController.magneticType == MagneticType.N)
+            {
+                Right_ArtifactGas[index].S_ApplyTo(abilitySystem);
+            }
+            else
+            {
+                Right_ArtifactGas[index].N_ApplyTo(abilitySystem);
+            }   
         }
     }
 
     
+    // 극성 변환시 전체 아티팩트의 효과 업데이트
     public void ConvertArtifact()
     {
         if(_magneticController.magneticType == MagneticType.S)
         {
-            N_Remove(Left_ArtifactGas);
-            S_Remove(Right_ArtifactGas);
-            N_Apply(Right_ArtifactGas);
-            S_Apply(Left_ArtifactGas);
+            N_RemoveAll(Left_ArtifactGas);
+            S_RemoveAll(Right_ArtifactGas);
+            N_ApplyAll(Right_ArtifactGas);
+            S_ApplyAll(Left_ArtifactGas);
         }
         else
         {
-            N_Remove(Right_ArtifactGas);
-            S_Remove(Left_ArtifactGas);
-            N_Apply(Left_ArtifactGas);
-            S_Apply(Right_ArtifactGas);
+            N_RemoveAll(Right_ArtifactGas);
+            S_RemoveAll(Left_ArtifactGas);
+            N_ApplyAll(Left_ArtifactGas);
+            S_ApplyAll(Right_ArtifactGas);
         }
     }
     

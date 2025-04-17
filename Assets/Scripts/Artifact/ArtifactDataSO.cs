@@ -7,6 +7,7 @@ public class ArtifactDataSO : ScriptableObject
 {
    public Sprite icon;
    public string name;
+   public GameObject prefab;
    
    public List<GameplayEffect> N_ArtifactEffect;
    public List<GameplayEffect> S_ArtifactEffect;

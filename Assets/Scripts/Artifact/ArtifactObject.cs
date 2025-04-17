@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ArtifactObject : MonoBehaviour, IInteractable
 {
+    // 추후 지워야함
     public ArtifactInventoryUI artifactInventoryUI;
     
     [SerializeField] private ArtifactDataSO artifactDataSO;
@@ -22,7 +23,9 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
-            artifactInventoryUI.Show(artifactDataSO);
+            if(artifactInventoryUI != null)
+                artifactInventoryUI.Show(artifactDataSO);
+            Destroy(gameObject);
         }
     }
 

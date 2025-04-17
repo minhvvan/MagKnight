@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using Moon;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public ArtifactDataSO artifact;
-    public Image icon;
+    [SerializeField] private ArtifactDataSO artifact;
+    [SerializeField] private Image icon;
 
     Vector3 startPos;
     [HideInInspector] public Transform startParent;
@@ -21,11 +23,15 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         this.onDragParent = onDragParent;
     }
 
+    public ArtifactDataSO GetArtifact()
+    {
+        return artifact;
+    }
     
     public void SetArtifactIcon(Transform parent)
     {
         transform.SetParent(parent);
-        transform.transform.position = parent.position;
+        transform.position = parent.position;
     }
     
 
@@ -44,6 +50,15 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!EventSystem.current.IsPointerOverGameObject())
+        {
+            // TODO: 아이템 버리기
+            transform.SetParent(null);
+            startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
+            Destroy(gameObject);
+            return;
+        }
+        
         GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         if (transform.parent == onDragParent)
@@ -51,10 +66,13 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             transform.position = startPos;
             transform.SetParent(startParent);
         }
-        else
-        {
-            startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
-            transform.parent.GetComponent<ArtifactSlot>().ModifyArtifact();
-        }
+    }
+
+    void OnDestroy()
+    {
+        var player = FindObjectOfType<PlayerController>().gameObject;
+        
+        var instanceArtifact = Instantiate(artifact.prefab);
+        instanceArtifact.transform.position = player.transform.position + new Vector3(0, 0, 3);
     }
 }

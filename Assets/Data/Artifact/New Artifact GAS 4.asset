@@ -17,10 +17,14 @@ MonoBehaviour:
   N_ArtifactEffect:
   - effectType: 0
     attributeType: 0
-    value: 10
+    amount: 10
     duration: 0
+    tracking: 0
+    appliedAmount: 10
   S_ArtifactEffect:
   - effectType: 0
     attributeType: 8
-    value: 10
+    amount: 10
     duration: 0
+    tracking: 0
+    appliedAmount: 10

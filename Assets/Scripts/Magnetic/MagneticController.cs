@@ -485,6 +485,10 @@ public class MagneticController : MagneticObject
             }
             
             SwitchMagneticType();
+            
+            ArtifactInventory inventory = GetComponent<ArtifactInventory>();
+            if (inventory != null)
+                inventory.ConvertArtifact();
         }
     }
     
