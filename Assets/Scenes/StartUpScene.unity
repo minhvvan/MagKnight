@@ -1069,10 +1069,20 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2109921500139422368, guid: 0716908eb9e5f4279a084be3e661f737,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2406804651387316831, guid: 0716908eb9e5f4279a084be3e661f737,
         type: 3}
       propertyPath: m_Name
       value: ScreenFader Cavas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8165938606448689538, guid: 0716908eb9e5f4279a084be3e661f737,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8213603876987848533, guid: 0716908eb9e5f4279a084be3e661f737,
         type: 3}
@@ -1173,6 +1183,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8430850498804558711, guid: 0716908eb9e5f4279a084be3e661f737,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
