@@ -19,7 +19,13 @@ public class Katana: BaseWeapon
 
     public override void OnNext(HitInfo hitInfo)
     {
-        Debug.Log($"{hitInfo.hit.collider.name} : Hit at {hitInfo.time:F1}s");
+        float finalDamage = -1f;
+        float resistanceDecrease = -2f;
+        Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, finalDamage);
+        GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Static, AttributeType.RES, resistanceDecrease);
+        enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+        enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
     }
 
     public override void OnError(Exception error)
