@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,13 @@ public class RoomController : MonoBehaviour
 
     private void Awake()
     {
+        var gateContollers = GetComponentsInChildren<Gate>().ToList();
+        
+        foreach (var gate in gateContollers)
+        {
+            gates[gate.roomDirection] = gate;
+        }
+        
         //모든 문 비활성화
         foreach (var gate in gates.Values)
         {
@@ -53,17 +61,17 @@ public class RoomController : MonoBehaviour
 
     public void OnPlayerEnter(RoomDirection direction)
     {
+        SetGateOpen(false);
         var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
 
         var player = GameManager.Instance.Player;
-        
+
         CharacterController controller = player.GetComponent<CharacterController>();
         controller.enabled = false;
         player.gameObject.transform.position = gates[gateDirection].playerSpawnPoint.position;
         player.gameObject.transform.rotation = gates[gateDirection].playerSpawnPoint.rotation;
         controller.enabled = true;
         
-        SetGateOpen(false);
         gameObject.SetActive(true);
     }
 

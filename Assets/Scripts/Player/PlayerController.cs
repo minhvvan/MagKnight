@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Moon
@@ -115,6 +116,8 @@ namespace Moon
                     cameraSettings.follow = transform.Find("HeadTarget");
             }
         }
+
+ 
 
         void Awake()
         {
