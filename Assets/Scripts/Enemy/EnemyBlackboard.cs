@@ -74,16 +74,16 @@ public class EnemyBlackboard : MonoBehaviour
     private void InitializeAttributes()
     {
         // 버프, 디버프, 상호작용 가능 stat은 attribute로 관리
-        abilitySystem.Attributes.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
-        abilitySystem.Attributes.AddAttribute(AttributeType.HP, _enemyDataSO.health);
-        abilitySystem.Attributes.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
-        abilitySystem.Attributes.AddAttribute(AttributeType.SPD, _enemyDataSO.moveSpeed);
-        abilitySystem.Attributes.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
-        abilitySystem.Attributes.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
-        abilitySystem.Attributes.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
+        abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
+        abilitySystem.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
+        abilitySystem.AddAttribute(AttributeType.SPD, _enemyDataSO.moveSpeed);
+        abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
+        abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
 
         // 1. 힐 과잉방지
-        abilitySystem.Attributes.AddPostModify(AttributeType.HP, () =>
+        abilitySystem.AddPostModify(AttributeType.HP, () =>
         {
             float hp = abilitySystem.GetValue(AttributeType.HP);
             float max = abilitySystem.GetValue(AttributeType.MaxHP);
@@ -92,7 +92,7 @@ public class EnemyBlackboard : MonoBehaviour
         });
         
         // 2. 사망 처리
-        abilitySystem.Attributes.AddPostModify(AttributeType.HP, () =>
+        abilitySystem.AddPostModify(AttributeType.HP, () =>
         {
             if (abilitySystem.GetValue(AttributeType.HP) <= 0)
             {
@@ -101,7 +101,7 @@ public class EnemyBlackboard : MonoBehaviour
         });
         
         // 1. resistance 회복 과잉방지
-        abilitySystem.Attributes.AddPostModify(AttributeType.RES, () =>
+        abilitySystem.AddPostModify(AttributeType.RES, () =>
         {
             float res = abilitySystem.GetValue(AttributeType.RES);
             float max = abilitySystem.GetValue(AttributeType.MAXRES);
@@ -110,7 +110,7 @@ public class EnemyBlackboard : MonoBehaviour
         });
         
         // 2. stagger 처리
-        abilitySystem.Attributes.AddPostModify(AttributeType.RES, () =>
+        abilitySystem.AddPostModify(AttributeType.RES, () =>
         {
             if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
             {

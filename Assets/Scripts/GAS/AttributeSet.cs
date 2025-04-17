@@ -4,16 +4,22 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
+/// <summary>
+/// ⚠ 내부 전용 클래스입니다. 외부에서 직접 접근하지 마세요.
+/// 반드시 <see cref="AbilitySystem"/>을 통해 Attribute를 수정해야 합니다.
+/// </summary>
 [System.Serializable]
 public class AttributeSet
 {
-    // 직접 접근은 피하기
-    // 무조건 Ability System 통해서 접근
-    
     public SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
 
     public void AddAttribute(AttributeType type , float value, Action<float> onPreModify = null, Action onPostModify = null)
     {
+        if (attributeDictionary.ContainsKey(type))
+        {
+            Debug.LogWarning($"{type}은 이미 존재하는 Attribute입니다");
+            return;
+        }
         Attribute instance = new Attribute{Value = value, OnPreModify = onPreModify, OnPostModify = onPostModify};
         attributeDictionary.Add(type, instance);
     }
