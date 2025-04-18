@@ -9,7 +9,7 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(AbilitySystem))]
 [RequireComponent(typeof(EnemyBlackboard))]
-public class Enemy : MagneticObject, IObserver<GameObject>
+public class Enemy : MagneticObject, IObserver<HitInfo>
 {
     // components
     public Animator Anim { get; private set; }
@@ -17,7 +17,7 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     public Collider MainCollider { get; private set; }
     public Rigidbody Rb { get; private set; }
     public AbilitySystem EnemyAbilitySystem { get; private set; }
-    public EnemyHitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
+    public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
     
     
@@ -53,8 +53,8 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         Agent.updateRotation = false;
         
         // hitbox Controller
-        EnemyHitDetector hitHandler;
-        if (TryGetComponent<EnemyHitDetector>(out hitHandler))
+        HitDetector hitHandler;
+        if (TryGetComponent<HitDetector>(out hitHandler))
         {
             HitHandler = hitHandler;
             HitHandler.Subscribe(this);
@@ -151,24 +151,32 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         SetState(staggerState);
         blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
-    
-    public void OnNext(GameObject value)
+
+    public void OnNext(HitInfo hitInfo)
     {
         float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
-        value.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
     {
-        throw new NotImplementedException();
+        Debug.LogError(error);
     }
 
     public void OnCompleted()
     {
-        throw new NotImplementedException();
     }
     
+    public void MeleeAttackStart(int throwing = 0)
+    {
+        HitHandler.StartDetection();
+    }
+
+    public void MeleeAttackEnd()
+    {
+        HitHandler.StopDetection();
+    }
     
     #region debugging
     private void OnDrawGizmos()

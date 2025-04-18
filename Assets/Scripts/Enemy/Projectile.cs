@@ -6,34 +6,29 @@ using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, IObserver<GameObject>
+public class Projectile : MonoBehaviour, IObserver<HitInfo>
 {
     private EnemyBlackboard _enemyBlackboard;
     
     private CancellationTokenSource _cancellation;
     
-    public EnemyHitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
+    public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
 
     public void Initialize(EnemyBlackboard blackboard)
     {
         _enemyBlackboard = blackboard;
         _cancellation = new CancellationTokenSource();
         
-        EnemyHitDetector hitHandler;
-        if (TryGetComponent<EnemyHitDetector>(out hitHandler))
+        HitDetector hitHandler;
+        if (TryGetComponent<HitDetector>(out hitHandler))
         {
             HitHandler = hitHandler;
             HitHandler.Subscribe(this);
         }
-        
-        OnShoot();
-    }
 
-    private void OnShoot()
-    {
         MoveGradually().Forget();
     }
-
+    
     private async UniTask MoveGradually()
     {        
         Vector3 targetPos = _enemyBlackboard.target.transform.position;
@@ -46,15 +41,6 @@ public class Projectile : MonoBehaviour, IObserver<GameObject>
             await UniTask.Yield(cancellationToken:_cancellation.Token);
         }
     }
-
-    // void OnTriggerEnter(Collider other)
-    // {
-    //     if (other.gameObject.layer == LayerMask.NameToLayer("Player") ||
-    //         other.gameObject.layer == LayerMask.NameToLayer("Environment"))
-    //     {
-    //         Destroy(gameObject);
-    //     }
-    // }
 
     public void OnDestroy()
     {
@@ -70,13 +56,21 @@ public class Projectile : MonoBehaviour, IObserver<GameObject>
         Destroy(gameObject);
     }
 
+    public void OnNext(HitInfo hitInfo)
+    {
+        float damage = -_enemyBlackboard.abilitySystem.GetValue(AttributeType.ATK);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        
+        Destroy(gameObject);
+    }
+
     public void OnError(Exception error)
     {
-        throw new NotImplementedException();
+        Debug.LogError(error);
     }
 
     public void OnCompleted()
     {
-        throw new NotImplementedException();
     }
 }

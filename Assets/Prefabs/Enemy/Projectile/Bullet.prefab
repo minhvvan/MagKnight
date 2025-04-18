@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 812550336333513277}
   - component: {fileID: 2876687750273402670}
   - component: {fileID: 8714758739034972268}
-  - component: {fileID: -1193684184485063049}
+  - component: {fileID: 3979837610085896539}
   m_Layer: 0
   m_Name: Bullet
   m_TagString: Untagged
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415c38ce53d212248bb137a8facfdb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-1193684184485063049
+--- !u!114 &3979837610085896539
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,11 +128,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8038718339445125436}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 970c1e9e17f8bfa4a9d736588a25e986, type: 3}
+  m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackType: 2
-  _triggerZones:
+  _hitboxZones:
   - referenceTransform: {fileID: 3062686034775090039}
     offset: {x: 0, y: 0, z: 0}
     radius: 0.5
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _hitType: 2
