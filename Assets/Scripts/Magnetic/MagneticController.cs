@@ -8,6 +8,7 @@ using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Quaternion = System.Numerics.Quaternion;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,39 +17,54 @@ using UnityEditor;
 public class MagneticController : MagneticObject
 {
     public MagneticObject targetMagneticObject;
-    
-    
-    public Camera mainCamera;
-    public LayerMask magneticLayer;
-    public LayerMask enemyLayer;
-    public float rayDistance;
-    public float screenOffset;
+   
+    //타겟팅 시스템
+    public Camera mainCamera; //메인 카메라
+    public Vector3 targetHit;
+    public LayerMask magneticLayer; //Magnetic 레이어
+    public LayerMask enemyLayer; //Enemy 레이어
+    public float rayDistance; //정면 인식 사거리
+    public float screenOffset; //
+    public float sphereRadius;
 
     private CharacterController _characterController;
 
-    private Vector3 _currentVelocity;
-    private Vector3 playerPosOffset;
-    private float _dragValue;
+    private Vector3 _currentVelocity; //
+    private Vector3 playerPosOffset; // player position을 center정도 위치로 임시보정 해주는 값
+    private float _dragValue; //가속 후 감속값
     
     private float _minDistance;
     private float _outBoundDistance;
+    private float _hangAdjustValue;
     
     public float structSpeed;
     public float nonStructSpeed;
-
+    
+    
+    //--입력--//
+    
+    //길게,짧게 누르기
+    private bool _isKeepRelease;
     private bool _isLongRelease;
     private bool _isShortRelease;
     
-    private bool _isReleaseMagnetic; //Magnetic 사용키 눌렀을 때
+    //Magetic 상호작용
+    private bool _isPressMagnetic; //Magnetic 사용키 눌렀을 때
     private bool _isDetectedMagnetic; //Ray에 MagneticObject감지 되었을 때
     private bool _isActivatedMagnetic; //자기력 로직 활성화 중일 때
 
+    //주변 탐색
     private List<MagneticObject> _magneticObjects = new();
     private bool _onSearchNearMagnetic;
     
+    
+    //--기술--//
+    
+    //자기력 붕괴
     private bool _onGravityBreak; //자기력 붕괴 스킬 사용 시
     public float gravityBreakRange;
 
+    //패링, 반격
     private bool _onCounterPress;
     private float _counterPressTime;
     private float _counterPressRange;
@@ -79,9 +95,10 @@ public class MagneticController : MagneticObject
         playerPosOffset = new Vector3(0,1f,0);
         
         _minDistance = 1f;
-        _outBoundDistance = 8f;
+        _outBoundDistance = 15f;
+        _hangAdjustValue = _outBoundDistance/10f+0.25f; //1.2~2f
         
-        structSpeed = 50f;
+        structSpeed = 35f;
         nonStructSpeed = 2f;
         _dragValue = 1.5f;
 
@@ -91,28 +108,68 @@ public class MagneticController : MagneticObject
         _counterPressRange = 1.5f;
         _counterPressPower = 10f;
     }
-    
-    //Q 짧게 눌렀을 때
-    public void OnShortReleaseEnter()
+
+    #region 입력 처리
+
+    //Q 누르기 유지
+    public void OnPressEnter()
     {
         _isShortRelease = true;
+        //입력 유지 시 할 로직
+        
+        //키 입력이 시작됨을 알림.
+        _isPressMagnetic = true;
+        
+        //끝
+        _isShortRelease = false;
     }
-
-    public void OnShortReleaseExit()
+    
+    //Q 짧게 누르고 뗐을때
+    public void OnShortRelease()
     {
+        _isShortRelease = true;
+        //짧게 입력시 할 로직
+        _isPressMagnetic = false;
+        if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
+        //끝
         _isShortRelease = false;
     }
 
-    //Q 길게 눌렀을 때
-    public void OnLongReleaseEnter()
+    //Q 길게 누르고 뗐을때
+    public void OnLongRelease()
     {
         _isLongRelease = true;
-    }
-
-    public void OnLongReleaseExit()
-    {
+        //길게 입력 시 할 로직
+        _isPressMagnetic = false;
+        if (targetMagneticObject != null)
+        {
+            if (targetMagneticObject.GetMagneticType() != magneticType)
+            {
+                OnApproach(targetMagneticObject).Forget();
+            }
+            else if (targetMagneticObject.GetMagneticType() == magneticType)
+            {
+                OnSeparation(targetMagneticObject).Forget();
+            }
+        }
+        //끝
         _isLongRelease = false;
     }
+    
+    //V, 극성전환
+    public override void SwitchMagneticType(MagneticType? type = null)
+    {
+        if (_isActivatedMagnetic)
+        {
+            //자기력 붕괴 스킬 사용
+            if(!_onGravityBreak && !_onCounterPress) OnGravityBreak(targetMagneticObject).Forget();
+        }
+        
+        base.SwitchMagneticType(type);
+    }
+
+    #endregion
+    
 
     #region 타겟팅 시스템
     public void MagneticTargetCamera()
@@ -121,8 +178,8 @@ public class MagneticController : MagneticObject
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         rayDistance = _outBoundDistance;
-
-        float sphereRadius = GetDynamicSphereRadius(screenOffset, rayDistance);
+        
+        sphereRadius = GetDynamicSphereRadius(screenOffset, Vector3.Distance(mainCamera.transform.position, targetPoint));
         
         Ray sphereRay = new Ray(targetPoint, mainCamera.transform.forward);
         RaycastHit[] hits = Physics.SphereCastAll(sphereRay, sphereRadius, rayDistance,
@@ -131,12 +188,16 @@ public class MagneticController : MagneticObject
         {
             RaycastHit bestHit = hits.OrderBy(h =>
             {
-                //hit지점이 카메라 중심에서 얼마나 떨어져 있는지
+                //hit지점이 카메라 중심에서 얼마나 떨어져 있는지 검사.
                 Vector3 toHit = h.point - mainCamera.transform.position;
                 float angle = Vector3.Angle(mainCamera.transform.forward, toHit);
                 return angle;
             }).First();
-            Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+            if (bestHit.point != Vector3.zero)
+            {
+                targetHit = bestHit.point;
+                Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+            }
 
             if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
             {
@@ -185,7 +246,7 @@ public class MagneticController : MagneticObject
     }
     
     //카메라 뷰 시점에서 항상 SphereCast의 원형 범위가 일정하게 보이도록 동적으로 Radius를 조정해주는 함수.
-    float GetDynamicSphereRadius(float screenOffset = 0.05f, float castDistance = 10f)
+    float GetDynamicSphereRadius(float screenOffset = 0.05f, float castDistance = 8f)
     {
         // 스크린 중심 기준 오프셋 위치 계산 (좌우)
         Vector3 screenCenter = new Vector3(0.5f, 0.5f, castDistance);
@@ -197,7 +258,7 @@ public class MagneticController : MagneticObject
 
         // 월드 거리 기준 반지름
         float dynamicRadius = Vector3.Distance(worldCenter, worldOffset);
-        return dynamicRadius;
+        return dynamicRadius*2f;
     }
     
     
@@ -209,9 +270,8 @@ public class MagneticController : MagneticObject
     public async UniTask OnApproach(MagneticObject target, Vector3? another = null)
     {
         var targetPos = target.transform.position;
-        var playerPos = another ?? _characterController.transform.position;
+        var playerPos = another ?? transform.position;
         var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
-        
         var distance = (targetPos - playerPos).magnitude;
         
         var duration = 0f;
@@ -228,22 +288,25 @@ public class MagneticController : MagneticObject
             if (!_onGravityBreak)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isReleaseMagnetic) break;
+                if (_isPressMagnetic) break;
             
                 //자기력 붕괴스킬 활성화 시
                 if (_onGravityBreak) break;
             }
             
             elapsedTime += Time.deltaTime;
-            
+
             targetPos = target.transform.position;
-            playerPos = another ?? _characterController.transform.position;
+            playerPos = another ?? transform.position;
             modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
             
             //구조물 여부에 따라 인력 주체가 달라진다.
             if (target.GetIsStructure())
             {
-                var hangDirection= (targetPos - playerPos).normalized;
+                var direction = (targetPos - playerPos);
+                direction.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
+                
+                var hangDirection= direction.normalized;
                 var newMovement = hangDirection * (structSpeed * Time.deltaTime);
                  
                 _currentVelocity = newMovement;
@@ -252,7 +315,7 @@ public class MagneticController : MagneticObject
             }
             else
             {
-                var newPosition = Vector3.Lerp( targetPos, modifyPlayerPos, nonStructSpeed * Time.deltaTime);
+                var newPosition = Vector3.Lerp( targetPos, playerPos, nonStructSpeed * Time.deltaTime);
                 target.transform.position = (newPosition);
             }
 
@@ -278,7 +341,7 @@ public class MagneticController : MagneticObject
             while (_currentVelocity != Vector3.zero)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isReleaseMagnetic) break;
+                if (_isPressMagnetic) break;
                 
                 _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, _dragValue * Time.deltaTime);
                 _characterController.Move(_currentVelocity);
@@ -311,7 +374,7 @@ public class MagneticController : MagneticObject
             if (!_onGravityBreak)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때 + 반격 중이지 않을 때.
-                if (_isReleaseMagnetic && !_onCounterPress) break;
+                if (_isPressMagnetic && !_onCounterPress) break;
             
                 //스킬 활성화 시
                 if (_onGravityBreak) break;
@@ -429,7 +492,7 @@ public class MagneticController : MagneticObject
     private void FixedUpdate()
     {
         //자석 능력 길게 키 입력 시
-        if (_isReleaseMagnetic)
+        if (_isPressMagnetic)
         {
             MagneticTargetCamera();
         }
@@ -451,32 +514,6 @@ public class MagneticController : MagneticObject
 
     private void Update()
     {
-        //임시 테스트용 키입력
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            _isReleaseMagnetic = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Q))
-        {
-            _isReleaseMagnetic = false;
-            if (targetMagneticObject != null)
-            {
-                if (targetMagneticObject.GetMagneticType() != magneticType)
-                {
-                    OnApproach(targetMagneticObject).Forget();
-                }
-                else if (targetMagneticObject.GetMagneticType() == magneticType)
-                {
-                   OnSeparation(targetMagneticObject).Forget();
-                }
-            }
-        }
-        
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
-        }
-        
         if (Input.GetKeyDown(KeyCode.V))
         {
             if (_isActivatedMagnetic)
@@ -501,7 +538,7 @@ public class MagneticController : MagneticObject
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         
-        if (_isReleaseMagnetic)
+        if (_isPressMagnetic)
         {
             if (targetMagneticObject != null)
             {
@@ -509,30 +546,55 @@ public class MagneticController : MagneticObject
                 {
                     case MagneticType.N:
                         Gizmos.color = Color.red;
+                        Handles.color = Color.red;
                         break;
                     case MagneticType.S:
                         Gizmos.color = Color.blue;
+                        Handles.color = Color.blue;
                         break;
                 }
             }
-            else Gizmos.color = Color.yellow;
+            else
+            {
+                Gizmos.color = Color.yellow;
+                Handles.color = Color.yellow;
+            }
         }
-        else Gizmos.color = Color.white;
+        else
+        {
+            Gizmos.color = Color.white;
+            Handles.color = Color.clear;
+        }
 
         Gizmos.DrawRay(targetPoint, mainCamera.transform.forward * rayDistance);
-        Gizmos.DrawWireSphere(targetPoint, GetDynamicSphereRadius(screenOffset, rayDistance));
         Gizmos.DrawWireSphere(_characterController.transform.position, _outBoundDistance);
+        
+        
+        Gizmos.DrawWireSphere(targetHit,1f);
+        
+        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius/2f);
+        
+        switch (magneticType)
+        {
+            case MagneticType.N:
+                Handles.color = Color.red;
+                break;
+            case MagneticType.S:
+                Handles.color = Color.blue;
+                break;
+        }
+        if (!_isPressMagnetic) Handles.color = Color.clear;
+        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, (sphereRadius/2f)*1.15f);
 
         if (_onCounterPress)
         {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawWireSphere(transform.position, _counterPressRange); 
         }
         else if (!_onCounterPress)
         {
             Gizmos.color = Color.clear;
-            Gizmos.DrawWireSphere(transform.position, _counterPressRange); 
         }
+        Gizmos.DrawWireSphere(_characterController.transform.position, _counterPressRange); 
         
     }
 }
