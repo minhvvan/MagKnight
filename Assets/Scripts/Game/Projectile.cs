@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
+[RequireComponent(typeof(HitDetector))]
 public class Projectile : MonoBehaviour, IObserver<HitInfo>
 {
     private EnemyBlackboard _enemyBlackboard;
