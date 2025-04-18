@@ -18,20 +18,20 @@ public class MagneticController : MagneticObject
 {
     public MagneticObject targetMagneticObject;
    
-    
-    public Camera mainCamera;
-    public LayerMask magneticLayer;
-    public LayerMask enemyLayer;
-    public float rayDistance;
-    public float screenOffset;
+    //타겟팅 시스템
+    public Camera mainCamera; //메인 카메라
+    public Vector3 targetHit;
+    public LayerMask magneticLayer; //Magnetic 레이어
+    public LayerMask enemyLayer; //Enemy 레이어
+    public float rayDistance; //정면 인식 사거리
+    public float screenOffset; //
     public float sphereRadius;
 
     private CharacterController _characterController;
 
-    private Vector3 _currentVelocity;
-    private Vector3 playerPosOffset;
-    private float _dragValue;
-    
+    private Vector3 _currentVelocity; //
+    private Vector3 playerPosOffset; // player position을 center정도 위치로 임시보정 해주는 값
+    private float _dragValue; //가속 후 감속값
     
     private float _minDistance;
     private float _outBoundDistance;
@@ -39,20 +39,32 @@ public class MagneticController : MagneticObject
     
     public float structSpeed;
     public float nonStructSpeed;
-
+    
+    
+    //--입력--//
+    
+    //길게,짧게 누르기
+    private bool _isKeepRelease;
     private bool _isLongRelease;
     private bool _isShortRelease;
     
-    private bool _isReleaseMagnetic; //Magnetic 사용키 눌렀을 때
+    //Magetic 상호작용
+    private bool _isPressMagnetic; //Magnetic 사용키 눌렀을 때
     private bool _isDetectedMagnetic; //Ray에 MagneticObject감지 되었을 때
     private bool _isActivatedMagnetic; //자기력 로직 활성화 중일 때
 
+    //주변 탐색
     private List<MagneticObject> _magneticObjects = new();
     private bool _onSearchNearMagnetic;
     
+    
+    //--기술--//
+    
+    //자기력 붕괴
     private bool _onGravityBreak; //자기력 붕괴 스킬 사용 시
     public float gravityBreakRange;
 
+    //패링, 반격
     private bool _onCounterPress;
     private float _counterPressTime;
     private float _counterPressRange;
@@ -96,28 +108,72 @@ public class MagneticController : MagneticObject
         _counterPressRange = 1.5f;
         _counterPressPower = 10f;
     }
-    
-    //Q 짧게 눌렀을 때
-    public void OnShortReleaseEnter()
-    {
-        _isShortRelease = true;
-    }
 
-    public void OnShortReleaseExit()
+    #region 입력 처리
+
+    //Q 누르기 유지
+    public void OnPressEnter()
     {
+        Debug.Log("Press");
+        _isShortRelease = true;
+        //입력 유지 시 할 로직
+        
+        //키 입력이 시작됨을 알림.
+        _isPressMagnetic = true;
+        
+        //끝
+        _isShortRelease = false;
+    }
+    
+    //Q 짧게 누르고 뗐을때
+    public void OnShortRelease()
+    {
+        Debug.Log("SHORT");
+        _isShortRelease = true;
+        //짧게 입력시 할 로직
+        _isPressMagnetic = false;
+        if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
+        //끝
         _isShortRelease = false;
     }
 
-    //Q 길게 눌렀을 때
-    public void OnLongReleaseEnter()
+    //Q 길게 누르고 뗐을때
+    public void OnLongRelease()
     {
+        Debug.Log("LONG");
         _isLongRelease = true;
-    }
-
-    public void OnLongReleaseExit()
-    {
+        //길게 입력 시 할 로직
+        _isPressMagnetic = false;
+        if (targetMagneticObject != null)
+        {
+            if (targetMagneticObject.GetMagneticType() != magneticType)
+            {
+                OnApproach(targetMagneticObject).Forget();
+            }
+            else if (targetMagneticObject.GetMagneticType() == magneticType)
+            {
+                OnSeparation(targetMagneticObject).Forget();
+            }
+        }
+        //끝
         _isLongRelease = false;
     }
+    
+    //V, 극성전환
+    public override void SwitchMagneticType(MagneticType? type = null)
+    {
+        Debug.Log("SwitchMagneticType");
+        if (_isActivatedMagnetic)
+        {
+            //자기력 붕괴 스킬 사용
+            if(!_onGravityBreak && !_onCounterPress) OnGravityBreak(targetMagneticObject).Forget();
+        }
+        
+        base.SwitchMagneticType(type);
+    }
+
+    #endregion
+    
 
     #region 타겟팅 시스템
     public void MagneticTargetCamera()
@@ -236,7 +292,7 @@ public class MagneticController : MagneticObject
             if (!_onGravityBreak)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isReleaseMagnetic) break;
+                if (_isPressMagnetic) break;
             
                 //자기력 붕괴스킬 활성화 시
                 if (_onGravityBreak) break;
@@ -289,7 +345,7 @@ public class MagneticController : MagneticObject
             while (_currentVelocity != Vector3.zero)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isReleaseMagnetic) break;
+                if (_isPressMagnetic) break;
                 
                 _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, _dragValue * Time.deltaTime);
                 _characterController.Move(_currentVelocity);
@@ -322,7 +378,7 @@ public class MagneticController : MagneticObject
             if (!_onGravityBreak)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때 + 반격 중이지 않을 때.
-                if (_isReleaseMagnetic && !_onCounterPress) break;
+                if (_isPressMagnetic && !_onCounterPress) break;
             
                 //스킬 활성화 시
                 if (_onGravityBreak) break;
@@ -440,7 +496,7 @@ public class MagneticController : MagneticObject
     private void FixedUpdate()
     {
         //자석 능력 길게 키 입력 시
-        if (_isReleaseMagnetic)
+        if (_isPressMagnetic)
         {
             MagneticTargetCamera();
         }
@@ -462,33 +518,6 @@ public class MagneticController : MagneticObject
 
     private void Update()
     {
-        
-        //임시 테스트용 키입력
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            _isReleaseMagnetic = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Q))
-        {
-            _isReleaseMagnetic = false;
-            if (targetMagneticObject != null)
-            {
-                if (targetMagneticObject.GetMagneticType() != magneticType)
-                {
-                    OnApproach(targetMagneticObject).Forget();
-                }
-                else if (targetMagneticObject.GetMagneticType() == magneticType)
-                {
-                   OnSeparation(targetMagneticObject).Forget();
-                }
-            }
-        }
-        
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
-        }
-        
         if (Input.GetKeyDown(KeyCode.V))
         {
             if (_isActivatedMagnetic)

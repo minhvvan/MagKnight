@@ -23,7 +23,10 @@ namespace Moon
         bool _attack1;
         bool _attack2;
         bool _interact;
-
+        bool _magnetic;
+        bool _magneticSecond;
+        bool _switchMangetic;
+        
         //다른 이유로 조작이 불가능한 경우 사용하는 변수
         bool _externalInputBlocked;
 
@@ -67,14 +70,24 @@ namespace Moon
         {
             get { return _interact && !IsContollerInputBlocked(); }
         }
+        
+        public bool SwitchMangeticInput
+        {
+            get { return _switchMangetic && !IsContollerInputBlocked(); }
+        }
+
+        public Action magneticInput;
+        public Action<bool> magneticOutput;
 
         WaitForSeconds _attackInputWait;
         WaitForSeconds _inputWait;
         Coroutine _attack1WaitCoroutine;
         Coroutine _attack2WaitCoroutine;
         Coroutine _interactWaitCoroutine;
+        Coroutine _magneticWaitCoroutine;
         const float _AttackInputDuration = 0.03f;
         const float _inputDuration = 0.1f;
+        const float _magneticInputDuration = 0.15f;
 
         void Start()
         {
@@ -110,6 +123,23 @@ namespace Moon
             
             playerInput.actions["Interact"].performed += ctx => _interact = true;
             playerInput.actions["Interact"].canceled += ctx => _interact = false;
+            
+            playerInput.actions["Magnetic"].performed += ctx =>
+            {
+                _magnetic = true;
+                magneticInput?.Invoke();
+                if(_magneticWaitCoroutine != null) StopCoroutine(_magneticWaitCoroutine);
+                _magneticWaitCoroutine = StartCoroutine(MagneticWait());
+            };
+            playerInput.actions["Magnetic"].canceled += ctx =>
+            {
+                _magnetic = false;
+                magneticOutput?.Invoke(_magneticSecond);
+                _magneticSecond = false;
+            };
+            
+            playerInput.actions["SwitchMagnetic"].performed += ctx => _switchMangetic = true;
+            playerInput.actions["SwitchMagnetic"].canceled += ctx => _switchMangetic = false;
 
             //Test Cursor disable
             // Cursor.lockState = CursorLockMode.Locked;
@@ -153,6 +183,19 @@ namespace Moon
             _interact = false;
         }
 
+        IEnumerator MagneticWait()
+        {
+            var elapsedTime = 0f;
+            while (elapsedTime < _magneticInputDuration)
+            {
+                Debug.Log("INPUT...");
+                if(!_magnetic) yield break;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            _magneticSecond = true;
+        }
 
         public bool HaveControl()
         {
