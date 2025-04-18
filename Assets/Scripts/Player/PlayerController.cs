@@ -118,6 +118,8 @@ namespace Moon
             }
         }
 
+ 
+
         void Awake()
         {
             _inputHandler = GetComponent<InputHandler>();
