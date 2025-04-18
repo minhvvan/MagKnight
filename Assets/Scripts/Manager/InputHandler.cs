@@ -69,6 +69,7 @@ namespace Moon
         public bool InteractInput
         {
             get { return _interact && !IsContollerInputBlocked(); }
+            set { _interact = value; }
         }
 
         public Action SwitchMangeticInput;
@@ -85,91 +86,156 @@ namespace Moon
         const float _inputDuration = 0.1f;
         const float _magneticInputDuration = 0.15f;
 
-        Action<InputAction.CallbackContext> _attack1Callback;
-        Action<InputAction.CallbackContext> _attack2Callback;
+        /// Input Action Callbacks
+        Action<InputAction.CallbackContext> _pressAttack1Callback;
+        Action<InputAction.CallbackContext> _releaseAttack1Callback;
+        Action<InputAction.CallbackContext> _pressAttack2Callback;
+        Action<InputAction.CallbackContext> _releaseAttack2Callback;
+        Action<InputAction.CallbackContext> _pressMagneticCallback;
+        Action<InputAction.CallbackContext> _releaseMagneticCallback;
+        Action<InputAction.CallbackContext> _pressSwitchMagneticCallback;
+        Action<InputAction.CallbackContext> _releaseSwitchMagneticCallback;
+        Action<InputAction.CallbackContext> _pressMoveCallback;
+        Action<InputAction.CallbackContext> _releaseMoveCallback;
+        Action<InputAction.CallbackContext> _pressCameraCallback;
+        Action<InputAction.CallbackContext> _releaseCameraCallback;
+        Action<InputAction.CallbackContext> _pressJumpCallback;
+        Action<InputAction.CallbackContext> _releaseJumpCallback;
+        Action<InputAction.CallbackContext> _pressInteractCallback;
+        Action<InputAction.CallbackContext> _releaseInteractCallback;
+        Action<InputAction.CallbackContext> _pressSprintCallback;
+        Action<InputAction.CallbackContext> _releaseSprintCallback;
+        
+        
+        
 
         void Start()
         {
-            _attack1Callback = ctx => Attack1Input(ctx);
-            _attack2Callback = ctx => Attack2Input(ctx);
+            _pressAttack1Callback = ctx => PressAttack1Input(ctx);
+            _pressAttack2Callback = ctx => PressAttack2Input(ctx);
+            _pressMagneticCallback = ctx => PressMagneticInput(ctx);
+            _pressSwitchMagneticCallback = ctx => PressSwitchMagneticInput(ctx);
+            _pressMoveCallback = ctx => PressMoveInput(ctx);
+            _pressCameraCallback = ctx => PressCameraInput(ctx);
+            _pressJumpCallback = ctx => PressJumpInput(ctx);
+            _pressInteractCallback = ctx => PressInteractInput(ctx);
+            _pressSprintCallback = ctx => PressSprintInput(ctx);
+
+            _releaseAttack1Callback = ctx => ReleaseAttack1Input(ctx);
+            _releaseAttack2Callback = ctx => ReleaseAttack2Input(ctx);
+            _releaseMagneticCallback = ctx => ReleaseMagneticInput(ctx);
+            _releaseSwitchMagneticCallback = ctx => ReleaseSwitchMagneticInput(ctx);
+            _releaseMoveCallback = ctx => ReleaseMoveInput(ctx);
+            _releaseCameraCallback = ctx => ReleaseCameraInput(ctx);
+            _releaseJumpCallback = ctx => ReleaseJumpInput(ctx);
+            _releaseInteractCallback = ctx => ReleaseInteractInput(ctx);
+            _releaseSprintCallback = ctx => ReleaseSprintInput(ctx);
+
+
+
 
             _attackInputWait = new WaitForSeconds(_AttackInputDuration);
             _inputWait = new WaitForSeconds(_inputDuration);
 
             playerInput = GetComponent<PlayerInput>();
 
-            playerInput.actions["Move"].performed += ctx => _movement = ctx.ReadValue<Vector2>();
-            playerInput.actions["Move"].canceled += ctx => _movement = Vector2.zero;
+            playerInput.actions["Move"].performed += _pressMoveCallback;
+            playerInput.actions["Move"].canceled += _releaseMoveCallback;
 
-            playerInput.actions["Look"].performed += ctx => _cameraMovement = ctx.ReadValue<Vector2>();
-            playerInput.actions["Look"].canceled += ctx => _cameraMovement = Vector2.zero;
+            playerInput.actions["Look"].performed += _pressCameraCallback;
+            playerInput.actions["Look"].canceled += _releaseCameraCallback;
 
-            playerInput.actions["Jump"].performed += ctx => _jump = true;
-            playerInput.actions["Jump"].canceled += ctx => _jump = false;
+            playerInput.actions["Jump"].performed += _pressJumpCallback;
+            playerInput.actions["Jump"].canceled += _releaseJumpCallback;
 
-            playerInput.actions["Attack1"].performed += _attack1Callback;
-            playerInput.actions["Attack2"].performed += _attack2Callback;
+            playerInput.actions["Attack1"].performed += _pressAttack1Callback;
+            playerInput.actions["Attack2"].performed += _pressAttack2Callback;
 
-            playerInput.actions["Sprint"].performed += ctx => _run = true;
-            playerInput.actions["Sprint"].canceled += ctx => _run = false;
+            playerInput.actions["Sprint"].performed += _pressSprintCallback;
+            playerInput.actions["Sprint"].canceled += _releaseSprintCallback;
 
+            playerInput.actions["Interact"].performed += _pressInteractCallback;
+            playerInput.actions["Interact"].canceled += _releaseInteractCallback;
+
+            playerInput.actions["Magnetic"].performed += _pressMagneticCallback;
+            playerInput.actions["Magnetic"].canceled += _releaseMagneticCallback;
+
+            playerInput.actions["SwitchMagnetic"].performed += _pressSwitchMagneticCallback;
+            playerInput.actions["SwitchMagnetic"].canceled += _releaseSwitchMagneticCallback;
             
-            playerInput.actions["Interact"].performed += ctx => _interact = true;
-            playerInput.actions["Interact"].canceled += ctx => _interact = false;
-            
-            playerInput.actions["Magnetic"].performed += ctx =>
-            {
-                _magnetic = true;
-                magneticInput?.Invoke();
-                if(_magneticWaitCoroutine != null) StopCoroutine(_magneticWaitCoroutine);
-                _magneticWaitCoroutine = StartCoroutine(MagneticWait());
-            };
-            playerInput.actions["Magnetic"].canceled += ctx =>
-            {
-                _magnetic = false;
-                magneticOutput?.Invoke(_magneticSecond);
-                _magneticSecond = false;
-            };
-            
-            playerInput.actions["SwitchMagnetic"].performed += ctx =>
-            {
-                _switchMangetic = true;
-                SwitchMangeticInput?.Invoke();
-            };
-            playerInput.actions["SwitchMagnetic"].canceled += ctx =>
-            {
-                _switchMangetic = false;
-                SwitchMangeticInput?.Invoke();
-            };
 
             UIManager.Instance.DisableCursor();
         }
 
         void OnDestroy()
         {
-            playerInput.actions["Move"].performed -= ctx => _movement = ctx.ReadValue<Vector2>();
-            playerInput.actions["Move"].canceled -= ctx => _movement = Vector2.zero;
+            playerInput.actions["Move"].performed -= _pressMoveCallback;
+            playerInput.actions["Move"].canceled -= _releaseMoveCallback;
 
-            playerInput.actions["Look"].performed -= ctx => _cameraMovement = ctx.ReadValue<Vector2>();
-            playerInput.actions["Look"].canceled -= ctx => _cameraMovement = Vector2.zero;
+            playerInput.actions["Look"].performed -= _pressCameraCallback;
+            playerInput.actions["Look"].canceled -= _releaseCameraCallback;
 
-            playerInput.actions["Jump"].performed -= ctx => _jump = true;
-            playerInput.actions["Jump"].canceled -= ctx => _jump = false;
+            playerInput.actions["Jump"].performed -= _pressJumpCallback;
+            playerInput.actions["Jump"].canceled -= _releaseJumpCallback;
 
-            playerInput.actions["Attack1"].performed -= _attack1Callback;
-            playerInput.actions["Attack2"].performed -= _attack2Callback;
+            playerInput.actions["Attack1"].performed -= _pressAttack1Callback;
+            playerInput.actions["Attack2"].performed -= _pressAttack2Callback;
 
-            playerInput.actions["Sprint"].performed -= ctx => _run = true;
-            playerInput.actions["Sprint"].canceled -= ctx => _run = false;
+            playerInput.actions["Sprint"].performed -= _pressSprintCallback;
+            playerInput.actions["Sprint"].canceled -= _releaseSprintCallback;
 
-            
-            playerInput.actions["Interact"].performed -= ctx => _interact = true;
-            playerInput.actions["Interact"].canceled -= ctx => _interact = false;
+            playerInput.actions["Interact"].performed -= _pressInteractCallback;
+            playerInput.actions["Interact"].canceled -= _releaseInteractCallback;
+
+            playerInput.actions["Magnetic"].performed -= _pressMagneticCallback;
+            playerInput.actions["Magnetic"].canceled -= _releaseMagneticCallback;
+
+            playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
+            playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
         }
 
-        void Attack1Input(InputAction.CallbackContext context)
+        void PressMoveInput(InputAction.CallbackContext context)
         {
-            Debug.Log(UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject());
+            _movement = context.ReadValue<Vector2>();
+        }
+
+        void ReleaseMoveInput(InputAction.CallbackContext context)
+        {
+            _movement = Vector2.zero;
+        }
+
+        void PressCameraInput(InputAction.CallbackContext context)
+        {
+            _cameraMovement = context.ReadValue<Vector2>();
+        }
+
+        void ReleaseCameraInput(InputAction.CallbackContext context)
+        {
+            _cameraMovement = Vector2.zero;
+        }
+
+        void PressJumpInput(InputAction.CallbackContext context)
+        {
+            _jump = true;
+        }
+
+        void ReleaseJumpInput(InputAction.CallbackContext context)
+        {
+            _jump = false;
+        }
+
+        void PressSprintInput(InputAction.CallbackContext context)
+        {
+            _run = true;
+        }
+
+        void ReleaseSprintInput(InputAction.CallbackContext context)
+        {
+            _run = false;
+        }
+
+        void PressAttack1Input(InputAction.CallbackContext context)
+        {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 return;
@@ -185,7 +251,11 @@ namespace Moon
             _attack1WaitCoroutine = StartCoroutine(Attack1Wait());
         }
 
-        void Attack2Input(InputAction.CallbackContext context)
+        void ReleaseAttack1Input(InputAction.CallbackContext context)
+        {
+        }
+
+        void PressAttack2Input(InputAction.CallbackContext context)
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
@@ -196,13 +266,52 @@ namespace Moon
                 UIManager.Instance.DisableCursor();
             }
 
-            
             if (_attack2WaitCoroutine != null)
                 StopCoroutine(_attack2WaitCoroutine);
 
             _attack2WaitCoroutine = StartCoroutine(Attack2Wait());
         }
 
+        void ReleaseAttack2Input(InputAction.CallbackContext context)
+        {
+        }
+
+        void PressInteractInput(InputAction.CallbackContext context)
+        {
+            _interact = true;        
+        }
+
+        void ReleaseInteractInput(InputAction.CallbackContext context)
+        {
+            _interact = false;
+        }
+
+        void PressMagneticInput(InputAction.CallbackContext context)
+        {
+            _magnetic = true;
+            magneticInput?.Invoke();
+            if(_magneticWaitCoroutine != null) StopCoroutine(_magneticWaitCoroutine);
+            _magneticWaitCoroutine = StartCoroutine(MagneticWait());
+        }
+
+        void ReleaseMagneticInput(InputAction.CallbackContext context)
+        {
+            _magnetic = false;
+            magneticOutput?.Invoke(_magneticSecond);
+            _magneticSecond = false;
+        }
+
+        void PressSwitchMagneticInput(InputAction.CallbackContext context)
+        {
+            _switchMangetic = true;
+            SwitchMangeticInput?.Invoke();
+        }
+
+        void ReleaseSwitchMagneticInput(InputAction.CallbackContext context)
+        {
+            _switchMangetic = false;
+            SwitchMangeticInput?.Invoke();
+        }
         
         public bool IsContollerInputBlocked()
         {
@@ -232,7 +341,6 @@ namespace Moon
 
         IEnumerator InteractWait()
         {
-            Debug.Log("InteractWait Start");
             _interact = true;
 
             yield return _inputWait;
