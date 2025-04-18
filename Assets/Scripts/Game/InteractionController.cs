@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VFolders.Libs;
 
 public class InteractionController : MonoBehaviour
 {
