@@ -19,14 +19,13 @@ namespace Moon
         //Test Code Update full -> empty repeatedly
         async UniTask Test()
         {
-            SetFillAmount(1, true);
-            // while (true)
-            // {
-            //     SetFillAmount(1, true);
-            //     await UniTask.Delay(1000, cancellationToken: this.GetCancellationTokenOnDestroy());
-            //     SetFillAmount(0, true);
-            //     await UniTask.Delay(1000, cancellationToken: this.GetCancellationTokenOnDestroy());
-            // }
+            while (true)
+            {
+                SetFillAmount(1, true);
+                await UniTask.Delay(1000, cancellationToken: this.GetCancellationTokenOnDestroy());
+                SetFillAmount(0, true);
+                await UniTask.Delay(1000, cancellationToken: this.GetCancellationTokenOnDestroy());
+            }
         }
 
         

@@ -16,11 +16,6 @@ namespace Moon
         {
             UIManager.Instance.SetPopupUIController(this);
         }
-
-        void OnDisable()
-        {
-            UIManager.Instance.ReleasePopupUIController();
-        }
     }
 }
 

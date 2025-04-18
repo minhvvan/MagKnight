@@ -17,11 +17,6 @@ public class InGameUIController : MonoBehaviour
         UIManager.Instance.SetInGameUIController(this);
     }
 
-    void OnDisable()
-    {
-        UIManager.Instance.ReleaseInGameUIController();
-    }
-
     private void OnSceneTransitionComplete(string entranceName, bool isSetNewName)
     {
        entranceText.SetTextAndShowFadeInAndOut(entranceName, isSetNewName);
