@@ -12,13 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07389bb2ae5f41747a445b9ba35023e8, type: 3}
   m_Name: New Artifact GAS 3
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 21ed692efe3d95a40bcb58ec97b4d87a, type: 3}
+  name: 
+  prefab: {fileID: 618887473216077382, guid: b13cc4629a3acda4e943017d86f0fe6e, type: 3}
   N_ArtifactEffect:
   - effectType: 0
     attributeType: 0
-    value: 10
+    amount: 10
     duration: 0
+    tracking: 0
+    appliedAmount: 10
   S_ArtifactEffect:
   - effectType: 0
     attributeType: 2
-    value: 10
+    amount: 10
     duration: 0
+    tracking: 0
+    appliedAmount: 10

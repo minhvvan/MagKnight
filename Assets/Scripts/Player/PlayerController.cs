@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Moon
@@ -9,6 +10,7 @@ namespace Moon
         CharacterController _characterController;
         Animator _animator;
         InputHandler _inputHandler;
+        MagneticController _magneticController;
         [SerializeField] private InteractionController interactionController;
         [SerializeField] private WeaponHandler weaponHandler;
 
@@ -116,11 +118,18 @@ namespace Moon
             }
         }
 
+ 
+
         void Awake()
         {
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
+            _magneticController = GetComponent<MagneticController>();
+
+            _inputHandler.magneticInput = MagneticPress;
+            _inputHandler.magneticOutput = MagneticRelease;
+            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
         }
 
         // Called automatically by Unity once every Physics step.
@@ -522,6 +531,28 @@ namespace Moon
             {
                 interactionController.Interact();
             }
+        }
+
+        void SwitchMagneticInput()
+        {
+            if (_magneticController != null)
+            {
+                _magneticController.SwitchMagneticType();
+            }
+        }
+
+        void MagneticPress()
+        {
+            if (_magneticController != null)
+            {
+                _magneticController.OnPressEnter();
+            }
+        }
+        void MagneticRelease(bool inputValue)
+        {
+            if (_magneticController == null) return;
+            if(inputValue) _magneticController.OnLongRelease(); 
+            else _magneticController.OnShortRelease();
         }
 
         public void MeleeAttackStart(int throwing = 0)
