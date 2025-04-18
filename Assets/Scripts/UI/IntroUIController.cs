@@ -6,7 +6,7 @@ namespace Moon
 {
     public class IntroUIController : MonoBehaviour
     {
-        const string k_NextSceneName = "prototype";
+        const string k_NextSceneName = "BaseCampScene";
 
 
         void Update()
