@@ -114,7 +114,6 @@ public class MagneticController : MagneticObject
     //Q 누르기 유지
     public void OnPressEnter()
     {
-        Debug.Log("Press");
         _isShortRelease = true;
         //입력 유지 시 할 로직
         
@@ -128,7 +127,6 @@ public class MagneticController : MagneticObject
     //Q 짧게 누르고 뗐을때
     public void OnShortRelease()
     {
-        Debug.Log("SHORT");
         _isShortRelease = true;
         //짧게 입력시 할 로직
         _isPressMagnetic = false;
@@ -140,7 +138,6 @@ public class MagneticController : MagneticObject
     //Q 길게 누르고 뗐을때
     public void OnLongRelease()
     {
-        Debug.Log("LONG");
         _isLongRelease = true;
         //길게 입력 시 할 로직
         _isPressMagnetic = false;
@@ -162,7 +159,6 @@ public class MagneticController : MagneticObject
     //V, 극성전환
     public override void SwitchMagneticType(MagneticType? type = null)
     {
-        Debug.Log("SwitchMagneticType");
         if (_isActivatedMagnetic)
         {
             //자기력 붕괴 스킬 사용

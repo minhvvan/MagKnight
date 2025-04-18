@@ -70,12 +70,8 @@ namespace Moon
         {
             get { return _interact && !IsContollerInputBlocked(); }
         }
-        
-        public bool SwitchMangeticInput
-        {
-            get { return _switchMangetic && !IsContollerInputBlocked(); }
-        }
 
+        public Action SwitchMangeticInput;
         public Action magneticInput;
         public Action<bool> magneticOutput;
 
@@ -138,8 +134,16 @@ namespace Moon
                 _magneticSecond = false;
             };
             
-            playerInput.actions["SwitchMagnetic"].performed += ctx => _switchMangetic = true;
-            playerInput.actions["SwitchMagnetic"].canceled += ctx => _switchMangetic = false;
+            playerInput.actions["SwitchMagnetic"].performed += ctx =>
+            {
+                _switchMangetic = true;
+                SwitchMangeticInput?.Invoke();
+            };
+            playerInput.actions["SwitchMagnetic"].canceled += ctx =>
+            {
+                _switchMangetic = false;
+                SwitchMangeticInput?.Invoke();
+            };
 
             //Test Cursor disable
             // Cursor.lockState = CursorLockMode.Locked;
@@ -188,7 +192,6 @@ namespace Moon
             var elapsedTime = 0f;
             while (elapsedTime < _magneticInputDuration)
             {
-                Debug.Log("INPUT...");
                 if(!_magnetic) yield break;
                 elapsedTime += Time.deltaTime;
                 yield return null;
