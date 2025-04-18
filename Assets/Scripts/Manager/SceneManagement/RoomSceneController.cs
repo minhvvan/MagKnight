@@ -99,6 +99,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
 
         await Moon.ScreenFader.FadeSceneIn().ToUniTask(this);
         Time.timeScale = 1f;
+        SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.sceneName, true);
     }
 
 
