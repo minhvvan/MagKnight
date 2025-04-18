@@ -9,7 +9,7 @@ public enum GameState
 {
     None,
     Title,
-    Loading,
+    InitGame,
     BaseCamp,
     Run,
     Combat,

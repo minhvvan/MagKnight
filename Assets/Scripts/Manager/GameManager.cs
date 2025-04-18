@@ -28,27 +28,9 @@ namespace hvvan
         
         protected override void Initialize()
         {
-            //데이터 load
-            _playerData = SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
-            if (_playerData == null)
-            {
-                Debug.Log($"{Constants.PlayerData} is null");
-                //TODO: 생성후 저장
-            }
-
-            _currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.PlayerData);
-            if (_currentRunData == null)
-            {
-                //회차 정보 없음 => BaseCamp로
-            }
-            else
-            {
-                //회차 정보대로 씬 이동 및 설정
-            }
-            
             //State 생성
             _states[GameState.Title] = new TitleState();
-            _states[GameState.Loading] = new LoadingState();
+            _states[GameState.InitGame] = new InitGameState();
             _states[GameState.BaseCamp] = new BaseCampState();
             _states[GameState.Run] = new RunState();
             _states[GameState.Dialogue] = new DialogueState();
@@ -64,7 +46,15 @@ namespace hvvan
         {
             Player = FindObjectOfType<PlayerController>();
         }
-        
+
+        private void Update()
+        {
+            if (_currentState != GameState.None)
+            {
+                _states[_currentState].OnUpdate();;
+            }
+        }
+
         public void AddStateListener(GameState state, Action callback)
         {
             if (!_stateListeners.ContainsKey(state))
@@ -118,6 +108,23 @@ namespace hvvan
         public void RecoverPreviousState()
         {
             ChangeGameState(_previousGameState);
+        }
+
+        public async UniTask SetPlayerData(PlayerData loadData)
+        {
+            if (loadData == null)
+            {
+                Debug.Log($"Create PlayerData");
+                loadData = new PlayerData();
+                await SaveDataManager.Instance.SaveData(Constants.PlayerData, loadData);
+            }
+            
+            _playerData = loadData;
+        }
+
+        public void SetCurrentRunData(CurrentRunData currentRunData)
+        {
+            _currentRunData = currentRunData;
         }
     }
 }
