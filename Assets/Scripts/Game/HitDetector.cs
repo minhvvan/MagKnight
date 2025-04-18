@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Moon;
 using UnityEngine;
 
 public class HitInfo
@@ -83,6 +84,9 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         _debugHits.Add(hitInfo);
         
         Notify(hitInfo);
+        
+        //Debug.Shaker
+        CameraShake.Shake(0.2f, 0.2f);
         
         //*Temp Debug
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);

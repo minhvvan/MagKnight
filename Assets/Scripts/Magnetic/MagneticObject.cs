@@ -27,9 +27,9 @@ public class MagneticObject : MonoBehaviour, IMagnetic
 
     public virtual void SetPhysic()
     {
-        magneticType = magneticObjectSO.magneticType;
-        isStructure = magneticObjectSO.isStructure;
-        objectMass = magneticObjectSO.objectMass;
+        magneticType = magneticObjectSO.magneticType = magneticObjectSO != null ? magneticObjectSO.magneticType : MagneticType.N;
+        isStructure = magneticObjectSO.isStructure = magneticObjectSO != null && magneticObjectSO.isStructure;
+        objectMass = magneticObjectSO.objectMass = magneticObjectSO != null ? magneticObjectSO.objectMass : 1;
 
         if (isStructure && rb != null)
         {
@@ -38,17 +38,17 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         }
     }
 
-    public bool GetIsStructure()
+    public virtual bool GetIsStructure()
     {
         return isStructure;
     }
 
-    public MagneticType GetMagneticType()
+    public virtual MagneticType GetMagneticType()
     {
         return magneticType;
     }
 
-    public void SwitchMagneticType(MagneticType? type = null)
+    public virtual void SwitchMagneticType(MagneticType? type = null)
     {
         if (type.HasValue)
         {
