@@ -39,7 +39,7 @@ public class RoomController : MonoBehaviour
         }
     }
 
-    private async void OnGateEntered(RoomDirection direction)
+    private void OnGateEntered(RoomDirection direction)
     {
         _ = RoomSceneController.Instance.EnterRoom(roomIndex, direction);
     }
