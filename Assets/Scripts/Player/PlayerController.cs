@@ -37,6 +37,7 @@ namespace Moon
         protected float _desiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float _forwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float _verticalSpeed;               // How fast Ellen is currently moving up or down.
+        protected Collider[] _overlapResult = new Collider[8];    // Used to cache colliders
         
         protected Quaternion _targetRotation;         // What rotation Ellen is aiming to have based on input.
         protected float _angleDiff;                   // Angle in degrees between Ellen's current rotation and her target rotation.
@@ -53,6 +54,7 @@ namespace Moon
         const float k_StickingGravityProportion = 0.3f;
         const float k_GroundAcceleration = 20f;
         const float k_GroundDeceleration = 25f;
+        const float k_MinEnemyDotCoeff = 0.2f;
 
         // Parameters
 
@@ -161,6 +163,7 @@ namespace Moon
             if (_inputHandler.InteractInput)
             {
                 Interact();
+                _inputHandler.InteractInput = false;
             }
 
             SetGrounded();
@@ -326,15 +329,16 @@ namespace Moon
             Vector3 resultingForward = targetRotation * Vector3.forward;
 
 //가까운 적 관련 회전 루틴 - 참고 후 삭제
-#if false
+#if true
             // If attacking try to orient to close enemies.
-            if (_InAttack)
+            if (_inCombo)
             {
                 // Find all the enemies in the local area.
                 Vector3 centre = transform.position + transform.forward * 2.0f + transform.up;
                 Vector3 halfExtents = new Vector3(3.0f, 1.0f, 2.0f);
                 int layerMask = 1 << LayerMask.NameToLayer("Enemy");
-                int count = Physics.OverlapBoxNonAlloc(centre, halfExtents, _OverlapResult, targetRotation, layerMask);
+                int count = Physics.OverlapBoxNonAlloc(centre, halfExtents, _overlapResult, targetRotation, layerMask);
+
 
                 // Go through all the enemies in the local area...
                 float closestDot = 0.0f;
@@ -344,7 +348,7 @@ namespace Moon
                 for (int i = 0; i < count; ++i)
                 {
                     // ... and for each get a vector from the player to the enemy.
-                    Vector3 playerToEnemy = _OverlapResult[i].transform.position - transform.position;
+                    Vector3 playerToEnemy = _overlapResult[i].transform.position - transform.position;
                     playerToEnemy.y = 0;
                     playerToEnemy.Normalize();
 
@@ -366,7 +370,7 @@ namespace Moon
                 {
                     // The desired forward is the direction to the closest enemy.
                     resultingForward = closestForward;
-                    
+                    Debug.DrawRay(transform.position, resultingForward * 2.0f, Color.red);
                     // We also directly set the rotation, as we want snappy fight and orientation isn't updated in the UpdateOrientation function during an atatck.
                     transform.rotation = Quaternion.LookRotation(resultingForward);
                 }
