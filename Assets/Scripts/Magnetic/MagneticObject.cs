@@ -38,7 +38,6 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         }
     }
 
-    // public bool GetIsStructure()
     public virtual bool GetIsStructure()
     {
         return isStructure;
