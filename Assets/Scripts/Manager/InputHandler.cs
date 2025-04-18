@@ -310,7 +310,7 @@ namespace Moon
         void ReleaseSwitchMagneticInput(InputAction.CallbackContext context)
         {
             _switchMangetic = false;
-            SwitchMangeticInput?.Invoke();
+            //SwitchMangeticInput?.Invoke(); //Press시에만 호출 필요
         }
         
         public bool IsContollerInputBlocked()
