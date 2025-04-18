@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(PlaceEnemyOnScene))]
 public class PlaceEnemyInEditor : Editor
 {
@@ -25,3 +26,4 @@ public class PlaceEnemyInEditor : Editor
         }
     }
 }
+#endif
