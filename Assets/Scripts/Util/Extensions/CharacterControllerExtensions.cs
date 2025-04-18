@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static partial class CharacterControllerExtensions
+public static class CharacterControllerExtensions
 {
     public static void Teleport(this CharacterController controller, GameObject player, Transform targetTransform)
     {
