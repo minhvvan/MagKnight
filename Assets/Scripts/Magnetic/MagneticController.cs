@@ -258,7 +258,7 @@ public class MagneticController : MagneticObject
 
         // 월드 거리 기준 반지름
         float dynamicRadius = Vector3.Distance(worldCenter, worldOffset);
-        return dynamicRadius;
+        return dynamicRadius*2f;
     }
     
     
@@ -572,7 +572,7 @@ public class MagneticController : MagneticObject
         
         Gizmos.DrawWireSphere(targetHit,1f);
         
-        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius);
+        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius/2f);
         
         switch (magneticType)
         {
@@ -584,7 +584,7 @@ public class MagneticController : MagneticObject
                 break;
         }
         if (!_isPressMagnetic) Handles.color = Color.clear;
-        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius*1.15f);
+        Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, (sphereRadius/2f)*1.15f);
 
         if (_onCounterPress)
         {
