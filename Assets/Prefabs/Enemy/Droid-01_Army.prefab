@@ -1737,6 +1737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 970c1e9e17f8bfa4a9d736588a25e986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackType: 1
   _triggerZones:
   - referenceTransform: {fileID: 238397485176193913}
     offset: {x: 0, y: 0, z: 0}
@@ -1789,11 +1790,13 @@ MonoBehaviour:
   appearanceFloor: 0
   projectileSpeed: 0
   attackRange: 0
+  projectilePrefab: {fileID: 0}
   target: {fileID: 0}
   targetLayer:
     serializedVersion: 2
     m_Bits: 0
   isDead: 0
+  muzzleTransform: {fileID: 0}
 --- !u!114 &8965972555179330726
 MonoBehaviour:
   m_ObjectHideFlags: 0

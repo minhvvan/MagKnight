@@ -25,6 +25,7 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public int appearanceFloor; // todo: 몹을 미리 배치하기 때문에 제거 가능성 높음
     [HideInInspector] public float projectileSpeed;
     [HideInInspector] public float attackRange;
+    [HideInInspector] public GameObject projectilePrefab;
     #endregion
     
     #region CurrentState
@@ -38,6 +39,11 @@ public class EnemyBlackboard : MonoBehaviour
 
     [HideInInspector] public CancellationTokenSource actionRecoveryCancellation;
     [HideInInspector] public CancellationTokenSource staggerRecoveryCancellation;
+    #endregion
+    
+    #region Transform
+
+    public Transform muzzleTransform;
     #endregion
 
     private void Awake()
@@ -60,12 +66,16 @@ public class EnemyBlackboard : MonoBehaviour
         appearanceFloor = _enemyDataSO.appearanceFloor;
         projectileSpeed = _enemyDataSO.projectileSpeed;
         attackRange = _enemyDataSO.attackRange;
+        projectilePrefab = _enemyDataSO.projectilePrefab;
         
         targetLayer = LayerMask.GetMask("Player");
 
         switch (aiType)
         {
             case EnemyAIType.MeleeNormal:
+                ai = new MeleeNormalAI(_enemy);
+                break;
+            case EnemyAIType.RangedNormal:
                 ai = new MeleeNormalAI(_enemy);
                 break;
         }
