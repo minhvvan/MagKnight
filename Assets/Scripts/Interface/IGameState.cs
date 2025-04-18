@@ -11,12 +11,11 @@ public enum GameState
     Title,
     Loading,
     BaseCamp,
-    Dungeon,
+    Run,
     Combat,
     Dialogue,
-    Victory,
+    GameClear,
     Pause,
-    Tutorial,
     GameOver,
     Max
 }

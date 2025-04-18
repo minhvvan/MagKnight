@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using Moon;
 using Unity.VisualScripting;
@@ -12,26 +13,6 @@ public class UIManager : Singleton<UIManager>
 {
     [SerializeField] InGameUIController _inGameUIController;
     [SerializeField] PopupUIController _popupUIController;
-
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (_popupUIController != null)
-            {
-                if (_popupUIController.pauseMenuUIController.gameObject.activeSelf)
-                {
-                    HidePauseMenuUI();
-                    //스택형으로 위에뜬 UI를 하나씩 숨기는 로직이 들어가는게 필요해보임
-                }
-                else
-                {
-                    ShowPauseMenuUI();
-                }
-            }
-        }   
-    }
 
     public void SetInGameUIController(InGameUIController inGameUIController)
     {

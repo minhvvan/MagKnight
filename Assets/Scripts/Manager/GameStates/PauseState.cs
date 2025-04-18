@@ -1,12 +1,13 @@
 ﻿
 using hvvan;
+using UnityEngine;
 
 public class PauseState: IGameState
 {
-    private GameState _previousState;
     public void OnEnter()
     {
-        _previousState = GameManager.Instance.CurrentGameState;
+        Time.timeScale = 0f;
+        UIManager.Instance.ShowPauseMenuUI();
     }
 
     public void OnUpdate()
@@ -15,6 +16,7 @@ public class PauseState: IGameState
 
     public void OnExit()
     {
-        GameManager.Instance.ChangeGameState(_previousState);
+        Time.timeScale = 1f;
+        UIManager.Instance.HidePauseMenuUI();
     }
 }
