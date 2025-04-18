@@ -141,11 +141,14 @@ public class MagneticController : MagneticObject
                 float angle = Vector3.Angle(mainCamera.transform.forward, toHit);
                 return angle;
             }).First();
-            if(bestHit.point != Vector3.zero) Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+            if (bestHit.point != Vector3.zero)
+            {
+                targetHit = bestHit.point;
+                Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+            }
 
             if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
             {
-                Debug.Log(Vector3.Distance(_characterController.transform.position, magneticObject.transform.position));
                 _isDetectedMagnetic = true;
                 targetMagneticObject = magneticObject;
                 return;
@@ -506,7 +509,7 @@ public class MagneticController : MagneticObject
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         
-        if (_isReleaseMagnetic)
+        if (_isPressMagnetic)
         {
             if (targetMagneticObject != null)
             {
@@ -537,6 +540,9 @@ public class MagneticController : MagneticObject
         Gizmos.DrawRay(targetPoint, mainCamera.transform.forward * rayDistance);
         Gizmos.DrawWireSphere(_characterController.transform.position, _outBoundDistance);
         
+        
+        Gizmos.DrawWireSphere(targetHit,1f);
+        
         Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius);
         
         switch (magneticType)
@@ -548,7 +554,7 @@ public class MagneticController : MagneticObject
                 Handles.color = Color.blue;
                 break;
         }
-        if (!_isReleaseMagnetic) Handles.color = Color.clear;
+        if (!_isPressMagnetic) Handles.color = Color.clear;
         Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius*1.15f);
 
         if (_onCounterPress)
