@@ -108,9 +108,7 @@ namespace Moon
             playerInput.actions["Interact"].performed += ctx => _interact = true;
             playerInput.actions["Interact"].canceled += ctx => _interact = false;
 
-            //Test Cursor disable
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            UIManager.Instance.DisableCursor();
         }
 
         void OnDestroy()
@@ -137,6 +135,16 @@ namespace Moon
 
         void Attack1Input(InputAction.CallbackContext context)
         {
+            Debug.Log(UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject());
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            else
+            {
+                UIManager.Instance.DisableCursor();
+            }
+
             if (_attack1WaitCoroutine != null)
                 StopCoroutine(_attack1WaitCoroutine);
 
@@ -145,6 +153,16 @@ namespace Moon
 
         void Attack2Input(InputAction.CallbackContext context)
         {
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+            else
+            {
+                UIManager.Instance.DisableCursor();
+            }
+
+            
             if (_attack2WaitCoroutine != null)
                 StopCoroutine(_attack2WaitCoroutine);
 

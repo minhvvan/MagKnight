@@ -157,6 +157,8 @@ namespace Moon
                 Interact();
             }
 
+            SetGrounded();
+
             CalculateForwardMovement();
             CalculateVerticalMovement();
 
@@ -169,7 +171,7 @@ namespace Moon
 
             TimeoutToIdle();
 
-            _previouslyGrounded = _isGrounded;
+            
         }
 
         // Called at the start of FixedUpdate to record the current state of the base layer of the animator.
@@ -382,6 +384,19 @@ namespace Moon
             return updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
         }
 
+        void SetGrounded()
+        {   
+            _isGrounded = _characterController.isGrounded;
+            
+            if (!_isGrounded && !_previouslyGrounded)
+                _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
+
+            
+            _animator.SetBool(_HashGrounded, _isGrounded || _previouslyGrounded);
+
+            _previouslyGrounded = _isGrounded;
+        }
+
         
         void UpdateOrientation()
         {
@@ -509,13 +524,6 @@ namespace Moon
             
             movement += _verticalSpeed * Vector3.up * Time.deltaTime;
             _characterController.Move(movement);
-            _isGrounded = _characterController.isGrounded;
-            
-            if (!_isGrounded)
-                _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
-
-            
-            _animator.SetBool(_HashGrounded, _isGrounded);
         }
         
 

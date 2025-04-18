@@ -65,6 +65,7 @@ namespace Moon
             if (_inputHandler)
                 _inputHandler.GainControl();
 
+            SceneTransitionEvent.TriggerSceneTransitionComplete("", false);
             _transitioning = false;
         }
     }
