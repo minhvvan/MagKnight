@@ -29,7 +29,7 @@ public class EnemyStateAction : BaseState<Enemy>
         {
             _shot = true;
             GameObject projectile = GameObject.Instantiate(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity);
-            projectile.GetComponent<Projectile>().Initialize(_blackboard);
+            projectile.GetComponent<Projectile>().Initialize(_blackboard.target.transform);
         }
         
         _startupDuration += Time.deltaTime;

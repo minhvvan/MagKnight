@@ -5,65 +5,77 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
+
+public enum TrajectoryType
+{
+    None,
+    Straight,
+    Homing,
+    Parabolic,
+    Max
+}
 
 [RequireComponent(typeof(HitDetector))]
 public class Projectile : MonoBehaviour, IObserver<HitInfo>
 {
-    private EnemyBlackboard _enemyBlackboard;
+    [SerializeField] private AbilitySystem _shooterAbilitySystem; // 발사하는 주체의 ability system
+    [SerializeField] private float _projectileSpeed;
+    [SerializeField] private TrajectoryType _trajectoryType;
     
-    private CancellationTokenSource _cancellation;
-    
-    public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
+    private Transform targetTransform;
 
-    public void Initialize(EnemyBlackboard blackboard)
+    private float lifeTime = 5f;
+    private CancellationTokenSource _cancellation;
+
+    private HitDetector _hitDetector;
+
+
+    public void Initialize(Transform targetTransform)
     {
-        _enemyBlackboard = blackboard;
+        this.targetTransform = targetTransform;
+        
         _cancellation = new CancellationTokenSource();
         
-        HitDetector hitHandler;
-        if (TryGetComponent<HitDetector>(out hitHandler))
-        {
-            HitHandler = hitHandler;
-            HitHandler.Subscribe(this);
-        }
+        _hitDetector = GetComponent<HitDetector>();
+        _hitDetector.Subscribe(this);
 
-        MoveGradually().Forget();
-    }
-    
-    private async UniTask MoveGradually()
-    {        
-        Vector3 targetPos = _enemyBlackboard.target.transform.position;
-        Vector3 startPos = transform.position;
-        Vector3 dir = Vector3.Normalize(targetPos - startPos);
-        while (true)
+        switch (_trajectoryType)
         {
-            transform.position += dir * (Time.deltaTime * _enemyBlackboard.projectileSpeed);
-            
-            await UniTask.Yield(cancellationToken:_cancellation.Token);
+            case TrajectoryType.Straight:
+                MoveStraight().Forget();
+                break;
         }
     }
 
     public void OnDestroy()
     {
         _cancellation.Cancel();
-    }
-
-    public void OnNext(GameObject value)
-    {
-        float damage = -_enemyBlackboard.abilitySystem.GetValue(AttributeType.ATK);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
-        value.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
-        
-        Destroy(gameObject);
+        _cancellation.Dispose();
     }
 
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = -_enemyBlackboard.abilitySystem.GetValue(AttributeType.ATK);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
-        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
-        
-        Destroy(gameObject);
+        GameObject colliderObject = hitInfo.hit.collider.gameObject;
+
+        // 히트한 object의 layer에 따라 다르게 처리
+        switch (LayerMask.LayerToName(colliderObject.layer))
+        {
+            case "Player":
+                GameplayEffect damageEffectToPlayer = new GameplayEffect(EffectType.Static, AttributeType.HP, 10);
+                colliderObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffectToPlayer);
+                Destroy(gameObject);
+                break;
+            case "Enemy":
+                float damage = - _shooterAbilitySystem.GetValue(AttributeType.ATK);
+                GameplayEffect damageEffectToEnemy = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+                colliderObject.GetComponent<EnemyBlackboard>().abilitySystem.ApplyEffect(damageEffectToEnemy);
+                Destroy(gameObject);
+                break;
+            case "Environment":
+                Destroy(gameObject);
+                break;
+        }
     }
 
     public void OnError(Exception error)
@@ -73,5 +85,22 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
 
     public void OnCompleted()
     {
+    }
+    
+    
+    private async UniTask MoveStraight()
+    {
+        float elapsedTime = 0;
+        Vector3 targetPos = targetTransform.position;
+        Vector3 startPos = transform.position;
+        Vector3 dir = Vector3.Normalize(targetPos - startPos);
+        while (elapsedTime < lifeTime)
+        {
+            transform.position += dir * (Time.deltaTime * _projectileSpeed);
+            
+            await UniTask.Yield(cancellationToken:_cancellation.Token);
+            elapsedTime += Time.deltaTime;
+        }
+        Destroy(gameObject);
     }
 }

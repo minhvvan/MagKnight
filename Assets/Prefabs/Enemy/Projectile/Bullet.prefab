@@ -119,6 +119,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415c38ce53d212248bb137a8facfdb8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _shooterAbilitySystem: {fileID: 2075707188686848477, guid: 1640e24d98d231947b45e53f2b22284e,
+    type: 3}
+  _projectileSpeed: 10
+  _trajectoryType: 1
 --- !u!114 &3979837610085896539
 MonoBehaviour:
   m_ObjectHideFlags: 0
