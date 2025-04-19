@@ -6,6 +6,14 @@ using Moon;
 using UnityEngine;
 using VFolders.Libs;
 
+public enum HitType
+{
+    None,
+    Melee,
+    Projectile,
+    Max
+}
+
 public class HitInfo
 {
     public RaycastHit hit;
@@ -18,17 +26,25 @@ public class HitInfo
         hit = h;
         previousPoint = prev;
         currentPoint = current;
-        time = Time.time;
+        time = Time.fixedTime;
     }
 }
 
 public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 {
-    [SerializeField] private List<Vector3> hitPoints;
-    [SerializeField] LayerMask layerMask;
-    [SerializeField] float detectionRadius;
+    [Serializable]
+    public class HitboxZone
+    {
+        public Transform referenceTransform; // 기준점
+        public Vector3 offset;
+        public float radius;
+    }
     
-    private bool _IsDetecting = false;
+    [SerializeField] private HitboxZone[] _hitboxZones;
+    [SerializeField] private LayerMask _layerMask;
+    [SerializeField] private HitType _hitType;
+    
+    private bool _isDetecting = false;
     private List<Vector3> _previousPoints = new List<Vector3>();
     private HashSet<Collider> _hitColliders = new HashSet<Collider>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
@@ -37,22 +53,26 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     
     public void StartDetection()
     {
-        _IsDetecting = true;
+        _isDetecting = true;
         _hitColliders.Clear();
+        
+        _previousPoints.Clear();
+        _hitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
     }
 
     public void StopDetection()
     {
-        _IsDetecting = false;
+        _isDetecting = false;
     }
 
     private void FixedUpdate()
     {
-        if(!_IsDetecting) return;
+        // projectile은 항상 공격모션과 별개로 히트판정이 항상 존재하기 때문에 isDetecting에 여부와 관계없이 히트 여부를 확인한다.
+        if(!_isDetecting && _hitType == HitType.Melee) return;
 
         for (var i = 0; i < _previousPoints.Count; i++)
         {
-            Vector3 currentPos = ConvertWorldTransform(hitPoints[i]);
+            Vector3 currentPos = _hitboxZones[i].referenceTransform.TransformPoint(_hitboxZones[i].offset);
             Vector3 previousPos = _previousPoints[i];
             Vector3 direction = currentPos - previousPos;
             float distance = direction.magnitude;
@@ -61,7 +81,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
             {
                 direction.Normalize();
             
-                int hitCount = Physics.SphereCastNonAlloc(previousPos, detectionRadius, direction, _hitResults, distance, layerMask);
+                int hitCount = Physics.SphereCastNonAlloc(previousPos, _hitboxZones[i].radius, direction, _hitResults, distance, _layerMask);
                 for (int j = 0; j < hitCount; j++)
                 {
                     RaycastHit hit = _hitResults[j];
@@ -76,7 +96,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         }
     
         _previousPoints.Clear();
-        hitPoints.ForEach(point => _previousPoints.Add(ConvertWorldTransform(point)));
+        _hitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
     }
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
@@ -93,21 +113,16 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
-    private Vector3 ConvertWorldTransform(Vector3 point)
-    {
-        return transform.TransformPoint(point);
-    }
-
     #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (hitPoints is { Count: > 0 })
+        if (_hitboxZones.Any())
         {
             Gizmos.color = Color.blue;
-            foreach (var point in hitPoints)
+            foreach (var hitboxZone in _hitboxZones)
             {
-                Vector3 worldPoint = ConvertWorldTransform(point);
-                Gizmos.DrawSphere(worldPoint, detectionRadius);
+                Vector3 worldPoint = hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset);
+                Gizmos.DrawSphere(worldPoint, hitboxZone.radius);
             }
         }
 

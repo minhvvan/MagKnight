@@ -16,7 +16,6 @@ public class MeleeNormalAI : IEnemyAI
         _blackboard = _enemy.blackboard;
     }
     
-    
     public void OnEnter()
     {
         _enemy.Anim.SetBool("Trace", true);
@@ -25,7 +24,7 @@ public class MeleeNormalAI : IEnemyAI
 
     public void OnUpdate()
     {
-        if (_enemy.TargetInRay())
+        if (TargetInRay())
         {
             _enemy.SetState(_enemy.actionState);
         }
@@ -43,5 +42,22 @@ public class MeleeNormalAI : IEnemyAI
     public void OnExit()
     {
         _enemy.Anim.SetBool("Trace", false);
+    }
+    
+    public bool TargetInRay()
+    {
+        Transform enemyTransform = _enemy.transform;
+        // Melee Enemy를 위한 탐색
+        if ((enemyTransform.position - _blackboard.target.transform.position).magnitude < 1f) return true; // 너무 가까울때
+        
+        Vector3 origin = enemyTransform.position + Vector3.up * 0.5f;
+        float radius = 0.5f;
+        return Physics.SphereCast(origin,
+            radius,
+            enemyTransform.forward,
+            out _,
+            _blackboard.attackRange,
+            _blackboard.targetLayer
+        );
     }
 }

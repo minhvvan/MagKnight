@@ -97,16 +97,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints:
-  - {x: 0, y: 0, z: 1.5}
-  - {x: 0, y: 0, z: 1.2}
-  - {x: 0, y: 0, z: 0.9}
-  - {x: 0, y: 0, z: 0.6}
-  - {x: 0, y: 0, z: 0.3}
-  layerMask:
+  _hitboxZones:
+  - referenceTransform: {fileID: 82124021084689730}
+    offset: {x: 0, y: 0, z: 0.3}
+    radius: 0.2
+  - referenceTransform: {fileID: 82124021084689730}
+    offset: {x: 0, y: 0, z: 0.6}
+    radius: 0.2
+  - referenceTransform: {fileID: 82124021084689730}
+    offset: {x: 0, y: 0, z: 0.9}
+    radius: 0.2
+  - referenceTransform: {fileID: 82124021084689730}
+    offset: {x: 0, y: 0, z: 1.2}
+    radius: 0.2
+  - referenceTransform: {fileID: 82124021084689730}
+    offset: {x: 0, y: 0, z: 1.5}
+    radius: 0.2
+  _layerMask:
     serializedVersion: 2
     m_Bits: 128
-  detectionRadius: 0.2
+  _hitType: 1
 --- !u!114 &5105682781939386770
 MonoBehaviour:
   m_ObjectHideFlags: 0
