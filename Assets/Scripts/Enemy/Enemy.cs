@@ -104,7 +104,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private void OnAnimatorMove()
     {
         Vector3 rootDelta = Anim.deltaPosition;
-        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.SPD);
+        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
         
         Vector3 position = transform.position + scaledDelta;
         // Vector3 position = EnemyAnimator.rootPosition;
@@ -130,13 +130,15 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
         SetState(staggerState);
-        blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
+        
+        // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
+        //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
 
     public void OnNext(HitInfo hitInfo)
     {
         float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
         hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }
 
