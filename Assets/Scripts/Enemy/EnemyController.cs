@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class EnemyController
+public static class EnemyController
 {
-    public IReadOnlyList<Enemy> Enemies => _enemies;
-    private List<Enemy> _enemies = new List<Enemy>();
+    public static IReadOnlyList<Enemy> Enemies => _enemies;
+    private static List<Enemy> _enemies = new List<Enemy>();
 
-    public bool NoEnemies => _enemies.Count <= 0;
+    public static bool NoEnemies => _enemies.Count <= 0;
     
-    public void AddEnemy(Enemy enemy)
+    public static void AddEnemy(Enemy enemy)
     {
         _enemies.Add(enemy);
     }
 
-    public void RemoveEnemy(Enemy enemy)
+    public static void RemoveEnemy(Enemy enemy)
     {
         _enemies.Remove(enemy);
     }

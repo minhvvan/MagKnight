@@ -7,10 +7,9 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(EnemyHitboxController))]
 [RequireComponent(typeof(AbilitySystem))]
 [RequireComponent(typeof(EnemyBlackboard))]
-public class Enemy : MagneticObject, IObserver<GameObject>
+public class Enemy : MagneticObject, IObserver<HitInfo>
 {
     // components
     public Animator Anim { get; private set; }
@@ -18,7 +17,7 @@ public class Enemy : MagneticObject, IObserver<GameObject>
     public Collider MainCollider { get; private set; }
     public Rigidbody Rb { get; private set; }
     public AbilitySystem EnemyAbilitySystem { get; private set; }
-    public EnemyHitboxController HitboxController { get; private set; }
+    public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
     
     
@@ -48,15 +47,21 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         MainCollider = GetComponent<Collider>();
         Rb = GetComponent<Rigidbody>();
         EnemyAbilitySystem = GetComponent<AbilitySystem>();
-        HitboxController = GetComponent<EnemyHitboxController>();
 
         Agent.updatePosition = false;
         Agent.updateRotation = false;
         
         // hitbox Controller
-        HitboxController.Subscribe(this);
+        HitDetector hitHandler;
+        if (TryGetComponent<HitDetector>(out hitHandler))
+        {
+            HitHandler = hitHandler;
+            HitHandler.Subscribe(this);
+        }
         
         InitializeState();
+        
+        EnemyController.AddEnemy(this);
     }
 
     private void InitializeState()
@@ -115,26 +120,6 @@ public class Enemy : MagneticObject, IObserver<GameObject>
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
         }
     }
-    
-    #region targetDetecting
-
-    public bool TargetInRange()
-    {
-        return Agent.remainingDistance <= blackboard.attackRange;
-    }
-    public bool TargetInRay()
-    {
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        float radius = 0.5f;
-        return Physics.SphereCast(origin,
-            radius,
-            transform.forward,
-            out _,
-            blackboard.attackRange,
-            blackboard.targetLayer
-        );
-    }
-    #endregion
 
     public void OnDeath()
     {
@@ -147,25 +132,38 @@ public class Enemy : MagneticObject, IObserver<GameObject>
         SetState(staggerState);
         blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
-    
-    public void OnNext(GameObject value)
+
+    public void OnNext(HitInfo hitInfo)
     {
         float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
-        value.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
     {
-        throw new NotImplementedException();
+        Debug.LogError(error);
     }
 
     public void OnCompleted()
     {
-        throw new NotImplementedException();
     }
     
-    
+    public void MeleeAttackStart(int throwing = 0)
+    {
+        HitHandler.StartDetection();
+    }
+
+    public void MeleeAttackEnd()
+    {
+        HitHandler.StopDetection();
+    }
+
+    public void OnDestroy()
+    {
+        EnemyController.RemoveEnemy(this);
+    }
+
     #region debugging
     private void OnDrawGizmos()
     {
