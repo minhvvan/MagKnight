@@ -2896,17 +2896,17 @@ PrefabInstance:
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.13
+      value: -3.3
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.000000034729034
+      value: 0.00000011777671
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.46000004
+      value: 1.56
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
@@ -2947,6 +2947,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Droid-01_Army
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4815,6 +4820,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SK_AssaultMech
+      objectReference: {fileID: 0}
+    - target: {fileID: 3984451785317852966, guid: 1640e24d98d231947b45e53f2b22284e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

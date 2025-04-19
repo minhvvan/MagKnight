@@ -48,7 +48,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         Rb = GetComponent<Rigidbody>();
         EnemyAbilitySystem = GetComponent<AbilitySystem>();
 
-
         Agent.updatePosition = false;
         Agent.updateRotation = false;
         
@@ -119,26 +118,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * 10f);
         }
     }
-    
-    #region targetDetecting
-
-    public bool TargetInRange()
-    {
-        return Agent.remainingDistance <= blackboard.attackRange;
-    }
-    public bool TargetInRay()
-    {
-        Vector3 origin = transform.position + Vector3.up * 0.5f;
-        float radius = 0.5f;
-        return Physics.SphereCast(origin,
-            radius,
-            transform.forward,
-            out _,
-            blackboard.attackRange,
-            blackboard.targetLayer
-        );
-    }
-    #endregion
 
     public void OnDeath()
     {

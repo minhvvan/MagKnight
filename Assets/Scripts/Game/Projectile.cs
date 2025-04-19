@@ -19,21 +19,25 @@ public enum TrajectoryType
 [RequireComponent(typeof(HitDetector))]
 public class Projectile : MonoBehaviour, IObserver<HitInfo>
 {
-    [SerializeField] private AbilitySystem _shooterAbilitySystem; // 발사하는 주체의 ability system
     [SerializeField] private float _projectileSpeed;
     [SerializeField] private TrajectoryType _trajectoryType;
+    [SerializeField] private float _lifeTime;
     
-    private Transform targetTransform;
-
-    private float lifeTime = 5f;
-    private CancellationTokenSource _cancellation;
-
+    private AbilitySystem _shooterAbilitySystem; // 발사하는 주체의 ability system
+    private Collider _targetCollider;
     private HitDetector _hitDetector;
 
+    private bool _hasTarget;
 
-    public void Initialize(Transform targetTransform)
+    private CancellationTokenSource _cancellation;
+
+    public void Initialize(AbilitySystem shooterAbilitySystem, Collider targetCollider, float speed)
     {
-        this.targetTransform = targetTransform;
+        _shooterAbilitySystem = shooterAbilitySystem;
+        _targetCollider = targetCollider;
+        _projectileSpeed = speed == 0 ? _projectileSpeed : speed; // runtime중 스피드 조절
+
+        _hasTarget = (targetCollider != null); // target 여부에 따라 trajectory 계산이 달라짐
         
         _cancellation = new CancellationTokenSource();
         
@@ -62,13 +66,13 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
         switch (LayerMask.LayerToName(colliderObject.layer))
         {
             case "Player":
-                GameplayEffect damageEffectToPlayer = new GameplayEffect(EffectType.Static, AttributeType.HP, 10);
+                float damage = - _shooterAbilitySystem.GetValue(AttributeType.ATK);
+                GameplayEffect damageEffectToPlayer = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
                 colliderObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffectToPlayer);
                 Destroy(gameObject);
                 break;
             case "Enemy":
-                float damage = - _shooterAbilitySystem.GetValue(AttributeType.ATK);
-                GameplayEffect damageEffectToEnemy = new GameplayEffect(EffectType.Static, AttributeType.HP, damage);
+                GameplayEffect damageEffectToEnemy = new GameplayEffect(EffectType.Static, AttributeType.HP, -10);
                 colliderObject.GetComponent<EnemyBlackboard>().abilitySystem.ApplyEffect(damageEffectToEnemy);
                 Destroy(gameObject);
                 break;
@@ -90,17 +94,20 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
     
     private async UniTask MoveStraight()
     {
-        float elapsedTime = 0;
-        Vector3 targetPos = targetTransform.position;
-        Vector3 startPos = transform.position;
-        Vector3 dir = Vector3.Normalize(targetPos - startPos);
-        while (elapsedTime < lifeTime)
+        if (_hasTarget)
         {
-            transform.position += dir * (Time.deltaTime * _projectileSpeed);
+            float elapsedTime = 0;
+            Vector3 targetPos = _targetCollider.bounds.center;
+            Vector3 startPos = transform.position;
+            Vector3 dir = Vector3.Normalize(targetPos - startPos);
+            while (elapsedTime < _lifeTime)
+            {
+                transform.position += dir * (Time.deltaTime * _projectileSpeed);
             
-            await UniTask.Yield(cancellationToken:_cancellation.Token);
-            elapsedTime += Time.deltaTime;
+                await UniTask.Yield(cancellationToken:_cancellation.Token);
+                elapsedTime += Time.deltaTime;
+            }
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
     }
 }

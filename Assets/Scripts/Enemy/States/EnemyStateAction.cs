@@ -28,8 +28,8 @@ public class EnemyStateAction : BaseState<Enemy>
         if (!_shot && _controller.Anim.GetCurrentAnimatorStateInfo(0).IsName("ActionRunning") && _blackboard.attackType == EnemyAttckType.Ranged)
         {
             _shot = true;
-            GameObject projectile = GameObject.Instantiate(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity);
-            projectile.GetComponent<Projectile>().Initialize(_blackboard.target.transform);
+            ProjectileFactory.Create(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity,
+                _blackboard.abilitySystem, targetCollider: _blackboard.target.GetComponent<Collider>());
         }
         
         _startupDuration += Time.deltaTime;

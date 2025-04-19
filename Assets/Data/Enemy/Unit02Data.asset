@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6dc8461c6c5d64e981219ef363cabf, type: 3}
   m_Name: Unit02Data
   m_EditorClassIdentifier: 
-  enemyName: 
+  enemyName: Unit02
   description: "\uC591\uC0B0\uD615 \uC6D0\uAC70\uB9AC \uC720\uB2DB\uC785\uB2C8\uB2E4"
   health: 10
   atk: 10

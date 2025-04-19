@@ -76,7 +76,7 @@ public class EnemyBlackboard : MonoBehaviour
                 ai = new MeleeNormalAI(_enemy);
                 break;
             case EnemyAIType.RangedNormal:
-                ai = new MeleeNormalAI(_enemy);
+                ai = new RangedNormalAI(_enemy);
                 break;
         }
     }

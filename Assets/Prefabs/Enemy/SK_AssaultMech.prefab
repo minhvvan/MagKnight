@@ -687,7 +687,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isDead: 0
-  muzzleTransform: {fileID: 2205477906364658151}
+  muzzleTransform: {fileID: 489340003819110710}
 --- !u!114 &4348407960360890687
 MonoBehaviour:
   m_ObjectHideFlags: 0
