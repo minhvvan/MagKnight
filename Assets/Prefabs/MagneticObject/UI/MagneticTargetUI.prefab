@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTargetList: []
-  magneticTargetImagePrefab: {fileID: 8591745875452543247, guid: 24eae76e2bc97ae48a7e14247b864821,
+  magneticTargetPrefab: {fileID: 8591745875452543247, guid: 24eae76e2bc97ae48a7e14247b864821,
     type: 3}
   imageContainer: {fileID: 7622393266465487930}
   poolSize: 20
