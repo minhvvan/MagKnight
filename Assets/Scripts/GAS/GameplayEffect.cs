@@ -6,9 +6,9 @@ using UnityEngine.Serialization;
 
 public enum EffectType
 {
-    Static,
-    Buff,
-    Debuff
+    Instant, //어트리뷰트에 즉각적으로 적용되는 게임플레이 이펙트. BaseValue를 수정 ex) 데미지, 포션, 스탯 증가 등
+    Duration, // 지정한 시간 동안 동작하는 게임플레이 이펙트. CurrentValue를 수정 ex) 버프, 디버프, 틱 데미지
+    Infinite // 명시적으로 종료하지 않으면 계속 동작하는 게임플레이 이펙트. CurrentValue를 수정 ex) 방에 입장시 체력 -20 나가면 해제 등
 }
 
 [System.Serializable]
