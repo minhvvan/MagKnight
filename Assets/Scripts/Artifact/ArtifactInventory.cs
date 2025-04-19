@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -30,7 +33,7 @@ public class ArtifactInventory : MonoBehaviour
     {
         foreach (var artifact in artifactList)
         {
-            if (artifact != null)
+            if(artifact != null)
                 artifact.S_ApplyTo(abilitySystem);
         }
     }
@@ -39,7 +42,7 @@ public class ArtifactInventory : MonoBehaviour
     {
         foreach (var artifact in artifactList)
         {
-            if (artifact != null)
+            if(artifact != null)
                 artifact.N_RemoveTo(abilitySystem);
         }
     }
@@ -48,67 +51,81 @@ public class ArtifactInventory : MonoBehaviour
     {
         foreach (var artifact in artifactList)
         {
-            if (artifact != null)
+            if(artifact != null)
                 artifact.S_RemoveTo(abilitySystem);
         }
     }
-
-    public void SetLeftArtifact(int index, ArtifactDataSO artifact)
+    
+    
+    public async UniTaskVoid SetLeftArtifact(int index, ArtifactDataSO artifact)
     {
-        // 현재 위치의 아티팩트가 위치하면 극에 맞게 기존 특성 지우기
-        if (Left_ArtifactGas[index] != null)
+        // 바뀐 아티팩트가 기존에 있던게 아니라면
+        if (artifact != null && !Left_ArtifactGas.Contains(artifact))
         {
+            Debug.Log("Apply" + artifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
-                Left_ArtifactGas[index].N_RemoveTo(abilitySystem);
+                artifact.N_ApplyTo(abilitySystem);
             }
             else
             {
-                Left_ArtifactGas[index].S_RemoveTo(abilitySystem);
-
-            }   
+                artifact.S_ApplyTo(abilitySystem);
+            }
         }
         
+        await UniTask.DelayFrame(1);
+        
+        var currentArtifact = Left_ArtifactGas[index];
         Left_ArtifactGas[index] = artifact;
-        // 업데이트 된 아티팩트가 있으면 극에 맞게 적용
-        if (artifact != null)
+        
+        await UniTask.DelayFrame(1);
+        
+        if (currentArtifact != null && !Left_ArtifactGas.Contains(currentArtifact))
         {
+            Debug.Log("Remove" + currentArtifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
-                Left_ArtifactGas[index].N_ApplyTo(abilitySystem);
+                currentArtifact.N_RemoveTo(abilitySystem);
             }
             else
             {
-                Left_ArtifactGas[index].S_ApplyTo(abilitySystem);
-            }
+                currentArtifact.S_RemoveTo(abilitySystem);
+            }   
         }
     }
 
-    public void SetRightArtifact(int index, ArtifactDataSO artifact)
+    public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact)
     {
-        // 현재 위치의 아티팩트가 위치하면 극에 맞게 기존 특성 지우기
-        if (Right_ArtifactGas[index] != null)
+        if (artifact != null && !Right_ArtifactGas.Contains(artifact))
         {
+            Debug.Log("Apply" + artifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
-                Right_ArtifactGas[index].S_RemoveTo(abilitySystem);
+                artifact.S_ApplyTo(abilitySystem);
             }
             else
             {
-                Right_ArtifactGas[index].N_RemoveTo(abilitySystem);
-            }   
+                artifact.N_ApplyTo(abilitySystem);
+            }
         }
+        
+        await UniTask.DelayFrame(1);
+        
+        var currentArtifact = Right_ArtifactGas[index];
         Right_ArtifactGas[index] = artifact;
-        // 업데이트 된 아티팩트가 있으면 극에 맞게 적용
-        if (artifact != null)
+        
+        await UniTask.DelayFrame(1);
+        
+        if (currentArtifact != null && !Right_ArtifactGas.Contains(currentArtifact))
         {
+            Debug.Log("Remove" + currentArtifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
-                Right_ArtifactGas[index].S_ApplyTo(abilitySystem);
+                currentArtifact.S_RemoveTo(abilitySystem);
             }
             else
             {
-                Right_ArtifactGas[index].N_ApplyTo(abilitySystem);
+                currentArtifact.N_RemoveTo(abilitySystem);
             }   
         }
     }
