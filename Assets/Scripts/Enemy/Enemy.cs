@@ -60,6 +60,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
         
         InitializeState();
+        
+        EnemyController.AddEnemy(this);
     }
 
     private void InitializeState()
@@ -156,7 +158,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         HitHandler.StopDetection();
     }
-    
+
+    public void OnDestroy()
+    {
+        EnemyController.RemoveEnemy(this);
+    }
+
     #region debugging
     private void OnDrawGizmos()
     {
