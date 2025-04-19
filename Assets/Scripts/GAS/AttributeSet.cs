@@ -13,7 +13,7 @@ using UnityEngine;
 
 public abstract class AttributeSet
 {
-    public SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
+    [SerializeField] SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
 
     public void AddAttribute(AttributeType type , float value)
     {
@@ -31,25 +31,33 @@ public abstract class AttributeSet
     public float GetValue(AttributeType type)
     {
         if (attributeDictionary.ContainsKey(type))
-            return attributeDictionary[type].CurrentValue;
+            return attributeDictionary[type].GetValue();
         
         Debug.LogError($"{type} not found");
         return 0;
     }
     
     // GameplayEffect 적용시 호출
-    public void Modify(AttributeType type, float amount, EffectType effectType)
+    public void Modify(GameplayEffect gameplayEffect)
     {
+        var type = gameplayEffect.attributeType;
+        var effectType = gameplayEffect.effectType;
+        
         if (attributeDictionary.ContainsKey(type))
         {
-            var newValue = PreAttributeChange(type, amount);
+            // PreAttributeChange에 의해 실제로 적용된 값으로 GE에 Update
+            // 이를 통해 Remove시 실제 적용된 값만큼 다시 적용 가능
+            gameplayEffect.amount = PreAttributeChange(type, gameplayEffect.amount);
+            
 
             // 만약 EffectType이 Instant면 BaseValue를 수정
             if(effectType == EffectType.Instant)
-                attributeDictionary[type].ModifyBaseValue(newValue);
+                attributeDictionary[type].ModifyBaseValue(gameplayEffect.amount);
             // 그 외 CurrentValue를 수정
             else
-                attributeDictionary[type].ModifyCurrentValue(newValue);
+                attributeDictionary[type].ModifyCurrentValue(gameplayEffect.amount);
+            
+            PostGameplayEffectExecute(gameplayEffect);
         }
         else
         {
@@ -66,11 +74,22 @@ public abstract class AttributeSet
         }
     }
 
-    public virtual float PreAttributeChange(AttributeType type, float newValue)
+    // Attribute 변경 시 Action 추가하기 위한 함수
+    public void DelegateAttributeChanged(AttributeType type, Action action)
+    {
+        if (attributeDictionary.ContainsKey(type))
+        {
+            attributeDictionary[type].DelegateChangeAction(action);
+        }
+    }
+
+    // Modify 적용 전에 호출
+    protected virtual float PreAttributeChange(AttributeType type, float newValue)
     {
         return newValue;
     }
 
-    public virtual void PostGameplayEffectExecute(GameplayEffect effect){}
+    // Effect 적용 후 호출
+    protected virtual void PostGameplayEffectExecute(GameplayEffect effect){}
 }
 

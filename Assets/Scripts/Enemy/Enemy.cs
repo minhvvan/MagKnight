@@ -130,7 +130,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
         SetState(staggerState);
-        blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
+        
+        // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
+        //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
 
     public void OnNext(HitInfo hitInfo)

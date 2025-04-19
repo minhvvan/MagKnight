@@ -7,7 +7,7 @@ namespace Jun
 {
     public class PlayerAttributeSet : AttributeSet
     {
-        public override float PreAttributeChange(AttributeType type, float newValue)
+        protected override float PreAttributeChange(AttributeType type, float newValue)
         {
             float returnValue = newValue;
 
@@ -20,15 +20,16 @@ namespace Jun
                 // if(무적효과 적용시)
                 // returnValue = 0  -> 데미지를 0으로 초기화
             }
+            
             return returnValue;
         }
 
-        public override void PostGameplayEffectExecute(GameplayEffect effect)
+        protected override void PostGameplayEffectExecute(GameplayEffect effect)
         {
             // 최대체력 증가시 그만큼 HP도 증가
             if (effect.attributeType == AttributeType.MaxHP)
             {
-                Modify(AttributeType.HP, effect.amount, effect.effectType);
+                SetValue(AttributeType.HP, GetValue(AttributeType.MaxHP));
             }
 
             // 체력 변경시 Clamp값으로
@@ -44,6 +45,8 @@ namespace Jun
                 SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
                 // 예시 실드가 있다면?
                 // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
+                
+                // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
                 SetValue(AttributeType.Damage, 0);
                 
             }

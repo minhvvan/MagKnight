@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -8,8 +9,13 @@ public class AbilitySystem : MonoBehaviour
 {
     [SerializeReference, SubclassPicker] public AttributeSet Attributes;
     
-    private List<GameplayEffect> _activatedEffects = new List<GameplayEffect>();
-
+    // 기존 GameplayEffect는 가지면서 기존 GameplayEffect에 영향을 주지않기 위해 Hash를 가져와서 사용
+    // 저장되는 GameplayEffect는 실제 적용된 Gameplay의 Instance
+    // Remove를 요청할 때는 요청자는 단순히 나의 GE를 삭제해달라고 요청해주면 된다.
+    [SerializeField] SerializedDictionary<int, GameplayEffect> _activatedEffects = new SerializedDictionary<int, GameplayEffect>();
+    
+    
+    
     public void AddAttribute(AttributeType type, float value)
     {
         Attributes.AddAttribute(type, value);
@@ -20,35 +26,38 @@ public class AbilitySystem : MonoBehaviour
     // e.g. 아티팩트 효과, 버프 디버프 등
     public void ApplyEffect(GameplayEffect gameplayEffect)
     {
-        AttributeType attributeType = gameplayEffect.attributeType;
+        // instance로 만드는 이유 : gameplayEffect를 직접적으로 수정하지 않도록
+        // AttributeSet 안에 PreAttributeChange에서 수정 위험 요소 있음
+        var instanceGE = gameplayEffect.DeepCopy();
         
-        Attributes.Modify(attributeType, gameplayEffect.amount, gameplayEffect.effectType);
+        
+        Attributes.Modify(instanceGE);
+        
         
         switch (gameplayEffect.effectType)
         {
             case EffectType.Instant:
                 break;
             case EffectType.Duration:
-                RemoveAfterDuration(gameplayEffect).Forget();
+                RemoveAfterDuration(instanceGE).Forget();
                 break;
             case EffectType.Infinite:
                 //RemoveAfterDuration(gameplayEffect).Forget();
                 break;
         }
         
-        Attributes.PostGameplayEffectExecute(gameplayEffect);
-        
-        if(gameplayEffect.tracking) _activatedEffects.Add(gameplayEffect);
+        if(instanceGE.tracking) _activatedEffects.TryAdd(gameplayEffect.GetHashCode(), instanceGE);
     }
     
     public void RemoveEffect(GameplayEffect gameplayEffect)
     {
         if (gameplayEffect.tracking)
         {
-            if (_activatedEffects.Contains(gameplayEffect))
+            if (_activatedEffects.ContainsKey(gameplayEffect.GetHashCode()))
             {
-                Attributes.Modify(gameplayEffect.attributeType, -gameplayEffect.appliedAmount, gameplayEffect.effectType);
-                _activatedEffects.Remove(gameplayEffect);
+                _activatedEffects[gameplayEffect.GetHashCode()].amount = -_activatedEffects[gameplayEffect.GetHashCode()].amount; 
+                Attributes.Modify(_activatedEffects[gameplayEffect.GetHashCode()]);
+                _activatedEffects.Remove(gameplayEffect.GetHashCode());
             }
             else // tracking 중인데 _activatedEffect가 없을수도
             {
@@ -56,19 +65,17 @@ public class AbilitySystem : MonoBehaviour
             }
         }
         else
-            Attributes.Modify(gameplayEffect.attributeType, - gameplayEffect.appliedAmount,gameplayEffect.effectType);
+        {
+            var instanceGE = gameplayEffect.DeepCopy();
+            instanceGE.amount = -instanceGE.amount;
+            Attributes.Modify(instanceGE);
+        }
     }
 
     // Attribute의 CurrentValue를 가져옴
     public float GetValue(AttributeType type)
     {
         return Attributes.GetValue(type);
-    }
-
-    // Attribute의 BaseValue를 세팅함
-    public void SetValue(AttributeType type, float value)
-    {
-        Attributes.SetValue(type, value);
     }
     
     //Duration에서 사용됨

@@ -32,10 +32,10 @@ public class Attribute
 {
     //public Action<float> OnPreModify; // amount 값을 value에 적용하기 전에 전처리
     // 기본 값, 영구히 적용되는 고정 스탯 값을 관리하는데 사용
-    public float BaseValue;
+    [SerializeField] private float BaseValue;
     // 변동값, 버프등으로 임시적으로 변동된 값을 관리하는데 사용
-    public float CurrentValue;
-    public Action ChangeAction;
+    [SerializeField] private float CurrentValue;
+    private Action ChangeAction;
     
     // Attribute 초기화
     public void InitAttribute(float value)
@@ -67,6 +67,11 @@ public class Attribute
         CurrentValue = BaseValue + gapValue;
         BaseValue = value;
         ChangeAction?.Invoke();
+    }
+
+    public float GetValue()
+    {
+        return CurrentValue;
     }
 
     // Delegate 구독 함수
