@@ -28,7 +28,8 @@ public class MagneticController : MagneticObject
     public float sphereRadius;
 
     private CharacterController _characterController;
-
+    [SerializeField] private MagneticUIController _magneticUIController;
+    
     private Vector3 _currentVelocity; //
     private Vector3 playerPosOffset; // player position을 center정도 위치로 임시보정 해주는 값
     private float _dragValue; //가속 후 감속값
@@ -83,6 +84,7 @@ public class MagneticController : MagneticObject
         base.Initialize();
         
         //추후 SO로 받아서 설정하게 될 기본값들
+        _magneticUIController = FindObjectOfType<MagneticUIController>();
         
         mainCamera = Camera.main;
         screenOffset = 0.15f;
@@ -151,6 +153,8 @@ public class MagneticController : MagneticObject
             {
                 OnSeparation(targetMagneticObject).Forget();
             }
+            
+            _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
         }
         //끝
         _isLongRelease = false;
@@ -177,18 +181,56 @@ public class MagneticController : MagneticObject
     
 
     #region 타겟팅 시스템
+
+    public void RealtimeInCountTargetSystem()
+    {
+        Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
+        Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
+        
+        rayDistance = _outBoundDistance;
+        
+        //범위 내 전체 감지
+        RaycastHit[] countHits = Physics.SphereCastAll(targetPoint, rayDistance, 
+            mainCamera.transform.up,0f, (1 << magneticLayer) | (1 << enemyLayer));
+        
+        //감지 된 대상 중 카메라 시야 내에 있는 대상만 count
+        if (countHits.Length > 0)
+        {
+            foreach (RaycastHit inCount in countHits)
+            {
+                IncountVisor(inCount.transform, targetPoint);
+            }
+        }
+    }
+
+    //대상의 위치가 자기력 범위 내에 있는지 판단하여 할당과 제외를 판별합니다.
+    public void IncountVisor(Transform inCount, Vector3 origin)
+    {
+        var objTransform = inCount.transform;
+        var inCounter = mainCamera.WorldToScreenPoint(objTransform.position);
+        if (Vector3.Distance(objTransform.position, origin) <= _outBoundDistance && inCounter.z >= 0)
+        {
+            _magneticUIController.InCountTarget(objTransform);
+        }
+        else
+        {
+            _magneticUIController.UnCountTarget(objTransform);
+        }
+    }
+    
+    //
     public void MagneticTargetCamera()
     {
         //RaycastHit hit;
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
-        rayDistance = _outBoundDistance;
-        
-        sphereRadius = GetDynamicSphereRadius(screenOffset, Vector3.Distance(mainCamera.transform.position, targetPoint));
         
         Ray sphereRay = new Ray(targetPoint, mainCamera.transform.forward);
-        RaycastHit[] hits = Physics.SphereCastAll(sphereRay, sphereRadius, rayDistance,
+        sphereRadius = GetDynamicSphereRadius(screenOffset, Vector3.Distance(mainCamera.transform.position, targetPoint));
+        //조준 범위만 감지
+        RaycastHit[] hits = Physics.SphereCastAll(sphereRay, sphereRadius, rayDistance - sphereRadius,
             (1 << magneticLayer) | (1 << enemyLayer));
+        
         if (hits.Length > 0)
         {
             RaycastHit bestHit = hits.OrderBy(h =>
@@ -202,16 +244,28 @@ public class MagneticController : MagneticObject
             {
                 targetHit = bestHit.point;
                 Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+                Debug.Log(Vector3.Distance(_characterController.transform.position,bestHit.point));
             }
 
             if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
             {
+                
+                
+                //새로 타겟된 대상이 이전과 다르면 언록
+                if (targetMagneticObject != null && magneticObject != targetMagneticObject)
+                {
+                    _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+                }
+                
                 _isDetectedMagnetic = true;
                 targetMagneticObject = magneticObject;
+                
+                _magneticUIController.InLockOnTarget(targetMagneticObject.transform);
                 return;
             }
         }
         
+        if(targetMagneticObject != null) _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
         _isDetectedMagnetic = false;
         targetMagneticObject = null;
     }
@@ -499,6 +553,8 @@ public class MagneticController : MagneticObject
     
     private void FixedUpdate()
     {
+        RealtimeInCountTargetSystem();
+        
         //자석 능력 길게 키 입력 시
         if (_isPressMagnetic)
         {
@@ -515,6 +571,7 @@ public class MagneticController : MagneticObject
             if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
         }
     }
+    
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
