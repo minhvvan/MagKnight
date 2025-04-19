@@ -364,10 +364,11 @@ public class MagneticController : MagneticObject
         var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
         var distance = (targetPos - modifyPlayerPos).magnitude;
         var maxDistance = _onCounterPress ? _counterPressRange : _outBoundDistance;
+        var backDistance = maxDistance - Vector3.Distance(targetPos, modifyPlayerPos);
         
         var duration = 0f;
         if (target.GetIsStructure()) 
-            duration = distance / (structSpeed);
+            duration = backDistance / (structSpeed);
         else duration = distance / (nonStructSpeed);
         
         var elapsedTime = 0f;
@@ -396,8 +397,10 @@ public class MagneticController : MagneticObject
             //구조물 여부에 따라 다른 액션
             if (target.GetIsStructure())
             {
-                var backDirection = -(destination - modifyPlayerPos).normalized;
-                var newMovement = backDirection * (structSpeed * Time.deltaTime);
+                var backDirection = -destination.normalized;
+                backDirection.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
+                
+                var newMovement = (backDirection) * (structSpeed * Time.deltaTime);
                 
                 _currentVelocity = newMovement;
                 
