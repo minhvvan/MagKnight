@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+// Attribute를 Type으로 관리
 public enum AttributeType
 {
     MaxHP,
     HP,
-    STR,
-    INT,
-    DEF,
-    LUK,
-    CRT,
-    DMG,
-    SPD,
-    BAS,
+    Strength, // 힘
+    Intelligence, // 지능
+    Defense, // 방어력
+    CriticalRate, // 치명타 확률
+    CriticalDamage, // 치명타 피해량
+    MoveSpeed, // 이동속
+    AttackSpeed, // 공격속도
+    Damage, // 메타 Attribute, 받은 피해량
     ATK, // Enemybase공격력
     MAXRES, // 최대저항력
     RES,
@@ -29,23 +30,54 @@ public enum AttributeType
 [System.Serializable]
 public class Attribute
 {
-    public Action<float> OnPreModify; // amount 값을 value에 적용하기 전에 전처리
-    public float Value;
-    public Action OnPostModify; // 바뀐 value 값을 후처리
+    //public Action<float> OnPreModify; // amount 값을 value에 적용하기 전에 전처리
+    // 기본 값, 영구히 적용되는 고정 스탯 값을 관리하는데 사용
+    [SerializeField] private float BaseValue;
+    // 변동값, 버프등으로 임시적으로 변동된 값을 관리하는데 사용
+    [SerializeField] private float CurrentValue;
+    private Action ChangeAction;
     
-
-    public void Modify(float amount)
+    // Attribute 초기화
+    public void InitAttribute(float value)
     {
-        OnPreModify?.Invoke(amount);
-        Value += amount;
-        OnPostModify?.Invoke();
+        BaseValue = value;
+        CurrentValue = BaseValue;
+    }
+    
+    // GameplayEffect Instant Type 이외 호출
+    public void ModifyCurrentValue(float amount)
+    {
+        CurrentValue += amount;
+        ChangeAction?.Invoke();
+    }
+    
+    // GameplayEffect Instant Type시 호출
+    public void ModifyBaseValue(float amount)
+    {
+        BaseValue += amount;
+        ModifyCurrentValue(amount);
+        ChangeAction?.Invoke();
     }
 
-    public void Set(float value)
+    // Attribute를 Set하는 함수
+    // BaseValue를 value값으로 설정하고 그 값차이만큼 CurrentValue Update
+    public void SetValue(float value)
     {
-        OnPreModify?.Invoke(value);
-        Value = value;
-        OnPostModify?.Invoke();
+        var gapValue = value - BaseValue;
+        CurrentValue = BaseValue + gapValue;
+        BaseValue = value;
+        ChangeAction?.Invoke();
+    }
+
+    public float GetValue()
+    {
+        return CurrentValue;
+    }
+
+    // Delegate 구독 함수
+    public void DelegateChangeAction(Action action)
+    {
+        ChangeAction += action;
     }
 }
 
