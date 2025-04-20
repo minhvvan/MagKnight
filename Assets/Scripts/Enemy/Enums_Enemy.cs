@@ -23,5 +23,6 @@ public enum EnemyAIType
 {
     None,
     MeleeNormal,
+    RangedNormal,
     Max
 }

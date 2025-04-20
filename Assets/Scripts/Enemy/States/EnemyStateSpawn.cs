@@ -25,11 +25,7 @@ public class EnemyStateSpawn : BaseState<Enemy>
     {
         if (_controller.IsCurrentAnimFinished("Spawn"))
         {
-
-            if (_controller.TargetInRay()) 
-                _controller.SetState(_controller.actionState);
-            else
-                _controller.SetState(_controller.aiState);
+            _controller.SetState(_controller.aiState);
         }
     }
 

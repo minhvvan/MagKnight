@@ -8,6 +8,13 @@ public class ArtifactButtonTest : MonoBehaviour
     public AbilitySystem abilitySystem;
     [FormerlySerializedAs("artifactGas")] public ArtifactDataSO artifactDataSo;
 
+    public GameplayEffect damageEffect;
+    
+    public void GetDamage()
+    {
+        abilitySystem.ApplyEffect(damageEffect);
+    }
+    
     public void ApplyN()
     {
         artifactDataSo.N_ApplyTo(abilitySystem);
