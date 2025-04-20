@@ -3,23 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class MagneticTarget : MonoBehaviour
 {
+    [Header("Image & Color Set")]
     public Sprite[] targetImg;
     public Color32[] targetColor;
     
-    public RectTransform rectTransform;
-    private readonly Vector2 _readySize = new Vector2(118,119);
-    private readonly Vector2 _lockSize = new Vector2(279,279);
-    
-    public Transform target;
+    [NonSerialized] public Transform target;
     public Action<MagneticTarget> onReturnTarget;
+    
+    [Header("Image width & height Set")]
+    public Vector2 readySize = new Vector2(118,119);
+    public Vector2 lockSize = new Vector2(279,279);
     
     private Image _currentImg;
     private Camera _mainCamera;
     private Canvas _uiCanvas;
+    private RectTransform _rectTransform;
     private RectTransform _canvasRectTransform;
     
     private bool _haveTarget = false;
@@ -33,7 +36,7 @@ public class MagneticTarget : MonoBehaviour
             _isLocked = value;
             _currentImg.sprite = !_isLocked ? targetImg[0] : targetImg[1];
             _currentImg.color = !_isLocked ? targetColor[0] : targetColor[1];
-            rectTransform.sizeDelta = !_isLocked ? _readySize : _lockSize;
+            _rectTransform.sizeDelta = !_isLocked ? readySize : lockSize;
         }
     }
 
@@ -46,7 +49,7 @@ public class MagneticTarget : MonoBehaviour
     {
         if (target != null)
         {
-            rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(target.position));
+            _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(target.position));
         }
         else
         {
@@ -59,7 +62,7 @@ public class MagneticTarget : MonoBehaviour
     private void Initialize()
     {
         _mainCamera = Camera.main;
-        rectTransform = GetComponent<RectTransform>();
+        _rectTransform = GetComponent<RectTransform>();
         _currentImg = GetComponent<Image>();
         _uiCanvas = GetComponentInParent<Canvas>();
         _canvasRectTransform = _uiCanvas.GetComponent<RectTransform>();
@@ -67,6 +70,7 @@ public class MagneticTarget : MonoBehaviour
         IsTargetLock = false;
     }
 
+    //
     private Vector2 OperateUiPoint(Vector3 screenPoint)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -74,7 +78,7 @@ public class MagneticTarget : MonoBehaviour
         
         return uiPosition;
     }
-
+    
     public void SetTarget(Transform target)
     {
         this.target = target;
