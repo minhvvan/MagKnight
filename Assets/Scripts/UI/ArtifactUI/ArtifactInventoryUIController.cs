@@ -3,34 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
-public class ArtifactInventoryUI : MonoBehaviour
+public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIController
 {
     [SerializeField] private ArtifactSlot artifactSlot;
     [SerializeField] private GameObject Left_ArtifactInventory;
     [SerializeField] private GameObject Right_ArtifactInventory;
     [SerializeField] private GameObject SlotPrefab;
     [SerializeField] private GameObject ArtifactUIPrefab;
+    [SerializeField] private Button HideButton;
     
     private List<ArtifactSlot> Left_ArtifactSlots = new List<ArtifactSlot>();
     private List<ArtifactSlot> Right_ArtifactSlots = new List<ArtifactSlot>();
-
-    private ArtifactSlot beginArtifactSlot;
+    
     private ArtifactInventory inventory;
     private MagneticController magneticController;
-    
-    void Awake()
-    {
-        Initialized();
-        inventory = FindObjectOfType<ArtifactInventory>();
-        magneticController = FindObjectOfType<MagneticController>();
-        Hide();
-    }
 
-    public void Show(ArtifactDataSO artifactDataSO = null)
+    public void ShowUI(ArtifactDataSO artifactDataSO = null)
     {
-        gameObject.SetActive(true);
-
         SetSlotColor(magneticController.GetMagneticType());
         
         if (artifactDataSO != null)
@@ -38,11 +29,20 @@ public class ArtifactInventoryUI : MonoBehaviour
             var artifactUI = Instantiate(ArtifactUIPrefab, artifactSlot.transform).GetComponent<ArtifactUI>();
             artifactUI.Initialized(artifactDataSO, transform);
         }
+        
+        ShowUI();
+    }
+
+    public void ShowUI()
+    {
+        gameObject.SetActive(true);
     }
     
-    public void Hide()
+    public void HideUI()
     {
-        var artifact = artifactSlot.Icon();
+        UIManager.Instance.DisableCursor();
+
+        var artifact = artifactSlot.GetChild();
         if (artifact != null)
             Destroy(artifact);
         gameObject.SetActive(false);
@@ -76,7 +76,7 @@ public class ArtifactInventoryUI : MonoBehaviour
         }
     }
     
-    void Initialized()
+    public void Initialized()
     {
         for (int i = 0; i < 15; i++)
         {
@@ -92,16 +92,19 @@ public class ArtifactInventoryUI : MonoBehaviour
             instance2.OnArtifactModified = UpdateArtifact_Right;
             Right_ArtifactSlots.Add(instance2);
         }
+        
+        inventory = FindObjectOfType<ArtifactInventory>();
+        magneticController = FindObjectOfType<MagneticController>();
+        HideButton.onClick.AddListener(HideUI);
     }
 
     void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
     {
-        inventory.SetLeftArtifact(index, artifact);
+        inventory.SetLeftArtifact(index, artifact).Forget();
     }
     
     void UpdateArtifact_Right(int index, ArtifactDataSO artifact)
     {
-        inventory.SetRightArtifact(index, artifact);
+        inventory.SetRightArtifact(index, artifact).Forget();
     }
-    
 }
