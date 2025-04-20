@@ -20,12 +20,10 @@ MonoBehaviour:
     attributeType: 0
     amount: 10
     duration: 0
-    tracking: 0
-    appliedAmount: 10
+    tracking: 1
   S_ArtifactEffect:
   - effectType: 0
     attributeType: 3
     amount: 10
     duration: 0
-    tracking: 0
-    appliedAmount: 10
+    tracking: 1

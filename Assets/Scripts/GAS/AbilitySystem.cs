@@ -45,8 +45,16 @@ public class AbilitySystem : MonoBehaviour
                 //RemoveAfterDuration(gameplayEffect).Forget();
                 break;
         }
-        
-        if(instanceGE.tracking) _activatedEffects.TryAdd(gameplayEffect.GetHashCode(), instanceGE);
+
+        if (instanceGE.tracking)
+        {
+            // 이미 존재하는 이펙트면
+            if (!_activatedEffects.TryAdd(gameplayEffect.GetHashCode(), instanceGE))
+            {
+                // 중첩되도록 amount 추가
+                _activatedEffects[gameplayEffect.GetHashCode()].amount += instanceGE.amount;
+            }
+        }
     }
     
     public void RemoveEffect(GameplayEffect gameplayEffect)

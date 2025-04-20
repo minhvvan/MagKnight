@@ -12,8 +12,8 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
     [SerializeField] private Image backgroundSprite;
 
     public ArtifactDataSO artifact;
-    
-    public int Index { get; private set; }
+
+    private int Index;
     public Action<int, ArtifactDataSO> OnArtifactModified;
 
     public void SetSlotIndex(int index) => Index = index;
@@ -27,7 +27,7 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
 
     public void ModifyArtifact()
     {
-        var child = Icon();
+        var child = GetChild();
         if (child != null)
         {
             var artifactUI = child.GetComponent<ArtifactUI>();
@@ -40,7 +40,7 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
         OnArtifactModified?.Invoke(Index, artifact);
     }
 
-    public GameObject Icon()
+    public GameObject GetChild()
     {
         if(transform.childCount > 0)
             return transform.GetChild(0).gameObject;
@@ -49,11 +49,11 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
 
     public void OnDrop(PointerEventData eventData)
     {
-        var icon = Icon();
+        var child = GetChild();
         // 슬롯에 아티팩트가 있을 때 Swap
-        if (icon != null)
+        if (child != null)
         {
-            icon.GetComponent<ArtifactUI>().SetArtifactIcon(eventData.pointerDrag.GetComponent<ArtifactUI>().startParent);
+            child.GetComponent<ArtifactUI>().SetArtifactIcon(eventData.pointerDrag.GetComponent<ArtifactUI>().startParent);
         }
         eventData.pointerDrag.GetComponent<ArtifactUI>().SetArtifactIcon(transform);
         ModifyArtifact();
