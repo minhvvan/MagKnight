@@ -128,7 +128,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnStagger()
     {
-        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
+        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MaxResistance);
         SetState(staggerState);
         
         // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
@@ -137,7 +137,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
+        float damage = -blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
         hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
     }

@@ -86,29 +86,13 @@ public class EnemyBlackboard : MonoBehaviour
         // 버프, 디버프, 상호작용 가능 stat은 attribute로 관리
         abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
-        abilitySystem.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
+        abilitySystem.AddAttribute(AttributeType.Strength, _enemyDataSO.atk);
         abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
-        abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.MaxResistance, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
-        abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
-
-        // 1. 힐 과잉방지
-        // abilitySystem.AddPostModify(AttributeType.HP, () =>
-        // {
-        //     float hp = abilitySystem.GetValue(AttributeType.HP);
-        //     float max = abilitySystem.GetValue(AttributeType.MaxHP);
-        //     if (hp > max)
-        //         abilitySystem.SetValue(AttributeType.HP, max);
-        // });
-        
-        // 2. 사망 처리
-        // abilitySystem.AddPostModify(AttributeType.HP, () =>
-        // {
-        //     if (abilitySystem.GetValue(AttributeType.HP) <= 0)
-        //     {
-        //         _enemy.OnDeath();
-        //     }
-        // });
+        abilitySystem.AddAttribute(AttributeType.Resistance, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.Damage, 0);
+        abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
         
         // 1. resistance 회복 과잉방지
         // abilitySystem.AddPostModify(AttributeType.RES, () =>
@@ -127,5 +111,8 @@ public class EnemyBlackboard : MonoBehaviour
         //         _enemy.OnStagger();
         //     }
         // });
+
+        ((EnemyAttributeSet)abilitySystem.Attributes).OnDeath += _enemy.OnDeath;
+        ((EnemyAttributeSet)abilitySystem.Attributes).OnStagger += _enemy.OnStagger;
     }
 }

@@ -1764,8 +1764,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attributes:
-    attributeDictionary:
-      _serializedList: []
+    rid: 7511380119148822528
+  _activatedEffects:
+    _serializedList: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7511380119148822528
+      type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
+      data:
+        attributeDictionary:
+          _serializedList: []
 --- !u!114 &-5029212273671297109
 MonoBehaviour:
   m_ObjectHideFlags: 0
