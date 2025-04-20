@@ -62,7 +62,6 @@ public class ArtifactInventory : MonoBehaviour
         // 바뀐 아티팩트가 기존에 있던게 아니라면
         if (artifact != null && !Left_ArtifactGas.Contains(artifact))
         {
-            Debug.Log("Apply" + artifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
                 artifact.N_ApplyTo(abilitySystem);
@@ -82,7 +81,6 @@ public class ArtifactInventory : MonoBehaviour
         
         if (currentArtifact != null && !Left_ArtifactGas.Contains(currentArtifact))
         {
-            Debug.Log("Remove" + currentArtifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
                 currentArtifact.N_RemoveTo(abilitySystem);
@@ -98,7 +96,6 @@ public class ArtifactInventory : MonoBehaviour
     {
         if (artifact != null && !Right_ArtifactGas.Contains(artifact))
         {
-            Debug.Log("Apply" + artifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
                 artifact.S_ApplyTo(abilitySystem);
@@ -118,7 +115,6 @@ public class ArtifactInventory : MonoBehaviour
         
         if (currentArtifact != null && !Right_ArtifactGas.Contains(currentArtifact))
         {
-            Debug.Log("Remove" + currentArtifact.ToString());
             if (_magneticController.magneticType == MagneticType.N)
             {
                 currentArtifact.S_RemoveTo(abilitySystem);
