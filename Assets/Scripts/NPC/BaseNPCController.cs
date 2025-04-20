@@ -5,6 +5,7 @@ using UnityEngine;
 public class BaseNPCController : MonoBehaviour, IInteractable
 {
     public Transform player;
+    public Transform headTransform;
     Animator animator;
 
     [Range(0, 1)]
@@ -104,5 +105,10 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public Transform GetHeadTransform()
+    {
+        return headTransform ? headTransform : transform;
     }
 }

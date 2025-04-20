@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
+using Moon;
 using UnityEngine;
 using VFolders.Libs;
 
@@ -9,6 +12,7 @@ public class InteractionController : MonoBehaviour
 {
     [SerializeField] private float viewAngle = 90f;
     [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] CinemachineVirtualCamera _interactionCamera;
     
     private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
@@ -33,11 +37,41 @@ public class InteractionController : MonoBehaviour
             return;
         }
         
+        
+        InteractStart();
+        
         _currentInteractable.Interact(_interactor);
         _interactables.Remove(_currentInteractable);
         FindClosestInteractable();
 
         _currentInteractable = null;
+    }
+
+    //NPC와의 인터렉션 시작
+    public void InteractStart()
+    {
+        if(_currentInteractable is BaseNPCController npc)
+        {
+            Transform playerHead = null;
+
+            if(_interactor is PlayerController player)
+            {
+                playerHead = player.cameraSettings.lookAt;    
+            }
+            FocusOnTarget(npc.GetHeadTransform(), playerHead);
+        }
+
+        //TEST 3초 후 대화 종료 : 대화장 만들고 상태 변화 적용 후 제거
+        UniTask.Delay(TimeSpan.FromSeconds(3)).ContinueWith(() =>
+        {
+            EndDialogue();
+        });
+    }
+
+
+    public void InteractEnd()
+    {
+        EndDialogue();
     }
 
   
@@ -105,5 +139,34 @@ public class InteractionController : MonoBehaviour
         
         _currentInteractable = closest;
         _currentInteractable?.Select();
+    }
+
+    public void FocusOnTarget(Transform target, Transform lookFrom = null)
+    {
+        if(lookFrom == null)
+        {
+            Vector3 offset = target.forward * 1.5f;
+            _interactionCamera.transform.position = target.position + offset;
+        }
+        else
+        {
+            Vector3 offset = target.forward * 1f;
+            _interactionCamera.transform.position = lookFrom.position + offset;
+        }
+
+        _interactionCamera.LookAt = target;
+        _interactionCamera.Priority = 20;
+
+        var composer = _interactionCamera.GetCinemachineComponent<CinemachineComposer>();
+        if (composer != null)
+        {
+            composer.m_ScreenX = 0.2f;
+            composer.m_ScreenY = 0.55f;
+        }
+    }
+
+    public void EndDialogue()
+    {
+        _interactionCamera.Priority = 0;
     }
 }
