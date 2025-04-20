@@ -12,15 +12,18 @@ public class InteractionController : MonoBehaviour
 {
     [SerializeField] private float viewAngle = 90f;
     [SerializeField] private LayerMask obstacleMask;
-    [SerializeField] CinemachineVirtualCamera _interactionCamera;
+    [SerializeField] public CameraSettings cameraSettings;
     
     private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
 
+    
+
     private void Awake()
     {
         _interactor = this.GetInterfaceInParent<IInteractor>();
+        cameraSettings = FindObjectOfType<CameraSettings>();
     }
 
     public void Interact()
@@ -58,20 +61,20 @@ public class InteractionController : MonoBehaviour
             {
                 playerHead = player.cameraSettings.lookAt;    
             }
-            FocusOnTarget(npc.GetHeadTransform(), playerHead);
+            FocusOnTarget(cameraSettings.interactionCamera,  npc.GetHeadTransform(), playerHead);
         }
 
         //TEST 3초 후 대화 종료 : 대화장 만들고 상태 변화 적용 후 제거
         UniTask.Delay(TimeSpan.FromSeconds(3)).ContinueWith(() =>
         {
-            EndDialogue();
+            EndDialogue(cameraSettings.interactionCamera);
         });
     }
 
 
     public void InteractEnd()
     {
-        EndDialogue();
+        EndDialogue(cameraSettings.interactionCamera);
     }
 
   
@@ -141,23 +144,23 @@ public class InteractionController : MonoBehaviour
         _currentInteractable?.Select();
     }
 
-    public void FocusOnTarget(Transform target, Transform lookFrom = null)
+    public void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
     {
         if(lookFrom == null)
         {
             Vector3 offset = target.forward * 1.5f;
-            _interactionCamera.transform.position = target.position + offset;
+            interactionCamera.transform.position = target.position + offset;
         }
         else
         {
-            Vector3 offset = target.forward * 1f;
-            _interactionCamera.transform.position = lookFrom.position + offset;
+            Vector3 offset = lookFrom.forward * 1f;
+            interactionCamera.transform.position = lookFrom.position + offset;
         }
 
-        _interactionCamera.LookAt = target;
-        _interactionCamera.Priority = 20;
+        interactionCamera.LookAt = target;
+        interactionCamera.Priority = 20;
 
-        var composer = _interactionCamera.GetCinemachineComponent<CinemachineComposer>();
+        var composer = interactionCamera.GetCinemachineComponent<CinemachineComposer>();
         if (composer != null)
         {
             composer.m_ScreenX = 0.2f;
@@ -165,8 +168,8 @@ public class InteractionController : MonoBehaviour
         }
     }
 
-    public void EndDialogue()
+    public void EndDialogue(CinemachineVirtualCamera interactionCamera)
     {
-        _interactionCamera.Priority = 0;
+        interactionCamera.Priority = 0;
     }
 }
