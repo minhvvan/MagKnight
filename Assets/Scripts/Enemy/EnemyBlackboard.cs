@@ -25,6 +25,7 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public int appearanceFloor; // todo: 몹을 미리 배치하기 때문에 제거 가능성 높음
     [HideInInspector] public float projectileSpeed;
     [HideInInspector] public float attackRange;
+    [HideInInspector] public GameObject projectilePrefab;
     #endregion
     
     #region CurrentState
@@ -38,6 +39,11 @@ public class EnemyBlackboard : MonoBehaviour
 
     [HideInInspector] public CancellationTokenSource actionRecoveryCancellation;
     [HideInInspector] public CancellationTokenSource staggerRecoveryCancellation;
+    #endregion
+    
+    #region Transform
+
+    public Transform muzzleTransform;
     #endregion
 
     private void Awake()
@@ -60,6 +66,7 @@ public class EnemyBlackboard : MonoBehaviour
         appearanceFloor = _enemyDataSO.appearanceFloor;
         projectileSpeed = _enemyDataSO.projectileSpeed;
         attackRange = _enemyDataSO.attackRange;
+        projectilePrefab = _enemyDataSO.projectilePrefab;
         
         targetLayer = LayerMask.GetMask("Player");
 
@@ -67,6 +74,9 @@ public class EnemyBlackboard : MonoBehaviour
         {
             case EnemyAIType.MeleeNormal:
                 ai = new MeleeNormalAI(_enemy);
+                break;
+            case EnemyAIType.RangedNormal:
+                ai = new RangedNormalAI(_enemy);
                 break;
         }
     }
@@ -77,45 +87,45 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
-        abilitySystem.AddAttribute(AttributeType.SPD, _enemyDataSO.moveSpeed);
+        abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
         abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
         abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
 
         // 1. 힐 과잉방지
-        abilitySystem.AddPostModify(AttributeType.HP, () =>
-        {
-            float hp = abilitySystem.GetValue(AttributeType.HP);
-            float max = abilitySystem.GetValue(AttributeType.MaxHP);
-            if (hp > max)
-                abilitySystem.SetValue(AttributeType.HP, max);
-        });
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     float hp = abilitySystem.GetValue(AttributeType.HP);
+        //     float max = abilitySystem.GetValue(AttributeType.MaxHP);
+        //     if (hp > max)
+        //         abilitySystem.SetValue(AttributeType.HP, max);
+        // });
         
         // 2. 사망 처리
-        abilitySystem.AddPostModify(AttributeType.HP, () =>
-        {
-            if (abilitySystem.GetValue(AttributeType.HP) <= 0)
-            {
-                _enemy.OnDeath();
-            }
-        });
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     if (abilitySystem.GetValue(AttributeType.HP) <= 0)
+        //     {
+        //         _enemy.OnDeath();
+        //     }
+        // });
         
         // 1. resistance 회복 과잉방지
-        abilitySystem.AddPostModify(AttributeType.RES, () =>
-        {
-            float res = abilitySystem.GetValue(AttributeType.RES);
-            float max = abilitySystem.GetValue(AttributeType.MAXRES);
-            if (res > max)
-                abilitySystem.SetValue(AttributeType.RES, max);
-        });
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     float res = abilitySystem.GetValue(AttributeType.RES);
+        //     float max = abilitySystem.GetValue(AttributeType.MAXRES);
+        //     if (res > max)
+        //         abilitySystem.SetValue(AttributeType.RES, max);
+        // });
         
         // 2. stagger 처리
-        abilitySystem.AddPostModify(AttributeType.RES, () =>
-        {
-            if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
-            {
-                _enemy.OnStagger();
-            }
-        });
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
+        //     {
+        //         _enemy.OnStagger();
+        //     }
+        // });
     }
 }

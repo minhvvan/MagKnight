@@ -62,6 +62,12 @@ public class UIManager : Singleton<UIManager>
         _popupUIController.optionUIController.ShowUI();
     }
 
+    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO)
+    {
+        _popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
+        EnableCursor();
+    }
+    
     public void EnableCursor()
     {
         Cursor.visible = true;

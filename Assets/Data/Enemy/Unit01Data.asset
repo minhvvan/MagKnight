@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd6dc8461c6c5d64e981219ef363cabf, type: 3}
   m_Name: Unit01Data
   m_EditorClassIdentifier: 
-  enemyName: 
+  enemyName: Unit01
   description: "\uC591\uC0B0\uD615 \uC720\uB2DB\uC785\uB2C8\uB2E4"
   health: 10
   atk: 5
   attckType: 1
   aiType: 1
   moveSpeed: 1
-  weight: 1
   startupTime: 0.1
   recoveryTime: 2
   staggerResistance: 1
@@ -29,3 +28,4 @@ MonoBehaviour:
   appearanceFloor: 1
   projectileSpeed: 0
   attackRange: 1
+  projectilePrefab: {fileID: 0}

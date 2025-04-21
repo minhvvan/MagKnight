@@ -44,7 +44,6 @@ public class MagneticController : MagneticObject
     //--입력--//
     
     //길게,짧게 누르기
-    private bool _isKeepRelease;
     private bool _isLongRelease;
     private bool _isShortRelease;
     
@@ -130,7 +129,8 @@ public class MagneticController : MagneticObject
         _isShortRelease = true;
         //짧게 입력시 할 로직
         _isPressMagnetic = false;
-        if(!_onGravityBreak && !_onCounterPress) OnCounterPress().Forget();
+        if(!_onGravityBreak && !_onCounterPress && !_onSearchNearMagnetic) OnCounterPress().Forget();
+        
         //끝
         _isShortRelease = false;
     }
@@ -162,10 +162,15 @@ public class MagneticController : MagneticObject
         if (_isActivatedMagnetic)
         {
             //자기력 붕괴 스킬 사용
-            if(!_onGravityBreak && !_onCounterPress) OnGravityBreak(targetMagneticObject).Forget();
+            if(!_onGravityBreak && !_onCounterPress & !_onSearchNearMagnetic) OnGravityBreak(targetMagneticObject).Forget();
         }
-        
+
         base.SwitchMagneticType(type);
+
+
+        ArtifactInventory inventory = GetComponent<ArtifactInventory>();
+        if (inventory != null)
+            inventory.ConvertArtifact();
     }
 
     #endregion
@@ -303,7 +308,7 @@ public class MagneticController : MagneticObject
             //구조물 여부에 따라 인력 주체가 달라진다.
             if (target.GetIsStructure())
             {
-                var direction = (targetPos - playerPos);
+                var direction = (targetPos - modifyPlayerPos);
                 direction.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
                 
                 var hangDirection= direction.normalized;
@@ -315,7 +320,7 @@ public class MagneticController : MagneticObject
             }
             else
             {
-                var newPosition = Vector3.Lerp( targetPos, playerPos, nonStructSpeed * Time.deltaTime);
+                var newPosition = Vector3.Lerp( targetPos, modifyPlayerPos, nonStructSpeed * Time.deltaTime);
                 target.transform.position = (newPosition);
             }
 
@@ -359,10 +364,11 @@ public class MagneticController : MagneticObject
         var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
         var distance = (targetPos - modifyPlayerPos).magnitude;
         var maxDistance = _onCounterPress ? _counterPressRange : _outBoundDistance;
+        var backDistance = maxDistance - Vector3.Distance(targetPos, modifyPlayerPos);
         
         var duration = 0f;
         if (target.GetIsStructure()) 
-            duration = distance / (structSpeed);
+            duration = backDistance / (structSpeed);
         else duration = distance / (nonStructSpeed);
         
         var elapsedTime = 0f;
@@ -391,8 +397,10 @@ public class MagneticController : MagneticObject
             //구조물 여부에 따라 다른 액션
             if (target.GetIsStructure())
             {
-                var backDirection = -(destination - modifyPlayerPos).normalized;
-                var newMovement = backDirection * (structSpeed * Time.deltaTime);
+                var backDirection = -destination.normalized;
+                backDirection.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
+                
+                var newMovement = (backDirection) * (structSpeed * Time.deltaTime);
                 
                 _currentVelocity = newMovement;
                 
@@ -501,34 +509,12 @@ public class MagneticController : MagneticObject
         if (_onSearchNearMagnetic)
         {
             //자기력 붕괴
-            if (targetMagneticObject != null)
-            {
-                if(_onGravityBreak) OnSearchNearMagnetic(targetMagneticObject, gravityBreakRange);
-                return;
-            }
+            if(_onGravityBreak && targetMagneticObject != null) OnSearchNearMagnetic(targetMagneticObject, gravityBreakRange);
             
             //반격
             if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
         }
     }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            if (_isActivatedMagnetic)
-            {
-                if(!_onGravityBreak && !_onCounterPress) OnGravityBreak(targetMagneticObject).Forget();
-            }
-            
-            SwitchMagneticType();
-            
-            ArtifactInventory inventory = GetComponent<ArtifactInventory>();
-            if (inventory != null)
-                inventory.ConvertArtifact();
-        }
-    }
-    
     private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
@@ -568,7 +554,11 @@ public class MagneticController : MagneticObject
         Gizmos.DrawRay(targetPoint, mainCamera.transform.forward * rayDistance);
         Gizmos.DrawWireSphere(_characterController.transform.position, _outBoundDistance);
         
-        
+        //타겟팅 대상 기즈모
+        if (targetHit == Vector3.zero || targetMagneticObject == null)
+        {
+            Gizmos.color = Color.clear;
+        }
         Gizmos.DrawWireSphere(targetHit,1f);
         
         Handles.DrawWireDisc(targetPoint, mainCamera.transform.forward, sphereRadius/2f);
@@ -593,8 +583,7 @@ public class MagneticController : MagneticObject
         {
             Gizmos.color = Color.clear;
         }
-        Gizmos.DrawWireSphere(_characterController.transform.position, _counterPressRange); 
+        Gizmos.DrawWireSphere(_characterController.transform.position + playerPosOffset, _counterPressRange);
 #endif
-
     }
 }
