@@ -114,6 +114,7 @@ public class DialogueUIController : MonoBehaviour
     public void ShowDialogue(NPCSO npcSO)
     {
         _currentNPCSO = npcSO;
+        _currentDialogueIndex = 0;
         gameObject.SetActive(true);
         SetName(_currentNPCSO.npcName);
         if (_currentNPCSO.dialogueData.lines.Count == 0)
@@ -134,7 +135,7 @@ public class DialogueUIController : MonoBehaviour
         {
             _nextImage.gameObject.SetActive(false);
         }
-        
+
         if (_currentDialogueIndex < _currentNPCSO.dialogueData.lines.Count - 1)
         {
             _currentDialogueIndex++;
