@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using hvvan;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,13 +30,13 @@ namespace Moon
             _sceneReady = true;
         }
     
-        public static void TransitionToScene(string sceneName)
+        public static void TransitionToScene(string sceneName, Action sceneLoaded = null)
         {
-            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true));
+            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true, sceneLoaded));
             // Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.CommonFade));
         }
 
-        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float lodingDelay = 1f, bool isStopTimeScale = false)
+        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float loadingDelay = 1f, bool isStopTimeScale = false, Action sceneLoaded = null)
         {
             _transitioning = true;
 
@@ -53,7 +54,10 @@ namespace Moon
             yield return SceneManager.LoadSceneAsync(newSceneName);
 
             yield return new WaitUntil(() => _sceneReady);
-            yield return new WaitForSecondsRealtime(lodingDelay);
+            yield return new WaitForSecondsRealtime(loadingDelay);
+            
+            sceneLoaded?.Invoke();
+            
             _inputHandler = FindObjectOfType<InputHandler>();
             if (_inputHandler) _inputHandler.ReleaseControl();
 

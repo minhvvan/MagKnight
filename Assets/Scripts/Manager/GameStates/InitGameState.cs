@@ -26,8 +26,8 @@ public class InitGameState: IGameState
         else
         {
             //회차 정보대로 씬 이동 및 설정
-            SceneController.TransitionToScene(RunScene);
-            GameManager.Instance.ChangeGameState(GameState.Run);
+            SceneController.TransitionToScene(currentRunData.currentRoom.sceneName);
+            GameManager.Instance.ChangeGameState(GameState.RoomClear);
         }
     }
 

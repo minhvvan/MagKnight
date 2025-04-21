@@ -1,4 +1,6 @@
+using hvvan;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Moon
 {
@@ -10,9 +12,14 @@ namespace Moon
         {
             if (other.CompareTag("Player"))
             {
-                SceneController.TransitionToScene(sceneName);
+                SceneController.TransitionToScene(sceneName, SceneLoaded);
             }
         }
 
+        private void SceneLoaded()
+        {
+            RoomSceneController.Instance.EnterFloor();
+            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
+        }
     }
 }

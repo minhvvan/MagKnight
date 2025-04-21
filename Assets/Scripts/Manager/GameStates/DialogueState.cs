@@ -3,10 +3,9 @@ using hvvan;
 
 public class DialogueState: IGameState
 {
-    private GameState _previousState;
     public void OnEnter()
     {
-        _previousState = GameManager.Instance.CurrentGameState;
+        //어떤 대화UI를 보여줄지 있어야 함
     }
 
     public void OnUpdate()
@@ -15,6 +14,5 @@ public class DialogueState: IGameState
 
     public void OnExit()
     {
-        GameManager.Instance.ChangeGameState(_previousState);
     }
 }

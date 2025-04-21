@@ -14,6 +14,9 @@ public class RoomController : MonoBehaviour
     private int roomIndex;
 
     public Room Room { get; private set; }
+    
+    //TODO: 클리어 판정을 위한 장소에 도착하면 Invoke
+    public Action OnClearSpotReached;
 
     private void Awake()
     {
@@ -50,7 +53,7 @@ public class RoomController : MonoBehaviour
         Room = roomData;
     }
 
-    public void SetGateOpen(bool isOpen)
+    private void SetGateOpen(bool isOpen)
     {
         //연결이 된 gate만 제어
         for (var dir = RoomDirection.East; dir < RoomDirection.Max; dir++)
@@ -77,5 +80,11 @@ public class RoomController : MonoBehaviour
     {
         SetGateOpen(false);
         gameObject.SetActive(false);
+    }
+
+    public void ClearRoom()
+    {
+        //TODO: 보상 지급
+        SetGateOpen(true);
     }
 }

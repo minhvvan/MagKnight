@@ -13,7 +13,21 @@ namespace hvvan
 {
     public class GameManager : Singleton<GameManager>
     {
-        public PlayerController Player { get; private set; }
+        public PlayerController Player
+        {
+            get
+            {
+                if (_playerController == null)
+                {
+                    return _playerController = FindObjectOfType<PlayerController>();
+                }
+
+                return _playerController;
+            }
+            private set => _playerController = value;
+        }
+
+        private PlayerController _playerController;
 
         private CurrentRunData _currentRunData;
         private PlayerData _playerData;
@@ -32,10 +46,10 @@ namespace hvvan
             _states[GameState.Title] = new TitleState();
             _states[GameState.InitGame] = new InitGameState();
             _states[GameState.BaseCamp] = new BaseCampState();
-            _states[GameState.Run] = new RunState();
+            _states[GameState.RoomEnter] = new RoomEnterState();
+            _states[GameState.RoomClear] = new RoomClearState();
             _states[GameState.Dialogue] = new DialogueState();
             _states[GameState.Pause] = new PauseState();
-            _states[GameState.Combat] = new CombatState();
             _states[GameState.GameClear] = new GameClearState();
             _states[GameState.GameOver] = new GameOverState();
 
@@ -73,9 +87,9 @@ namespace hvvan
             }
         }
 
-        public bool ChangeGameState(GameState newState)
+        public void ChangeGameState(GameState newState)
         {
-            if (!VerifyChangeState(newState)) return false;
+            if (!VerifyChangeState(newState)) return;
 
             if (_currentState != GameState.None)
             {
@@ -96,7 +110,7 @@ namespace hvvan
                 }
             }
             
-            return true;
+            return;
         }
 
         private bool VerifyChangeState(GameState newState)

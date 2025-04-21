@@ -11,11 +11,11 @@ public enum GameState
     Title,
     InitGame,
     BaseCamp,
-    Run,
-    Combat,
+    RoomEnter,
+    RoomClear,
     Dialogue,
     GameClear,
-    Pause,
     GameOver,
+    Pause,
     Max
 }

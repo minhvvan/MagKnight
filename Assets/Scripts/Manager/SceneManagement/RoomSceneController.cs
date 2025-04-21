@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,53 +12,22 @@ public class RoomSceneController: Singleton<RoomSceneController>
     private Dictionary<int, RoomController> _loadedRoomControllers = new Dictionary<int, RoomController>();
     private RoomGenerator _roomGenerator = new RoomGenerator();
     private RoomController _currentRoomController;
+    public RoomController CurrentRoomController => _currentRoomController;
     
-    public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode mode)
+    public async void EnterFloor()
     {
-        await SceneManager.LoadSceneAsync(sceneName, mode);
-    }
-
-    //Singleton Awake에서 호출
-    protected override void Initialize()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    //*TEST: 임시 클리어 판정 KEY = C
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            //현재룸 클리어 판정
-            if (_currentRoomController == null)
-            {
-                Debug.Log("Current room is null");
-                return;
-            }
-            
-            _currentRoomController.SetGateOpen(true);
-        }
-    }
-
-    private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (mode == LoadSceneMode.Additive) return;
         _loadedRoomControllers.Clear();
         
         // 룸 생성
         await _roomGenerator.GenerateRooms();
         
-        // 컨트롤러 캐싱
-        var roomController = FindRoomController(scene);
-        if (roomController == null) return;
-
         // 데이터 처리(시작 룸 설정)
-        _currentRoomController = roomController;
+        _currentRoomController = FindObjectOfType<RoomController>();
         var roomData = _roomGenerator.GetRoom(0);
         _currentRoomController.SetRoomData(roomData, 0);
         _currentRoomController.gameObject.SetActive(true);
         
-        _loadedRoomControllers.Add(0, roomController);
+        _loadedRoomControllers.Add(0, _currentRoomController);
         
         // 시작 룸에 연결된 룸들 로드
         await LoadConnectedRooms(_currentRoomController.Room.connectedRooms);
@@ -69,18 +39,18 @@ public class RoomSceneController: Singleton<RoomSceneController>
         await Moon.ScreenFader.FadeSceneOut().ToUniTask(this);
 
         var targetRoomIndex = _loadedRoomControllers[currentRoomIndex].Room.connectedRooms[(int)direction];
-        if (targetRoomIndex < 0 || targetRoomIndex >= _loadedRoomControllers.Count)
+        if (targetRoomIndex < 0 || !_loadedRoomControllers.TryGetValue(targetRoomIndex, out var targetController))
         {
             Debug.Log("TargetRoomIndex is out of range");
             return;
         }
         
         //targetRoom활성화 + currentRoom비활성화
-        RoomController targetController = _loadedRoomControllers[targetRoomIndex];
         if (targetController != null)
         {
             targetController.OnPlayerEnter(direction);
             _currentRoomController = targetController;
+            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
 
         RoomController currentController = _loadedRoomControllers[currentRoomIndex];
