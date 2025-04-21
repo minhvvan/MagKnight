@@ -520,7 +520,6 @@ public class MagneticController : MagneticObject
 #if UNITY_EDITOR
         if (!EditorApplication.isPlaying)
             return;
-#endif
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         
@@ -584,7 +583,7 @@ public class MagneticController : MagneticObject
         {
             Gizmos.color = Color.clear;
         }
-        Gizmos.DrawWireSphere(_characterController.transform.position + playerPosOffset, _counterPressRange); 
-        
+        Gizmos.DrawWireSphere(_characterController.transform.position + playerPosOffset, _counterPressRange);
+#endif
     }
 }
