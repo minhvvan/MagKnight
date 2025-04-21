@@ -356,27 +356,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: start
---- !u!1 &534764357 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8873774672594268764, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 7753879085700487774}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &534764361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 534764357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fea7ca58aa684c56a2966cebb892743, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _nameText: {fileID: 1810327803}
-  _dialogueText: {fileID: 1141290276}
-  _nextImage: {fileID: 0}
 --- !u!1 &566121613
 GameObject:
   m_ObjectHideFlags: 0
@@ -673,18 +652,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 838499977}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1141290276 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4220288512456146626, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 7753879085700487774}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1248338566 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2139562845638539336, guid: 32cffd128548f4efb98acf7a2c11b595,
@@ -1223,18 +1190,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1810327803 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4606042525092816514, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 7753879085700487774}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!20 &1838570766 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 7343723846579405457, guid: 32cffd128548f4efb98acf7a2c11b595,
@@ -1663,19 +1618,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGameCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 8873774672594268764, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8873774672594268764, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 534764361}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d73c9e6a276341e18e169bc156354ff, type: 3}
 --- !u!1001 &9160001381965543820
 PrefabInstance:
@@ -1689,21 +1635,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BaseNPC
-      objectReference: {fileID: 0}
-    - target: {fileID: 7712850065636905493, guid: a5ecafd2ba8eb4d139babacd145d4dac,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.6094101
-      objectReference: {fileID: 0}
-    - target: {fileID: 7712850065636905493, guid: a5ecafd2ba8eb4d139babacd145d4dac,
-        type: 3}
-      propertyPath: m_Center.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7712850065636905493, guid: a5ecafd2ba8eb4d139babacd145d4dac,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8153636240357898116, guid: a5ecafd2ba8eb4d139babacd145d4dac,
         type: 3}
@@ -1755,12 +1686,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8341216859492092385, guid: a5ecafd2ba8eb4d139babacd145d4dac,
-        type: 3}
-      propertyPath: npcSO
-      value: 
-      objectReference: {fileID: 11400000, guid: ab4d3cdfd65094eee90244c462d8999b,
-        type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
