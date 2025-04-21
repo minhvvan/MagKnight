@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using hvvan;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -104,7 +105,9 @@ namespace Moon
         Action<InputAction.CallbackContext> _pressInteractCallback;
         Action<InputAction.CallbackContext> _releaseInteractCallback;
         Action<InputAction.CallbackContext> _pressSprintCallback;
-        Action<InputAction.CallbackContext> _releaseSprintCallback;
+        Action<InputAction.CallbackContext> _releaseSprintCallback;        
+        Action<InputAction.CallbackContext> _pressPauseCallback;
+        Action<InputAction.CallbackContext> _releasePauseCallback;
         
         
         
@@ -120,6 +123,7 @@ namespace Moon
             _pressJumpCallback = ctx => PressJumpInput(ctx);
             _pressInteractCallback = ctx => PressInteractInput(ctx);
             _pressSprintCallback = ctx => PressSprintInput(ctx);
+            _pressPauseCallback = ctx => PressPauseInput(ctx);
 
             _releaseAttack1Callback = ctx => ReleaseAttack1Input(ctx);
             _releaseAttack2Callback = ctx => ReleaseAttack2Input(ctx);
@@ -130,6 +134,7 @@ namespace Moon
             _releaseJumpCallback = ctx => ReleaseJumpInput(ctx);
             _releaseInteractCallback = ctx => ReleaseInteractInput(ctx);
             _releaseSprintCallback = ctx => ReleaseSprintInput(ctx);
+            _releasePauseCallback = ctx => ReleasePauseInput(ctx);
 
 
 
@@ -163,8 +168,12 @@ namespace Moon
             playerInput.actions["SwitchMagnetic"].performed += _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled += _releaseSwitchMagneticCallback;
             
+            playerInput.actions["Pause"].performed += _pressPauseCallback;
+            playerInput.actions["Pause"].canceled += _releasePauseCallback;
 
             UIManager.Instance.DisableCursor();
+            InteractionEvent.OnDialogueStart += ReleaseControl;
+            InteractionEvent.OnDialogueEnd += GainControlDelayed;
         }
 
         void OnDestroy()
@@ -192,6 +201,9 @@ namespace Moon
 
             playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
+
+            InteractionEvent.OnDialogueStart -= ReleaseControl;
+            InteractionEvent.OnDialogueEnd -= GainControlDelayed;
         }
 
         void PressMoveInput(InputAction.CallbackContext context)
@@ -313,6 +325,24 @@ namespace Moon
             //SwitchMangeticInput?.Invoke(); //Press시에만 호출 필요
         }
         
+        private void ReleasePauseInput(InputAction.CallbackContext ctx)
+        {
+            
+        }
+
+        private void PressPauseInput(InputAction.CallbackContext ctx)
+        {
+            var currentGameState = GameManager.Instance.CurrentGameState;
+            if (currentGameState != GameState.Pause)
+            {
+                GameManager.Instance.ChangeGameState(GameState.Pause);
+            }
+            else
+            {
+                GameManager.Instance.RecoverPreviousState();
+            }
+        }
+        
         public bool IsContollerInputBlocked()
         {
             return playerControllerInputBlocked || _externalInputBlocked;
@@ -374,6 +404,14 @@ namespace Moon
         public void GainControl()
         {
             _externalInputBlocked = false;
+        }
+
+        void GainControlDelayed()
+        {
+            UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() =>
+            {
+                _externalInputBlocked = false;
+            });            
         }
     }
 }

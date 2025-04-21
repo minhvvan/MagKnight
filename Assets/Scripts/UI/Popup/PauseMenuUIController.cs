@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using hvvan;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,14 +19,12 @@ public class PauseMenuUIController : MonoBehaviour
 
     void OnEnable()
     {
-        Time.timeScale = 0f;
         UIManager.Instance.ShowBackgroundImage(true);
         
     }
 
     void OnDisable()
     {
-        Time.timeScale = 1f;
         UIManager.Instance.ShowBackgroundImage(false);
     }
 
@@ -42,8 +41,7 @@ public class PauseMenuUIController : MonoBehaviour
 
     void OnClickResume()
     {
-        Time.timeScale = 1f;
-        UIManager.Instance.HidePauseMenuUI();
+        GameManager.Instance.RecoverPreviousState();
     }
 
     void OnClickOption()
