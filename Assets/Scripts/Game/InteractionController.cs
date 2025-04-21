@@ -17,7 +17,6 @@ public class InteractionController : MonoBehaviour
     private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
-
     
 
     private void Awake()
@@ -44,7 +43,7 @@ public class InteractionController : MonoBehaviour
         InteractStart();
         
         _currentInteractable.Interact(_interactor);
-        _interactables.Remove(_currentInteractable);
+        //_interactables.Remove(_currentInteractable);
         FindClosestInteractable();
 
         _currentInteractable = null;
@@ -62,19 +61,26 @@ public class InteractionController : MonoBehaviour
                 playerHead = player.cameraSettings.lookAt;    
             }
             FocusOnTarget(cameraSettings.interactionCamera,  npc.GetHeadTransform(), playerHead);
+
+            //NPC가 대화가 가능할 경우 대화창을 열고 대화를 진행
+            UIManager.Instance.inGameUIController.HideInGameUI();
+            UIManager.Instance.inGameUIController.ShowDialogUI(npc.npcSO);
         }
 
-        //TEST 3초 후 대화 종료 : 대화장 만들고 상태 변화 적용 후 제거
-        UniTask.Delay(TimeSpan.FromSeconds(3)).ContinueWith(() =>
-        {
-            EndDialogue(cameraSettings.interactionCamera);
-        });
+        // //TEST 3초 후 대화 종료 : 대화장 만들고 상태 변화 적용 후 제거
+        // UniTask.Delay(TimeSpan.FromSeconds(3)).ContinueWith(() =>
+        // {
+        //     EndDialogue(cameraSettings.interactionCamera);
+        // });
+        InteractionEvent.OnDialogueEnd += InteractEnd;
+        InteractionEvent.DialogueStart();
     }
 
 
     public void InteractEnd()
     {
         EndDialogue(cameraSettings.interactionCamera);
+        InteractionEvent.OnDialogueEnd -= InteractEnd;
     }
 
   
@@ -153,7 +159,7 @@ public class InteractionController : MonoBehaviour
         }
         else
         {
-            Vector3 offset = lookFrom.forward * 1f;
+            Vector3 offset = lookFrom.forward * 0.5f;
             interactionCamera.transform.position = lookFrom.position + offset;
         }
 
@@ -171,5 +177,6 @@ public class InteractionController : MonoBehaviour
     public void EndDialogue(CinemachineVirtualCamera interactionCamera)
     {
         interactionCamera.Priority = 0;
+        UIManager.Instance.inGameUIController.ShowInGameUI();
     }
 }
