@@ -90,7 +90,6 @@ namespace Moon
         readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
         readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
         readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
-        readonly int _HashEllenDeath = Animator.StringToHash("EllenDeath");
 
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
@@ -587,6 +586,11 @@ namespace Moon
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        public void Death()
+        {
+            _animator.SetTrigger(_HashDeath);
         }
     }
 }

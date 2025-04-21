@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,6 +8,8 @@ namespace Jun
 {
     public class PlayerAttributeSet : AttributeSet
     {
+        public Action OnDead;
+
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
             float returnValue = newValue;
@@ -56,6 +59,7 @@ namespace Jun
                 // TODO : 사망로직
                 Debug.Log("Player Dead");
                 // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
+                OnDead?.Invoke();
             }
         }
     }   
