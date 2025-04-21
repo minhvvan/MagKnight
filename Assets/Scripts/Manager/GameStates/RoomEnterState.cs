@@ -6,11 +6,10 @@ using UnityEngine;
 public class RoomEnterState: IGameState
 {
     private RoomController _currentRoomController;
-    private EnemyController _enemyController;
     
     public void OnEnter()
     {
-        //TODO: EnemyController 받아오기 -> 클리어 판정
+        //TODO: EnemyController로 클리어 판정 로직 필요
         _currentRoomController = RoomSceneController.Instance.CurrentRoomController;
         if (_currentRoomController)
         {
@@ -43,6 +42,5 @@ public class RoomEnterState: IGameState
     public void OnExit()
     {
         _currentRoomController = null;
-        _enemyController = null;
     }
 }
