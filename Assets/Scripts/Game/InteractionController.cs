@@ -6,7 +6,6 @@ using Cinemachine;
 using Cysharp.Threading.Tasks;
 using Moon;
 using UnityEngine;
-using VFolders.Libs;
 
 public class InteractionController : MonoBehaviour
 {

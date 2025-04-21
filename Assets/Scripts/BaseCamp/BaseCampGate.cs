@@ -1,3 +1,5 @@
+using System.Collections;
+using hvvan;
 using UnityEngine;
 
 namespace Moon
@@ -10,9 +12,16 @@ namespace Moon
         {
             if (other.CompareTag("Player"))
             {
-                SceneController.TransitionToScene(sceneName);
+                SceneController.TransitionToScene(sceneName, SceneLoaded);
             }
         }
 
+        private IEnumerator SceneLoaded()
+        {
+            yield return RoomSceneController.Instance.EnterFloor();
+            
+            //TODO: PlayerCurrentStat 초기화
+            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
+        }
     }
 }

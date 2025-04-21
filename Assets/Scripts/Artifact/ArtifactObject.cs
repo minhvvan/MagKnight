@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Moon;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArtifactObject : MonoBehaviour, IInteractable
 {
-    // 추후 지워야함
-    public ArtifactInventoryUI artifactInventoryUI;
-    
     [SerializeField] private ArtifactDataSO artifactDataSO;
     
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
@@ -23,8 +21,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
-            if(artifactInventoryUI != null)
-                artifactInventoryUI.Show(artifactDataSO);
+            UIManager.Instance.ShowArtifactInventoryUI(artifactDataSO);
             Destroy(gameObject);
         }
     }
