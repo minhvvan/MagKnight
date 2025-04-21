@@ -251,6 +251,46 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 2.79
       objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[1].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[2].Key
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[3].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[0].Value
+      value: 
+      objectReference: {fileID: 638305339}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 827956147}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[2].Value
+      value: 
+      objectReference: {fileID: 992665770}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[3].Value
+      value: 
+      objectReference: {fileID: 872805374}
     - target: {fileID: 7430040820956032788, guid: 1596b01fc97632f43b2faf92134b743c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -293,7 +333,7 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2998352639858788575, guid: 1596b01fc97632f43b2faf92134b743c,
         type: 3}
-      insertIndex: 15
+      insertIndex: -1
       addedObject: {fileID: 2009829323}
     - targetCorrespondingSourceObject: {fileID: 2998352639858788575, guid: 1596b01fc97632f43b2faf92134b743c,
         type: 3}
@@ -315,11 +355,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1720369089}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8534525548041080317, guid: 1596b01fc97632f43b2faf92134b743c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 474374782}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1596b01fc97632f43b2faf92134b743c, type: 3}
 --- !u!4 &474374780 stripped
 Transform:
@@ -327,34 +363,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 474374779}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &474374781 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8534525548041080317, guid: 1596b01fc97632f43b2faf92134b743c,
-    type: 3}
-  m_PrefabInstance: {fileID: 474374779}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &474374782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474374781}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc04bf2fda261314c886283e215de912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gates:
-    _serializedList:
-    - Key: 0
-      Value: {fileID: 638305339}
-    - Key: 1
-      Value: {fileID: 827956147}
-    - Key: 2
-      Value: {fileID: 992665770}
-    - Key: 3
-      Value: {fileID: 872805374}
 --- !u!224 &474374783 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3588761392077940914, guid: 1596b01fc97632f43b2faf92134b743c,
