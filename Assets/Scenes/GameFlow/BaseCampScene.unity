@@ -535,6 +535,16 @@ PrefabInstance:
       propertyPath: lookAt
       value: 
       objectReference: {fileID: 838499978}
+    - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.0361106
+      objectReference: {fileID: 0}
+    - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.194354
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1607,11 +1617,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InGameCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 8169252509681659830, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

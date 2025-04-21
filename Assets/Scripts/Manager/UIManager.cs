@@ -11,60 +11,60 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
-    [SerializeField] InGameUIController _inGameUIController;
-    [SerializeField] PopupUIController _popupUIController;
+    [SerializeField] public InGameUIController inGameUIController;
+    [SerializeField] public PopupUIController popupUIController;
 
     public void SetInGameUIController(InGameUIController inGameUIController)
     {
-        this._inGameUIController = inGameUIController;
+        this.inGameUIController = inGameUIController;
     }
 
     public void ReleaseInGameUIController()
     {
-        _inGameUIController = null;
+        inGameUIController = null;
     }
 
     public void SetPopupUIController(PopupUIController popupUIController)
     {
-        this._popupUIController = popupUIController;
+        this.popupUIController = popupUIController;
     }
 
     public void ReleasePopupUIController()
     {
-        _popupUIController = null;
+        popupUIController = null;
     }
 
     public void ShowConfirmPopup(string title, string message, Action onConfirm, Action onCancel, bool isShowCancelButton = true)
     {
-        _popupUIController.confirmPopupUIController.ShowUI(title, message, onConfirm, onCancel, isShowCancelButton);
+        popupUIController.confirmPopupUIController.ShowUI(title, message, onConfirm, onCancel, isShowCancelButton);
     }
 
     public void HideConfirmPopupUI()
     {
-        _popupUIController.confirmPopupUIController.HideUI();
+        popupUIController.confirmPopupUIController.HideUI();
     }
 
     public void ShowPauseMenuUI()
     {
-        _popupUIController.pauseMenuUIController.ShowUI();
+        popupUIController.pauseMenuUIController.ShowUI();
         EnableCursor();
     }
 
     public void HidePauseMenuUI()
     {
-        _popupUIController.pauseMenuUIController.HideUI();
+        popupUIController.pauseMenuUIController.HideUI();
         DisableCursor();
     }
 
 
     public void ShowOptionUI()
     {
-        _popupUIController.optionUIController.ShowUI();
+        popupUIController.optionUIController.ShowUI();
     }
 
     public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO)
     {
-        _popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
+        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
         EnableCursor();
     }
     
@@ -82,7 +82,7 @@ public class UIManager : Singleton<UIManager>
 
     public void ShowBackgroundImage(bool isShow)
     {
-        _popupUIController.backgroundImage.gameObject.SetActive(isShow);
+        popupUIController.backgroundImage.gameObject.SetActive(isShow);
     }
 }
 

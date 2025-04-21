@@ -656,7 +656,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3685364806385498194}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.9045942, z: -0, w: 0.42627397}
+  m_LocalRotation: {x: 0, y: -0.9045929, z: 0, w: 0.42627674}
   m_LocalPosition: {x: 6.491, y: 0, z: 23.549}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -700,6 +700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5410da65fb6a243ba9aa1cc0a99ef471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  npcSO: {fileID: 11400000, guid: ab4d3cdfd65094eee90244c462d8999b, type: 2}
   player: {fileID: 0}
   headTransform: {fileID: 3267554247657557537}
   lookWeight: 0.673
@@ -724,10 +725,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.43371677
+  m_Radius: 0.6094101
   m_Height: 1.9848022
   m_Direction: 1
-  m_Center: {x: 0.0000000038906087, y: 0.8634622, z: -0.066283256}
+  m_Center: {x: 0, y: 0.8634622, z: 0}
 --- !u!54 &5529036330941957320
 Rigidbody:
   m_ObjectHideFlags: 0

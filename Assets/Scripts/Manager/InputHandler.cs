@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using hvvan;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -171,6 +172,8 @@ namespace Moon
             playerInput.actions["Pause"].canceled += _releasePauseCallback;
 
             UIManager.Instance.DisableCursor();
+            InteractionEvent.OnDialogueStart += ReleaseControl;
+            InteractionEvent.OnDialogueEnd += GainControlDelayed;
         }
 
         void OnDestroy()
@@ -198,6 +201,9 @@ namespace Moon
 
             playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
+
+            InteractionEvent.OnDialogueStart -= ReleaseControl;
+            InteractionEvent.OnDialogueEnd -= GainControlDelayed;
         }
 
         void PressMoveInput(InputAction.CallbackContext context)
@@ -398,6 +404,14 @@ namespace Moon
         public void GainControl()
         {
             _externalInputBlocked = false;
+        }
+
+        void GainControlDelayed()
+        {
+            UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() =>
+            {
+                _externalInputBlocked = false;
+            });            
         }
     }
 }
