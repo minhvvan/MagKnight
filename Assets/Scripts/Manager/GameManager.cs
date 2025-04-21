@@ -1,13 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
-using Managers;
 using Moon;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 namespace hvvan
 {
@@ -139,6 +134,11 @@ namespace hvvan
         public void SetCurrentRunData(CurrentRunData currentRunData)
         {
             _currentRunData = currentRunData;
+        }
+
+        public void SavePlayerData()
+        {
+            _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _currentRunData);
         }
     }
 }

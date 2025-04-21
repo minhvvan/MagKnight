@@ -30,13 +30,13 @@ namespace Moon
             _sceneReady = true;
         }
     
-        public static void TransitionToScene(string sceneName, Action sceneLoaded = null)
+        public static void TransitionToScene(string sceneName, Func<IEnumerator> sceneLoadedAction = null)
         {
-            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true, sceneLoaded));
+            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true, sceneLoadedAction));
             // Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.CommonFade));
         }
 
-        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float loadingDelay = 1f, bool isStopTimeScale = false, Action sceneLoaded = null)
+        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float loadingDelay = 1f, bool isStopTimeScale = false, Func<IEnumerator> sceneLoadedAction = null)
         {
             _transitioning = true;
 
@@ -56,7 +56,11 @@ namespace Moon
             yield return new WaitUntil(() => _sceneReady);
             yield return new WaitForSecondsRealtime(loadingDelay);
             
-            sceneLoaded?.Invoke();
+            // 콜백이 있는 경우 실행하고 완료될 때까지 대기
+            if (sceneLoadedAction != null)
+            {
+                yield return StartCoroutine(sceneLoadedAction());
+            }
             
             _inputHandler = FindObjectOfType<InputHandler>();
             if (_inputHandler) _inputHandler.ReleaseControl();

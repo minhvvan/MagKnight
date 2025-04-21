@@ -1,6 +1,6 @@
+using System.Collections;
 using hvvan;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Moon
 {
@@ -16,9 +16,11 @@ namespace Moon
             }
         }
 
-        private void SceneLoaded()
+        private IEnumerator SceneLoaded()
         {
-            RoomSceneController.Instance.EnterFloor();
+            yield return RoomSceneController.Instance.EnterFloor();
+            
+            //TODO: PlayerCurrentStat 초기화
             GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
     }

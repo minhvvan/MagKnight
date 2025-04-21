@@ -14,7 +14,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
     private RoomController _currentRoomController;
     public RoomController CurrentRoomController => _currentRoomController;
     
-    public async void EnterFloor()
+    public async UniTask EnterFloor()
     {
         _loadedRoomControllers.Clear();
         
