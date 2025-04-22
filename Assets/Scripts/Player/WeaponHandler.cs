@@ -9,9 +9,12 @@ public class WeaponHandler: MonoBehaviour
 
     private WeaponPrefabSO _weaponSO;
     private BaseWeapon _currentWeapon;
+    private AbilitySystem _abilitySystem;
     
     private async void Awake()
     {
+        _abilitySystem = GetComponent<AbilitySystem>();
+        
         try
         {
             _weaponSO = await DataManager.Instance.LoadDataAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
@@ -31,6 +34,7 @@ public class WeaponHandler: MonoBehaviour
         }
 
         _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        _currentWeapon.OnHit += OnHitAction;
     }
 
     public void AttackStart()
@@ -63,5 +67,17 @@ public class WeaponHandler: MonoBehaviour
     public void ChangePolarity()
     {
         _currentWeapon.ChangePolarity();
+    }
+
+    private void OnHitAction(HitInfo hitInfo)
+    {
+        Debug.Log("OnHit" + hitInfo.hit);
+        var damage = _abilitySystem.GetValue(AttributeType.Strength);
+        Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+        GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.RES, damage);
+        enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+        enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
+        _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
     }
 }

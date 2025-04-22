@@ -5,7 +5,8 @@ using UnityEngine;
 public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
 {
     protected HitDetector HitDetector;
-
+    public Action<HitInfo> OnHit;
+    
     private void Awake()
     {
         HitDetector = GetComponent<HitDetector>();
@@ -28,7 +29,7 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
 
     public virtual void OnNext(HitInfo hitInfo)
     {
-        
+        OnHit?.Invoke(hitInfo);
     }
 
     public virtual void OnError(Exception error)
