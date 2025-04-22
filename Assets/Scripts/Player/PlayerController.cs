@@ -640,5 +640,14 @@ namespace Moon
             
             GameManager.Instance.ChangeGameState(GameState.GameOver);
         }
+
+        public void Damaged()
+        {
+            if (isDead) return;
+
+            _animator.SetTrigger(_HashHurt);
+            // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
+            // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
+        }
     }
 }

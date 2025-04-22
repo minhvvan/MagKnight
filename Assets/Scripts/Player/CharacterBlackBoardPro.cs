@@ -41,6 +41,11 @@ public class CharacterBlackBoardPro : MonoBehaviour
             {
                 _playerController.Death();
             };
+
+            playerAttributeSet.OnDamaged += () =>
+            {
+                _playerController.Damaged();
+            };
         }
     }
 
