@@ -61,6 +61,9 @@ namespace Moon
                 if (playerController.cameraSettings == null)
                     playerController.cameraSettings = this;
             }
+
+            Current.m_XAxis.m_InputAxisName = "";
+            Current.m_YAxis.m_InputAxisName = "";
         }
 
         void Awake()
@@ -108,6 +111,9 @@ namespace Moon
 
         public void DisableCameraMove()
         {
+            Current.m_XAxis.m_InputAxisName = "";
+            Current.m_YAxis.m_InputAxisName = "";
+
             if(keyboardAndMouseCamera != null)
             {
                 keyboardAndMouseCamera.GetComponent<CinemachineInputProvider>().enabled = false;          

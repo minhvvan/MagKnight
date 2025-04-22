@@ -67,6 +67,12 @@ public class UIManager : Singleton<UIManager>
         popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
         EnableCursor();
     }
+
+    public void ShowGameOverUI()
+    {
+        popupUIController.gameOverUIController.ShowUI();
+        EnableCursor();
+    }
     
     public void EnableCursor()
     {
