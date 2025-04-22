@@ -9,13 +9,19 @@ namespace hvvan
 {
     public class GameManager : Singleton<GameManager>
     {
+        [SerializeField] GameObject playerCharacterPrefab;
+        
         public PlayerController Player
         {
             get
             {
                 if (_playerController == null)
                 {
-                    return _playerController = FindObjectOfType<PlayerController>();
+                    _playerController = FindObjectOfType<PlayerController>();
+                    if (_playerController == null)
+                    {
+                        _playerController = Instantiate(playerCharacterPrefab).GetComponent<PlayerController>();
+                    }
                 }
 
                 return _playerController;

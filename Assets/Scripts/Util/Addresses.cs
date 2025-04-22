@@ -18,6 +18,7 @@ public static class Addresses
 
         public static class Room
         {
+            public const string Floor = "data/floor";
             public const string RoomData = "data/room";
         }
     }

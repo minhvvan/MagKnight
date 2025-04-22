@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -106,7 +107,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
             var loadedSceneController = FindRoomController(loadedScene);
             if (loadedSceneController != null)
             {
-                _loadedRoomControllers.Add(roomIndex, loadedSceneController);
+                _loadedRoomControllers.TryAdd(roomIndex, loadedSceneController);
                 loadedSceneController.SetRoomData(room, roomIndex);
                 loadedSceneController.gameObject.SetActive(false);
             }
@@ -138,10 +139,55 @@ public class RoomSceneController: Singleton<RoomSceneController>
         foreach (GameObject root in rootObjects)
         {
             RoomController controller = root.GetComponent<RoomController>();
-            if (controller != null)
+            if (controller)
                 return controller;
         }
     
         return null;
+    }
+
+    public async UniTask TeleportToSavedRoom()
+    {
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        if (currentRunData.currentRoomIndex != 0)
+        {
+            var targetRoom = _roomGenerator.GetRoom(currentRunData.currentRoomIndex);
+            var operation = SceneManager.LoadSceneAsync(targetRoom.sceneName, LoadSceneMode.Additive);
+            await operation.ToUniTask();
+
+            if (operation.isDone)
+            {
+                Scene loadedScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
+
+                //현재 roomController 캐싱
+                var loadedSceneController = FindRoomController(loadedScene);
+                if (loadedSceneController)
+                {
+                    //Room 데이터 초기화
+                    loadedSceneController.SetRoomData(targetRoom, currentRunData.currentRoomIndex);
+                    _currentRoomController = loadedSceneController;
+                    
+                    _loadedRoomControllers.TryAdd(currentRunData.currentRoomIndex, loadedSceneController);
+                    loadedSceneController.OnPlayerEnter();
+                }
+
+                //연결된 룸 load 시도
+                await LoadConnectedRooms(_roomGenerator.GetRoom(currentRunData.currentRoomIndex).connectedRooms);
+            }
+            
+            //start룸 비활성화
+            _loadedRoomControllers[0].OnPlayerExit();
+        }
+
+        //Character위치 조정
+        var player = GameManager.Instance.Player;
+        if (player && GameManager.Instance.Player.TryGetComponent<CharacterController>(out var characterController))
+        {
+            characterController.Teleport(player.gameObject, currentRunData.lastPlayerPosition, currentRunData.lastPlayerRotation);
+        }
+        else
+        {
+            Debug.Log("No character controller found");
+        }
     }
 }

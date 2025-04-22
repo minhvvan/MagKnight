@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class CurrentRunData : ISaveData
@@ -8,8 +9,9 @@ public class CurrentRunData : ISaveData
     
     // 현재 게임 실행 정보
     public int currentFloor = 0;
-    public Room currentRoom;
-    public Vector3 playerPosition = Vector3.zero;
+    public int currentRoomIndex;
+    public Vector3 lastPlayerPosition = Vector3.zero;
+    public Quaternion lastPlayerRotation = Quaternion.identity;
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
 
     //TODO

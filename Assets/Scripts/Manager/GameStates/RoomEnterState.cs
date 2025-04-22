@@ -25,8 +25,6 @@ public class RoomEnterState: IGameState
         }
         
         _currentRoomController.OnClearSpotReached -= ClearRoom;
-        _currentRoomController.ClearRoom();
-        
         GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }
 

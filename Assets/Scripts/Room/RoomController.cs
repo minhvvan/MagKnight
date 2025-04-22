@@ -13,6 +13,7 @@ public class RoomController : MonoBehaviour
 
     private int roomIndex;
 
+    public int RoomIndex => roomIndex;
     public Room Room { get; private set; }
     
     //TODO: 클리어 판정을 위한 장소에 도착하면 Invoke
@@ -63,7 +64,7 @@ public class RoomController : MonoBehaviour
         }
     }
 
-    public void OnPlayerEnter(RoomDirection direction)
+    public void OnPlayerEnter(RoomDirection direction = RoomDirection.South)
     {
         SetGateOpen(false);
         var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
