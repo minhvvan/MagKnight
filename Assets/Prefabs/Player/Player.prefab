@@ -228,7 +228,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
-  _interactionCamera: {fileID: 0}
+  cameraSettings: {fileID: 0}
 --- !u!1 &450063133152014215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2292,6 +2292,7 @@ GameObject:
   - component: {fileID: 7606081418953164142}
   - component: {fileID: 4373900182711006843}
   - component: {fileID: 5278516391698251394}
+  - component: {fileID: 4137939099155573968}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2400,6 +2401,8 @@ MonoBehaviour:
   idleTimeout: 5
   canAttack: 1
   cameraSettings: {fileID: 0}
+  lockOnSystem: {fileID: 4137939099155573968}
+  lockCam: {fileID: 0}
 --- !u!114 &6796001127801567281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2557,6 +2560,26 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   abilitySystem: {fileID: 7606081418953164142}
+--- !u!114 &4137939099155573968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999629288266388604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af168b17fe1b21644a42cd2ed8ff7855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camSettings: {fileID: 0}
+  lockCam: {fileID: 0}
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 128
+  searchRadius: 15
+  rotationSpeed: 5
+  currentTarget: {fileID: 0}
 --- !u!1 &7010538823116905246
 GameObject:
   m_ObjectHideFlags: 0
