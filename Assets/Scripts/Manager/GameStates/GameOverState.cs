@@ -7,6 +7,7 @@ public class GameOverState: IGameState
     public void OnEnter()
     {
         //TODO: 캐릭터 사망 연출(UI변경 등)
+        UIManager.Instance.ShowGameOverUI();
         
         //데이터 초기화
         SaveDataManager.Instance.DeleteData(Constants.CurrentRun);
@@ -21,6 +22,7 @@ public class GameOverState: IGameState
     public void OnExit()
     {
         //basecamp로 이동
-        SceneController.TransitionToScene(Constants.BaseCamp);
+        //SceneController.TransitionToScene(Constants.BaseCamp);
+        
     }
 }

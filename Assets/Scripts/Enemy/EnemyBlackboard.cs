@@ -91,6 +91,7 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
         abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.Damage, 0);
 
         // 1. 힐 과잉방지
         // abilitySystem.AddPostModify(AttributeType.HP, () =>
