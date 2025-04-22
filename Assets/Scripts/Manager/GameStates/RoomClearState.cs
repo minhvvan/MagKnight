@@ -12,10 +12,11 @@ public class RoomClearState: IGameState
         currentRunData.currentRoomIndex = RoomSceneController.Instance.CurrentRoomController.RoomIndex;
         currentRunData.lastPlayerPosition = GameManager.Instance.Player.transform.position;
         currentRunData.lastPlayerRotation = GameManager.Instance.Player.transform.rotation;
+        currentRunData.clearedRooms.Add(RoomSceneController.Instance.CurrentRoomController.RoomIndex);
         GameManager.Instance.SetCurrentRunData(currentRunData);
         
         //Room 관리
-        RoomSceneController.Instance.CurrentRoomController.ClearRoom();
+        RoomSceneController.Instance.CurrentRoomController.SetGateOpen(true);
         
         //TODO: 최종 보스 잡았는지 확인
         //잡았으면 GameClear

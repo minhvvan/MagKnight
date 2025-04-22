@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,6 +14,8 @@ public class CurrentRunData : ISaveData
     public Vector3 lastPlayerPosition = Vector3.zero;
     public Quaternion lastPlayerRotation = Quaternion.identity;
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
+    
+    public List<int> clearedRooms = new List<int>();
 
     //TODO
     /*

@@ -15,7 +15,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
     private RoomController _currentRoomController;
     public RoomController CurrentRoomController => _currentRoomController;
     
-    public async UniTask EnterFloor()
+    public async UniTask EnterFloor(bool loadConnect = true)
     {
         _loadedRoomControllers.Clear();
         
@@ -31,7 +31,10 @@ public class RoomSceneController: Singleton<RoomSceneController>
         _loadedRoomControllers.Add(0, _currentRoomController);
         
         // 시작 룸에 연결된 룸들 로드
-        await LoadConnectedRooms(_currentRoomController.Room.connectedRooms);
+        if (loadConnect)
+        {
+            await LoadConnectedRooms(_currentRoomController.Room.connectedRooms);
+        }
     }
 
     public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
@@ -50,6 +53,12 @@ public class RoomSceneController: Singleton<RoomSceneController>
         if (targetController != null)
         {
             targetController.OnPlayerEnter(direction);
+
+            if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
+            {
+                targetController.SetGateOpen(true);
+            }
+            
             _currentRoomController = targetController;
             GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
