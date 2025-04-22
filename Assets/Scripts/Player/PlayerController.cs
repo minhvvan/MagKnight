@@ -21,9 +21,10 @@ namespace Moon
         [SerializeField] public float maxTurnSpeed = 1200f;        
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
-        
 
         public CameraSettings cameraSettings;
+        public bool isInvisible;
+
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -588,8 +589,17 @@ namespace Moon
             return gameObject;
         }
 
+        
+        public void RespawnFinished()
+        {
+            isInvisible = false;
+        }
+
         public void Death()
         {
+            if(isInvisible) return;
+            
+            isInvisible = true;
             _animator.SetTrigger(_HashDeath);
         }
     }
