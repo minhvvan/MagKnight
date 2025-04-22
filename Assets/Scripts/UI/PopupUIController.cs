@@ -11,6 +11,7 @@ namespace Moon
         [SerializeField] public OptionUIController optionUIController;
         [SerializeField] public ConfirmPopupUIController confirmPopupUIController;
         [SerializeField] public ArtifactInventoryUIController artifactInventoryUIController;
+        [SerializeField] public GameOverUIController gameOverUIController;
 
         void OnEnable()
         {
