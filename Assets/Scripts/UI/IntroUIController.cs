@@ -1,4 +1,5 @@
 using DG.Tweening;
+using hvvan;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,15 +7,12 @@ namespace Moon
 {
     public class IntroUIController : MonoBehaviour
     {
-        const string k_NextSceneName = "BaseCampScene";
-
-
         void Update()
         {
             if (Input.anyKeyDown)
             {
                 DOTween.KillAll();
-                SceneController.TransitionToScene(k_NextSceneName);
+                GameManager.Instance.ChangeGameState(GameState.InitGame);
             }
         }
     }

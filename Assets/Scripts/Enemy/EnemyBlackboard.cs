@@ -87,45 +87,45 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
-        abilitySystem.AddAttribute(AttributeType.SPD, _enemyDataSO.moveSpeed);
+        abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
         abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
         abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
 
         // 1. 힐 과잉방지
-        abilitySystem.AddPostModify(AttributeType.HP, () =>
-        {
-            float hp = abilitySystem.GetValue(AttributeType.HP);
-            float max = abilitySystem.GetValue(AttributeType.MaxHP);
-            if (hp > max)
-                abilitySystem.SetValue(AttributeType.HP, max);
-        });
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     float hp = abilitySystem.GetValue(AttributeType.HP);
+        //     float max = abilitySystem.GetValue(AttributeType.MaxHP);
+        //     if (hp > max)
+        //         abilitySystem.SetValue(AttributeType.HP, max);
+        // });
         
         // 2. 사망 처리
-        abilitySystem.AddPostModify(AttributeType.HP, () =>
-        {
-            if (abilitySystem.GetValue(AttributeType.HP) <= 0)
-            {
-                _enemy.OnDeath();
-            }
-        });
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     if (abilitySystem.GetValue(AttributeType.HP) <= 0)
+        //     {
+        //         _enemy.OnDeath();
+        //     }
+        // });
         
         // 1. resistance 회복 과잉방지
-        abilitySystem.AddPostModify(AttributeType.RES, () =>
-        {
-            float res = abilitySystem.GetValue(AttributeType.RES);
-            float max = abilitySystem.GetValue(AttributeType.MAXRES);
-            if (res > max)
-                abilitySystem.SetValue(AttributeType.RES, max);
-        });
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     float res = abilitySystem.GetValue(AttributeType.RES);
+        //     float max = abilitySystem.GetValue(AttributeType.MAXRES);
+        //     if (res > max)
+        //         abilitySystem.SetValue(AttributeType.RES, max);
+        // });
         
         // 2. stagger 처리
-        abilitySystem.AddPostModify(AttributeType.RES, () =>
-        {
-            if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
-            {
-                _enemy.OnStagger();
-            }
-        });
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
+        //     {
+        //         _enemy.OnStagger();
+        //     }
+        // });
     }
 }

@@ -8,14 +8,13 @@ public class CurrentRunData : ISaveData
     
     // 현재 게임 실행 정보
     public int currentFloor;
-    public int currentRoom;
+    public Room currentRoom;
     public Vector3 playerPosition;
     public int seed;
 
     public CurrentRunData()
     {
         currentFloor = 0;
-        currentRoom = 0;
         playerPosition = Vector3.zero;
         seed = (int)DateTime.Now.Ticks % int.MaxValue;
     }

@@ -23,7 +23,7 @@ namespace Moon
         [SerializeField] public bool canAttack;
         
 
-         public CameraSettings cameraSettings;
+        public CameraSettings cameraSettings;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;

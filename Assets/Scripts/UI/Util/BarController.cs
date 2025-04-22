@@ -13,7 +13,7 @@ namespace Moon
         void Awake()
         {
             _backgorundImage = GetComponent<Image>();
-            _ = Test();
+            //_ = Test();
         }
 
         //Test Code Update full -> empty repeatedly

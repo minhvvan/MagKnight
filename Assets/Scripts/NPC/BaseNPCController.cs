@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BaseNPCController : MonoBehaviour, IInteractable
 {
+    [SerializeField] public NPCSO npcSO;
+
     public Transform player;
+    public Transform headTransform;
     Animator animator;
 
     [Range(0, 1)]
@@ -23,13 +26,17 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
     Vector3 _lastTargetPosition = Vector3.zero;
 
-
     void Start()
     {
         animator = GetComponent<Animator>();
     }
 
     void Update()
+    {
+        IKWeightHandler();
+    }
+
+    void IKWeightHandler()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, detectDistance);
         bool isPlayerInRange = false;
@@ -45,25 +52,24 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
         if (!isPlayerInRange)
         {
-            player = null; 
-            _isInteract = false;  
+            player = null;
+            InteractExit();
         }
 
-
-        if(player != null)
+        if (player != null)
         {
-            if(_isInteract)
+            if (_isInteract)
             {
                 Vector3 direction = player.position - transform.position;
                 direction.y = 0; // Y축 회전 방지
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);            
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
             }
         }
 
         _targetLookWeight = (player != null) ? lookWeight : 0.0f;
         _currentLookWeight = Mathf.Lerp(_currentLookWeight, _targetLookWeight, Time.deltaTime * 3f);
-        
+
         _targetRightHandWeight = _isInteract ? rightHandWeight : 0.0f;
         _currentRightHandWeight = Mathf.Lerp(_currentRightHandWeight, _targetRightHandWeight, Time.deltaTime * 3f);
     }
@@ -87,8 +93,19 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
     public void Interact(IInteractor interactor)
     {
-        Debug.Log("Interact NPC");
+        InteractEnter();
+        InteractionEvent.OnDialogueEnd += InteractExit;
+    }
+
+    public void InteractEnter()
+    {
         _isInteract = true;
+    }
+
+    public void InteractExit()
+    {
+        _isInteract = false;
+        InteractionEvent.OnDialogueEnd -= InteractExit;
     }
 
     public void Select()
@@ -104,5 +121,10 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public Transform GetHeadTransform()
+    {
+        return headTransform ? headTransform : transform;
     }
 }

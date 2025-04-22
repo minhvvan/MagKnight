@@ -228,6 +228,7 @@ MonoBehaviour:
   obstacleMask:
     serializedVersion: 2
     m_Bits: 0
+  _interactionCamera: {fileID: 0}
 --- !u!1 &450063133152014215
 GameObject:
   m_ObjectHideFlags: 0
@@ -2418,6 +2419,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   targetMagneticObject: {fileID: 0}
   mainCamera: {fileID: 0}
+  targetHit: {x: 0, y: 0, z: 0}
   magneticLayer:
     serializedVersion: 2
     m_Bits: 0
@@ -2426,6 +2428,7 @@ MonoBehaviour:
     m_Bits: 0
   rayDistance: 0
   screenOffset: 0
+  sphereRadius: 0
   structSpeed: 0
   nonStructSpeed: 0
   gravityBreakRange: 0
@@ -2485,8 +2488,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attributes:
-    attributeDictionary:
-      _serializedList: []
+    rid: 4781514843088748545
+  _activatedEffects:
+    _serializedList: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4781514843088748545
+      type: {class: PlayerAttributeSet, ns: Jun, asm: Assembly-CSharp}
+      data:
+        attributeDictionary:
+          _serializedList: []
 --- !u!114 &4373900182711006843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2512,10 +2524,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05eea317180695f408d65d7c00031700, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  N_ArtifactGas:
-  - {fileID: 11400000, guid: e5916336d0d58d142821f01d1bad20b0, type: 2}
-  S_ArtifactGas:
-  - {fileID: 11400000, guid: be7511650ecba70408b59e7de892301c, type: 2}
+  Left_ArtifactGas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  Right_ArtifactGas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   abilitySystem: {fileID: 7606081418953164142}
 --- !u!1 &7010538823116905246
 GameObject:

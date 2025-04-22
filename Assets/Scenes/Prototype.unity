@@ -198,15 +198,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5346760470181023004, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: Attributes
+      value: 4781514850479112197
+      objectReference: {fileID: 0}
+    - target: {fileID: -5346760470181023004, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: managedReferences[4781514850479112197]
+      value: Assembly-CSharp Jun.PlayerAttributeSet
+      objectReference: {fileID: 0}
+    - target: {fileID: -5346760470181023004, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: managedReferences[4781514850479112197].attributeDictionary._serializedList.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17
+      value: -17.000002
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.0000010645203
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
