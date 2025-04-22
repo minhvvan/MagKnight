@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using UnityEngine;
 
 namespace Moon
@@ -11,6 +12,7 @@ namespace Moon
         Animator _animator;
         InputHandler _inputHandler;
         MagneticController _magneticController;
+        LockOnSystem _lockOnSystem;
         [SerializeField] private InteractionController interactionController;
         [SerializeField] private WeaponHandler weaponHandler;
 
@@ -24,6 +26,9 @@ namespace Moon
         
 
         public CameraSettings cameraSettings;
+        public LockOnSystem lockOnSystem;
+        public CinemachineVirtualCamera lockCam;
+        bool _lockOnLastFrame = false;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -73,6 +78,7 @@ namespace Moon
         readonly int _HashStateTime = Animator.StringToHash("StateTime");
         readonly int _HashFootFall = Animator.StringToHash("FootFall");
         readonly int _HashAttackType = Animator.StringToHash("AttackType");
+        readonly int _HashLockOn = Animator.StringToHash("LockOn");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -128,6 +134,7 @@ namespace Moon
             _animator = GetComponent<Animator>();
             _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
+            _lockOnSystem = GetComponent<LockOnSystem>();
 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
@@ -165,6 +172,24 @@ namespace Moon
                 Interact();
                 _inputHandler.InteractInput = false;
             }
+            
+            bool lockOnNow = _inputHandler.LockOnInput;  // true/false
+            // 눌린 순간(!이전 && 지금)
+            if (lockOnNow && !_lockOnLastFrame)
+            {
+                lockOnSystem.ToggleLockOn();
+                if (lockOnSystem.currentTarget != null)
+                {
+                    _animator.SetTrigger(_HashLockOn);
+                }
+                else
+                {
+                    _animator.ResetTrigger(_HashLockOn);
+                }
+            }
+            // 상태 저장
+            _lockOnLastFrame = lockOnNow;
+            
 
             SetGrounded();
 
@@ -303,86 +328,52 @@ namespace Moon
         
         void SetTargetRotation()
         {
-            // Create three variables, move input local to the player, flattened forward direction of the camera and a local target rotation.
             Vector2 moveInput = _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            
-            Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
-            forward.y = 0f;
-            forward.Normalize();
+            if (localMovementDirection == Vector3.zero) return;
 
             Quaternion targetRotation;
-            
-            // If the local movement direction is the opposite of forward then the target rotation should be towards the camera.
-            if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1.0f))
+
+            // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
+            if (lockOnSystem.currentTarget != null)
             {
-                targetRotation = Quaternion.LookRotation(-forward);
+                // --- 락온 모드 계산 ---
+                // 실제 락온 카메라를 기준으로 forward 추출
+                Transform camT = lockCam.transform;
+                Vector3 forward = camT.forward;
+                forward.y = 0f; forward.Normalize();
+
+                if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1f))
+                    targetRotation = Quaternion.LookRotation(-forward);
+                else
+                {
+                    var offset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
+                    targetRotation = Quaternion.LookRotation(offset * forward);
+                }
             }
             else
             {
-                // Otherwise the rotation should be the offset of the input from the camera's forward.
-                Quaternion cameraToInputOffset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
-                targetRotation = Quaternion.LookRotation(cameraToInputOffset * forward);
+                // --- FreeLook 모드(원래 코드) ---
+                Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
+                forward.y = 0f; forward.Normalize();
+
+                if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1f))
+                    targetRotation = Quaternion.LookRotation(-forward);
+                else
+                {
+                    var offset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
+                    targetRotation = Quaternion.LookRotation(offset * forward);
+                }
             }
 
-            // The desired forward direction of Ellen.
+            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
             Vector3 resultingForward = targetRotation * Vector3.forward;
-
-//가까운 적 관련 회전 루틴 - 참고 후 삭제
-#if true
-            // If attacking try to orient to close enemies.
-            if (_inCombo)
-            {
-                // Find all the enemies in the local area.
-                Vector3 centre = transform.position + transform.forward * 2.0f + transform.up;
-                Vector3 halfExtents = new Vector3(3.0f, 1.0f, 2.0f);
-                int layerMask = 1 << LayerMask.NameToLayer("Enemy");
-                int count = Physics.OverlapBoxNonAlloc(centre, halfExtents, _overlapResult, targetRotation, layerMask);
-
-
-                // Go through all the enemies in the local area...
-                float closestDot = 0.0f;
-                Vector3 closestForward = Vector3.zero;
-                int closest = -1;
-
-                for (int i = 0; i < count; ++i)
-                {
-                    // ... and for each get a vector from the player to the enemy.
-                    Vector3 playerToEnemy = _overlapResult[i].transform.position - transform.position;
-                    playerToEnemy.y = 0;
-                    playerToEnemy.Normalize();
-
-                    // Find the dot product between the direction the player wants to go and the direction to the enemy.
-                    // This will be larger the closer to Ellen's desired direction the direction to the enemy is.
-                    float d = Vector3.Dot(resultingForward, playerToEnemy);
-
-                    // Store the closest enemy.
-                    if (d > k_MinEnemyDotCoeff && d > closestDot)
-                    {
-                        closestForward = playerToEnemy;
-                        closestDot = d;
-                        closest = i;
-                    }
-                }
-
-                // If there is a close enemy...
-                if (closest != -1)
-                {
-                    // The desired forward is the direction to the closest enemy.
-                    resultingForward = closestForward;
-                    Debug.DrawRay(transform.position, resultingForward * 2.0f, Color.red);
-                    // We also directly set the rotation, as we want snappy fight and orientation isn't updated in the UpdateOrientation function during an atatck.
-                    transform.rotation = Quaternion.LookRotation(resultingForward);
-                }
-            }
-#endif
-            // Find the difference between the current rotation of the player and the desired rotation of the player in radians.
             float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
-            float targetAngle = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
-
-            _angleDiff = Mathf.DeltaAngle(angleCurrent, targetAngle);
+            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
+            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
             _targetRotation = targetRotation;
         }
+
 
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()

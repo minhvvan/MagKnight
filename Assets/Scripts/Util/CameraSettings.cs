@@ -10,7 +10,7 @@ namespace Moon
     {
         public enum InputChoice
         {
-            KeyboardAndMouse, Controller,
+            KeyboardAndMouse, Controller, LockOn, 
         }
 
         [Serializable]
@@ -26,6 +26,7 @@ namespace Moon
         public CinemachineFreeLook keyboardAndMouseCamera;
         public CinemachineFreeLook controllerCamera;
         public CinemachineVirtualCamera interactionCamera;
+        public CinemachineVirtualCamera LockOnCamera;
         public InputChoice inputChoice;
         public InvertSettings keyboardAndMouseInvertSettings;
         public InvertSettings controllerInvertSettings;
