@@ -14,17 +14,19 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
 
-    public virtual void Initialize()
+    public IMagneticInteractCommand magnetApproach;
+    public IMagneticInteractCommand magnetSeparation;
+    
+    public virtual void InitializeMagnetic()
     {
+        //기본 데이터 세팅
         TryGetComponent(out rb);
         SetPhysic();
+        
+        //자기력 상호작용
+        SetMagneticInteract();
     }
-
-    public virtual async UniTask LoadMagneticObjectSO()
-    {
-        //magneticObjectSO = await DataManager.Instance.LoadDataAsync<>() 
-    }
-
+    
     public virtual void SetPhysic()
     {
         magneticType = magneticObjectSO.magneticType = magneticObjectSO != null ? magneticObjectSO.magneticType : MagneticType.N;
@@ -36,6 +38,33 @@ public class MagneticObject : MonoBehaviour, IMagnetic
             rb.isKinematic = true;
             rb.useGravity = false;
         }
+    }
+    
+    //새로 추가된 자기력 관련 상호작용을 이곳에서 캐싱합니다.
+    public virtual void SetMagneticInteract()
+    {
+        magnetApproach = MagneticInteractFactory.GetInteract<OnApproach>();
+        magnetSeparation = MagneticInteractFactory.GetInteract<OnSeparation>();
+    }
+
+    public virtual async UniTask OnMagneticInteract(MagneticObject target)
+    {
+        //끌려오기 날아가기 등 다양한 액션을 override하여 사용.
+        
+        //디폴트
+        if (target.magneticType != magneticType)
+        {
+            await magnetApproach.Execute(target, this);
+        }
+        else if (target.magneticType == magneticType)
+        {
+            await magnetSeparation.Execute(target, this);
+        }
+    }
+
+    public virtual void MagneticCoolDown()
+    {
+        
     }
 
     public virtual bool GetIsStructure()

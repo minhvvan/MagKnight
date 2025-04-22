@@ -27,8 +27,11 @@ public class MagneticUIController : MonoBehaviour
     
     private Queue<MagneticTarget> _targetImgPool = new Queue<MagneticTarget>(); // 타겟 이미지 풀링
     private List<MagneticTarget> _currentTargetList = new List<MagneticTarget>(); //화면 내에 표기되는 타겟 리스트
+
+    private WaitForSeconds _waitDoTween;
     
     private bool _isDispose = false; //true 시 모든 동작 중단.
+    private float _dotDuration;
     
     private void Awake()
     {
@@ -56,58 +59,112 @@ public class MagneticUIController : MonoBehaviour
         focusAreaCircle.transform.DOScale(Vector3.zero, 0);
         magneticTypeN.transform.DOScale(Vector3.zero, 0);
         magneticTypeS.transform.DOScale(Vector3.zero, 0);
+
+        _dotDuration = 0.2f;
+        _waitDoTween = new WaitForSeconds(_dotDuration);
     }
     
-    public void ShowFocusArea()
+    public IEnumerator ShowFocusArea()
     {
-        focusAreaCircle.transform.DOScale(Vector3.one, 0.2f);
-        _focusCircleCanvasGroup.DOFade(1, 0.2f);
+        // focusAreaCircle.transform.DOScale(Vector3.one, _dotDuration);
+        // _focusCircleCanvasGroup.DOFade(1, _dotDuration);
+        StartCoroutine(UIScale(focusAreaCircle.transform, Vector3.one, _dotDuration));
+        StartCoroutine(UIFade(_focusCircleCanvasGroup, 1f, _dotDuration));
+        
+        yield return _waitDoTween;
     }
 
-    public void HideFocusArea()
+    public IEnumerator HideFocusArea()
     {
-        focusAreaCircle.transform.DOScale(Vector3.zero, 0.2f);
-        _focusCircleCanvasGroup.DOFade(0, 0.2f);
+        // focusAreaCircle.transform.DOScale(Vector3.zero, _dotDuration);
+        // _focusCircleCanvasGroup.DOFade(0, _dotDuration);
+        
+        StartCoroutine(UIScale(focusAreaCircle.transform, Vector3.zero, _dotDuration));
+        StartCoroutine(UIFade(_focusCircleCanvasGroup, 0f, _dotDuration));
+        yield return _waitDoTween;
     }
 
-    public void ShowMagneticTypeVisual(MagneticType type)
+    public IEnumerator ShowMagneticTypeVisual(MagneticType type)
     {
         switch (type)
         {
             case MagneticType.N:
                 if (_typeNCanvasGroup.alpha == 0 && _typeSCanvasGroup.alpha == 0)
                 {
-                    magneticTypeN.transform.DOScale(Vector3.one, 0.2f);
-                    magneticTypeS.transform.DOScale(Vector3.one, 0.2f);
-                    _typeNCanvasGroup.DOFade(1, 0.2f);
+                    // magneticTypeN.transform.DOScale(Vector3.one, _dotDuration);
+                    // magneticTypeS.transform.DOScale(Vector3.one, _dotDuration);
+                    // _typeNCanvasGroup.DOFade(1, _dotDuration);
+                    StartCoroutine(UIScale(magneticTypeN.transform, Vector3.one, _dotDuration));
+                    StartCoroutine(UIScale(magneticTypeS.transform, Vector3.one, _dotDuration));
+                    StartCoroutine(UIFade(_typeNCanvasGroup, 1f, _dotDuration));
                     
-                    return;
+                    yield return _waitDoTween;
+                    
+                    yield break;
                 }
-                _typeNCanvasGroup.alpha = 1;
-                _typeSCanvasGroup.alpha = 0;
+                _typeNCanvasGroup.DOFade(1, 0);
+                _typeSCanvasGroup.DOFade(0, 0);
                 break;
             case MagneticType.S:
                 if (_typeNCanvasGroup.alpha == 0 && _typeSCanvasGroup.alpha == 0)
                 {
-                    magneticTypeN.transform.DOScale(Vector3.one, 0.2f);
-                    magneticTypeS.transform.DOScale(Vector3.one, 0.2f);
-                    _typeSCanvasGroup.DOFade(1, 0.2f);
-
-                    return;
+                    // magneticTypeN.transform.DOScale(Vector3.one, _dotDuration);
+                    // magneticTypeS.transform.DOScale(Vector3.one, _dotDuration);
+                    // _typeSCanvasGroup.DOFade(1, _dotDuration);
+                    StartCoroutine(UIScale(magneticTypeN.transform, Vector3.one, _dotDuration));
+                    StartCoroutine(UIScale(magneticTypeS.transform, Vector3.one, _dotDuration));
+                    StartCoroutine(UIFade(_typeSCanvasGroup, 1f, _dotDuration));
+                    
+                    yield return _waitDoTween;
+                    
+                    yield break;
                 }
-                _typeNCanvasGroup.alpha = 0;
-                _typeSCanvasGroup.alpha = 1;
+                _typeNCanvasGroup.DOFade(0, 0);
+                _typeSCanvasGroup.DOFade(1, 0);
                 break;
         }
     }
 
-    public void HideMagneticTypeVisual()
+    public IEnumerator HideMagneticTypeVisual()
     {
-        magneticTypeN.transform.DOScale(Vector3.zero, 0.2f);
-        magneticTypeS.transform.DOScale(Vector3.zero, 0.2f);
+        // magneticTypeN.transform.DOScale(Vector3.zero, _dotDuration);
+        // magneticTypeS.transform.DOScale(Vector3.zero, _dotDuration);
+        //
+        // _typeNCanvasGroup.DOFade(0, _dotDuration);
+        // _typeSCanvasGroup.DOFade(0, _dotDuration);
         
-        _typeNCanvasGroup.DOFade(0, 0.2f);
-        _typeSCanvasGroup.DOFade(0, 0.2f);
+        StartCoroutine(UIScale(magneticTypeN.transform, Vector3.zero, _dotDuration));
+        StartCoroutine(UIScale(magneticTypeS.transform, Vector3.zero, _dotDuration));
+        StartCoroutine(UIFade(_typeNCanvasGroup, 0, _dotDuration));
+        StartCoroutine(UIFade(_typeSCanvasGroup, 0, _dotDuration));
+
+        yield return _waitDoTween;
+    }
+
+    //DOTween은 TimeScale이 느려지면 같이 느려진다. 코루틴은 그것에 영향을 받지 않는다.
+    
+    //TimeScale에 영향을 받지 않는 DOTween DOScale!
+    public IEnumerator UIScale(Transform target ,Vector3 scale, float duration)
+    {
+        var elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            target.localScale = Vector3.Lerp(target.localScale, scale, elapsedTime / duration);
+            yield return null;
+        }
+    }
+
+    //TimeScale에 영향을 받지 않는 DOTween DOFade!
+    public IEnumerator UIFade(CanvasGroup target, float value, float duration)
+    {
+        var elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            target.alpha = Mathf.Lerp(target.alpha, value, elapsedTime / duration);
+            yield return null;
+        }
     }
 
     #endregion
@@ -218,6 +275,7 @@ public class MagneticUIController : MonoBehaviour
 
     private void OnDestroy()
     {
+        DOTween.KillAll();
         _currentTargetList.Clear();
         DisposePooling();
     }
