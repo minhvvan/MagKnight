@@ -1,12 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
+using Cysharp.Threading.Tasks;
+using Moon;
 using UnityEngine;
 
 namespace Jun
 {
     public class PlayerAttributeSet : AttributeSet
     {
+        public Action OnDead;
+
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
             float returnValue = newValue;
@@ -36,6 +38,8 @@ namespace Jun
             if (effect.attributeType == AttributeType.HP)
             {
                 SetValue(AttributeType.HP,Mathf.Clamp(GetValue(AttributeType.HP), 0f, GetValue(AttributeType.MaxHP)));
+                
+                
             }
             
             if (effect.attributeType == AttributeType.Damage)
@@ -45,18 +49,23 @@ namespace Jun
                 SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
                 // 예시 실드가 있다면?
                 // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
-                
+
+#if true //공격 효과
+                CameraShake.Shake(0.2f, 0.1f);
+                Time.timeScale = 0.1f;
+                UniTask.Delay(TimeSpan.FromMilliseconds(200f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
+                {
+                    Time.timeScale = 1;
+                });
+#endif
                 // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
                 SetValue(AttributeType.Damage, 0);
-                
             }
             
             if (GetValue(AttributeType.HP) == 0)
             {
-                // TODO : 사망로직
-                Debug.Log("Player Dead");
-                // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
+                OnDead?.Invoke();
             }
         }
-    }   
+    }
 }
