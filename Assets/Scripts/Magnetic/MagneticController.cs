@@ -16,33 +16,34 @@ using UnityEditor;
 
 public class MagneticController : MagneticObject
 {
-    public MagneticObject targetMagneticObject;
-   
     //-- 타겟팅 시스템 --//
+    private MagneticUIController _magneticUIController;
+    public MagneticObject targetMagneticObject;
     
     public Camera mainCamera; //메인 카메라
     public Vector3 targetHit;
     public LayerMask magneticLayer; //Magnetic 레이어
     public LayerMask enemyLayer; //Enemy 레이어
+    public LayerMask groundLayer; //Enemy 레이어
+    public LayerMask environmentLayer; //Enemy 레이어
     public float rayDistance; //정면 인식 사거리
     public float screenOffset; //
     public float sphereRadius; //조준 범위 반지름
     public int maxInCount; //탐지 개체 최대 수
-
-    private CharacterController _characterController;
-    private MagneticUIController _magneticUIController;
+    
     
     //--자기력--//
+    private CharacterController _characterController;
     private Vector3 _currentVelocity; // 현재 가속도
     private Vector3 playerPosOffset; // player position을 center정도 위치로 임시보정 해주는 값
     private float _dragValue; //가속 후 감속값
     
-    private float _minDistance;
-    private float _outBoundDistance;
-    private float _hangAdjustValue;
+    private float _minDistance;//대상 오브젝트가 일정 거리 이내로 다가올 시 자기력 상호작용을 종료할 최소거리.
+    private float _outBoundDistance;//자기력이 작용하는 최대 거리
+    private float _hangAdjustValue;//Vector만 전달 시 y축 보정
     
-    public float structSpeed;
-    public float nonStructSpeed;
+    public float structSpeed; //구조물 대상 적용 속도
+    public float nonStructSpeed; //비구조물 대상 적용 속도
     
     
     //--입력--//
@@ -90,6 +91,8 @@ public class MagneticController : MagneticObject
         screenOffset = 0.15f;
         magneticLayer = LayerMask.NameToLayer("Magnetic");
         enemyLayer = LayerMask.NameToLayer("Enemy");
+        groundLayer = LayerMask.NameToLayer("Ground");
+        environmentLayer = LayerMask.NameToLayer("Environment");
         
         _characterController = GetComponent<CharacterController>();
         playerPosOffset = new Vector3(0,1f,0);
@@ -98,7 +101,7 @@ public class MagneticController : MagneticObject
         _outBoundDistance = 15f;
         _hangAdjustValue = _outBoundDistance/10f+0.25f; //1.2~2f
         
-        structSpeed = 35f;
+        structSpeed = 7f;
         nonStructSpeed = 2f;
         _dragValue = 1.5f;
 
@@ -188,7 +191,6 @@ public class MagneticController : MagneticObject
     }
 
     #endregion
-    
 
     #region 타겟팅 시스템
 
@@ -245,22 +247,23 @@ public class MagneticController : MagneticObject
         //조준 범위만 감지
         Ray sphereRay = new Ray(targetPoint, mainCamera.transform.forward);
         RaycastHit[] hits = new RaycastHit[maxInCount];
-        Physics.SphereCastNonAlloc(sphereRay, sphereRadius, hits, rayDistance, (1 << magneticLayer) | (1 << enemyLayer));
+        var hitCount = Physics.SphereCastNonAlloc(sphereRay, sphereRadius, hits, rayDistance, (1 << magneticLayer) | (1 << enemyLayer));
         
         if (hits.Length > 0)
         {
-            RaycastHit bestHit = hits.OrderBy(h =>
+            if (hitCount > 0)
             {
-                //hit지점이 카메라 중심에서 얼마나 떨어져 있는지 검사.
-                Vector3 toHit = h.point - mainCamera.transform.position;
-                float angle = Vector3.Angle(mainCamera.transform.forward, toHit);
-                return angle;
-            }).First();
-            
-            if (bestHit.point != Vector3.zero)
-            {
+                RaycastHit bestHit = hits.OrderBy(h =>
+                {
+                    //hit지점이 카메라 중심에서 얼마나 떨어져 있는지 검사.
+                    Vector3 toHit = h.point - mainCamera.transform.position;
+                    float angle = Vector3.Angle(mainCamera.transform.forward, toHit);
+                    return angle;
+                }).First();
+                
                 targetHit = bestHit.point;
                 Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
+                
                 if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
                 {
                     //새로 타겟된 대상이 이전과 다르면 언록
@@ -273,6 +276,7 @@ public class MagneticController : MagneticObject
                     _isDetectedMagnetic = true;
                     targetMagneticObject = magneticObject;
                     _magneticUIController.InLockOnTarget(targetMagneticObject.transform);
+                    
                     return;
                 }
             }
@@ -341,6 +345,45 @@ public class MagneticController : MagneticObject
     #endregion
 
     #region 물리 효과
+    
+    //상호 겹침 보정
+    public void PenetrationFix(MagneticObject magneticObject)
+    {
+        var obj = magneticObject.gameObject;
+        var col = magneticObject.GetComponent<Collider>();
+        var center = col.bounds.center;
+        var size  = col.bounds.size;
+        
+        var radius = Mathf.Min(size.x, size.z)/2f;
+        var height = size.y;
+        var halfHeight = Mathf.Max(height / 2f - radius, 0f);
+        var up = Vector3.up;
+        var point1 = center + up * halfHeight;
+        var point2 = center - up * halfHeight;
+
+        var hitColliders = new Collider[maxInCount];
+        var hitCount = Physics.OverlapCapsuleNonAlloc(point1, point2, radius, hitColliders, 
+            (1 << magneticLayer) | (1 << enemyLayer) | (1 << groundLayer) | (1 << environmentLayer));
+
+        //감지한 대상 기반으로 보정 수행
+        for (int i = 0; i < hitCount; i++)
+        {
+            Collider hitCol = hitColliders[i];
+            
+            //본인 제외
+            if(hitCol == col) continue;
+            
+            //ComputePenetration
+            if (Physics.ComputePenetration(col, obj.transform.position, obj.transform.rotation,
+                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                    out Vector3 direction, out float distance))
+            {
+                //겹침(침투) 보정
+                obj.transform.position += direction * distance;
+            }
+        }
+    }
+    
     //두 오브젝트 가까워짐
     public async UniTask OnApproach(MagneticObject target, Vector3? another = null)
     {
@@ -348,17 +391,18 @@ public class MagneticController : MagneticObject
         var playerPos = another ?? transform.position;
         var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
         var distance = (targetPos - playerPos).magnitude;
+        var staticDistance = distance;
         
-        var duration = 0f;
+        var eta = 0f;
         if (target.GetIsStructure()) 
-            duration = distance / (structSpeed);
-        else duration = distance / (nonStructSpeed);
+            eta = distance / (structSpeed);
+        else eta = distance / (nonStructSpeed);
         
-        var elapsedTime = 0f;        
-
+        var elapsedTime = 0f;
+        var elapsedDistance = 0f;
         if (!_onGravityBreak) _isActivatedMagnetic = true;
         //방향까지 가속
-        while (elapsedTime < duration/2f)
+        while (elapsedTime < eta) // eta/2f
         {
             if (!_onGravityBreak)
             {
@@ -370,6 +414,9 @@ public class MagneticController : MagneticObject
             }
             
             elapsedTime += Time.deltaTime;
+            
+            //Lerp로도 잘 어울려지도록 ETA 보정
+            float progressTime = Mathf.Clamp01(elapsedTime / eta);
 
             targetPos = target.transform.position;
             playerPos = another ?? transform.position;
@@ -382,20 +429,25 @@ public class MagneticController : MagneticObject
                 direction.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
                 
                 var hangDirection= direction.normalized;
-                var newMovement = hangDirection * (structSpeed * Time.deltaTime);
+                var newMovement = hangDirection * progressTime;
                  
                 _currentVelocity = newMovement;
                 
                 _characterController.Move(newMovement);
+                
+                elapsedDistance += Vector3.Distance(playerPos+newMovement, playerPos);
             }
             else
             {
-                var newPosition = Vector3.Lerp( targetPos, modifyPlayerPos, nonStructSpeed * Time.deltaTime);
+                var newPosition = Vector3.MoveTowards( targetPos, modifyPlayerPos, progressTime);
                 target.transform.position = (newPosition);
+                elapsedDistance += Vector3.Distance(targetPos, newPosition);
             }
+            
+            PenetrationFix(target);
 
             distance = (targetPos - modifyPlayerPos).magnitude;
-
+            if (elapsedDistance >= staticDistance) break;
             if (distance <= _minDistance)
             {
                 break;
@@ -416,7 +468,7 @@ public class MagneticController : MagneticObject
             while (_currentVelocity != Vector3.zero)
             {
                 //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isPressMagnetic) break;
+                //if (_isPressMagnetic) break;
                 
                 _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, _dragValue * Time.deltaTime);
                 _characterController.Move(_currentVelocity);
@@ -436,16 +488,28 @@ public class MagneticController : MagneticObject
         var maxDistance = _onCounterPress ? _counterPressRange : _outBoundDistance;
         var backDistance = maxDistance - Vector3.Distance(targetPos, modifyPlayerPos);
         
-        var duration = 0f;
+        var direction = (targetPos - modifyPlayerPos).normalized;
+        var destination = direction * maxDistance;
+        var outDistance = Vector3.Distance(destination + modifyPlayerPos, targetPos);
+        
+        var eta = 0f;
         if (target.GetIsStructure()) 
-            duration = backDistance / (structSpeed);
-        else duration = distance / (nonStructSpeed);
+            eta = backDistance / (structSpeed);
+        else if (_onCounterPress)
+        {
+            eta = distance / _counterPressPower;
+        }
+        else
+        {
+            eta = outDistance / nonStructSpeed;
+        }
         
         var elapsedTime = 0f;
+        var elapsedDistance = 0f;
 
         if (!_onGravityBreak || !_onCounterPress) _isActivatedMagnetic = true;
         //방향까지 가속
-        while (elapsedTime < duration/2f)
+        while (elapsedTime < eta)
         {
             if (!_onGravityBreak)
             {
@@ -457,12 +521,14 @@ public class MagneticController : MagneticObject
             }
             
             elapsedTime += Time.deltaTime;
+            //Lerp로도 잘 어울려지도록 ETA 보정
+            float progressTime = Mathf.Clamp01(elapsedTime / eta);
             
             targetPos = target.transform.position;
             playerPos = another ?? _characterController.transform.position;
             modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
             
-            var destination = (targetPos - modifyPlayerPos).normalized * maxDistance;
+            destination = (targetPos - modifyPlayerPos).normalized * maxDistance;
     
             //구조물 여부에 따라 다른 액션
             if (target.GetIsStructure())
@@ -470,22 +536,23 @@ public class MagneticController : MagneticObject
                 var backDirection = -destination.normalized;
                 backDirection.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
                 
-                var newMovement = (backDirection) * (structSpeed * Time.deltaTime);
+                var newMovement = (backDirection) * progressTime;
                 
                 _currentVelocity = newMovement;
-                
                 _characterController.Move(newMovement);
+                elapsedDistance += Vector3.Distance(newMovement + playerPos, playerPos);
             }
             else
             {
                 var pressDirection = destination + modifyPlayerPos;
-                var newPosition = Vector3.Lerp(targetPos, pressDirection, 
-                    (_onCounterPress ? _counterPressPower : nonStructSpeed) * Time.fixedDeltaTime);
+                var newPosition = Vector3.MoveTowards(targetPos, pressDirection, progressTime);
                 target.transform.position = newPosition;
+                elapsedDistance += Vector3.Distance(targetPos, newPosition);
             }
             
+            PenetrationFix(target);
             distance = (targetPos - modifyPlayerPos).magnitude;
-
+            if (elapsedDistance >= outDistance) break;
             if (distance >= maxDistance)
             {
                 break;
