@@ -1,4 +1,8 @@
 using System;
+using System.Threading;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 
 namespace Moon
@@ -23,7 +27,7 @@ namespace Moon
         [SerializeField] public bool canAttack;
 
         public CameraSettings cameraSettings;
-        public bool isInvisible;
+        public bool isDead;
 
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
@@ -208,11 +212,36 @@ namespace Moon
             if(_inputHandler.IsContollerInputBlocked())
             {
                 cameraSettings.DisableCameraMove();
+                if(isDead)
+                {
+                    AnimateCameraYAxis(cameraSettings.Current, 1f, 1f, this.GetCancellationTokenOnDestroy()).Forget();
+                }
             }
             else
             {
                 cameraSettings.EnableCameraMove();
             }
+        }
+
+        async UniTask AnimateCameraYAxis(CinemachineFreeLook camera, float targetValue, float duration, CancellationToken token)
+        {
+            float startValue = camera.m_YAxis.Value;
+            float time = 0f;
+
+            while (time < duration)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                time += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(time / duration);
+                camera.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            }
+
+            camera.m_YAxis.Value = targetValue;
         }
         
         bool IsInAttackComboState()
@@ -503,6 +532,8 @@ namespace Moon
         {
             Vector3 movement;
 
+            if(isDead) return;
+
             if (_isGrounded)
             {
                 if(_currentStateInfo.shortNameHash == _HashLocomotion)
@@ -592,15 +623,17 @@ namespace Moon
         
         public void RespawnFinished()
         {
-            isInvisible = false;
+            isDead = false;
         }
 
         public void Death()
         {
-            if(isInvisible) return;
+            if(isDead) return;
             
-            isInvisible = true;
+            isDead = true;
             _animator.SetTrigger(_HashDeath);
+            
+            GameManager.Instance.ChangeGameState(GameState.GameOver);
         }
     }
 }
