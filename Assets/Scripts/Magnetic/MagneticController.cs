@@ -264,7 +264,9 @@ public class MagneticController : MagneticObject
                 targetHit = bestHit.point;
                 Debug.DrawLine(sphereRay.origin, bestHit.point, Color.green);
                 
-                if (bestHit.transform.TryGetComponent(out MagneticObject magneticObject))
+                if (bestHit.collider != null && 
+                    bestHit.collider.transform.TryGetComponent(out MagneticObject magneticObject) 
+                    && magneticObject != null)
                 {
                     //새로 타겟된 대상이 이전과 다르면 언록
                     if (targetMagneticObject != null && magneticObject != targetMagneticObject)
