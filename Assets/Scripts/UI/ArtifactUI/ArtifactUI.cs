@@ -10,7 +10,8 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 {
     [SerializeField] private ArtifactDataSO artifact;
     [SerializeField] private Image icon;
-
+    [SerializeField] private GameObject artifactPrefab;
+    
     Vector3 startPos;
     [HideInInspector] public Transform startParent;
     
@@ -72,7 +73,8 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         var player = FindObjectOfType<PlayerController>().gameObject;
         
-        var instanceArtifact = Instantiate(artifact.prefab);
+        var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
+        instanceArtifact.SetArtifactData(artifact);
         instanceArtifact.transform.position = player.transform.position + new Vector3(0, 0, 3);
     }
 }

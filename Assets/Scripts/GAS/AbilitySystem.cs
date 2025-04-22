@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AbilitySystem : MonoBehaviour
 {
@@ -14,13 +15,26 @@ public class AbilitySystem : MonoBehaviour
     // Remove를 요청할 때는 요청자는 단순히 나의 GE를 삭제해달라고 요청해주면 된다.
     [SerializeField] SerializedDictionary<int, GameplayEffect> _activatedEffects = new SerializedDictionary<int, GameplayEffect>();
     
-    
+    // Passive를 담고 있는 Dicitionary
+    [SerializeField] SerializedDictionary<int, PassiveEffectData> _registeredPassiveEffects = new SerializedDictionary<int, PassiveEffectData>();
+
+
+    #region Attribute
     
     public void AddAttribute(AttributeType type, float value)
     {
         Attributes.AddAttribute(type, value);
     }
+
+    // Attribute의 CurrentValue를 가져옴
+    public float GetValue(AttributeType type)
+    {
+        return Attributes.GetValue(type);
+    }
     
+    #endregion
+    
+    #region Effect
     
     // effect 개념으로 관리하고 싶은 것은 ApplyEffect를 한다.
     // e.g. 아티팩트 효과, 버프 디버프 등
@@ -33,20 +47,11 @@ public class AbilitySystem : MonoBehaviour
         
         Attributes.Modify(instanceGE);
         
+        if(gameplayEffect.effectType == EffectType.Duration)
+            RemoveAfterDuration(gameplayEffect);
         
-        switch (gameplayEffect.effectType)
-        {
-            case EffectType.Instant:
-                break;
-            case EffectType.Duration:
-                RemoveAfterDuration(instanceGE).Forget();
-                break;
-            case EffectType.Infinite:
-                //RemoveAfterDuration(gameplayEffect).Forget();
-                break;
-        }
-
-        if (instanceGE.tracking)
+        // Infinite는 항상 저장
+        if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
         {
             // 이미 존재하는 이펙트면
             if (!_activatedEffects.TryAdd(gameplayEffect.GetHashCode(), instanceGE))
@@ -59,12 +64,12 @@ public class AbilitySystem : MonoBehaviour
     
     public void RemoveEffect(GameplayEffect gameplayEffect)
     {
-        if (gameplayEffect.tracking)
+        if (gameplayEffect.tracking || gameplayEffect.effectType == EffectType.Infinite)
         {
-            if (_activatedEffects.ContainsKey(gameplayEffect.GetHashCode()))
+            if (_activatedEffects.TryGetValue(gameplayEffect.GetHashCode(), out var effect))
             {
-                _activatedEffects[gameplayEffect.GetHashCode()].amount = -_activatedEffects[gameplayEffect.GetHashCode()].amount; 
-                Attributes.Modify(_activatedEffects[gameplayEffect.GetHashCode()]);
+                effect.amount = -effect.amount; 
+                Attributes.Modify(effect);
                 _activatedEffects.Remove(gameplayEffect.GetHashCode());
             }
             else // tracking 중인데 _activatedEffect가 없을수도
@@ -79,12 +84,6 @@ public class AbilitySystem : MonoBehaviour
             Attributes.Modify(instanceGE);
         }
     }
-
-    // Attribute의 CurrentValue를 가져옴
-    public float GetValue(AttributeType type)
-    {
-        return Attributes.GetValue(type);
-    }
     
     //Duration에서 사용됨
     private async UniTask RemoveAfterDuration(GameplayEffect gameplayEffect)
@@ -92,5 +91,41 @@ public class AbilitySystem : MonoBehaviour
         await UniTask.WaitForSeconds(gameplayEffect.duration);
         RemoveEffect(gameplayEffect);
     }
+    
+    #endregion
+    
+    #region Passive
+    
+    public void RegisterPassiveEffect(PassiveEffectData data)
+    {
+        _registeredPassiveEffects.TryAdd(data.GetHashCode(), data);
+    }
+
+    public void RemovePassiveEffect(PassiveEffectData data)
+    {
+        if(_registeredPassiveEffects.ContainsKey(data.GetHashCode()))
+            _registeredPassiveEffects.Remove(data.GetHashCode());
+        else
+        {
+            Debug.Log("해당 이펙트는 이미 제거되었습니다");
+        }
+    }
+    
+    public void TriggerEvent(TriggerEventType eventType, AbilitySystem target)
+    {
+        foreach (var passiveEffect in _registeredPassiveEffects)
+        {
+            if (passiveEffect.Value.triggerEvent == eventType)
+            {
+                if (Random.value <= passiveEffect.Value.triggerChance && target != null)
+                {
+                    target.ApplyEffect(passiveEffect.Value.effect);
+                }
+            }   
+        }
+    }
+    
+    #endregion
+    
 }
 
