@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using Managers;
 using UnityEngine;
 
 public class AbilitySystem : MonoBehaviour
@@ -13,8 +14,26 @@ public class AbilitySystem : MonoBehaviour
     // 저장되는 GameplayEffect는 실제 적용된 Gameplay의 Instance
     // Remove를 요청할 때는 요청자는 단순히 나의 GE를 삭제해달라고 요청해주면 된다.
     [SerializeField] SerializedDictionary<int, GameplayEffect> _activatedEffects = new SerializedDictionary<int, GameplayEffect>();
+
+    // PlayerStat -> Attribute
+    public void InitializeFromPlayerStat(PlayerStat playerStat = null)
+    {
+        if (playerStat == null)
+        {
+            Debug.LogError("PlayerStat is not assigned!");
+            return;
+        }
     
-    
+        // PlayerStat의 모든 필드를 순회
+        foreach (var field in typeof(PlayerStat).GetFields())
+        {
+            // 필드 값을 AttributePair로 가져옴
+            AttributePair attributePair = (AttributePair)field.GetValue(playerStat);
+        
+            // AbilitySystem에 값 추가
+            AddAttribute(attributePair.Key, attributePair.Value);
+        }
+    }
     
     public void AddAttribute(AttributeType type, float value)
     {

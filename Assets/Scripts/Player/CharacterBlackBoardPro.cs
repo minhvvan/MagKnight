@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using hvvan;
 using Jun;
 using Moon;
 using UnityEngine;
@@ -14,25 +15,16 @@ public class CharacterBlackBoardPro : MonoBehaviour
     
     void Awake()
     {
-        Initalized();
+        Initialize();
     }
     
-    void Initalized()
+    private void Initialize()
     {
         _playerController = GetComponent<PlayerController>();
 
         abilitySystem = GetComponent<AbilitySystem>();
-
-        abilitySystem.AddAttribute(AttributeType.MaxHP, 10);
-        abilitySystem.AddAttribute(AttributeType.HP, 100);
-        abilitySystem.AddAttribute(AttributeType.Strength, 10);
-        abilitySystem.AddAttribute(AttributeType.Intelligence, 10);
-        abilitySystem.AddAttribute(AttributeType.CriticalRate, 10);
-        abilitySystem.AddAttribute(AttributeType.Defense, 10);
-        abilitySystem.AddAttribute(AttributeType.CriticalDamage, 10);
-        abilitySystem.AddAttribute(AttributeType.Damage, 0);
-        abilitySystem.AddAttribute(AttributeType.MoveSpeed, 10);
-        abilitySystem.AddAttribute(AttributeType.AttackSpeed, 10);
+        
+        abilitySystem.InitializeFromPlayerStat(GameManager.Instance.PlayerStats);
 
         PlayerAttributeSet playerAttributeSet = abilitySystem.Attributes as PlayerAttributeSet;
         if (playerAttributeSet != null)

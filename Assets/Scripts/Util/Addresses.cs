@@ -8,6 +8,7 @@ public static class Addresses
     {
         public static class Player
         {
+            public const string Stat = "data/player/stat";
         }
 
         public static class Weapon

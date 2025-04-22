@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Managers;
 using Moon;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ namespace hvvan
             }
             private set => _playerController = value;
         }
+
+        public PlayerStat PlayerStats => _playerData.PlayerStat;
 
         private PlayerController _playerController;
 
@@ -123,12 +126,26 @@ namespace hvvan
         {
             if (loadData == null)
             {
-                Debug.Log($"Create PlayerData");
-                loadData = new PlayerData();
+                loadData = await CreatePlayerData();
                 await SaveDataManager.Instance.SaveData(Constants.PlayerData, loadData);
             }
             
             _playerData = loadData;
+        }
+
+        private async UniTask<PlayerData> CreatePlayerData()
+        {
+            Debug.Log($"Create PlayerData");
+            var statSO = await DataManager.Instance.LoadDataAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
+    
+            // 새 PlayerData 생성
+            var playerData = new PlayerData
+            {
+                PlayerStat = statSO.Stat,
+                Currency = 0
+            };
+    
+            return playerData;
         }
 
         public void SetCurrentRunData(CurrentRunData currentRunData)
