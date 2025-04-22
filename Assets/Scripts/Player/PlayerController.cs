@@ -649,5 +649,15 @@ namespace Moon
             // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
             // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
         }
+
+        void OnAnimatorIK(int layerIndex)
+        {
+            if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+            {
+                Transform target = _lockOnSystem.currentTarget;
+                _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);
+                _animator.SetLookAtWeight(0.6f);
+            }
+        }
     }
 }
