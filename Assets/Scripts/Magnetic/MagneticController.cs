@@ -101,8 +101,8 @@ public class MagneticController : MagneticObject
         _outBoundDistance = 15f;
         _hangAdjustValue = _outBoundDistance/10f+0.25f; //1.2~2f
         
-        structSpeed = 7f;
-        nonStructSpeed = 2f;
+        structSpeed = 6.5f;
+        nonStructSpeed = 3f;
         _dragValue = 1.5f;
 
         gravityBreakRange = 4f;
