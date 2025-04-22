@@ -5,9 +5,8 @@ using Moon; // CameraSettings 네임스페이스
 
 public class LockOnSystem : MonoBehaviour
 {
-    [Header("레퍼런스")]
-    public CameraSettings           camSettings;  // CameraRig의 CameraSettings
-    public CinemachineVirtualCamera lockCam;      // LockOnVirtualCamera
+    PlayerController _playerController;
+
     public LayerMask                targetMask;
     public float                    searchRadius = 15f;
 
@@ -17,7 +16,11 @@ public class LockOnSystem : MonoBehaviour
     Transform[] candidates = new Transform[0];
     public Transform   currentTarget;
 
-    InputHandler inputHandler;
+    void Start()
+    {
+        _playerController = GetComponent<PlayerController>();
+    }
+
     void Update()
     {
         if (currentTarget != null && Input.GetKeyDown(KeyCode.E)) CycleTarget(1);
@@ -64,7 +67,7 @@ public class LockOnSystem : MonoBehaviour
         float heading = Mathf.Atan2(camForward.x, camForward.z) * Mathf.Rad2Deg;
 
         // 3) FreeLook 축 값에 복사
-        var rig = camSettings.Current;          // 현재 사용 중인 FreeLook
+        var rig = _playerController.cameraSettings.Current;          // 현재 사용 중인 FreeLook
         rig.m_XAxis.Value = heading;           
 
         // (선택) 수직(Pitch)까지 완벽히 맞추고 싶다면 아래처럼 YAxis도 설정할 수 있어요:
@@ -76,11 +79,11 @@ public class LockOnSystem : MonoBehaviour
         // rig.m_YAxis.Value = Mathf.InverseLerp(rig.m_YAxis.m_MinValue, rig.m_YAxis.m_MaxValue, pitchAngle);
 
         // 4) Priority 낮춰서 FreeLook으로 복귀
-        lockCam.Priority = 0;
-        camSettings.EnableCameraMove();
+        _playerController.cameraSettings.lockOnCamera.Priority = 0;
+        _playerController.cameraSettings.EnableCameraMove();
 
         // 5) LookAt도 원래 플레이어로 복원
-        rig.LookAt = camSettings.lookAt;
+        rig.LookAt = _playerController.cameraSettings.lookAt;
 
         currentTarget = null;
     }
@@ -88,16 +91,18 @@ public class LockOnSystem : MonoBehaviour
 
     void ApplyLockOn()
     {
+        CinemachineVirtualCamera lockCam = _playerController.cameraSettings.lockOnCamera;
+
         // VirtualCamera를 활성화
-        lockCam.Follow   = camSettings.follow;
+        lockCam.Follow   = _playerController.cameraSettings.follow;
         lockCam.LookAt   = currentTarget;
         lockCam.Priority = 20;
 
-        camSettings.DisableCameraMove();
+        _playerController.cameraSettings.DisableCameraMove();
 
         // 즉시 초기 회전 맞춰주고 싶다면 아래 한 줄 추가
         lockCam.transform.rotation = Quaternion.LookRotation(
-            (currentTarget.position - camSettings.follow.position).WithY(0f)
+            (currentTarget.position - _playerController.cameraSettings.follow.position).WithY(0f)
         );
     }
 
@@ -108,20 +113,20 @@ public class LockOnSystem : MonoBehaviour
         idx = (idx + dir + candidates.Length) % candidates.Length;
         currentTarget = candidates[idx];
         // LookAt만 교체
-        lockCam.LookAt = currentTarget;
+        _playerController.cameraSettings.lockOnCamera.LookAt = currentTarget;
     }
 
     void RotateVCamTowardTarget()
     {
-        Vector3 playerPos = camSettings.follow.position;
+        Vector3 playerPos = _playerController.cameraSettings.follow.position;
         // 적 방향 (수평만)
         Vector3 dir = currentTarget.position - playerPos;
         dir.y = 0f;
         if (dir.sqrMagnitude < 0.001f) return;
 
         Quaternion desired = Quaternion.LookRotation(dir);
-        lockCam.transform.rotation = Quaternion.Slerp(
-            lockCam.transform.rotation,
+        _playerController.cameraSettings.lockOnCamera.transform.rotation = Quaternion.Slerp(
+            _playerController.cameraSettings.lockOnCamera.transform.rotation,
             desired,
             Time.deltaTime * rotationSpeed
         );

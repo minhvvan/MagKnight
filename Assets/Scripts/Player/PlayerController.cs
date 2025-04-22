@@ -15,7 +15,6 @@ namespace Moon
         Animator _animator;
         InputHandler _inputHandler;
         MagneticController _magneticController;
-        LockOnSystem _lockOnSystem;
         [SerializeField] private InteractionController interactionController;
         [SerializeField] private WeaponHandler weaponHandler;
 
@@ -30,8 +29,7 @@ namespace Moon
         public CameraSettings cameraSettings;
         public bool isDead;
 
-        public LockOnSystem lockOnSystem;
-        public CinemachineVirtualCamera lockCam;
+        LockOnSystem _lockOnSystem;
         bool _lockOnLastFrame = false;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
@@ -180,8 +178,8 @@ namespace Moon
             // 눌린 순간(!이전 && 지금)
             if (lockOnNow && !_lockOnLastFrame)
             {
-                lockOnSystem.ToggleLockOn();
-                if (lockOnSystem.currentTarget != null)
+                _lockOnSystem.ToggleLockOn();
+                if (_lockOnSystem.currentTarget != null)
                 {
                     _animator.SetTrigger(_HashLockOn);
                 }
@@ -363,11 +361,11 @@ namespace Moon
             Quaternion targetRotation;
 
             // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
-            if (lockOnSystem.currentTarget != null)
+            if (_lockOnSystem.currentTarget != null)
             {
                 // --- 락온 모드 계산 ---
                 // 실제 락온 카메라를 기준으로 forward 추출
-                Transform camT = lockCam.transform;
+                Transform camT = cameraSettings.lockOnCamera.transform;
                 Vector3 forward = camT.forward;
                 forward.y = 0f; forward.Normalize();
 

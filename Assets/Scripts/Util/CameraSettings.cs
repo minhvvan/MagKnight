@@ -26,7 +26,7 @@ namespace Moon
         public CinemachineFreeLook keyboardAndMouseCamera;
         public CinemachineFreeLook controllerCamera;
         public CinemachineVirtualCamera interactionCamera;
-        public CinemachineVirtualCamera LockOnCamera;
+        public CinemachineVirtualCamera lockOnCamera;
         public InputChoice inputChoice;
         public InvertSettings keyboardAndMouseInvertSettings;
         public InvertSettings controllerInvertSettings;
@@ -50,6 +50,10 @@ namespace Moon
             Transform interactionCameraTransform = transform.Find("InteractionCamera");
             if (interactionCameraTransform != null)
                 interactionCamera = interactionCameraTransform.GetComponent<CinemachineVirtualCamera>();
+
+            Transform lockOnCameraTransform = transform.Find("LockOnCamera");
+            if (lockOnCameraTransform != null)
+                lockOnCamera = lockOnCameraTransform.GetComponent<CinemachineVirtualCamera>();
 
             PlayerController playerController = FindObjectOfType<PlayerController>();
             if (playerController != null && playerController.name == "Player")
