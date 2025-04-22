@@ -18,10 +18,8 @@ namespace Moon
 
         private IEnumerator SceneLoaded()
         {
+            GameManager.Instance.ChangeGameState(GameState.DungeonEnter);
             yield return RoomSceneController.Instance.EnterFloor();
-            
-            //TODO: PlayerCurrentStat 초기화
-            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
     }
 }

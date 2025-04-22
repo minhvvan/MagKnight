@@ -23,6 +23,7 @@ public class InitGameState: IGameState
             //회차 정보대로 씬 이동 및 설정
             GameManager.Instance.SetCurrentRunData(currentRunData);
 
+            //TODO: startScene으로 보내고 이동시켜야 함
             SceneController.TransitionToScene(currentRunData.currentRoom.sceneName);
             GameManager.Instance.ChangeGameState(GameState.RoomClear);
         }

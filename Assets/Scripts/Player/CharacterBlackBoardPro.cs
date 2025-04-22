@@ -23,7 +23,6 @@ public class CharacterBlackBoardPro : MonoBehaviour
         _playerController = GetComponent<PlayerController>();
 
         abilitySystem = GetComponent<AbilitySystem>();
-        
         abilitySystem.InitializeFromPlayerStat(GameManager.Instance.PlayerStats);
 
         PlayerAttributeSet playerAttributeSet = abilitySystem.Attributes as PlayerAttributeSet;

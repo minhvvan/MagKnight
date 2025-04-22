@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -67,16 +68,8 @@ public class RoomGenerator
         if (_roomData == null) await Initialize();
         
         //seed 설정
-        var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
-        if (currentSaveData == null) 
-        {
-            //*TEST: 베이스캠프에서 던전 입장시 초기화 및 저장이 되어야 함, 현재는 임시 생성
-            currentSaveData = SaveDataManager.Instance.CreateData<CurrentRunData>(Constants.CurrentRun);
-            
-            // Debug.Log("CurrentSaveData is null");
-            // return;
-        }
-        
+        var currentSaveData = GameManager.Instance.CurrentRunData;
+
         _seed = currentSaveData.seed;
         Random.InitState(_seed);
         

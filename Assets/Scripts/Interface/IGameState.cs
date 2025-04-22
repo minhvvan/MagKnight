@@ -11,6 +11,7 @@ public enum GameState
     Title,
     InitGame,
     BaseCamp,
+    DungeonEnter,
     RoomEnter,
     RoomClear,
     Dialogue,

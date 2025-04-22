@@ -25,6 +25,12 @@ namespace hvvan
 
         public PlayerStat PlayerStats => _playerData.PlayerStat;
 
+        public CurrentRunData CurrentRunData
+        {
+            get { return _currentRunData ??= new CurrentRunData(); }
+            set => _currentRunData = value;
+        }
+
         private PlayerController _playerController;
 
         private CurrentRunData _currentRunData;
@@ -44,6 +50,7 @@ namespace hvvan
             _states[GameState.Title] = new TitleState();
             _states[GameState.InitGame] = new InitGameState();
             _states[GameState.BaseCamp] = new BaseCampState();
+            _states[GameState.DungeonEnter] = new DungeonEnterState();
             _states[GameState.RoomEnter] = new RoomEnterState();
             _states[GameState.RoomClear] = new RoomClearState();
             _states[GameState.Dialogue] = new DialogueState();
@@ -148,14 +155,42 @@ namespace hvvan
             return playerData;
         }
 
-        public void SetCurrentRunData(CurrentRunData currentRunData)
+        public void SetCurrentRunData(CurrentRunData currentRunData = null)
         {
+            currentRunData ??= new CurrentRunData
+            {
+                playerStat = _playerData.PlayerStat
+            };
+            
             _currentRunData = currentRunData;
+            
+            SaveData(Constants.CurrentRun);
         }
 
-        public void SavePlayerData()
+        public void SaveData(string key)
         {
-            _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _currentRunData);
+            if (key == Constants.PlayerData)
+            {
+                _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _playerData);
+            }
+            else if (key == Constants.CurrentRun)
+            {
+                _ = SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
+            }
+        }
+
+        public void DeleteData(string key)
+        {
+            if (key == Constants.PlayerData)
+            {
+                SaveDataManager.Instance.DeleteData(Constants.PlayerData);
+                _playerData = null;
+            }
+            else if (key == Constants.CurrentRun)
+            {
+                SaveDataManager.Instance.DeleteData(Constants.CurrentRun);
+                _currentRunData = null;
+            }
         }
     }
 }
