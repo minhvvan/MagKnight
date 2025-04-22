@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26e1bcd082ea38a4c8b55427bc9fb300, type: 3}
   m_Name: New Stat Artifact Data SO
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: da7129ed6a246f048a49d8d97de2d2d4, type: 3}
   name: 
   prefab: {fileID: 0}
-  N_ArtifactEffect: []
-  S_ArtifactEffect: []
+  N_ArtifactEffect:
+  - effectType: 2
+    attributeType: 0
+    amount: 10
+    duration: 0
+    period: 0
+    tracking: 0
+  S_ArtifactEffect:
+  - effectType: 2
+    attributeType: 2
+    amount: 10
+    duration: 0
+    period: 0
+    tracking: 0

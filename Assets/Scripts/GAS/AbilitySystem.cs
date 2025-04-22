@@ -48,7 +48,16 @@ public class AbilitySystem : MonoBehaviour
         Attributes.Modify(instanceGE);
         
         if(gameplayEffect.effectType == EffectType.Duration)
-            RemoveAfterDuration(gameplayEffect);
+        {
+            if (gameplayEffect.period > 0f)
+            {
+                ApplyPeriodicEffect(instanceGE);
+            }
+            else
+            {
+                RemoveAfterDuration(instanceGE);
+            }
+        }
         
         // Infinite는 항상 저장
         if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
@@ -90,6 +99,19 @@ public class AbilitySystem : MonoBehaviour
     {
         await UniTask.WaitForSeconds(gameplayEffect.duration);
         RemoveEffect(gameplayEffect);
+    }
+    
+    private async UniTaskVoid ApplyPeriodicEffect(GameplayEffect gameplayEffect)
+    {
+        float elapsed = 0f;
+        while (elapsed < gameplayEffect.duration)
+        {
+            var tickEffect = gameplayEffect.DeepCopy();
+            Attributes.Modify(tickEffect);
+
+            await UniTask.Delay(System.TimeSpan.FromSeconds(gameplayEffect.period));
+            elapsed += gameplayEffect.period;
+        }
     }
     
     #endregion
