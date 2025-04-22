@@ -1,4 +1,8 @@
 using System;
+using System.Threading;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 
 namespace Moon
@@ -21,9 +25,10 @@ namespace Moon
         [SerializeField] public float maxTurnSpeed = 1200f;        
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
-        
 
         public CameraSettings cameraSettings;
+        public bool isDead;
+
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -90,7 +95,6 @@ namespace Moon
         readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
         readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
         readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
-        readonly int _HashEllenDeath = Animator.StringToHash("EllenDeath");
 
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
@@ -208,11 +212,36 @@ namespace Moon
             if(_inputHandler.IsContollerInputBlocked())
             {
                 cameraSettings.DisableCameraMove();
+                if(isDead)
+                {
+                    AnimateCameraYAxis(cameraSettings.Current, 1f, 1f, this.GetCancellationTokenOnDestroy()).Forget();
+                }
             }
             else
             {
                 cameraSettings.EnableCameraMove();
             }
+        }
+
+        async UniTask AnimateCameraYAxis(CinemachineFreeLook camera, float targetValue, float duration, CancellationToken token)
+        {
+            float startValue = camera.m_YAxis.Value;
+            float time = 0f;
+
+            while (time < duration)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                time += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(time / duration);
+                camera.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            }
+
+            camera.m_YAxis.Value = targetValue;
         }
         
         bool IsInAttackComboState()
@@ -503,6 +532,8 @@ namespace Moon
         {
             Vector3 movement;
 
+            if(isDead) return;
+
             if (_isGrounded)
             {
                 if(_currentStateInfo.shortNameHash == _HashLocomotion)
@@ -587,6 +618,22 @@ namespace Moon
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        
+        public void RespawnFinished()
+        {
+            isDead = false;
+        }
+
+        public void Death()
+        {
+            if(isDead) return;
+            
+            isDead = true;
+            _animator.SetTrigger(_HashDeath);
+            
+            GameManager.Instance.ChangeGameState(GameState.GameOver);
         }
     }
 }

@@ -1764,8 +1764,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attributes:
-    attributeDictionary:
-      _serializedList: []
+    rid: 4781514850479112197
+  _activatedEffects:
+    _serializedList: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 4781514850479112197
+      type: {class: PlayerAttributeSet, ns: Jun, asm: Assembly-CSharp}
+      data:
+        attributeDictionary:
+          _serializedList: []
 --- !u!114 &-5029212273671297109
 MonoBehaviour:
   m_ObjectHideFlags: 0
