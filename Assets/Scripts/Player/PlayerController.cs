@@ -633,10 +633,17 @@ namespace Moon
             _weaponHandler.AttackEnd();
         }
 
+        
+        public void HandleEnemyHit(Enemy enemy)
+        {
+            enemy.OnMeleeAttackHit(transform).Forget();
+        }
+        
         #region Weapon
         public void SetCurrentWeapon(WeaponType weaponType)
         {
             _weaponHandler.SetCurrentWeapon(weaponType);
+            _weaponHandler.SubscribeToEnemyHit(HandleEnemyHit);
         }
         #endregion
         
