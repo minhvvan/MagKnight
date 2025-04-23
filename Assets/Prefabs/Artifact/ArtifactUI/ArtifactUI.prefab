@@ -89,8 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d1fdcb1840971546b98eeaa223dca16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  artifact: {fileID: 11400000, guid: e5916336d0d58d142821f01d1bad20b0, type: 2}
+  artifact: {fileID: 0}
   icon: {fileID: 2003645519418189764}
+  artifactPrefab: {fileID: 5023272368703363778, guid: 1976de0664897a34bb6080b27334ac7e,
+    type: 3}
   startParent: {fileID: 0}
   onDragParent: {fileID: 0}
 --- !u!225 &4302722762674105238
