@@ -22,6 +22,7 @@ MonoBehaviour:
     duration: 0
     period: 0
     tracking: 0
+    maxStack: 0
   S_ArtifactEffect:
   - effectType: 2
     attributeType: 2
@@ -29,3 +30,4 @@ MonoBehaviour:
     duration: 0
     period: 0
     tracking: 0
+    maxStack: 0

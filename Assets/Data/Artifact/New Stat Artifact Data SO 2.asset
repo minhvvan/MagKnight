@@ -17,11 +17,12 @@ MonoBehaviour:
   prefab: {fileID: 0}
   N_ArtifactEffect:
   - effectType: 2
-    attributeType: 2
+    attributeType: 3
     amount: 10
     duration: 0
     period: 0
     tracking: 0
+    maxStack: 0
   S_ArtifactEffect:
   - effectType: 2
     attributeType: 4
@@ -29,3 +30,4 @@ MonoBehaviour:
     duration: 0
     period: 0
     tracking: 0
+    maxStack: 1

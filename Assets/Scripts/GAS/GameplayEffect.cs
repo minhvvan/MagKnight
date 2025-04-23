@@ -21,7 +21,7 @@ public class GameplayEffect
     public bool tracking; // buff, 아이템같이 저장해두고 관리가 필요할 때 true
 
     public int maxStack = 1;
-    [NonSerialized] public int currentStack = 1;
+    [NonSerialized] public int currentStack;
     
     
     public GameplayEffect(EffectType effectType, AttributeType attributeType, float amount, float duration = 0f, bool tracking = false)

@@ -50,7 +50,7 @@ public class AbilitySystem : MonoBehaviour
         if(gameplayEffect.effectType == EffectType.Instant)
             Attributes.Modify(instanceGE);
         
-        else if(gameplayEffect.effectType == EffectType.Duration)
+        if(gameplayEffect.effectType == EffectType.Duration)
         {
             if (gameplayEffect.period > 0f)
             {
@@ -71,6 +71,7 @@ public class AbilitySystem : MonoBehaviour
                 else
                 {
                     Attributes.Modify(instanceGE);
+                    instanceGE.currentStack = 1;
                 }
                 //Remove 항상 기존 gameplayEffect걸로 -> Hash때문
                 RemoveAfterDuration(gameplayEffect);
@@ -78,11 +79,10 @@ public class AbilitySystem : MonoBehaviour
         }
         
         // Infinite는 항상 저장
-        else if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
+        if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
         {
             if(gameplayEffect.effectType == EffectType.Infinite)
                 Attributes.Modify(instanceGE);
-            // 이미 존재하는 이펙트면
             _activatedEffects.TryAdd(hash, instanceGE);
         }
     }

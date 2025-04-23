@@ -6,7 +6,6 @@ public abstract class ArtifactDataSO : ScriptableObject
 {
    public Sprite icon;
    public string name;
-   public GameObject prefab;
    
    public virtual void N_ApplyTo(AbilitySystem target) {}
    

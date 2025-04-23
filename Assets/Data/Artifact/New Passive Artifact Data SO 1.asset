@@ -15,3 +15,25 @@ MonoBehaviour:
   icon: {fileID: 0}
   name: 
   prefab: {fileID: 0}
+  N_passiveArtifacts:
+  - triggerChance: 1
+    triggerEvent: 3
+    effect:
+      effectType: 0
+      attributeType: 1
+      amount: 500
+      duration: 0
+      period: 0
+      tracking: 0
+      maxStack: 0
+  S_passiveArtifacts:
+  - triggerChance: 1
+    triggerEvent: 3
+    effect:
+      effectType: 0
+      attributeType: 1
+      amount: 500
+      duration: 0
+      period: 0
+      tracking: 0
+      maxStack: 0

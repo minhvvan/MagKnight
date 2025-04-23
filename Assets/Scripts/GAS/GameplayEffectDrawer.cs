@@ -51,8 +51,11 @@ public class GameplayEffectDrawer : PropertyDrawer
             y += lineHeight;
             EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), trackingProp);
             y += lineHeight;
-            EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), maxStackProp);
-            y += lineHeight;
+            if(trackingProp.boolValue)
+            {
+                EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), maxStackProp);
+                y += lineHeight;
+            }
         }
 
         EditorGUI.EndProperty();

@@ -24,14 +24,16 @@ MonoBehaviour:
       amount: 2
       duration: 2
       period: 0.25
-      tracking: 0
+      tracking: 1
+      maxStack: 1
   S_passiveArtifacts:
   - triggerChance: 1
     triggerEvent: 2
     effect:
       effectType: 1
       attributeType: 2
-      amount: 1
-      duration: 2
+      amount: 5
+      duration: 5
       period: 0
-      tracking: 0
+      tracking: 1
+      maxStack: 5
