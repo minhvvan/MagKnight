@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
   name: 
-  prefab: {fileID: 0}
   N_passiveArtifacts:
   - triggerChance: 1
     triggerEvent: 3
@@ -26,6 +25,8 @@ MonoBehaviour:
       period: 0
       tracking: 0
       maxStack: 0
+    hasCount: 1
+    triggerCount: 1
   S_passiveArtifacts:
   - triggerChance: 1
     triggerEvent: 3
@@ -37,3 +38,5 @@ MonoBehaviour:
       period: 0
       tracking: 0
       maxStack: 0
+    hasCount: 1
+    triggerCount: 1

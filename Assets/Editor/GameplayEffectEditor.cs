@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 
 [CustomPropertyDrawer(typeof(GameplayEffect))]
-public class GameplayEffectDrawer : PropertyDrawer
+public class GameplayEffectEditor : PropertyDrawer
 {
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {

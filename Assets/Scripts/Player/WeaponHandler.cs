@@ -72,13 +72,15 @@ public class WeaponHandler: MonoBehaviour
 
     private void OnHitAction(HitInfo hitInfo)
     {
-        Debug.Log("OnHit" + hitInfo.hit);
-        var damage = _abilitySystem.GetValue(AttributeType.Strength);
-        Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
-        GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.RES, damage);
-        enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
-        enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
-        _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
+        if(hitInfo.hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            var damage = _abilitySystem.GetValue(AttributeType.Strength);
+            Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
+            GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+            GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.Resistance, damage);
+            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
+        }
     }
 }

@@ -17,6 +17,12 @@ public class AbilitySystem : MonoBehaviour
     // Remove를 요청할 때는 요청자는 단순히 나의 GE를 삭제해달라고 요청해주면 된다.
     [SerializeField] SerializedDictionary<int, GameplayEffect> _activatedEffects = new SerializedDictionary<int, GameplayEffect>();
 
+    // Passive를 담고 있는 Dicitionary
+    [SerializeField] SerializedDictionary<int, PassiveEffectData> _registeredPassiveEffects = new SerializedDictionary<int, PassiveEffectData>();
+
+    // 버프/디버프 갱신 용 Dictionary
+    private Dictionary<int, CancellationTokenSource> _durationEffectTokens = new();
+    
     // PlayerStat -> Attribute
     public void InitializeFromPlayerStat(PlayerStat playerStat = null)
     {
@@ -36,11 +42,7 @@ public class AbilitySystem : MonoBehaviour
             AddAttribute(attributePair.Key, attributePair.Value);
         }
     }
-    // Passive를 담고 있는 Dicitionary
-    [SerializeField] SerializedDictionary<int, PassiveEffectData> _registeredPassiveEffects = new SerializedDictionary<int, PassiveEffectData>();
-
-    // 버프/디버프 갱신 용 Dictionary
-    private Dictionary<int, CancellationTokenSource> _durationEffectTokens = new();
+    
     #region Attribute
     
     public void AddAttribute(AttributeType type, float value)
@@ -191,7 +193,8 @@ public class AbilitySystem : MonoBehaviour
     
     public void RegisterPassiveEffect(PassiveEffectData passiveData)
     {
-        _registeredPassiveEffects.TryAdd(passiveData.GetHashCode(), passiveData);
+        var instancePassive = passiveData.DeepCopy();
+        _registeredPassiveEffects.TryAdd(passiveData.GetHashCode(), instancePassive);
     }
 
     public void RemovePassiveEffect(PassiveEffectData passiveData)
@@ -206,15 +209,34 @@ public class AbilitySystem : MonoBehaviour
     
     public void TriggerEvent(TriggerEventType eventType, AbilitySystem target)
     {
+        List<PassiveEffectData> removeList = new List<PassiveEffectData>();
         foreach (var passiveEffect in _registeredPassiveEffects)
         {
             if (passiveEffect.Value.triggerEvent == eventType)
             {
                 if (Random.value <= passiveEffect.Value.triggerChance && target != null)
                 {
-                    target.ApplyEffect(passiveEffect.Value.effect);
+                    if (passiveEffect.Value.hasCount)
+                    {
+                        if (passiveEffect.Value.triggerCount > 0)
+                        {
+                            target.ApplyEffect(passiveEffect.Value.effect);
+                            passiveEffect.Value.triggerCount--;
+                            if(passiveEffect.Value.triggerCount == 0)
+                                removeList.Add(passiveEffect.Value);
+                        }
+                    }
+                    else
+                    {
+                        target.ApplyEffect(passiveEffect.Value.effect);
+                    }
                 }
             }   
+        }
+        // 순회 도중 삭제하면 error여서
+        foreach (var remove in removeList)
+        {
+            RemovePassiveEffect(remove);
         }
     }
     
