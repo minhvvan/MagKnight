@@ -23,6 +23,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
     public PatternController patternController;
+    public HpBarController hpBarController;
     
     
     // stateMachine
@@ -138,7 +139,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
         //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
-
+    
     public void OnPhaseChange(int phase)
     {
         if (blackboard.aiType == EnemyAIType.Boss)
@@ -149,19 +150,47 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
     }
 
-    public async UniTask OnMeleeAttackHit(Transform playerTransform)
+    public void OnHit(Transform playerTransform)
     {
+        if (blackboard.onHitCancellation != null)
+        {
+            blackboard.onHitCancellation.Cancel();
+            blackboard.onHitCancellation.Dispose();
+        }
+        blackboard.onHitCancellation = new CancellationTokenSource();
+
+        OnHitHelper(playerTransform).Forget();
+    }
+
+    private async UniTask OnHitHelper(Transform playerTransform)
+    {
+        CancellationToken token = blackboard.onHitCancellation.Token;
+        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
+        Color originalColor = blackboard.enemyRenderer.material.color;
+        blackboard.enemyRenderer.material.color = Color.red;
+        
         // Enemy 넉백 관련은 이 함수를 사용
         float desiredDistance = 1.5f;
+        float enemyPositionCorrection = 1f;
         float pullSpeed = 20f;
-        float moveTime = 0.3f;
+        float moveTime = 0.2f;
         float duration = 0f;
-        Vector3 targetPos = playerTransform.position + playerTransform.forward * desiredDistance;
-        while (duration < moveTime)
+        Vector3 playerFront = playerTransform.position + playerTransform.forward * desiredDistance;
+        Vector3 dir = playerFront - transform.position;
+        Vector3 targetPos = dir.magnitude <= enemyPositionCorrection ? playerFront : transform.position + dir.normalized * enemyPositionCorrection;
+        try
         {
-            transform.position = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
-            duration += Time.deltaTime;
-            await UniTask.Yield();
+            while (duration < moveTime)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
+                duration += Time.deltaTime;
+                await UniTask.Yield(token);
+            }
+        }
+        catch (OperationCanceledException){}
+        finally
+        {
+            blackboard.enemyRenderer.material.color = originalColor;
         }
     }
 
