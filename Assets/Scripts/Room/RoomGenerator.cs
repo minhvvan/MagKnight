@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,6 +32,7 @@ public enum RoomType
 [Serializable]
 public class Room
 {
+    public string roomTitle;
     public string sceneName;
     public List<int> connectedRooms = new List<int>() { Empty, Empty, Empty, Empty };
     public RoomType roomType;
@@ -46,6 +48,7 @@ public class Room
         
     public Room(Room room)
     {
+        roomTitle = room.roomTitle;
         sceneName = room.sceneName;
         roomType = room.roomType;
     }
@@ -67,16 +70,8 @@ public class RoomGenerator
         if (_roomData == null) await Initialize();
         
         //seed 설정
-        var currentSaveData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
-        if (currentSaveData == null) 
-        {
-            //*TEST: 베이스캠프에서 던전 입장시 초기화 및 저장이 되어야 함, 현재는 임시 생성
-            currentSaveData = SaveDataManager.Instance.CreateData<CurrentRunData>(Constants.CurrentRun);
-            
-            // Debug.Log("CurrentSaveData is null");
-            // return;
-        }
-        
+        var currentSaveData = GameManager.Instance.CurrentRunData;
+
         _seed = currentSaveData.seed;
         Random.InitState(_seed);
         
@@ -124,23 +119,9 @@ public class RoomGenerator
         
         //generateRoomCount만큼 생성 + 시작 + 보스 + 상점
         //필수 지점 추가
-        _rooms.Add(new Room()
-        {
-            sceneName = "start",
-            roomType = RoomType.StartRoom,
-        });
-        
-        _rooms.Add(new Room()
-        {
-            sceneName = "boss",
-            roomType = RoomType.BoosRoom,
-        });
-        
-        _rooms.Add(new Room()
-        {
-            sceneName = "shop",
-            roomType = RoomType.ShopRoom,
-        });
+        _rooms.Add(new Room(_roomData.rooms[RoomType.StartRoom]));
+        _rooms.Add(new Room(_roomData.rooms[RoomType.BoosRoom]));
+        _rooms.Add(new Room(_roomData.rooms[RoomType.ShopRoom]));
 
         //treasureRoom 개수 제한
         int treasureRoomCount = 0;

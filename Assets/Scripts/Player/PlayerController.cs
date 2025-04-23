@@ -3,6 +3,7 @@ using System.Threading;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using hvvan;
+using Jun;
 using UnityEngine;
 
 namespace Moon
@@ -11,13 +12,16 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
-        CharacterController _characterController;
-        Animator _animator;
+        private CharacterController _characterController;
+        private Animator _animator;
+        private InputHandler _inputHandler;
+        private MagneticController _magneticController;
+        private InteractionController _interactionController;
+        private WeaponHandler _weaponHandler;
+        private AbilitySystem _abilitySystem;
         Collider _collider;
-        InputHandler _inputHandler;
-        MagneticController _magneticController;
-        [SerializeField] private InteractionController interactionController;
-        [SerializeField] private WeaponHandler weaponHandler;
+
+        [SerializeField] private GameObject hudPrefab;
 
         [SerializeField] public float maxForwardSpeed = 8f;        
         [SerializeField] public float gravity = 20f;               
@@ -128,9 +132,7 @@ namespace Moon
             }
         }
 
- 
-
-        void Awake()
+        async void Awake()
         {
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
@@ -138,6 +140,24 @@ namespace Moon
             _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
+            _abilitySystem = GetComponent<AbilitySystem>();
+            _weaponHandler = GetComponent<WeaponHandler>();
+            _interactionController = GetComponentInChildren<InteractionController>();
+            
+            var stat = await GameManager.Instance.GetPlayerStat();
+            _abilitySystem.InitializeFromPlayerStat(stat);
+            if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
+            {
+                attributeSet.OnDead += Death;
+                attributeSet.OnDamaged += Damaged;
+            }
+            
+            //HUD 생성 및 바인딩
+            var hud = Instantiate(hudPrefab);
+            if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
+            {
+                inGameUIController.BindAttributeChanges(_abilitySystem);
+            }
 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
@@ -575,9 +595,9 @@ namespace Moon
 
         void Interact()
         {
-            if (interactionController != null)
+            if (_interactionController != null)
             {
-                interactionController.Interact();
+                _interactionController.Interact();
             }
         }
 
@@ -605,24 +625,18 @@ namespace Moon
 
         public void MeleeAttackStart(int throwing = 0)
         {
-            weaponHandler.AttackStart();
+            _weaponHandler.AttackStart();
         }
 
         public void MeleeAttackEnd()
         {
-            weaponHandler.AttackEnd();
-        }
-
-        public void HandleEnemyHit(Enemy enemy)
-        {
-            enemy.OnMeleeAttackHit(transform);
+            _weaponHandler.AttackEnd();
         }
 
         #region Weapon
         public void SetCurrentWeapon(WeaponType weaponType)
         {
-            weaponHandler.SetCurrentWeapon(weaponType);
-            weaponHandler.SubscribeToEnemyHit(HandleEnemyHit);
+            _weaponHandler.SetCurrentWeapon(weaponType);
         }
         #endregion
         
