@@ -31,7 +31,6 @@ public class Katana: BaseWeapon
             float finalDamage = 1f;
             float resistanceDecrease = 2f;
             Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
-            OnEnemyHit?.Invoke(enemy);
             GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, finalDamage);
             GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, resistanceDecrease);
             enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);

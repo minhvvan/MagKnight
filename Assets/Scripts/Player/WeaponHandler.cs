@@ -64,9 +64,4 @@ public class WeaponHandler: MonoBehaviour
     {
         _currentWeapon.ChangePolarity();
     }
-
-    public void SubscribeToEnemyHit(Action<Enemy> action)
-    {
-        _currentWeapon.OnEnemyHit += action;
-    }
 }

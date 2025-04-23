@@ -6,8 +6,6 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
 {
     protected HitDetector HitDetector;
 
-    public Action<Enemy> OnEnemyHit;
-
     private void Awake()
     {
         HitDetector = GetComponent<HitDetector>();

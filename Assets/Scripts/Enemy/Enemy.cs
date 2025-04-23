@@ -151,6 +151,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public async UniTask OnMeleeAttackHit(Transform playerTransform)
     {
+        // Enemy 넉백 관련은 이 함수를 사용
         float desiredDistance = 1.5f;
         float pullSpeed = 20f;
         float moveTime = 0.3f;
