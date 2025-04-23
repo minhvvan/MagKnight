@@ -10,6 +10,9 @@ public enum EnemyAttckType
 public enum EnemyType
 {
     None,
+    Melee,
+    Ranged,
+    Boss,
     Max
 }
 
@@ -24,5 +27,6 @@ public enum EnemyAIType
     None,
     MeleeNormal,
     RangedNormal,
+    Boss,
     Max
 }

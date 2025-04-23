@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class EnemyAttributeSet : AttributeSet
 {
+    public Action<int> OnPhaseChange;
     public Action OnDeath;
     public Action OnStagger;
+    
+    private bool _phase70Triggered = false;
+    private bool _phase30Triggered = false;
     
     protected override float PreAttributeChange(AttributeType type, float newValue)
     {
@@ -82,13 +86,23 @@ public class EnemyAttributeSet : AttributeSet
         {
             OnStagger?.Invoke();
         }
-
+        
         if (GetValue(AttributeType.HP) <= 0)
         {
             // TODO : 사망로직
             Debug.Log("EnemyDead");
             OnDeath?.Invoke();
             // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
+        }
+        else if (!_phase30Triggered && GetValue(AttributeType.HP) <= GetValue(AttributeType.MaxHP) * 0.3f)
+        {
+            _phase30Triggered = true;
+            OnPhaseChange?.Invoke(3);
+        }
+        else if (!_phase70Triggered && GetValue(AttributeType.HP) <= GetValue(AttributeType.MaxHP) * 0.7f)
+        {
+            _phase70Triggered = true;
+            OnPhaseChange?.Invoke(2);
         }
     }
 }

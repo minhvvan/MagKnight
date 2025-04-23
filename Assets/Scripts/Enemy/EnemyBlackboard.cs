@@ -32,7 +32,9 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public GameObject target;
     [HideInInspector] public LayerMask targetLayer;
     [HideInInspector] public IEnemyAI ai;
+    [HideInInspector] public IEnemyAction action;
     [HideInInspector] public bool isDead;
+    [HideInInspector] public int phase;
     #endregion
     
     #region CancellationToken
@@ -67,6 +69,7 @@ public class EnemyBlackboard : MonoBehaviour
         projectileSpeed = _enemyDataSO.projectileSpeed;
         attackRange = _enemyDataSO.attackRange;
         projectilePrefab = _enemyDataSO.projectilePrefab;
+        phase = 1;
         
         targetLayer = LayerMask.GetMask("Player");
 
@@ -74,9 +77,15 @@ public class EnemyBlackboard : MonoBehaviour
         {
             case EnemyAIType.MeleeNormal:
                 ai = new MeleeNormalAI(_enemy);
+                action = new MeleeNormalAction(_enemy);
                 break;
             case EnemyAIType.RangedNormal:
                 ai = new RangedNormalAI(_enemy);
+                action = new RangedNormalAction(_enemy);
+                break;
+            case EnemyAIType.Boss:
+                ai = new BossAI(_enemy);
+                action = new BossAction(_enemy);
                 break;
         }
     }
@@ -94,25 +103,8 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.Damage, 0);
         abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
         
-        // 1. resistance 회복 과잉방지
-        // abilitySystem.AddPostModify(AttributeType.RES, () =>
-        // {
-        //     float res = abilitySystem.GetValue(AttributeType.RES);
-        //     float max = abilitySystem.GetValue(AttributeType.MAXRES);
-        //     if (res > max)
-        //         abilitySystem.SetValue(AttributeType.RES, max);
-        // });
-        
-        // 2. stagger 처리
-        // abilitySystem.AddPostModify(AttributeType.RES, () =>
-        // {
-        //     if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
-        //     {
-        //         _enemy.OnStagger();
-        //     }
-        // });
-
         ((EnemyAttributeSet)abilitySystem.Attributes).OnDeath += _enemy.OnDeath;
         ((EnemyAttributeSet)abilitySystem.Attributes).OnStagger += _enemy.OnStagger;
+        ((EnemyAttributeSet)abilitySystem.Attributes).OnPhaseChange += _enemy.OnPhaseChange;
     }
 }

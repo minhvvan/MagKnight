@@ -19,6 +19,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public AbilitySystem EnemyAbilitySystem { get; private set; }
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
+    public PatternController patternController;
     
     
     // stateMachine
@@ -40,7 +41,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         _stateMachine.ChangeState(spawnState);
     }
-    public void Initialize()
+    private void Initialize()
     {
         Anim = GetComponent<Animator>();
         Agent = GetComponent<NavMeshAgent>();
@@ -59,9 +60,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler.Subscribe(this);
         }
         
-        InitializeState();
-        
         EnemyController.AddEnemy(this);
+        
+        InitializeState();
     }
 
     private void InitializeState()
@@ -135,6 +136,15 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
 
+    public void OnPhaseChange(int phase)
+    {
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            Anim.SetTrigger("PhaseChange");
+            patternController.PhaseChange(phase);
+        }
+    }
+
     public void OnNext(HitInfo hitInfo)
     {
         float damage = -blackboard.abilitySystem.GetValue(AttributeType.Strength);
@@ -160,6 +170,17 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         HitHandler.StopDetection();
     }
+
+    public void PatternAttackStart()
+    {
+        patternController.AttackStart();
+    }
+
+    public void PatternAttackEnd()
+    {
+        patternController.AttackEnd();
+    }
+    
 
     public void OnDestroy()
     {

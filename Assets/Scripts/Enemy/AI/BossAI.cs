@@ -10,18 +10,46 @@ using UnityEngine;
 /// </summary>
 public class BossAI : IEnemyAI
 {
+    private Enemy _enemy;
+    private EnemyBlackboard _blackboard;
+    private PatternController _patternController;
+    
+    private float destinationUpdateInterval = 0.1f;
+    private float _destinationTimer = 0f;
+
+    public BossAI(Enemy enemy)
+    {
+        _enemy = enemy;
+        _blackboard = _enemy.blackboard;
+        _patternController = _enemy.GetComponent<PatternController>();
+    }
+    
     public void OnEnter()
     {
-        throw new System.NotImplementedException();
+        _enemy.Anim.SetBool("Trace", true);
+        _enemy.Agent.SetDestination(_blackboard.target.transform.position);
     }
 
     public void OnUpdate()
     {
-        throw new System.NotImplementedException();
+        PatternDataSO patternDataSO = _patternController.GetAvailablePattern(_enemy.transform, _blackboard.target.transform);
+        if(patternDataSO != null)
+        {
+            _enemy.SetState(_enemy.actionState);
+        }
+        else
+        {
+            _destinationTimer += Time.deltaTime;
+            if (_destinationTimer >= destinationUpdateInterval)
+            {
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+                _destinationTimer = 0f;
+            }
+        }
     }
 
     public void OnExit()
     {
-        throw new System.NotImplementedException();
+        _enemy.Anim.SetBool("Trace", false);
     }
 }

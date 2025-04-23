@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moon;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VFolders.Libs;
 
 public enum HitType
@@ -30,34 +31,50 @@ public class HitInfo
     }
 }
 
+[Serializable]
+public class HitboxZone
+{
+    public Transform referenceTransform; // 기준점
+    public Vector3 offset;
+    public float radius;
+}
+
+[Serializable]
+public class PatternHitboxGroup
+{
+    public int patternId;
+    public HitboxZone[] hitboxes;
+}
+
 public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 {
-    [Serializable]
-    public class HitboxZone
-    {
-        public Transform referenceTransform; // 기준점
-        public Vector3 offset;
-        public float radius;
-    }
-    
-    [SerializeField] private HitboxZone[] _hitboxZones;
+    [SerializeField] private PatternHitboxGroup[] _patternHitboxGroups; 
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private HitType _hitType;
     
     private bool _isDetecting = false;
+    private HitboxZone[] _currentHitboxZones;
     private List<Vector3> _previousPoints = new List<Vector3>();
     private HashSet<Collider> _hitColliders = new HashSet<Collider>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
     private List<HitInfo> _debugHits = new List<HitInfo>();
     private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
     
-    public void StartDetection()
+    public void StartDetection(int patternId = default)
     {
+        _currentHitboxZones = _patternHitboxGroups
+            .FirstOrDefault(x => x.patternId == patternId)?.hitboxes;
+        if (_currentHitboxZones == null)
+        {
+            Debug.LogError($"Pattern {patternId} not found");
+            return;
+        }
+        
         _isDetecting = true;
         _hitColliders.Clear();
         
         _previousPoints.Clear();
-        _hitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
+        _currentHitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
     }
 
     public void StopDetection()
@@ -68,11 +85,11 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void FixedUpdate()
     {
         // projectile은 항상 공격모션과 별개로 히트판정이 항상 존재하기 때문에 isDetecting에 여부와 관계없이 히트 여부를 확인한다.
-        if(!_isDetecting && _hitType == HitType.Melee) return;
+        if(!_isDetecting && _hitType != HitType.Projectile) return;
 
         for (var i = 0; i < _previousPoints.Count; i++)
         {
-            Vector3 currentPos = _hitboxZones[i].referenceTransform.TransformPoint(_hitboxZones[i].offset);
+            Vector3 currentPos = _currentHitboxZones[i].referenceTransform.TransformPoint(_currentHitboxZones[i].offset);
             Vector3 previousPos = _previousPoints[i];
             Vector3 direction = currentPos - previousPos;
             float distance = direction.magnitude;
@@ -81,7 +98,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
             {
                 direction.Normalize();
             
-                int hitCount = Physics.SphereCastNonAlloc(previousPos, _hitboxZones[i].radius, direction, _hitResults, distance, _layerMask);
+                int hitCount = Physics.SphereCastNonAlloc(previousPos, _currentHitboxZones[i].radius, direction, _hitResults, distance, _layerMask);
                 for (int j = 0; j < hitCount; j++)
                 {
                     RaycastHit hit = _hitResults[j];
@@ -96,7 +113,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         }
     
         _previousPoints.Clear();
-        _hitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
+        _currentHitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
     }
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
@@ -116,16 +133,18 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (_hitboxZones.Any())
+        if (_patternHitboxGroups == null || _patternHitboxGroups.Length == 0) return;
+
+        Gizmos.color = Color.blue;
+        foreach (var group in _patternHitboxGroups)
         {
-            Gizmos.color = Color.blue;
-            foreach (var hitboxZone in _hitboxZones)
+            foreach (var hitboxZone in group.hitboxes)
             {
                 Vector3 worldPoint = hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset);
                 Gizmos.DrawSphere(worldPoint, hitboxZone.radius);
             }
         }
-
+        
         // 저장된 히트 정보 시각화
         foreach (var hitInfo in _debugHits)
         {
@@ -165,5 +184,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     public void Notify(HitInfo hitInfo)
     {
         _observers.ForEach(observer => observer.OnNext(hitInfo));
+    }
+
+    public HitboxZone[] GetHitboxZones()
+    {
+        return _currentHitboxZones;
     }
 }
