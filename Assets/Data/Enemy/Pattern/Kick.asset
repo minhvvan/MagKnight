@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patternName: Kick
   damageMultiplier: 1
-  range: 3
-  priority: 10
+  range: 10
+  priority: 1
   cooldown: 1
-  phase: 2
-  isCooldown: 1
+  phase: 1
+  isActive: 1
