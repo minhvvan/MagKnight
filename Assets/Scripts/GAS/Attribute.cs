@@ -17,9 +17,9 @@ public enum AttributeType
     MoveSpeed, // 이동속
     AttackSpeed, // 공격속도
     Damage, // 메타 Attribute, 받은 피해량
-    ATK, // Enemybase공격력
-    MAXRES, // 최대저항력
-    RES,
+    MaxResistance, // 최대저항력
+    Resistance,
+    ResistanceDamage,
     GOLD, // 드롭 골드량
 }
 

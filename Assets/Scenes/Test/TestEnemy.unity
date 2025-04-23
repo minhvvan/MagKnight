@@ -1142,6 +1142,21 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7606081418953164142, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: Attributes
+      value: 4497238308258316288
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606081418953164142, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: managedReferences[4497238308258316288]
+      value: Assembly-CSharp Jun.PlayerAttributeSet
+      objectReference: {fileID: 0}
+    - target: {fileID: 7606081418953164142, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: managedReferences[4497238308258316288].attributeDictionary._serializedList.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2948,11 +2963,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Droid-01_Army
       objectReference: {fileID: 0}
-    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3739,12 +3749,12 @@ PrefabInstance:
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.536111
+      value: 2.0361106
       objectReference: {fileID: 0}
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.194354
+      value: -12.194354
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
