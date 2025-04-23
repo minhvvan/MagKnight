@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -143,6 +146,21 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             Anim.SetTrigger("PhaseChange");
             blackboard.phase = phase;
             patternController.PhaseChange(phase);
+        }
+    }
+
+    public async UniTask OnMeleeAttackHit(Transform playerTransform)
+    {
+        float desiredDistance = 1.5f;
+        float pullSpeed = 20f;
+        float moveTime = 0.3f;
+        float duration = 0f;
+        Vector3 targetPos = playerTransform.position + playerTransform.forward * desiredDistance;
+        while (duration < moveTime)
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
+            duration += Time.deltaTime;
+            await UniTask.Yield();
         }
     }
 
