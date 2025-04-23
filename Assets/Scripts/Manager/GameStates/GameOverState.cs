@@ -10,8 +10,8 @@ public class GameOverState: IGameState
         UIManager.Instance.ShowGameOverUI();
         
         //데이터 초기화
-        SaveDataManager.Instance.DeleteData(Constants.CurrentRun);
-        GameManager.Instance.SavePlayerData();
+        GameManager.Instance.DeleteData(Constants.CurrentRun);
+        GameManager.Instance.SaveData(Constants.PlayerData);
     }
 
     public void OnUpdate()

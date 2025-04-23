@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf1079c17b024874acb1817990dbe9ca, type: 3}
+  m_Name: StatAttributeSO
+  m_EditorClassIdentifier: 
+  Stat:
+    MaxHP:
+      Key: 0
+      Value: 200
+    HP:
+      Key: 1
+      Value: 200
+    Strength:
+      Key: 2
+      Value: 20
+    Intelligence:
+      Key: 3
+      Value: 20
+    CriticalRate:
+      Key: 5
+      Value: 20
+    Defense:
+      Key: 4
+      Value: 20
+    CriticalDamage:
+      Key: 6
+      Value: 20
+    Damage:
+      Key: 9
+      Value: 0
+    MoveSpeed:
+      Key: 7
+      Value: 20

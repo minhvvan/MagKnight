@@ -17,5 +17,6 @@ public static class Constants
     
     #region SceneName
     public const string BaseCamp = "BaseCampScene";
+    public const string Start = "start";
     #endregion
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Managers;
 using Moon;
 using UnityEngine;
 
@@ -8,18 +9,32 @@ namespace hvvan
 {
     public class GameManager : Singleton<GameManager>
     {
+        [SerializeField] GameObject playerCharacterPrefab;
+        
         public PlayerController Player
         {
             get
             {
                 if (_playerController == null)
                 {
-                    return _playerController = FindObjectOfType<PlayerController>();
+                    _playerController = FindObjectOfType<PlayerController>();
+                    if (_playerController == null)
+                    {
+                        _playerController = Instantiate(playerCharacterPrefab).GetComponent<PlayerController>();
+                    }
                 }
 
                 return _playerController;
             }
             private set => _playerController = value;
+        }
+
+        public PlayerStat PlayerStats => _playerData.PlayerStat;
+
+        public CurrentRunData CurrentRunData
+        {
+            get { return _currentRunData ??= new CurrentRunData(); }
+            set => _currentRunData = value;
         }
 
         private PlayerController _playerController;
@@ -41,6 +56,7 @@ namespace hvvan
             _states[GameState.Title] = new TitleState();
             _states[GameState.InitGame] = new InitGameState();
             _states[GameState.BaseCamp] = new BaseCampState();
+            _states[GameState.DungeonEnter] = new DungeonEnterState();
             _states[GameState.RoomEnter] = new RoomEnterState();
             _states[GameState.RoomClear] = new RoomClearState();
             _states[GameState.Dialogue] = new DialogueState();
@@ -123,22 +139,64 @@ namespace hvvan
         {
             if (loadData == null)
             {
-                Debug.Log($"Create PlayerData");
-                loadData = new PlayerData();
+                loadData = await CreatePlayerData();
                 await SaveDataManager.Instance.SaveData(Constants.PlayerData, loadData);
             }
             
             _playerData = loadData;
         }
 
-        public void SetCurrentRunData(CurrentRunData currentRunData)
+        private async UniTask<PlayerData> CreatePlayerData()
         {
-            _currentRunData = currentRunData;
+            Debug.Log($"Create PlayerData");
+            var statSO = await DataManager.Instance.LoadDataAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
+    
+            // 새 PlayerData 생성
+            var playerData = new PlayerData
+            {
+                PlayerStat = statSO.Stat,
+                Currency = 0
+            };
+    
+            return playerData;
         }
 
-        public void SavePlayerData()
+        public void SetCurrentRunData(CurrentRunData currentRunData = null)
         {
-            _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _currentRunData);
+            currentRunData ??= new CurrentRunData
+            {
+                playerStat = _playerData.PlayerStat
+            };
+            
+            _currentRunData = currentRunData;
+            
+            SaveData(Constants.CurrentRun);
+        }
+
+        public void SaveData(string key)
+        {
+            if (key == Constants.PlayerData)
+            {
+                _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _playerData);
+            }
+            else if (key == Constants.CurrentRun)
+            {
+                _ = SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
+            }
+        }
+
+        public void DeleteData(string key)
+        {
+            if (key == Constants.PlayerData)
+            {
+                SaveDataManager.Instance.DeleteData(Constants.PlayerData);
+                _playerData = null;
+            }
+            else if (key == Constants.CurrentRun)
+            {
+                SaveDataManager.Instance.DeleteData(Constants.CurrentRun);
+                _currentRunData = null;
+            }
         }
     }
 }
