@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Moon;
 using UnityEngine;
-using UnityEngine.Serialization;
-using VFolders.Libs;
 
 public enum HitType
 {
