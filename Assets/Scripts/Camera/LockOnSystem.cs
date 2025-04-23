@@ -23,7 +23,7 @@ public class LockOnSystem : MonoBehaviour
 
     void Update()
     {
-        if (currentTarget != null && Input.GetKeyDown(KeyCode.E)) CycleTarget(1);
+        if (currentTarget != null && Input.GetKeyDown(KeyCode.F)) CycleTarget(1);
     }
 
     void LateUpdate()

@@ -82,9 +82,14 @@ namespace Moon
         readonly int _HashFootFall = Animator.StringToHash("FootFall");
         readonly int _HashAttackType = Animator.StringToHash("AttackType");
         readonly int _HashLockOn = Animator.StringToHash("LockOn");
+        readonly int _HashMoveX   = Animator.StringToHash("MoveX");
+        readonly int _HashMoveY   = Animator.StringToHash("MoveY");
+        readonly int _HashSpeed   = Animator.StringToHash("Speed");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
+        readonly int _HashLockOnWalk = Animator.StringToHash("LockOnWalk");
+        readonly int _HashLockOnJog = Animator.StringToHash("LockOnJog");
         readonly int _HashAirborne = Animator.StringToHash("Airborne");
         readonly int _HashLanding = Animator.StringToHash("Landing");
         readonly int _HashEllenCombo1 = Animator.StringToHash("EllenCombo1");
@@ -108,6 +113,16 @@ namespace Moon
             get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
         }
 
+        void UpdateMoveParameters()
+        {
+            Vector2 moveInput = _inputHandler.MoveInput;
+            _animator.SetFloat(_HashMoveX, moveInput.x, 0.2f, Time.deltaTime);
+            _animator.SetFloat(_HashMoveY, moveInput.y, 0.2f, Time.deltaTime);
+            
+            float speed = moveInput.magnitude;
+            _animator.SetFloat(_HashSpeed, speed);
+        }
+        
         public void SetCanAttack(bool canAttack)
         {
             this.canAttack = canAttack;
@@ -175,6 +190,8 @@ namespace Moon
                 Interact();
                 _inputHandler.InteractInput = false;
             }
+            
+            UpdateMoveParameters();
             
             bool lockOnNow = _inputHandler.LockOnInput;  // true/false
             // 눌린 순간(!이전 && 지금)
@@ -409,8 +426,15 @@ namespace Moon
             bool updateOrientationForLocomotion = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLocomotion || _nextStateInfo.shortNameHash == _HashLocomotion;
             bool updateOrientationForAirborne = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashAirborne || _nextStateInfo.shortNameHash == _HashAirborne;
             bool updateOrientationForLanding = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLanding || _nextStateInfo.shortNameHash == _HashLanding;
+            // ★ 락온 워크/조그 상태 추가
+            bool updateForLockOnWalk = 
+                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLockOnWalk) 
+                || (_nextStateInfo.shortNameHash == _HashLockOnWalk);
+            bool updateForLockOnJog  = 
+                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLockOnJog) 
+                || (_nextStateInfo.shortNameHash == _HashLockOnJog);
 
-            return updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
+            return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
         }
 
         void SetGrounded()
@@ -429,16 +453,31 @@ namespace Moon
         
         void UpdateOrientation()
         {
+            // 1) 락온 중이면, 대상 바라보기만 하고 리턴
+            if (_lockOnSystem.currentTarget != null)
+            {
+                Vector3 dir = _lockOnSystem.currentTarget.position - transform.position;
+                dir.y = 0f;
+                if (dir.sqrMagnitude > 0.001f)
+                    transform.rotation = Quaternion.LookRotation(dir);
+                return;
+            }
+
+            // 2) 평소 locomotion / airborne / landing 회전 처리
             _animator.SetFloat(_HashAngleDeltaRad, _angleDiff * Mathf.Deg2Rad);
 
-            if(_currentStateInfo.shortNameHash == _HashLocomotion)
+            if (_currentStateInfo.shortNameHash == _HashLocomotion)
             {
                 Vector3 localInput = new Vector3(_inputHandler.MoveInput.x, 0f, _inputHandler.MoveInput.y);
                 float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, _forwardSpeed / _desiredForwardSpeed);
-                float actualTurnSpeed = _isGrounded ? groundedTurnSpeed : Vector3.Angle(transform.forward, localInput) * k_InverseOneEighty * k_AirborneTurnSpeedProportion * groundedTurnSpeed;
-                
-                _targetRotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, actualTurnSpeed * Time.deltaTime);
+                float actualTurnSpeed = _isGrounded
+                    ? groundedTurnSpeed
+                    : Vector3.Angle(transform.forward, localInput) * k_InverseOneEighty 
+                                                                   * k_AirborneTurnSpeedProportion * groundedTurnSpeed;
 
+                _targetRotation = Quaternion.RotateTowards(
+                    transform.rotation, _targetRotation, actualTurnSpeed * Time.deltaTime
+                );
                 transform.rotation = _targetRotation;
             }
         }
@@ -520,34 +559,63 @@ namespace Moon
         
         void OnAnimatorMove()
         {
+            // 1) 콤보 중엔 항상 루트 모션만
+            if (_inCombo)
+            {
+                // 애니메이터에 박혀있는 이동(deltaPosition)만 적용
+                Vector3 move = _animator.deltaPosition;
+                // 필요하면 중력/점프 속도 추가
+                move += Vector3.up * _verticalSpeed * Time.deltaTime;
+                _characterController.Move(move);
+                return;
+            }
+
+            // 2) 락온 중이고 콤보가 아니면, 입력 기반 이동
+            if (_lockOnSystem.currentTarget != null)
+            {
+                Vector3 dirToTarget = _lockOnSystem.currentTarget.position - transform.position;
+                dirToTarget.y = 0f;
+                transform.rotation = Quaternion.LookRotation(dirToTarget);
+
+                Vector2 inp = _inputHandler.MoveInput;
+                Vector3 localInput = new Vector3(inp.x, 0f, inp.y);
+                if (localInput.sqrMagnitude > 1f) localInput.Normalize();
+
+                Vector3 move = (transform.right * localInput.x
+                                + transform.forward * localInput.z)
+                               * _forwardSpeed * Time.deltaTime;
+                move += Vector3.up * _verticalSpeed * Time.deltaTime;
+                _characterController.Move(move);
+                return;
+            }
+
+            
             Vector3 movement;
 
-            if(isDead) return;
+            if (isDead) return;
 
             if (_isGrounded)
             {
-                if(_currentStateInfo.shortNameHash == _HashLocomotion)
+                // ★ Locomotion 뿐 아니라 LockOnWalk/Jog 도 같이
+                bool isStdMove = _currentStateInfo.shortNameHash == _HashLocomotion;
+
+                if (isStdMove)
                 {
                     movement = _forwardSpeed * transform.forward * Time.deltaTime;
                 }
                 else
-                {                        
+                {
+                    // 기존 Root Motion 처리
                     RaycastHit hit;
                     Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, -Vector3.up);
                     if (Physics.Raycast(ray, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                    {
-                        // ... and get the movement of the root motion rotated to lie along the plane of the ground.
                         movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
-                    }
                     else
-                    {
                         movement = _animator.deltaPosition;
-                    }
                 }
             }
             else
             {
-                // If not grounded the movement is just in the forward direction.
                 movement = _forwardSpeed * transform.forward * Time.deltaTime;
             }
             
