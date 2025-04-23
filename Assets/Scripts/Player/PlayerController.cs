@@ -1,4 +1,8 @@
 using System;
+using System.Threading;
+using Cinemachine;
+using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 
 namespace Moon
@@ -9,6 +13,7 @@ namespace Moon
     {
         CharacterController _characterController;
         Animator _animator;
+        Collider _collider;
         InputHandler _inputHandler;
         MagneticController _magneticController;
         [SerializeField] private InteractionController interactionController;
@@ -21,9 +26,12 @@ namespace Moon
         [SerializeField] public float maxTurnSpeed = 1200f;        
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
-        
 
-         public CameraSettings cameraSettings;
+        public CameraSettings cameraSettings;
+        public bool isDead;
+
+        LockOnSystem _lockOnSystem;
+        bool _lockOnLastFrame = false;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -73,6 +81,7 @@ namespace Moon
         readonly int _HashStateTime = Animator.StringToHash("StateTime");
         readonly int _HashFootFall = Animator.StringToHash("FootFall");
         readonly int _HashAttackType = Animator.StringToHash("AttackType");
+        readonly int _HashLockOn = Animator.StringToHash("LockOn");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -90,7 +99,6 @@ namespace Moon
         readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
         readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
         readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
-        readonly int _HashEllenDeath = Animator.StringToHash("EllenDeath");
 
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
@@ -126,8 +134,10 @@ namespace Moon
         {
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
+            _collider = GetComponent<Collider>();
             _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
+            _lockOnSystem = GetComponent<LockOnSystem>();
 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
@@ -165,6 +175,24 @@ namespace Moon
                 Interact();
                 _inputHandler.InteractInput = false;
             }
+            
+            bool lockOnNow = _inputHandler.LockOnInput;  // true/false
+            // 눌린 순간(!이전 && 지금)
+            if (lockOnNow && !_lockOnLastFrame)
+            {
+                _lockOnSystem.ToggleLockOn();
+                if (_lockOnSystem.currentTarget != null)
+                {
+                    _animator.SetTrigger(_HashLockOn);
+                }
+                else
+                {
+                    _animator.ResetTrigger(_HashLockOn);
+                }
+            }
+            // 상태 저장
+            _lockOnLastFrame = lockOnNow;
+            
 
             SetGrounded();
 
@@ -208,11 +236,36 @@ namespace Moon
             if(_inputHandler.IsContollerInputBlocked())
             {
                 cameraSettings.DisableCameraMove();
+                if(isDead)
+                {
+                    AnimateCameraYAxis(cameraSettings.Current, 1f, 1f, this.GetCancellationTokenOnDestroy()).Forget();
+                }
             }
             else
             {
                 cameraSettings.EnableCameraMove();
             }
+        }
+
+        async UniTask AnimateCameraYAxis(CinemachineFreeLook camera, float targetValue, float duration, CancellationToken token)
+        {
+            float startValue = camera.m_YAxis.Value;
+            float time = 0f;
+
+            while (time < duration)
+            {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                time += Time.unscaledDeltaTime;
+                float t = Mathf.Clamp01(time / duration);
+                camera.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            }
+
+            camera.m_YAxis.Value = targetValue;
         }
         
         bool IsInAttackComboState()
@@ -303,86 +356,52 @@ namespace Moon
         
         void SetTargetRotation()
         {
-            // Create three variables, move input local to the player, flattened forward direction of the camera and a local target rotation.
             Vector2 moveInput = _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            
-            Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
-            forward.y = 0f;
-            forward.Normalize();
+            if (localMovementDirection == Vector3.zero) return;
 
             Quaternion targetRotation;
-            
-            // If the local movement direction is the opposite of forward then the target rotation should be towards the camera.
-            if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1.0f))
+
+            // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
+            if (_lockOnSystem.currentTarget != null)
             {
-                targetRotation = Quaternion.LookRotation(-forward);
+                // --- 락온 모드 계산 ---
+                // 실제 락온 카메라를 기준으로 forward 추출
+                Transform camT = cameraSettings.lockOnCamera.transform;
+                Vector3 forward = camT.forward;
+                forward.y = 0f; forward.Normalize();
+
+                if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1f))
+                    targetRotation = Quaternion.LookRotation(-forward);
+                else
+                {
+                    var offset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
+                    targetRotation = Quaternion.LookRotation(offset * forward);
+                }
             }
             else
             {
-                // Otherwise the rotation should be the offset of the input from the camera's forward.
-                Quaternion cameraToInputOffset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
-                targetRotation = Quaternion.LookRotation(cameraToInputOffset * forward);
+                // --- FreeLook 모드(원래 코드) ---
+                Vector3 forward = Quaternion.Euler(0f, cameraSettings.Current.m_XAxis.Value, 0f) * Vector3.forward;
+                forward.y = 0f; forward.Normalize();
+
+                if (Mathf.Approximately(Vector3.Dot(localMovementDirection, Vector3.forward), -1f))
+                    targetRotation = Quaternion.LookRotation(-forward);
+                else
+                {
+                    var offset = Quaternion.FromToRotation(Vector3.forward, localMovementDirection);
+                    targetRotation = Quaternion.LookRotation(offset * forward);
+                }
             }
 
-            // The desired forward direction of Ellen.
+            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
             Vector3 resultingForward = targetRotation * Vector3.forward;
-
-//가까운 적 관련 회전 루틴 - 참고 후 삭제
-#if true
-            // If attacking try to orient to close enemies.
-            if (_inCombo)
-            {
-                // Find all the enemies in the local area.
-                Vector3 centre = transform.position + transform.forward * 2.0f + transform.up;
-                Vector3 halfExtents = new Vector3(3.0f, 1.0f, 2.0f);
-                int layerMask = 1 << LayerMask.NameToLayer("Enemy");
-                int count = Physics.OverlapBoxNonAlloc(centre, halfExtents, _overlapResult, targetRotation, layerMask);
-
-
-                // Go through all the enemies in the local area...
-                float closestDot = 0.0f;
-                Vector3 closestForward = Vector3.zero;
-                int closest = -1;
-
-                for (int i = 0; i < count; ++i)
-                {
-                    // ... and for each get a vector from the player to the enemy.
-                    Vector3 playerToEnemy = _overlapResult[i].transform.position - transform.position;
-                    playerToEnemy.y = 0;
-                    playerToEnemy.Normalize();
-
-                    // Find the dot product between the direction the player wants to go and the direction to the enemy.
-                    // This will be larger the closer to Ellen's desired direction the direction to the enemy is.
-                    float d = Vector3.Dot(resultingForward, playerToEnemy);
-
-                    // Store the closest enemy.
-                    if (d > k_MinEnemyDotCoeff && d > closestDot)
-                    {
-                        closestForward = playerToEnemy;
-                        closestDot = d;
-                        closest = i;
-                    }
-                }
-
-                // If there is a close enemy...
-                if (closest != -1)
-                {
-                    // The desired forward is the direction to the closest enemy.
-                    resultingForward = closestForward;
-                    Debug.DrawRay(transform.position, resultingForward * 2.0f, Color.red);
-                    // We also directly set the rotation, as we want snappy fight and orientation isn't updated in the UpdateOrientation function during an atatck.
-                    transform.rotation = Quaternion.LookRotation(resultingForward);
-                }
-            }
-#endif
-            // Find the difference between the current rotation of the player and the desired rotation of the player in radians.
             float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
-            float targetAngle = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
-
-            _angleDiff = Mathf.DeltaAngle(angleCurrent, targetAngle);
+            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
+            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
             _targetRotation = targetRotation;
         }
+
 
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()
@@ -503,6 +522,8 @@ namespace Moon
         {
             Vector3 movement;
 
+            if(isDead) return;
+
             if (_isGrounded)
             {
                 if(_currentStateInfo.shortNameHash == _HashLocomotion)
@@ -531,9 +552,24 @@ namespace Moon
             }
             
             _characterController.transform.rotation *= _animator.deltaRotation;
-            
             movement += _verticalSpeed * Vector3.up * Time.deltaTime;
             _characterController.Move(movement);
+
+            Collider[] colliders = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
+
+            foreach(Collider hitCol in colliders)
+            {
+
+                if (Physics.ComputePenetration(_collider, transform.position, transform.rotation,
+                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                    out Vector3 direction, out float distance))
+                {
+                    //transform.position += direction * distance;
+
+                    transform.position = Vector3.Lerp(transform.position, transform.position + (direction * distance), 1f);
+
+                }
+            }
         }
         
 
@@ -563,8 +599,8 @@ namespace Moon
         void MagneticRelease(bool inputValue)
         {
             if (_magneticController == null) return;
-            if(inputValue) _magneticController.OnLongRelease(); 
-            else _magneticController.OnShortRelease();
+            if(inputValue) _magneticController.OnLongRelease().Forget(); 
+            else _magneticController.OnShortRelease().Forget();
         }
 
         public void MeleeAttackStart(int throwing = 0)
@@ -587,6 +623,41 @@ namespace Moon
         public GameObject GetGameObject()
         {
             return gameObject;
+        }
+
+        
+        public void RespawnFinished()
+        {
+            isDead = false;
+        }
+
+        public void Death()
+        {
+            if(isDead) return;
+            
+            isDead = true;
+            _animator.SetTrigger(_HashDeath);
+            
+            GameManager.Instance.ChangeGameState(GameState.GameOver);
+        }
+
+        public void Damaged()
+        {
+            if (isDead) return;
+
+            _animator.SetTrigger(_HashHurt);
+            // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
+            // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
+        }
+
+        void OnAnimatorIK(int layerIndex)
+        {
+            if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+            {
+                Transform target = _lockOnSystem.currentTarget;
+                _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);
+                _animator.SetLookAtWeight(0.6f);
+            }
         }
     }
 }

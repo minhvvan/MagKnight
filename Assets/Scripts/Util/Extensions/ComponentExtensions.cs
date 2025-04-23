@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static partial class ComponentExtensions
+public static class ComponentExtensions
 {
     public static T GetInterfaceInParent<T>(this Component component) where T : class
     {

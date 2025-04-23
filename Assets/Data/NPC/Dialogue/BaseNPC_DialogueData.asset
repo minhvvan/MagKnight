@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d51091156a2dd4ab0a485945d22f7abc, type: 3}
+  m_Name: BaseNPC_DialogueData
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueDataSO
+  lines:
+  - speakerName: BaseNPC
+    text: "\uC548\uB155\uD558\uC138\uC694? \uCC98\uC74C \uBD59\uACA0\uC2B5\uB2C8\uB2E4."
+    options: []
+  - speakerName: BaseNPC
+    text: "\uC0C1\uC810\uC744 \uB9CC\uB4DC\uB824\uBA74 \uB2E4\uB978 NPC\uC5D0\uC11C
+      \uBB38\uC758\uD558\uC138\uC694."
+    options: []
+  - speakerName: BaseNPC
+    text: "\uC548\uB155\uD788\uAC00\uC138\uC694."
+    options: []

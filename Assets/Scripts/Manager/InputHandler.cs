@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
+using hvvan;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,8 @@ namespace Moon
         bool _jump;
         bool _attack1;
         bool _attack2;
+        bool _lockOn;
+        bool _nextTarget;
         bool _interact;
         bool _magnetic;
         bool _magneticSecond;
@@ -66,6 +69,11 @@ namespace Moon
         {
             get { return _attack2 && !IsContollerInputBlocked(); }
         }
+
+        public bool LockOnInput
+        {
+            get { return _lockOn && !IsContollerInputBlocked(); }
+        }
         public bool InteractInput
         {
             get { return _interact && !IsContollerInputBlocked(); }
@@ -80,6 +88,7 @@ namespace Moon
         WaitForSeconds _inputWait;
         Coroutine _attack1WaitCoroutine;
         Coroutine _attack2WaitCoroutine;
+        Coroutine _lockOnWaitCoroutine;
         Coroutine _interactWaitCoroutine;
         Coroutine _magneticWaitCoroutine;
         const float _AttackInputDuration = 0.03f;
@@ -104,7 +113,11 @@ namespace Moon
         Action<InputAction.CallbackContext> _pressInteractCallback;
         Action<InputAction.CallbackContext> _releaseInteractCallback;
         Action<InputAction.CallbackContext> _pressSprintCallback;
-        Action<InputAction.CallbackContext> _releaseSprintCallback;
+        Action<InputAction.CallbackContext> _releaseSprintCallback;        
+        Action<InputAction.CallbackContext> _pressPauseCallback;
+        Action<InputAction.CallbackContext> _releasePauseCallback;
+        Action<InputAction.CallbackContext> _pressLockOnCallback;
+        Action<InputAction.CallbackContext> _releaseLockOnCallback;
         
         
         
@@ -120,6 +133,8 @@ namespace Moon
             _pressJumpCallback = ctx => PressJumpInput(ctx);
             _pressInteractCallback = ctx => PressInteractInput(ctx);
             _pressSprintCallback = ctx => PressSprintInput(ctx);
+            _pressPauseCallback = ctx => PressPauseInput(ctx);
+            _pressLockOnCallback   = ctx => PressLockOnInput(ctx);
 
             _releaseAttack1Callback = ctx => ReleaseAttack1Input(ctx);
             _releaseAttack2Callback = ctx => ReleaseAttack2Input(ctx);
@@ -130,6 +145,8 @@ namespace Moon
             _releaseJumpCallback = ctx => ReleaseJumpInput(ctx);
             _releaseInteractCallback = ctx => ReleaseInteractInput(ctx);
             _releaseSprintCallback = ctx => ReleaseSprintInput(ctx);
+            _releasePauseCallback = ctx => ReleasePauseInput(ctx);
+            _releaseLockOnCallback   = ctx => ReleaseLockOnInput(ctx);
 
 
 
@@ -151,6 +168,9 @@ namespace Moon
             playerInput.actions["Attack1"].performed += _pressAttack1Callback;
             playerInput.actions["Attack2"].performed += _pressAttack2Callback;
 
+            playerInput.actions["LockOn"].performed     += _pressLockOnCallback;
+            playerInput.actions["LockOn"].canceled += _releaseLockOnCallback;
+            
             playerInput.actions["Sprint"].performed += _pressSprintCallback;
             playerInput.actions["Sprint"].canceled += _releaseSprintCallback;
 
@@ -163,8 +183,12 @@ namespace Moon
             playerInput.actions["SwitchMagnetic"].performed += _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled += _releaseSwitchMagneticCallback;
             
+            playerInput.actions["Pause"].performed += _pressPauseCallback;
+            playerInput.actions["Pause"].canceled += _releasePauseCallback;
 
             UIManager.Instance.DisableCursor();
+            InteractionEvent.OnDialogueStart += ReleaseControl;
+            InteractionEvent.OnDialogueEnd += GainControlDelayed;
         }
 
         void OnDestroy()
@@ -192,6 +216,12 @@ namespace Moon
 
             playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
+            
+            playerInput.actions["LockOn"].performed     -= _pressLockOnCallback;
+            playerInput.actions["LockOn"].canceled     -= _releaseLockOnCallback;
+
+            InteractionEvent.OnDialogueStart -= ReleaseControl;
+            InteractionEvent.OnDialogueEnd -= GainControlDelayed;
         }
 
         void PressMoveInput(InputAction.CallbackContext context)
@@ -276,6 +306,15 @@ namespace Moon
         {
         }
 
+        void PressLockOnInput(InputAction.CallbackContext ctx)
+        {
+            _lockOn = true;
+        }
+        void ReleaseLockOnInput(InputAction.CallbackContext ctx)
+        {
+            _lockOn = false;
+        }
+        
         void PressInteractInput(InputAction.CallbackContext context)
         {
             _interact = true;        
@@ -311,6 +350,24 @@ namespace Moon
         {
             _switchMangetic = false;
             //SwitchMangeticInput?.Invoke(); //Press시에만 호출 필요
+        }
+        
+        private void ReleasePauseInput(InputAction.CallbackContext ctx)
+        {
+            
+        }
+
+        private void PressPauseInput(InputAction.CallbackContext ctx)
+        {
+            var currentGameState = GameManager.Instance.CurrentGameState;
+            if (currentGameState != GameState.Pause)
+            {
+                GameManager.Instance.ChangeGameState(GameState.Pause);
+            }
+            else
+            {
+                GameManager.Instance.RecoverPreviousState();
+            }
         }
         
         public bool IsContollerInputBlocked()
@@ -374,6 +431,14 @@ namespace Moon
         public void GainControl()
         {
             _externalInputBlocked = false;
+        }
+
+        void GainControlDelayed()
+        {
+            UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() =>
+            {
+                _externalInputBlocked = false;
+            });            
         }
     }
 }

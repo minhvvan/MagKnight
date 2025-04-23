@@ -14,4 +14,8 @@ public static class Constants
     public const string CurrentRun = "CurrentRun";
 
     #endregion
+    
+    #region SceneName
+    public const string BaseCamp = "BaseCampScene";
+    #endregion
 }

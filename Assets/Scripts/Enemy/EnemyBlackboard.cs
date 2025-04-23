@@ -99,12 +99,42 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
         abilitySystem.AddAttribute(AttributeType.MaxResistance, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
-        abilitySystem.AddAttribute(AttributeType.Resistance, _enemyDataSO.staggerResistance);
-        abilitySystem.AddAttribute(AttributeType.Damage, 0);
-        abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
+        abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
+
+        // 1. 힐 과잉방지
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     float hp = abilitySystem.GetValue(AttributeType.HP);
+        //     float max = abilitySystem.GetValue(AttributeType.MaxHP);
+        //     if (hp > max)
+        //         abilitySystem.SetValue(AttributeType.HP, max);
+        // });
         
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnDeath += _enemy.OnDeath;
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnStagger += _enemy.OnStagger;
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnPhaseChange += _enemy.OnPhaseChange;
+        // 2. 사망 처리
+        // abilitySystem.AddPostModify(AttributeType.HP, () =>
+        // {
+        //     if (abilitySystem.GetValue(AttributeType.HP) <= 0)
+        //     {
+        //         _enemy.OnDeath();
+        //     }
+        // });
+        
+        // 1. resistance 회복 과잉방지
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     float res = abilitySystem.GetValue(AttributeType.RES);
+        //     float max = abilitySystem.GetValue(AttributeType.MAXRES);
+        //     if (res > max)
+        //         abilitySystem.SetValue(AttributeType.RES, max);
+        // });
+        
+        // 2. stagger 처리
+        // abilitySystem.AddPostModify(AttributeType.RES, () =>
+        // {
+        //     if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
+        //     {
+        //         _enemy.OnStagger();
+        //     }
+        // });
     }
 }

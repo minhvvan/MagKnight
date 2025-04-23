@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine;
 
 public class Katana: BaseWeapon
@@ -20,10 +19,10 @@ public class Katana: BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         float finalDamage = 1f;
-        float resistanceDecrease = 2f;
+        float resistanceDecrease = -2f;
         Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, finalDamage);
-        GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, resistanceDecrease);
+        GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.RES, resistanceDecrease);
         enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
         enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
     }

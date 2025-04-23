@@ -10,7 +10,7 @@ namespace Moon
     {
         public enum InputChoice
         {
-            KeyboardAndMouse, Controller,
+            KeyboardAndMouse, Controller, LockOn, 
         }
 
         [Serializable]
@@ -25,6 +25,8 @@ namespace Moon
         public Transform lookAt;
         public CinemachineFreeLook keyboardAndMouseCamera;
         public CinemachineFreeLook controllerCamera;
+        public CinemachineVirtualCamera interactionCamera;
+        public CinemachineVirtualCamera lockOnCamera;
         public InputChoice inputChoice;
         public InvertSettings keyboardAndMouseInvertSettings;
         public InvertSettings controllerInvertSettings;
@@ -45,6 +47,14 @@ namespace Moon
             if (controllerCameraTransform != null)
                 controllerCamera = controllerCameraTransform.GetComponent<CinemachineFreeLook>();
 
+            Transform interactionCameraTransform = transform.Find("InteractionCamera");
+            if (interactionCameraTransform != null)
+                interactionCamera = interactionCameraTransform.GetComponent<CinemachineVirtualCamera>();
+
+            Transform lockOnCameraTransform = transform.Find("LockOnCamera");
+            if (lockOnCameraTransform != null)
+                lockOnCamera = lockOnCameraTransform.GetComponent<CinemachineVirtualCamera>();
+
             PlayerController playerController = FindObjectOfType<PlayerController>();
             if (playerController != null && playerController.name == "Player")
             {
@@ -55,10 +65,14 @@ namespace Moon
                 if (playerController.cameraSettings == null)
                     playerController.cameraSettings = this;
             }
+
+            Current.m_XAxis.m_InputAxisName = "";
+            Current.m_YAxis.m_InputAxisName = "";
         }
 
         void Awake()
         {
+            Reset();
             UpdateCameraSettings();
         }
 
@@ -101,6 +115,9 @@ namespace Moon
 
         public void DisableCameraMove()
         {
+            Current.m_XAxis.m_InputAxisName = "";
+            Current.m_YAxis.m_InputAxisName = "";
+
             if(keyboardAndMouseCamera != null)
             {
                 keyboardAndMouseCamera.GetComponent<CinemachineInputProvider>().enabled = false;          

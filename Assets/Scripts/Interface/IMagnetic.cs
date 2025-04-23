@@ -5,8 +5,9 @@ using UnityEngine;
 
 public interface IMagnetic
 {
-    void Initialize();
+    void InitializeMagnetic();
     void SetPhysic();
+    UniTask OnMagneticInteract(MagneticObject target);
 }
 
 public enum MagneticType

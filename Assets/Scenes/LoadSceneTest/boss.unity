@@ -532,6 +532,31 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.04
       objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[0].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[1].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[0].Value
+      value: 
+      objectReference: {fileID: 1232394480}
+    - target: {fileID: 6649709562706148680, guid: 1596b01fc97632f43b2faf92134b743c,
+        type: 3}
+      propertyPath: gates._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 1809333188}
     - target: {fileID: 7333266266056909369, guid: 1596b01fc97632f43b2faf92134b743c,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -599,36 +624,8 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1367411538}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8534525548041080317, guid: 1596b01fc97632f43b2faf92134b743c,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1644696216}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1596b01fc97632f43b2faf92134b743c, type: 3}
---- !u!1 &1644696215 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8534525548041080317, guid: 1596b01fc97632f43b2faf92134b743c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1644696214}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1644696216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1644696215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc04bf2fda261314c886283e215de912, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gates:
-    _serializedList:
-    - Key: 1
-      Value: {fileID: 1232394480}
-    - Key: 3
-      Value: {fileID: 1809333188}
 --- !u!224 &1644696217 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3588761392077940914, guid: 1596b01fc97632f43b2faf92134b743c,

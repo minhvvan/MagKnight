@@ -40,7 +40,7 @@ namespace Moon
             {
                 m_CinemachineVCam.LookAt.localPosition = m_OriginalLocalPosition + Random.insideUnitSphere * m_ShakeAmount;
 
-                m_RemainingShakeTime -= Time.deltaTime;
+                m_RemainingShakeTime -= Time.unscaledDeltaTime;
                 if (m_RemainingShakeTime <= 0)
                 {
                     m_IsShaking = false;
