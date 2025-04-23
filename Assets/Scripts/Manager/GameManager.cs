@@ -29,16 +29,6 @@ namespace hvvan
             private set => _playerController = value;
         }
 
-        public PlayerStat PlayerStats
-        {
-            get
-            {
-                _playerData ??= SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
-
-                return _playerData.PlayerStat;
-            }
-        }
-
         public CurrentRunData CurrentRunData
         {
             get { return _currentRunData ??= new CurrentRunData(); }
@@ -205,6 +195,17 @@ namespace hvvan
                 SaveDataManager.Instance.DeleteData(Constants.CurrentRun);
                 _currentRunData = null;
             }
+        }
+
+        public async UniTask<PlayerStat> GetPlayerStat()
+        {
+            if (_playerData == null)
+            {
+                _playerData = SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
+                await SetPlayerData(_playerData);
+            }
+
+            return _playerData.PlayerStat;
         }
     }
 }

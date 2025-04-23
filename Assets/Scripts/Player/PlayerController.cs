@@ -132,7 +132,7 @@ namespace Moon
             }
         }
 
-        void Awake()
+        async void Awake()
         {
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
@@ -144,7 +144,8 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
             
-            _abilitySystem.InitializeFromPlayerStat(GameManager.Instance.PlayerStats);
+            var stat = await GameManager.Instance.GetPlayerStat();
+            _abilitySystem.InitializeFromPlayerStat(stat);
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
                 attributeSet.OnDead += Death;
