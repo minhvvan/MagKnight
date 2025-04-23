@@ -30,7 +30,7 @@ public class InitGameState: IGameState
             var currentFloorRooms = floorList.Floor[_currentRunData.currentFloor];
             
             //시작씬으로 이동
-            SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, MoveToLastRoom);
+            SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
         }
     }
 

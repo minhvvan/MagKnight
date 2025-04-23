@@ -34,13 +34,13 @@ namespace Moon
             _sceneReady = true;
         }
     
-        public static void TransitionToScene(string sceneName, Func<IEnumerator> sceneLoadedAction = null)
+        public static void TransitionToScene(string sceneName, bool showSceneTitle = true, Func<IEnumerator> sceneLoadedAction = null)
         {
-            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true, sceneLoadedAction));
+            Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.Loading, 1f, true, showSceneTitle, sceneLoadedAction));
             // Instance.StartCoroutine(Instance.Transition(sceneName, ScreenFader.FadeType.CommonFade));
         }
 
-        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float loadingDelay = 1f, bool isStopTimeScale = false, Func<IEnumerator> sceneLoadedAction = null)
+        protected IEnumerator Transition(string newSceneName, ScreenFader.FadeType fadeType = ScreenFader.FadeType.Loading, float loadingDelay = 1f, bool isStopTimeScale = false, bool showSceneTitle = true, Func<IEnumerator> sceneLoadedAction = null)
         {
             _transitioning = true;
 
@@ -77,12 +77,17 @@ namespace Moon
             if (_inputHandler)
                 _inputHandler.GainControl();
 
-            var title = "";
-            if (_sceneMapping)
+
+            if (showSceneTitle)
             {
-                title = _sceneMapping.scenes[newSceneName].sceneTitle;
+                var title = "";
+                if (_sceneMapping)
+                {
+                    title = _sceneMapping.scenes[newSceneName].sceneTitle;
+                }
+                SceneTransitionEvent.TriggerSceneTransitionComplete(title, true);
             }
-            SceneTransitionEvent.TriggerSceneTransitionComplete(title, true);
+
             _transitioning = false;
         }
     }

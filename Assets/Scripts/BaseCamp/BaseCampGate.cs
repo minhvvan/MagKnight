@@ -12,7 +12,7 @@ namespace Moon
         {
             if (other.CompareTag("Player"))
             {
-                SceneController.TransitionToScene(sceneName, SceneLoaded);
+                SceneController.TransitionToScene(sceneName, true, SceneLoaded);
             }
         }
 

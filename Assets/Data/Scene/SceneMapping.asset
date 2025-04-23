@@ -17,6 +17,9 @@ MonoBehaviour:
     - Key: BaseCampScene
       Value:
         sceneTitle: "\uBCA0\uC774\uC2A4 \uCEA0\uD504"
+    - Key: Prototype
+      Value:
+        sceneTitle: "\uD504\uB85C\uD1A0\uD0C0\uC785"
     - Key: start
       Value:
         sceneTitle: "\uC2DC\uC791\uBC29"

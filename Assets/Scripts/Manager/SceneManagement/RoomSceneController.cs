@@ -183,6 +183,9 @@ public class RoomSceneController: Singleton<RoomSceneController>
             
             //start룸 비활성화
             _loadedRoomControllers[0].OnPlayerExit();
+            
+            //최종 클리어 방 타이틀 출력
+            SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);
         }
         
         //연결된 룸 load 시도
