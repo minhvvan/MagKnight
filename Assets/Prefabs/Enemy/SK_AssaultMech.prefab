@@ -701,6 +701,7 @@ MonoBehaviour:
   isDead: 0
   phase: 0
   muzzleTransform: {fileID: 489340003819110710}
+  enemyRenderer: {fileID: 0}
 --- !u!114 &4348407960360890687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -720,7 +721,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   blackboard: {fileID: 8534206445701083951}
   patternController: {fileID: 0}
-  hpBarController: {fileID: 0}
+  hpBarController: {fileID: 420342846819582159}
 --- !u!136 &4009868634891994682
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1245,6 +1246,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 236395a2a863a4344a559b65e86ea863, type: 3}
+--- !u!114 &420342846819582159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7716640660075021864, guid: 236395a2a863a4344a559b65e86ea863,
+    type: 3}
+  m_PrefabInstance: {fileID: 7981038642612487911}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2561db17915cc974e8369bc97859c823, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4597919957289261702 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5840411751001267297, guid: 236395a2a863a4344a559b65e86ea863,
