@@ -599,8 +599,8 @@ namespace Moon
         void MagneticRelease(bool inputValue)
         {
             if (_magneticController == null) return;
-            if(inputValue) _magneticController.OnLongRelease(); 
-            else _magneticController.OnShortRelease();
+            if(inputValue) _magneticController.OnLongRelease().Forget(); 
+            else _magneticController.OnShortRelease().Forget();
         }
 
         public void MeleeAttackStart(int throwing = 0)
