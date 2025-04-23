@@ -5,18 +5,16 @@ using UnityEngine;
 public class Katana: BaseWeapon
 {
     [SerializeField] GameObject _hitEffectPrefab;
-
+    
     public override void AttackStart()
     {
         base.AttackStart();
-        
         //TODO: FX
     }
 
     public override void AttackEnd()
     {
         base.AttackEnd();
-
     }
 
     public override void OnNext(HitInfo hitInfo)

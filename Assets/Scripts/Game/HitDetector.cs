@@ -130,7 +130,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         Notify(hitInfo);
         
         //Debug.Shaker
-        CameraShake.Shake(0.2f, 0.2f);
+        CameraShake.Shake(0.05f, 0.2f);
         
         //*Temp Debug
         hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
