@@ -466,6 +466,7 @@ MonoBehaviour:
     type: 3}
   ArtifactUIPrefab: {fileID: 2383857669606011363, guid: d547e837081f95540b03979f37ed7543,
     type: 3}
+  HideButton: {fileID: 2291002308004508361}
 --- !u!1 &7314563541374802172
 GameObject:
   m_ObjectHideFlags: 0

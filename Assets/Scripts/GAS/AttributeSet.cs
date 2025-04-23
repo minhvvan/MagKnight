@@ -50,8 +50,8 @@ public abstract class AttributeSet
             gameplayEffect.amount = PreAttributeChange(type, gameplayEffect.amount);
             
 
-            // 만약 EffectType이 Instant면 BaseValue를 수정
-            if(effectType == EffectType.Instant)
+            // 만약 EffectType이 Instant또는 Period를 가지는 Duration이면 BaseValue를 수정
+            if(effectType == EffectType.Instant || (effectType == EffectType.Duration && gameplayEffect.period > 0))
                 attributeDictionary[type].ModifyBaseValue(gameplayEffect.amount);
             // 그 외 CurrentValue를 수정
             else

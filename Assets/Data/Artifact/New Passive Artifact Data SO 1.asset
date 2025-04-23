@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb36e9c0bc715d6479f02981a9b08ff3, type: 3}
+  m_Name: New Passive Artifact Data SO 1
+  m_EditorClassIdentifier: 
+  icon: {fileID: 0}
+  name: 
+  N_passiveArtifacts:
+  - triggerChance: 1
+    triggerEvent: 3
+    effect:
+      effectType: 0
+      attributeType: 1
+      amount: 500
+      duration: 0
+      period: 0
+      tracking: 0
+      maxStack: 0
+    hasCount: 1
+    triggerCount: 1
+  S_passiveArtifacts:
+  - triggerChance: 1
+    triggerEvent: 3
+    effect:
+      effectType: 0
+      attributeType: 1
+      amount: 500
+      duration: 0
+      period: 0
+      tracking: 0
+      maxStack: 0
+    hasCount: 1
+    triggerCount: 1

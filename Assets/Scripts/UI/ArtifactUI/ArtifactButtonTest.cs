@@ -6,8 +6,8 @@ using UnityEngine.Serialization;
 public class ArtifactButtonTest : MonoBehaviour
 {
     public AbilitySystem abilitySystem;
-    [FormerlySerializedAs("artifactGas")] public ArtifactDataSO artifactDataSo;
-
+    public ArtifactDataSO artifactDataSo;
+    
     public GameplayEffect damageEffect;
     
     public void GetDamage()

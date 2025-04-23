@@ -655,10 +655,14 @@ namespace Moon
         {
             if(isDead) return;
             
-            isDead = true;
-            _animator.SetTrigger(_HashDeath);
-            
-            GameManager.Instance.ChangeGameState(GameState.GameOver);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDeath, _abilitySystem);
+            if(_abilitySystem.GetValue(AttributeType.HP) <= 0)
+            {
+                Debug.Log("Dead Player");
+                isDead = true;
+                _animator.SetTrigger(_HashDeath);
+                GameManager.Instance.ChangeGameState(GameState.GameOver);
+            }
         }
 
         public void Damaged()

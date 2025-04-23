@@ -167,8 +167,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = -blackboard.abilitySystem.GetValue(AttributeType.Strength);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
+        float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
     }
 
