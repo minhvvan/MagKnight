@@ -148,6 +148,7 @@ namespace Moon
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
                 attributeSet.OnDead += Death;
+                attributeSet.OnDamaged += Damaged;
             }
             
             //HUD 생성 및 바인딩

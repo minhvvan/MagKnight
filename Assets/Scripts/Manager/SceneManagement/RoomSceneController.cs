@@ -179,14 +179,14 @@ public class RoomSceneController: Singleton<RoomSceneController>
                     _loadedRoomControllers.TryAdd(currentRunData.currentRoomIndex, loadedSceneController);
                     loadedSceneController.OnPlayerEnter();
                 }
-
-                //연결된 룸 load 시도
-                await LoadConnectedRooms(_roomGenerator.GetRoom(currentRunData.currentRoomIndex).connectedRooms);
             }
             
             //start룸 비활성화
             _loadedRoomControllers[0].OnPlayerExit();
         }
+        
+        //연결된 룸 load 시도
+        await LoadConnectedRooms(_roomGenerator.GetRoom(currentRunData.currentRoomIndex).connectedRooms);
 
         //Character위치 조정
         var player = GameManager.Instance.Player;

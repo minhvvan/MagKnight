@@ -15,7 +15,6 @@ public class InitGameState: IGameState
 
         _currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
 
-        //TODO: UI랑 동기화 필요, 현재는 데이터를 로드하고 나서 로딩 화면을 보여줌 => 로딩화면 보여주면서 데이터 로드하도록 변경 필요
         if (_currentRunData == null)
         {
             //회차 정보 없음 => BaseCamp로

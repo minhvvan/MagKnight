@@ -37,6 +37,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b16eb9ba826123844abf54aaded3d2bb
+    m_Address: data/common/sceneData
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: cfa7d4aa0b0364e4f86cd68aacdb0cc5
     m_Address: data/magnetic/setup
     m_ReadOnly: 0

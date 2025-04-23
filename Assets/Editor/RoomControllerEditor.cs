@@ -111,6 +111,8 @@ public class RoomControllerEditor : Editor
                 // Room 타입 표시
                 EditorGUILayout.LabelField("Room 타입:", GetRoomTypeString(roomController.Room));
                 
+                EditorGUILayout.LabelField("제목:", roomController.Room.roomTitle);
+
                 // 씬 이름 표시
                 EditorGUILayout.LabelField("씬 이름:", roomController.Room.sceneName);
                 

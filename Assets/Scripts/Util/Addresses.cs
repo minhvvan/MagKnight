@@ -26,6 +26,11 @@ public static class Addresses
         {
             public const string MagneticSetupData = "data/magnetic/setup";
         }
+
+        public static class Common
+        {
+            public const string SceneData = "data/common/sceneData";
+        }
     }
     
     public static class Prefabs

@@ -119,23 +119,9 @@ public class RoomGenerator
         
         //generateRoomCount만큼 생성 + 시작 + 보스 + 상점
         //필수 지점 추가
-        _rooms.Add(new Room()
-        {
-            sceneName = "start",
-            roomType = RoomType.StartRoom,
-        });
-        
-        _rooms.Add(new Room()
-        {
-            sceneName = "boss",
-            roomType = RoomType.BoosRoom,
-        });
-        
-        _rooms.Add(new Room()
-        {
-            sceneName = "shop",
-            roomType = RoomType.ShopRoom,
-        });
+        _rooms.Add(new Room(_roomData.rooms[RoomType.StartRoom]));
+        _rooms.Add(new Room(_roomData.rooms[RoomType.BoosRoom]));
+        _rooms.Add(new Room(_roomData.rooms[RoomType.ShopRoom]));
 
         //treasureRoom 개수 제한
         int treasureRoomCount = 0;
