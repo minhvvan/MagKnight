@@ -39,14 +39,14 @@ public class EnemyBlackboard : MonoBehaviour
     
     #region CancellationToken
 
+    [HideInInspector] public CancellationTokenSource onHitCancellation;
     [HideInInspector] public CancellationTokenSource actionRecoveryCancellation;
     [HideInInspector] public CancellationTokenSource staggerRecoveryCancellation;
     #endregion
     
-    #region Transform
-
     public Transform muzzleTransform;
-    #endregion
+    public Renderer enemyRenderer;
+
 
     private void Awake()
     {
