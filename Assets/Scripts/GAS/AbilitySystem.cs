@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -18,7 +19,8 @@ public class AbilitySystem : MonoBehaviour
     // Passive를 담고 있는 Dicitionary
     [SerializeField] SerializedDictionary<int, PassiveEffectData> _registeredPassiveEffects = new SerializedDictionary<int, PassiveEffectData>();
 
-
+    // 버프/디버프 갱신 용 Dictionary
+    private Dictionary<int, CancellationTokenSource> _durationEffectTokens = new();
     #region Attribute
     
     public void AddAttribute(AttributeType type, float value)
@@ -43,11 +45,12 @@ public class AbilitySystem : MonoBehaviour
         // instance로 만드는 이유 : gameplayEffect를 직접적으로 수정하지 않도록
         // AttributeSet 안에 PreAttributeChange에서 수정 위험 요소 있음
         var instanceGE = gameplayEffect.DeepCopy();
+        var hash = gameplayEffect.GetHashCode();
         
+        if(gameplayEffect.effectType == EffectType.Instant)
+            Attributes.Modify(instanceGE);
         
-        Attributes.Modify(instanceGE);
-        
-        if(gameplayEffect.effectType == EffectType.Duration)
+        else if(gameplayEffect.effectType == EffectType.Duration)
         {
             if (gameplayEffect.period > 0f)
             {
@@ -55,19 +58,32 @@ public class AbilitySystem : MonoBehaviour
             }
             else
             {
-                RemoveAfterDuration(instanceGE);
+                if (_activatedEffects.TryGetValue(hash, out var effect))
+                {
+                    if (effect.currentStack < effect.maxStack)
+                    {
+                        Attributes.Modify(instanceGE);
+                        effect.currentStack++;
+                        effect.amount += gameplayEffect.amount;
+                    }
+                }
+                // 처음 적용
+                else
+                {
+                    Attributes.Modify(instanceGE);
+                }
+                //Remove 항상 기존 gameplayEffect걸로 -> Hash때문
+                RemoveAfterDuration(gameplayEffect);
             }
         }
         
         // Infinite는 항상 저장
-        if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
+        else if (instanceGE.tracking || gameplayEffect.effectType == EffectType.Infinite)
         {
+            if(gameplayEffect.effectType == EffectType.Infinite)
+                Attributes.Modify(instanceGE);
             // 이미 존재하는 이펙트면
-            if (!_activatedEffects.TryAdd(gameplayEffect.GetHashCode(), instanceGE))
-            {
-                // 중첩되도록 amount 추가
-                _activatedEffects[gameplayEffect.GetHashCode()].amount += instanceGE.amount;
-            }
+            _activatedEffects.TryAdd(hash, instanceGE);
         }
     }
     
@@ -97,8 +113,32 @@ public class AbilitySystem : MonoBehaviour
     //Duration에서 사용됨
     private async UniTask RemoveAfterDuration(GameplayEffect gameplayEffect)
     {
-        await UniTask.WaitForSeconds(gameplayEffect.duration);
-        RemoveEffect(gameplayEffect);
+        // await UniTask.WaitForSeconds(gameplayEffect.duration);
+        // RemoveEffect(gameplayEffect);
+        
+        var id = gameplayEffect.GetHashCode();
+
+        // 기존 타이머가 있다면 취소
+        if (_durationEffectTokens.TryGetValue(id, out var oldToken))
+        {
+            oldToken.Cancel();
+            _durationEffectTokens.Remove(id);
+        }
+
+        // 새로운 타이머 시작
+        var cts = new CancellationTokenSource();
+        _durationEffectTokens[id] = cts;
+
+        try
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(gameplayEffect.duration), cancellationToken: cts.Token);
+            RemoveEffect(gameplayEffect);
+            _durationEffectTokens.Remove(id);
+        }
+        catch (OperationCanceledException)
+        {
+            // 취소된 경우 아무것도 하지 않음
+        }
     }
     
     private async UniTaskVoid ApplyPeriodicEffect(GameplayEffect gameplayEffect)
@@ -118,15 +158,15 @@ public class AbilitySystem : MonoBehaviour
     
     #region Passive
     
-    public void RegisterPassiveEffect(PassiveEffectData data)
+    public void RegisterPassiveEffect(PassiveEffectData passiveData)
     {
-        _registeredPassiveEffects.TryAdd(data.GetHashCode(), data);
+        _registeredPassiveEffects.TryAdd(passiveData.GetHashCode(), passiveData);
     }
 
-    public void RemovePassiveEffect(PassiveEffectData data)
+    public void RemovePassiveEffect(PassiveEffectData passiveData)
     {
-        if(_registeredPassiveEffects.ContainsKey(data.GetHashCode()))
-            _registeredPassiveEffects.Remove(data.GetHashCode());
+        if(_registeredPassiveEffects.ContainsKey(passiveData.GetHashCode()))
+            _registeredPassiveEffects.Remove(passiveData.GetHashCode());
         else
         {
             Debug.Log("해당 이펙트는 이미 제거되었습니다");

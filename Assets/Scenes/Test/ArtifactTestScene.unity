@@ -1105,7 +1105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca4378fe09a8e048969801d7873a6f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  artifactDataSO: {fileID: 11400000, guid: 3d0ecfc76240b54428a3ea7c76947eee, type: 2}
+  artifactDataSO: {fileID: 11400000, guid: 2f1a565ffc578da44a73cb9bed2ae569, type: 2}
 --- !u!135 &282031172
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3576,6 +3576,6 @@ SceneRoots:
   - {fileID: 150635461}
   - {fileID: 1095358111}
   - {fileID: 1058892354}
-  - {fileID: 177215600}
   - {fileID: 1714316386}
   - {fileID: 76023732}
+  - {fileID: 177215600}

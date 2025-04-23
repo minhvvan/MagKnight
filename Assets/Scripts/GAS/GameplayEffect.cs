@@ -1,8 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public enum EffectType
 {
@@ -21,6 +20,10 @@ public class GameplayEffect
     public float period = 0f; // 주기, Duration에서 틱 데미지와 같은 효과에 사용, BaseValue값을 변경, ex) duration : 1, period : 0.25일 때 총 5번의 효과 적용
     public bool tracking; // buff, 아이템같이 저장해두고 관리가 필요할 때 true
 
+    public int maxStack = 1;
+    [NonSerialized] public int currentStack = 1;
+    
+    
     public GameplayEffect(EffectType effectType, AttributeType attributeType, float amount, float duration = 0f, bool tracking = false)
     {
         this.effectType = effectType;

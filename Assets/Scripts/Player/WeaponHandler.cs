@@ -46,6 +46,7 @@ public class WeaponHandler: MonoBehaviour
         }
 
         _currentWeapon.AttackStart();
+        _abilitySystem.TriggerEvent(TriggerEventType.OnAttack, _abilitySystem);
     }
 
     public void AttackEnd()
