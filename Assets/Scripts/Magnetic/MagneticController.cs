@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Managers;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UIElements;
 using Quaternion = System.Numerics.Quaternion;
 
 #if UNITY_EDITOR
@@ -75,12 +77,42 @@ public class MagneticController : MagneticObject
     
     private void Start()
     {
-        Initialize();
+        InitializeMagnetic();
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            _characterController.Move(Vector3.forward * 15f * Time.deltaTime);
+        }
     }
     
-    public override void Initialize()
+    private void FixedUpdate()
     {
-        base.Initialize();
+        //실시간 자기력 범위 내 대상 탐색.
+        ScanNearByMagneticTarget();
+        
+        //자석 능력 길게 키 입력 시
+        if (_isPressMagnetic)
+        {
+            FocusMagneticTarget();
+        }
+        
+        //자기력 붕괴 스킬 활성화로 주변 탐색
+        if (_onSearchNearMagnetic)
+        {
+            //자기력 붕괴
+            if(_onGravityBreak && targetMagneticObject != null) OnSearchNearMagnetic(targetMagneticObject, gravityBreakRange);
+            
+            //반격
+            if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
+        }
+    }
+    
+    public override void InitializeMagnetic()
+    {
+        base.InitializeMagnetic();
         
         //추후 SO로 받아서 설정하게 될 기본값들
         _magneticUIController = FindObjectOfType<MagneticUIController>();
@@ -104,7 +136,7 @@ public class MagneticController : MagneticObject
         nonStructSpeed = 3f;
         _dragValue = 1.5f;
 
-        gravityBreakRange = 4f;
+        gravityBreakRange = 5f;
 
         _counterPressTime = 0.15f;
         _counterPressRange = 1.5f;
@@ -122,48 +154,61 @@ public class MagneticController : MagneticObject
         //키 입력이 시작됨을 알림.
         _isPressMagnetic = true;
         
-        _magneticUIController.ShowFocusArea();
-        _magneticUIController.ShowMagneticTypeVisual(GetMagneticType());
+        StartCoroutine(_magneticUIController.ShowFocusArea());
+        StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
+        //Time.timeScale = 0.15f;
         
         //끝
         _isShortRelease = false;
     }
     
     //Q 짧게 누르고 뗐을때
-    public void OnShortRelease()
+    public async UniTask OnShortRelease()
     {
         _isShortRelease = true;
         //짧게 입력시 할 로직
         _isPressMagnetic = false;
-        _magneticUIController.HideFocusArea();
-        _magneticUIController.HideMagneticTypeVisual();
+        //Time.timeScale = 1f;
         
-        if(!_onGravityBreak && !_onCounterPress && !_onSearchNearMagnetic) OnCounterPress().Forget();
+        StartCoroutine(_magneticUIController.HideFocusArea());
+        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        
+        if (!_isActivatedMagnetic) if(!_onGravityBreak && !_onCounterPress && !_onSearchNearMagnetic) await OnCounterPress();
         
         //끝
         _isShortRelease = false;
     }
 
     //Q 길게 누르고 뗐을때
-    public void OnLongRelease()
+    public async UniTask OnLongRelease()
     {
         _isLongRelease = true;
         //길게 입력 시 할 로직
         _isPressMagnetic = false;
-        _magneticUIController.HideFocusArea();
-        _magneticUIController.HideMagneticTypeVisual();
+        //Time.timeScale = 1f;
+        
+        StartCoroutine(_magneticUIController.HideFocusArea());
+        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
         
         if (targetMagneticObject != null)
         {
-            if (targetMagneticObject.GetMagneticType() != magneticType)
-            {
-                OnApproach(targetMagneticObject).Forget();
-            }
-            else if (targetMagneticObject.GetMagneticType() == magneticType)
-            {
-                OnSeparation(targetMagneticObject).Forget();
-            }
+            _isActivatedMagnetic = true;
             _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+            await targetMagneticObject.OnMagneticInteract(this);
+            // if (targetMagneticObject.GetMagneticType() != magneticType)
+            // {
+            //     targetMagneticObject.MagneticInteract(this);
+            //     //OnApproach(targetMagneticObject).Forget();
+            // }
+            // else if (targetMagneticObject.GetMagneticType() == magneticType)
+            // {
+            //     targetMagneticObject.MagneticInteract(this);
+            //     //OnSeparation(targetMagneticObject).Forget();
+            // }
+            
+            _isActivatedMagnetic = false;
+            _isDetectedMagnetic = false;
+            
         }
         //끝
         _isLongRelease = false;
@@ -182,7 +227,7 @@ public class MagneticController : MagneticObject
         base.SwitchMagneticType(type); //극성 전환
         
         //극성 전환 후
-        if(_isPressMagnetic) _magneticUIController.ShowMagneticTypeVisual(GetMagneticType());
+        if(_isPressMagnetic) StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
 
         ArtifactInventory inventory = GetComponent<ArtifactInventory>();
         if (inventory != null)
@@ -348,226 +393,226 @@ public class MagneticController : MagneticObject
     #region 물리 효과
     
     //상호 겹침 보정
-    public void PenetrationFix(MagneticObject magneticObject)
-    {
-        var obj = magneticObject.gameObject;
-        var col = magneticObject.GetComponent<Collider>();
-        var center = col.bounds.center;
-        var size  = col.bounds.size;
-        
-        var radius = Mathf.Min(size.x, size.z)/2f;
-        var height = size.y;
-        var halfHeight = Mathf.Max(height / 2f - radius, 0f);
-        var up = Vector3.up;
-        var point1 = center + up * halfHeight;
-        var point2 = center - up * halfHeight;
-
-        var hitColliders = new Collider[maxInCount];
-        var hitCount = Physics.OverlapCapsuleNonAlloc(point1, point2, radius, hitColliders, 
-            (1 << magneticLayer) | (1 << enemyLayer) | (1 << groundLayer) | (1 << environmentLayer));
-
-        //감지한 대상 기반으로 보정 수행
-        for (int i = 0; i < hitCount; i++)
-        {
-            Collider hitCol = hitColliders[i];
-            
-            //본인 제외
-            if(hitCol == col) continue;
-            
-            //ComputePenetration
-            if (Physics.ComputePenetration(col, obj.transform.position, obj.transform.rotation,
-                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
-                    out Vector3 direction, out float distance))
-            {
-                //겹침(침투) 보정
-                obj.transform.position += direction * distance;
-            }
-        }
-    }
-    
-    //두 오브젝트 가까워짐
-    public async UniTask OnApproach(MagneticObject target, Vector3? another = null)
-    {
-        var targetPos = target.transform.position;
-        var playerPos = another ?? transform.position;
-        var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
-        var distance = (targetPos - playerPos).magnitude;
-        var staticDistance = distance;
-        
-        var eta = 0f;
-        if (target.GetIsStructure()) 
-            eta = distance / (structSpeed);
-        else eta = distance / (nonStructSpeed);
-        
-        var elapsedTime = 0f;
-        var elapsedDistance = 0f;
-        if (!_onGravityBreak) _isActivatedMagnetic = true;
-        //방향까지 가속
-        while (elapsedTime < eta) // eta/2f
-        {
-            if (!_onGravityBreak)
-            {
-                //동작도중 자석 능력 키 한번 더 눌렀을 때
-                if (_isPressMagnetic) break;
-            
-                //자기력 붕괴스킬 활성화 시
-                if (_onGravityBreak) break;
-            }
-            
-            elapsedTime += Time.deltaTime;
-            
-            //Lerp로도 잘 어울려지도록 ETA 보정
-            float progressTime = Mathf.Clamp01(elapsedTime / eta);
-
-            targetPos = target.transform.position;
-            playerPos = another ?? transform.position;
-            modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
-            
-            //구조물 여부에 따라 인력 주체가 달라진다.
-            if (target.GetIsStructure())
-            {
-                var direction = (targetPos - modifyPlayerPos);
-                direction.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
-                
-                var hangDirection= direction.normalized;
-                var newMovement = hangDirection * progressTime;
-                 
-                _currentVelocity = newMovement;
-                
-                _characterController.Move(newMovement);
-                
-                elapsedDistance += Vector3.Distance(playerPos+newMovement, playerPos);
-            }
-            else
-            {
-                var newPosition = Vector3.MoveTowards( targetPos, modifyPlayerPos, progressTime);
-                target.transform.position = (newPosition);
-                elapsedDistance += Vector3.Distance(targetPos, newPosition);
-            }
-            
-            PenetrationFix(target);
-
-            distance = (targetPos - modifyPlayerPos).magnitude;
-            if (elapsedDistance >= staticDistance) break;
-            if (distance <= _minDistance)
-            {
-                break;
-            }
-
-            await UniTask.Yield();
-        }
-        
-        //자기력 붕괴사용 시 true가 되지 않음.
-        if (!_isActivatedMagnetic) return;
-        
-        _isActivatedMagnetic = false;
-        _isDetectedMagnetic = false;
-
-        //도착 후 관성
-        if (target.GetIsStructure() && !_onGravityBreak)
-        {
-            while (_currentVelocity != Vector3.zero)
-            {
-                //동작도중 자석 능력 키 한번 더 눌렀을 때
-                //if (_isPressMagnetic) break;
-                
-                _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, _dragValue * Time.deltaTime);
-                _characterController.Move(_currentVelocity);
-
-                await UniTask.Yield();
-            }
-        }
-    }
-
-    //두 오브젝트 멀어짐
-    public async UniTask OnSeparation(MagneticObject target, Vector3? another = null)
-    {
-        var targetPos = target.transform.position;
-        var playerPos = another ?? _characterController.transform.position;
-        var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
-        var distance = (targetPos - modifyPlayerPos).magnitude;
-        var maxDistance = _onCounterPress ? _counterPressRange : _outBoundDistance;
-        var backDistance = maxDistance - Vector3.Distance(targetPos, modifyPlayerPos);
-        
-        var direction = (targetPos - modifyPlayerPos).normalized;
-        var destination = direction * maxDistance;
-        var outDistance = Vector3.Distance(destination + modifyPlayerPos, targetPos);
-        
-        var eta = 0f;
-        if (target.GetIsStructure()) 
-            eta = backDistance / (structSpeed);
-        else if (_onCounterPress)
-        {
-            eta = distance / _counterPressPower;
-        }
-        else
-        {
-            eta = outDistance / nonStructSpeed;
-        }
-        
-        var elapsedTime = 0f;
-        var elapsedDistance = 0f;
-
-        if (!_onGravityBreak || !_onCounterPress) _isActivatedMagnetic = true;
-        //방향까지 가속
-        while (elapsedTime < eta)
-        {
-            if (!_onGravityBreak)
-            {
-                //동작도중 자석 능력 키 한번 더 눌렀을 때 + 반격 중이지 않을 때.
-                if (_isPressMagnetic && !_onCounterPress) break;
-            
-                //스킬 활성화 시
-                if (_onGravityBreak) break;
-            }
-            
-            elapsedTime += Time.deltaTime;
-            //Lerp로도 잘 어울려지도록 ETA 보정
-            float progressTime = Mathf.Clamp01(elapsedTime / eta);
-            
-            targetPos = target.transform.position;
-            playerPos = another ?? _characterController.transform.position;
-            modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
-            
-            destination = (targetPos - modifyPlayerPos).normalized * maxDistance;
-    
-            //구조물 여부에 따라 다른 액션
-            if (target.GetIsStructure())
-            {
-                var backDirection = -destination.normalized;
-                backDirection.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
-                
-                var newMovement = (backDirection) * progressTime;
-                
-                _currentVelocity = newMovement;
-                _characterController.Move(newMovement);
-                elapsedDistance += Vector3.Distance(newMovement + playerPos, playerPos);
-            }
-            else
-            {
-                var pressDirection = destination + modifyPlayerPos;
-                var newPosition = Vector3.MoveTowards(targetPos, pressDirection, progressTime);
-                target.transform.position = newPosition;
-                elapsedDistance += Vector3.Distance(targetPos, newPosition);
-            }
-            
-            PenetrationFix(target);
-            distance = (targetPos - modifyPlayerPos).magnitude;
-            if (elapsedDistance >= outDistance) break;
-            if (distance >= maxDistance)
-            {
-                break;
-            }
-            
-            await UniTask.Yield();
-        }
-
-        //자기력 붕괴사용 시 true가 되지 않음.
-        if (!_isActivatedMagnetic) return;
-        
-        _isActivatedMagnetic = false;
-        _isDetectedMagnetic = false;
-    }
+    // public void PenetrationFix(MagneticObject magneticObject)
+    // {
+    //     var obj = magneticObject.gameObject;
+    //     var col = magneticObject.GetComponent<Collider>();
+    //     var center = col.bounds.center;
+    //     var size  = col.bounds.size;
+    //     
+    //     var radius = Mathf.Min(size.x, size.z)/2f;
+    //     var height = size.y;
+    //     var halfHeight = Mathf.Max(height / 2f - radius, 0f);
+    //     var up = Vector3.up;
+    //     var point1 = center + up * halfHeight;
+    //     var point2 = center - up * halfHeight;
+    //
+    //     var hitColliders = new Collider[maxInCount];
+    //     var hitCount = Physics.OverlapCapsuleNonAlloc(point1, point2, radius, hitColliders, 
+    //         (1 << magneticLayer) | (1 << enemyLayer) | (1 << groundLayer) | (1 << environmentLayer));
+    //
+    //     //감지한 대상 기반으로 보정 수행
+    //     for (int i = 0; i < hitCount; i++)
+    //     {
+    //         Collider hitCol = hitColliders[i];
+    //         
+    //         //본인 제외
+    //         if(hitCol == col) continue;
+    //         
+    //         //ComputePenetration
+    //         if (Physics.ComputePenetration(col, obj.transform.position, obj.transform.rotation,
+    //                 hitCol, hitCol.transform.position, hitCol.transform.rotation,
+    //                 out Vector3 direction, out float distance))
+    //         {
+    //             //겹침(침투) 보정
+    //             obj.transform.position += direction * distance;
+    //         }
+    //     }
+    // }
+    //
+    // //두 오브젝트 가까워짐
+    // public async UniTask OnApproach(MagneticObject target, Vector3? another = null)
+    // {
+    //     var targetPos = target.transform.position;
+    //     var playerPos = another ?? transform.position;
+    //     var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
+    //     var distance = (targetPos - playerPos).magnitude;
+    //     var staticDistance = distance;
+    //     
+    //     var eta = 0f;
+    //     if (target.GetIsStructure()) 
+    //         eta = distance / (structSpeed);
+    //     else eta = distance / (nonStructSpeed);
+    //     
+    //     var elapsedTime = 0f;
+    //     var elapsedDistance = 0f;
+    //     if (!_onGravityBreak) _isActivatedMagnetic = true;
+    //     //방향까지 가속
+    //     while (elapsedTime < eta) // eta/2f
+    //     {
+    //         if (!_onGravityBreak)
+    //         {
+    //             //동작도중 자석 능력 키 한번 더 눌렀을 때
+    //             if (_isPressMagnetic) break;
+    //         
+    //             //자기력 붕괴스킬 활성화 시
+    //             if (_onGravityBreak) break;
+    //         }
+    //         
+    //         elapsedTime += Time.deltaTime;
+    //         
+    //         //Lerp로도 잘 어울려지도록 ETA 보정
+    //         float progressTime = Mathf.Clamp01(elapsedTime / eta);
+    //
+    //         targetPos = target.transform.position;
+    //         playerPos = another ?? transform.position;
+    //         modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
+    //         
+    //         //구조물 여부에 따라 인력 주체가 달라진다.
+    //         if (target.GetIsStructure())
+    //         {
+    //             var direction = (targetPos - modifyPlayerPos);
+    //             direction.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
+    //             
+    //             var hangDirection= direction.normalized;
+    //             var newMovement = hangDirection * progressTime;
+    //              
+    //             _currentVelocity = newMovement;
+    //             
+    //             _characterController.Move(newMovement);
+    //             
+    //             elapsedDistance += Vector3.Distance(playerPos+newMovement, playerPos);
+    //         }
+    //         else
+    //         {
+    //             var newPosition = Vector3.MoveTowards( targetPos, modifyPlayerPos, progressTime);
+    //             target.transform.position = (newPosition);
+    //             elapsedDistance += Vector3.Distance(targetPos, newPosition);
+    //         }
+    //         
+    //         PenetrationFix(target);
+    //
+    //         distance = (targetPos - modifyPlayerPos).magnitude;
+    //         if (elapsedDistance >= staticDistance) break;
+    //         if (distance <= _minDistance)
+    //         {
+    //             break;
+    //         }
+    //
+    //         await UniTask.Yield();
+    //     }
+    //     
+    //     //자기력 붕괴사용 시 true가 되지 않음.
+    //     if (!_isActivatedMagnetic) return;
+    //     
+    //     _isActivatedMagnetic = false;
+    //     _isDetectedMagnetic = false;
+    //
+    //     //도착 후 관성
+    //     if (target.GetIsStructure() && !_onGravityBreak)
+    //     {
+    //         while (_currentVelocity != Vector3.zero)
+    //         {
+    //             //동작도중 자석 능력 키 한번 더 눌렀을 때
+    //             //if (_isPressMagnetic) break;
+    //             
+    //             _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, _dragValue * Time.deltaTime);
+    //             _characterController.Move(_currentVelocity);
+    //
+    //             await UniTask.Yield();
+    //         }
+    //     }
+    // }
+    //
+    // //두 오브젝트 멀어짐
+    // public async UniTask OnSeparation(MagneticObject target, Vector3? another = null)
+    // {
+    //     var targetPos = target.transform.position;
+    //     var playerPos = another ?? _characterController.transform.position;
+    //     var modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
+    //     var distance = (targetPos - modifyPlayerPos).magnitude;
+    //     var maxDistance = _onCounterPress ? _counterPressRange : _outBoundDistance;
+    //     var backDistance = maxDistance - Vector3.Distance(targetPos, modifyPlayerPos);
+    //     
+    //     var direction = (targetPos - modifyPlayerPos).normalized;
+    //     var destination = direction * maxDistance;
+    //     var outDistance = Vector3.Distance(destination + modifyPlayerPos, targetPos);
+    //     
+    //     var eta = 0f;
+    //     if (target.GetIsStructure()) 
+    //         eta = backDistance / (structSpeed);
+    //     else if (_onCounterPress_onCounterPress)
+    //     {
+    //         eta = distance / _counterPressPower;
+    //     }
+    //     else
+    //     {
+    //         eta = outDistance / nonStructSpeed;
+    //     }
+    //     
+    //     var elapsedTime = 0f;
+    //     var elapsedDistance = 0f;
+    //
+    //     if (!_onGravityBreak || !_onCounterPress) _isActivatedMagnetic = true;
+    //     //방향까지 가속
+    //     while (elapsedTime < eta)
+    //     {
+    //         if (!_onGravityBreak)
+    //         {
+    //             //동작도중 자석 능력 키 한번 더 눌렀을 때 + 반격 중이지 않을 때.
+    //             if (_isPressMagnetic && !_onCounterPress) break;
+    //         
+    //             //스킬 활성화 시
+    //             if (_onGravityBreak) break;
+    //         }
+    //         
+    //         elapsedTime += Time.deltaTime;
+    //         //Lerp로도 잘 어울려지도록 ETA 보정
+    //         float progressTime = Mathf.Clamp01(elapsedTime / eta);
+    //         
+    //         targetPos = target.transform.position;
+    //         playerPos = another ?? _characterController.transform.position;
+    //         modifyPlayerPos = another == null ? playerPos + playerPosOffset : playerPos;
+    //         
+    //         destination = (targetPos - modifyPlayerPos).normalized * maxDistance;
+    //
+    //         //구조물 여부에 따라 다른 액션
+    //         if (target.GetIsStructure())
+    //         {
+    //             var backDirection = -destination.normalized;
+    //             backDirection.y *= _hangAdjustValue; //normalized로 인한 y값 감소에 대한 보정
+    //             
+    //             var newMovement = (backDirection) * progressTime;
+    //             
+    //             _currentVelocity = newMovement;
+    //             _characterController.Move(newMovement);
+    //             elapsedDistance += Vector3.Distance(newMovement + playerPos, playerPos);
+    //         }
+    //         else
+    //         {
+    //             var pressDirection = destination + modifyPlayerPos;
+    //             var newPosition = Vector3.MoveTowards(targetPos, pressDirection, progressTime);
+    //             target.transform.position = newPosition;
+    //             elapsedDistance += Vector3.Distance(targetPos, newPosition);
+    //         }
+    //         
+    //         PenetrationFix(target);
+    //         distance = (targetPos - modifyPlayerPos).magnitude;
+    //         if (elapsedDistance >= outDistance) break;
+    //         if (distance >= maxDistance)
+    //         {
+    //             break;
+    //         }
+    //         
+    //         await UniTask.Yield();
+    //     }
+    //
+    //     //자기력 붕괴사용 시 true가 되지 않음.
+    //     if (!_isActivatedMagnetic) return;
+    //     
+    //     _isActivatedMagnetic = false;
+    //     _isDetectedMagnetic = false;
+    // }
     
     #endregion
 
@@ -580,12 +625,30 @@ public class MagneticController : MagneticObject
 
         _onSearchNearMagnetic = true;
         await UniTask.WaitUntil(() => !_onSearchNearMagnetic);
+        
+        _isActivatedMagnetic = true;
+        for (int i = 0; i < _magneticObjects.Count; i++)
+        {
+            if (i == _magneticObjects.Count - 1)
+            {
+                _magneticObjects[i].magnetSeparation.useCounterPress = true;
+                _magneticObjects[i].magnetSeparation.Execute(this, _magneticObjects[i]);
+            }
+            else
+            {
+                _magneticObjects[i].magnetSeparation.useCounterPress = true;
+                _magneticObjects[i].magnetSeparation.Execute(this, _magneticObjects[i]);
+            }
+        }
+        _isActivatedMagnetic = false;
+        _isDetectedMagnetic = false;
+        
+        await UniTask.Delay((int)(1000 * _counterPressTime));
         foreach (var obj in _magneticObjects)
         {
-            OnSeparation(obj).Forget();
+            obj.magnetSeparation.useCounterPress = false;
         }
-        await UniTask.Delay((int)(1000 * _counterPressTime));
-
+        
         _onCounterPress = false;
     }
     
@@ -595,7 +658,10 @@ public class MagneticController : MagneticObject
     {
         _onGravityBreak = true;
         
+        await UniTask.Delay(1000);
+        
         _onSearchNearMagnetic = true;
+        
         await UniTask.WaitUntil(() => !_onSearchNearMagnetic);
         
         foreach (var obj in _magneticObjects)
@@ -603,12 +669,19 @@ public class MagneticController : MagneticObject
             Debug.DrawLine(target.transform.position, obj.transform.position, Color.green, 1f);
         }
         
-        await UniTask.Delay(1000);
-        
-        foreach (var obj in _magneticObjects)
+        _isActivatedMagnetic = true;
+        for (int i = 0; i < _magneticObjects.Count; i++)
         {
-            OnApproach(obj, target.transform.position).Forget();
+            if(i == _magneticObjects.Count - 1) await _magneticObjects[i].magnetApproach.Execute(target, _magneticObjects[i]);
+            else _magneticObjects[i].magnetApproach.Execute(target, _magneticObjects[i]);
         }
+        _isActivatedMagnetic = false;
+        _isDetectedMagnetic = false;
+        // foreach (var obj in _magneticObjects)
+        // {
+        //     obj.OnMagneticInteract(target);//OnApproach(obj, target.transform.position).Forget();
+        // }
+        
 
         _onGravityBreak = false;
     }
@@ -618,13 +691,16 @@ public class MagneticController : MagneticObject
     {
         _magneticObjects?.Clear();
 
-        RaycastHit[] hits = Physics.SphereCastAll(target.transform.position, radius , Vector3.up ,1f, 
-            !_onCounterPress ? (1 << magneticLayer) | (1 << enemyLayer) : (1 << enemyLayer));
-        if (hits.Length > 0)
+        RaycastHit[] hits = new RaycastHit[maxInCount];
+        var hitCount = Physics.SphereCastNonAlloc(target.transform.position, radius , Vector3.up ,hits,
+            1f, !_onCounterPress ? (1 << magneticLayer) | (1 << enemyLayer) : (1 << enemyLayer));
+        if (hitCount > 0)
         {
             foreach (var hit in hits)
             {
-                if (hit.transform.TryGetComponent(out MagneticObject magneticObject) && !magneticObject.GetIsStructure())
+                if (hit.collider != null && hit.collider.transform.TryGetComponent(out MagneticObject magneticObject) 
+                   && !magneticObject.GetIsStructure()
+                   )
                 {
                     _magneticObjects.Add(magneticObject);
                 }
@@ -634,34 +710,15 @@ public class MagneticController : MagneticObject
     }
 
     #endregion
-    
-    private void FixedUpdate()
-    {
-        //실시간 자기력 범위 내 대상 탐색.
-        ScanNearByMagneticTarget();
-        
-        //자석 능력 길게 키 입력 시
-        if (_isPressMagnetic)
-        {
-            FocusMagneticTarget();
-        }
 
-        //자기력 붕괴 스킬 활성화로 주변 탐색
-        if (_onSearchNearMagnetic)
-        {
-            //자기력 붕괴
-            if(_onGravityBreak && targetMagneticObject != null) OnSearchNearMagnetic(targetMagneticObject, gravityBreakRange);
-            
-            //반격
-            if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
-        }
-    }
-    
-    private void OnDrawGizmos()
+    #region Debug
+
+        private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
         if (!EditorApplication.isPlaying)
             return;
+        
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         
@@ -728,4 +785,6 @@ public class MagneticController : MagneticObject
         Gizmos.DrawWireSphere(_characterController.transform.position + playerPosOffset, _counterPressRange);
 #endif
     }
+
+    #endregion
 }

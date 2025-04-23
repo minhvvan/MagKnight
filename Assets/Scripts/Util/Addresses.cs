@@ -21,6 +21,11 @@ public static class Addresses
             public const string Floor = "data/floor";
             public const string RoomData = "data/room";
         }
+
+        public static class Magnetic
+        {
+            public const string MagneticSetupData = "data/magnetic/setup";
+        }
     }
     
     public static class Prefabs

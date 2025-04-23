@@ -37,6 +37,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cfa7d4aa0b0364e4f86cd68aacdb0cc5
+    m_Address: data/magnetic/setup
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 0ad2ff8368975fa4995ba75bdf65029d, type: 2}
   m_SchemaSet:
