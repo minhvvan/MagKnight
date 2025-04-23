@@ -59,6 +59,14 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private RaycastHit[] _hitResults = new RaycastHit[10];
     private List<HitInfo> _debugHits = new List<HitInfo>();
     private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
+
+    void Awake()
+    {
+        if (_hitType == HitType.Projectile)
+        {
+            _currentHitboxZones = _patternHitboxGroups[0].hitboxes;
+        }
+    }
     
     public void StartDetection(int patternId = default)
     {
