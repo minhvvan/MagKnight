@@ -1767,13 +1767,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attributes:
-    rid: 7511380179482312704
+    rid: 6298930017499348996
   _activatedEffects:
     _serializedList: []
   references:
     version: 2
     RefIds:
-    - rid: 7511380179482312704
+    - rid: 6298930017499348996
       type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
       data:
         attributeDictionary:
