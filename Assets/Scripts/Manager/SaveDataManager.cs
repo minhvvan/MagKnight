@@ -77,35 +77,48 @@ public class SaveDataManager: Singleton<SaveDataManager>
     public async UniTask SaveData(string key, ISaveData data)
     {
         _saveData[key] = data;
-        
+
         string filePath = Path.Combine(SavePath, $"{key}.json");
         string json = JsonUtility.ToJson(data);
-        
+
         try
         {
+            // 저장 디렉토리가 존재하는지 확인하고 없으면 생성
+            Directory.CreateDirectory(SavePath);
+            Debug.Log($"파일 저장 경로: {filePath}");
             // OS 확인 후 다른 방식으로 파일 저장
             if (IsMacOS())
             {
                 // macOS용 저장 방식
                 // 임시 파일에 먼저 쓰고 이동하는 방식 사용
                 string tempFilePath = Path.Combine(SavePath, $"{key}_temp.json");
-                
+
                 // 임시 파일에 데이터 쓰기
                 using (FileStream fs = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-                using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
                 {
-                    await writer.WriteAsync(json);
-                    await writer.FlushAsync();
+                    using (StreamWriter writer = new StreamWriter(fs, Encoding.UTF8))
+                    {
+                        await writer.WriteAsync(json);
+                        await writer.FlushAsync();
+                    }
                 }
-                
+
                 // 기존 파일이 있으면 삭제
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
-                
-                // 임시 파일을 실제 위치로 이동
-                File.Move(tempFilePath, filePath);
+
+                // 임시 파일이 정상적으로 생성되었는지 확인
+                if (File.Exists(tempFilePath))
+                {
+                    // 임시 파일을 실제 위치로 이동
+                    File.Move(tempFilePath, filePath);
+                }
+                else
+                {
+                    throw new FileNotFoundException($"임시 파일이 생성되지 않았습니다: {tempFilePath}");
+                }
             }
             else
             {
@@ -115,16 +128,18 @@ public class SaveDataManager: Singleton<SaveDataManager>
         }
         catch (Exception e)
         {
-            Debug.LogError($"파일 저장 중 오류 발생: {e.Message}");
-            
+            Debug.Log($"파일 저장 중 오류 발생: {e.Message}");
+
             // 최후의 수단: 동기 방식 시도
             try
             {
+                // 저장 디렉토리 다시 확인
+                Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                 File.WriteAllText(filePath, json);
             }
             catch (Exception e2)
             {
-                Debug.LogError($"동기 파일 저장 중 오류 발생: {e2.Message}");
+                Debug.Log($"동기 파일 저장 중 오류 발생: {e2.Message} | 경로: {filePath}");
             }
         }
     }

@@ -7,7 +7,7 @@ public class DungeonEnterState: IGameState
     {
         //currentRun Data 초기화
         GameManager.Instance.SetCurrentRunData();
-        GameManager.Instance.SaveData(Constants.CurrentRun);
+        //GameManager.Instance.SaveData(Constants.CurrentRun);
         GameManager.Instance.ChangeGameState(GameState.RoomEnter);
     }
 
