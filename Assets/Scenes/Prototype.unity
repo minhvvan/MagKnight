@@ -200,11 +200,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5346760470181023004, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
-      propertyPath: Attributes
-      value: 4781514850479112197
-      objectReference: {fileID: 0}
-    - target: {fileID: -5346760470181023004, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
-        type: 3}
       propertyPath: managedReferences[4781514850479112197]
       value: Assembly-CSharp Jun.PlayerAttributeSet
       objectReference: {fileID: 0}

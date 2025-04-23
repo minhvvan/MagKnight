@@ -17,6 +17,16 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b84a45f19ba1b8543bf5d5bb265bb563
   m_SerializeEntries:
+  - m_GUID: 1c628ddca65d2044792fbc33322c2e48
+    m_Address: data/floor
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a2e23d8cc3329a4198ade210e271835
+    m_Address: data/player/stat
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 304dc4d64ff194d4d837d34d7cd22aca
     m_Address: data/weapon/katana
     m_ReadOnly: 0
@@ -24,6 +34,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 44acd07bd1848154a8a9dc7d46f00749
     m_Address: data/room
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b16eb9ba826123844abf54aaded3d2bb
+    m_Address: data/common/sceneData
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

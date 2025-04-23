@@ -103,9 +103,9 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.AddAttribute(AttributeType.Damage, 0);
         abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
 
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnDeath += _enemy.OnDeath;
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnStagger += _enemy.OnStagger;
-        ((EnemyAttributeSet)abilitySystem.Attributes).OnPhaseChange += _enemy.OnPhaseChange;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnDeath += _enemy.OnDeath;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnStagger += _enemy.OnStagger;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnPhaseChange += _enemy.OnPhaseChange;
 
     }
 }
