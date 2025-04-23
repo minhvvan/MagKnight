@@ -1653,6 +1653,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4, type: 2}
   rb: {fileID: 0}
   blackboard: {fileID: -5029212273671297109}
+  patternController: {fileID: 0}
 --- !u!195 &6121732416747469485
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1737,16 +1738,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitboxZones:
-  - referenceTransform: {fileID: 238397485176193913}
-    offset: {x: 0, y: 0, z: 0}
-    radius: 0.2
-  - referenceTransform: {fileID: 9098425608971865769}
-    offset: {x: 0.1, y: 0, z: 0}
-    radius: 0.2
-  - referenceTransform: {fileID: 5889882352773017890}
-    offset: {x: 0, y: 0, z: 0}
-    radius: 0.2
+  _patternHitboxGroups:
+  - patternId: 0
+    hitboxes:
+    - referenceTransform: {fileID: 5889882352773017890}
+      offset: {x: 0, y: 0, z: 0}
+      radius: 0.2
+    - referenceTransform: {fileID: 9098425608971865769}
+      offset: {x: 0.1, y: 0, z: 0}
+      radius: 0.2
+    - referenceTransform: {fileID: 238397485176193913}
+      offset: {x: 0, y: 0, z: 0}
+      radius: 0.2
   _layerMask:
     serializedVersion: 2
     m_Bits: 8
@@ -1764,14 +1767,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Attributes:
-    rid: 4781514850479112197
+    rid: 6298930017499348996
   _activatedEffects:
     _serializedList: []
   references:
     version: 2
     RefIds:
-    - rid: 4781514850479112197
-      type: {class: PlayerAttributeSet, ns: Jun, asm: Assembly-CSharp}
+    - rid: 6298930017499348996
+      type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
       data:
         attributeDictionary:
           _serializedList: []
@@ -1808,6 +1811,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   isDead: 0
+  phase: 0
   muzzleTransform: {fileID: 0}
 --- !u!114 &8965972555179330726
 MonoBehaviour:

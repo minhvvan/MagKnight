@@ -19,6 +19,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public AbilitySystem EnemyAbilitySystem { get; private set; }
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
+    public PatternController patternController;
     
     
     // stateMachine
@@ -40,7 +41,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         _stateMachine.ChangeState(spawnState);
     }
-    public void Initialize()
+    private void Initialize()
     {
         Anim = GetComponent<Animator>();
         Agent = GetComponent<NavMeshAgent>();
@@ -59,9 +60,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler.Subscribe(this);
         }
         
-        InitializeState();
-        
         EnemyController.AddEnemy(this);
+        
+        InitializeState();
     }
 
     private void InitializeState()
@@ -128,18 +129,28 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnStagger()
     {
-        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
+        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MaxResistance);
         SetState(staggerState);
         
         // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
         //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
 
+    public void OnPhaseChange(int phase)
+    {
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            Anim.SetTrigger("PhaseChange");
+            blackboard.phase = phase;
+            patternController.PhaseChange(phase);
+        }
+    }
+
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
+        float damage = -blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
-        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
@@ -160,6 +171,17 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         HitHandler.StopDetection();
     }
+
+    public void PatternAttackStart()
+    {
+        patternController.AttackStart();
+    }
+
+    public void PatternAttackEnd()
+    {
+        patternController.AttackEnd();
+    }
+    
 
     public void OnDestroy()
     {

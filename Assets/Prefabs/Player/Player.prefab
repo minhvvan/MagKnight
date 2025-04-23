@@ -2391,8 +2391,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb2efeeb91ad04e49b57518cd79b9f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionController: {fileID: 5378873323398674128}
-  weaponHandler: {fileID: 1895797284832264210}
+  hudPrefab: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
+    type: 3}
   maxForwardSpeed: 8
   gravity: 20
   jumpSpeed: 10
@@ -2401,8 +2401,7 @@ MonoBehaviour:
   idleTimeout: 5
   canAttack: 1
   cameraSettings: {fileID: 0}
-  lockOnSystem: {fileID: 4137939099155573968}
-  lockCam: {fileID: 0}
+  isDead: 0
 --- !u!114 &6796001127801567281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2429,9 +2428,16 @@ MonoBehaviour:
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  environmentLayer:
+    serializedVersion: 2
+    m_Bits: 0
   rayDistance: 0
   screenOffset: 0
   sphereRadius: 0
+  maxInCount: 0
   structSpeed: 0
   nonStructSpeed: 0
   gravityBreakRange: 0
@@ -2572,8 +2578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af168b17fe1b21644a42cd2ed8ff7855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camSettings: {fileID: 0}
-  lockCam: {fileID: 0}
   targetMask:
     serializedVersion: 2
     m_Bits: 128

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 138024517856477626}
   - component: {fileID: 2141237319511462634}
   - component: {fileID: 186761425319112703}
+  - component: {fileID: 846332705326212575}
   m_Layer: 5
   m_Name: Status Panel
   m_TagString: Untagged
@@ -79,6 +80,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &846332705326212575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 623782391628841952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3618d76c3f82b4d4da823f73b856acb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthBar: {fileID: 6634211129475579304}
 --- !u!1 &1077208675659022560
 GameObject:
   m_ObjectHideFlags: 0
@@ -1416,6 +1430,7 @@ MonoBehaviour:
   _entranceText: {fileID: 4236997272040203258}
   _inGameUI: {fileID: 5333566695903117652}
   dialogueUIController: {fileID: 5545755243910122450}
+  statusUIController: {fileID: 846332705326212575}
 --- !u!1 &5664010102706663522
 GameObject:
   m_ObjectHideFlags: 0

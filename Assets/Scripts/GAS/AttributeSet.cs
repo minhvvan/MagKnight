@@ -75,7 +75,7 @@ public abstract class AttributeSet
     }
 
     // Attribute 변경 시 Action 추가하기 위한 함수
-    public void DelegateAttributeChanged(AttributeType type, Action action)
+    public void DelegateAttributeChanged(AttributeType type, Action<float> action)
     {
         if (attributeDictionary.ContainsKey(type))
         {
@@ -91,5 +91,17 @@ public abstract class AttributeSet
 
     // Effect 적용 후 호출
     protected virtual void PostGameplayEffectExecute(GameplayEffect effect){}
+    
+    // attributeDictionary의 키 목록을 가져오는 getter 추가
+    public IEnumerable<AttributeType> GetAttributeTypes()
+    {
+        return attributeDictionary.Keys;
+    }
+    
+    // attributeDictionary가 특정 키를 포함하는지 확인하는 메서드
+    public bool HasAttribute(AttributeType type)
+    {
+        return attributeDictionary.ContainsKey(type);
+    }
 }
 

@@ -12,16 +12,14 @@ namespace Moon
         {
             if (other.CompareTag("Player"))
             {
-                SceneController.TransitionToScene(sceneName, SceneLoaded);
+                SceneController.TransitionToScene(sceneName, true, SceneLoaded);
             }
         }
 
         private IEnumerator SceneLoaded()
         {
+            GameManager.Instance.ChangeGameState(GameState.DungeonEnter);
             yield return RoomSceneController.Instance.EnterFloor();
-            
-            //TODO: PlayerCurrentStat 초기화
-            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
     }
 }
