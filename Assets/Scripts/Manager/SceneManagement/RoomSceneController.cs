@@ -193,7 +193,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
 
         //Character위치 조정
         var player = GameManager.Instance.Player;
-        if (player && GameManager.Instance.Player.TryGetComponent<CharacterController>(out var characterController))
+        if (player && player.TryGetComponent<CharacterController>(out var characterController))
         {
             characterController.Teleport(player.gameObject, currentRunData.lastPlayerPosition, currentRunData.lastPlayerRotation);
         }

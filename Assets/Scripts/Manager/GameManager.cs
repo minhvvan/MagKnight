@@ -17,11 +17,7 @@ namespace hvvan
             {
                 if (_playerController == null)
                 {
-                    _playerController = FindObjectOfType<PlayerController>();
-                    if (_playerController == null)
-                    {
-                        _playerController = Instantiate(playerCharacterPrefab).GetComponent<PlayerController>();
-                    }
+                    return _playerController = FindObjectOfType<PlayerController>();
                 }
 
                 return _playerController;
