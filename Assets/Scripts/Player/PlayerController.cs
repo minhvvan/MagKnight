@@ -632,7 +632,7 @@ namespace Moon
         {
             _weaponHandler.AttackEnd();
         }
-
+        
         #region Weapon
         public void SetCurrentWeapon(WeaponType weaponType)
         {
