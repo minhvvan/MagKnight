@@ -141,6 +141,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         if (blackboard.aiType == EnemyAIType.Boss)
         {
             Anim.SetTrigger("PhaseChange");
+            blackboard.phase = phase;
             patternController.PhaseChange(phase);
         }
     }
