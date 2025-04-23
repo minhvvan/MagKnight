@@ -13,6 +13,7 @@ namespace Moon
     {
         CharacterController _characterController;
         Animator _animator;
+        Collider _collider;
         InputHandler _inputHandler;
         MagneticController _magneticController;
         [SerializeField] private InteractionController interactionController;
@@ -133,6 +134,7 @@ namespace Moon
         {
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
+            _collider = GetComponent<Collider>();
             _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
@@ -550,9 +552,24 @@ namespace Moon
             }
             
             _characterController.transform.rotation *= _animator.deltaRotation;
-            
             movement += _verticalSpeed * Vector3.up * Time.deltaTime;
             _characterController.Move(movement);
+
+            Collider[] colliders = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
+
+            foreach(Collider hitCol in colliders)
+            {
+
+                if (Physics.ComputePenetration(_collider, transform.position, transform.rotation,
+                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                    out Vector3 direction, out float distance))
+                {
+                    //transform.position += direction * distance;
+
+                    transform.position = Vector3.Lerp(transform.position, transform.position + (direction * distance), 1f);
+
+                }
+            }
         }
         
 
@@ -622,6 +639,25 @@ namespace Moon
             _animator.SetTrigger(_HashDeath);
             
             GameManager.Instance.ChangeGameState(GameState.GameOver);
+        }
+
+        public void Damaged()
+        {
+            if (isDead) return;
+
+            _animator.SetTrigger(_HashHurt);
+            // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
+            // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
+        }
+
+        void OnAnimatorIK(int layerIndex)
+        {
+            if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+            {
+                Transform target = _lockOnSystem.currentTarget;
+                _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);
+                _animator.SetLookAtWeight(0.6f);
+            }
         }
     }
 }

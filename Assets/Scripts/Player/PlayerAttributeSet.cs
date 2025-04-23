@@ -8,6 +8,7 @@ namespace Jun
     public class PlayerAttributeSet : AttributeSet
     {
         public Action OnDead;
+        public Action OnDamaged;
 
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
@@ -65,6 +66,10 @@ namespace Jun
             if (GetValue(AttributeType.HP) == 0)
             {
                 OnDead?.Invoke();
+            }
+            else
+            {
+                OnDamaged?.Invoke();
             }
         }
     }
