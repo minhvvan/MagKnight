@@ -32,6 +32,7 @@ public enum RoomType
 [Serializable]
 public class Room
 {
+    public string roomTitle;
     public string sceneName;
     public List<int> connectedRooms = new List<int>() { Empty, Empty, Empty, Empty };
     public RoomType roomType;
@@ -47,6 +48,7 @@ public class Room
         
     public Room(Room room)
     {
+        roomTitle = room.roomTitle;
         sceneName = room.sceneName;
         roomType = room.roomType;
     }

@@ -73,7 +73,7 @@ public class MagneticController : MagneticObject
     private float _counterPressRange;
     private float _counterPressPower;
     
-    private void Awake()
+    private void Start()
     {
         Initialize();
     }

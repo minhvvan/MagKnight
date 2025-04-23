@@ -35,7 +35,7 @@ public class Attribute
     [SerializeField] private float BaseValue;
     // 변동값, 버프등으로 임시적으로 변동된 값을 관리하는데 사용
     [SerializeField] private float CurrentValue;
-    private Action ChangeAction;
+    private Action<float> ChangeAction;
     
     // Attribute 초기화
     public void InitAttribute(float value)
@@ -48,7 +48,7 @@ public class Attribute
     public void ModifyCurrentValue(float amount)
     {
         CurrentValue += amount;
-        ChangeAction?.Invoke();
+        ChangeAction?.Invoke(CurrentValue);
     }
     
     // GameplayEffect Instant Type시 호출
@@ -56,7 +56,6 @@ public class Attribute
     {
         BaseValue += amount;
         ModifyCurrentValue(amount);
-        ChangeAction?.Invoke();
     }
 
     // Attribute를 Set하는 함수
@@ -66,7 +65,7 @@ public class Attribute
         var gapValue = value - BaseValue;
         CurrentValue = BaseValue + gapValue;
         BaseValue = value;
-        ChangeAction?.Invoke();
+        ChangeAction?.Invoke(CurrentValue);
     }
 
     public float GetValue()
@@ -75,7 +74,7 @@ public class Attribute
     }
 
     // Delegate 구독 함수
-    public void DelegateChangeAction(Action action)
+    public void DelegateChangeAction(Action<float> action)
     {
         ChangeAction += action;
     }

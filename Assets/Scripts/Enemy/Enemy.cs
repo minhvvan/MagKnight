@@ -139,7 +139,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
-        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)

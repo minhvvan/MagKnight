@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class AbilitySystem : MonoBehaviour
 {
-    [SerializeReference, SubclassPicker] public AttributeSet Attributes;
+    [SerializeReference, SubclassPicker] private AttributeSet Attributes;
     
     // 기존 GameplayEffect는 가지면서 기존 GameplayEffect에 영향을 주지않기 위해 Hash를 가져와서 사용
     // 저장되는 GameplayEffect는 실제 적용된 Gameplay의 Instance
@@ -110,6 +110,17 @@ public class AbilitySystem : MonoBehaviour
     {
         await UniTask.WaitForSeconds(gameplayEffect.duration);
         RemoveEffect(gameplayEffect);
+    }
+
+    public T GetAttributeSet<T>() where T : AttributeSet
+    {
+        return Attributes as T;
+    }
+
+    public bool TryGetAttributeSet<T>(out T outVar) where T : AttributeSet
+    {
+        outVar = GetAttributeSet<T>();
+        return outVar != null;
     }
 }
 

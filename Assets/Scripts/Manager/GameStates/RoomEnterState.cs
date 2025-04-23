@@ -13,6 +13,12 @@ public class RoomEnterState: IGameState
         _currentRoomController = RoomSceneController.Instance.CurrentRoomController;
         if (_currentRoomController)
         {
+            if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(_currentRoomController.RoomIndex))
+            {
+                GameManager.Instance.ChangeGameState(GameState.RoomClear);
+                return;
+            }
+            
             _currentRoomController.OnClearSpotReached += ClearRoom;
         }
     }

@@ -68,7 +68,7 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
             case "Player":
                 float damage = - _shooterAbilitySystem.GetValue(AttributeType.ATK);
                 GameplayEffect damageEffectToPlayer = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
-                colliderObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffectToPlayer);
+                colliderObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffectToPlayer);
                 Destroy(gameObject);
                 break;
             case "Enemy":

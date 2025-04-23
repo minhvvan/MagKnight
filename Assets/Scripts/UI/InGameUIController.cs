@@ -1,4 +1,6 @@
 using System;
+using hvvan;
+using Jun;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,6 +11,7 @@ public class InGameUIController : MonoBehaviour
     [SerializeField] FadeText _entranceText;
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
+    [SerializeField] private StatusUIController statusUIController;
 
     void Awake()
     {
@@ -40,5 +43,11 @@ public class InGameUIController : MonoBehaviour
     {
         dialogueUIController.ShowDialogue(npcSO);
         // dialogueUIController.SetText("테스트 기본 대화 입니다. 이 부분에 대화에 관한 컨텍스트를 만들어서 넣을 예정입니다.");
+    }
+
+    public void BindAttributeChanges(AbilitySystem abilitySystem)
+    {
+        //attributeSet에 묶인 UI 변경 추가
+        statusUIController.BindAttributeChanges(abilitySystem);
     }
 }

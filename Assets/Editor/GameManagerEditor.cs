@@ -37,6 +37,7 @@ public class GameManagerEditor : Editor
             GameState.GameOver => new Color(0.8f, 0.2f, 0.2f, 1f),    // 빨간색 - 게임 오버
             GameState.Pause => new Color(0.7f, 0.7f, 0.7f, 1f),       // 밝은 회색 - 일시정지
             GameState.Max => new Color(0.1f, 0.1f, 0.1f, 1f),         // 어두운 회색 - 최대값
+            _ => throw new ArgumentOutOfRangeException()
         };
 
         EditorGUILayout.BeginVertical(EditorStyles.helpBox);

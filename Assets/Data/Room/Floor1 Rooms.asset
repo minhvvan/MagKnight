@@ -16,31 +16,37 @@ MonoBehaviour:
     _serializedList:
     - Key: 1
       Value:
+        roomTitle: "\uC2DC\uC791\uBC29"
         sceneName: start
         connectedRooms: 
         roomType: 1
     - Key: 2
       Value:
+        roomTitle: "\uBCF4\uC2A4\uBC29"
         sceneName: boss
         connectedRooms: 
         roomType: 2
     - Key: 3
       Value:
+        roomTitle: "\uC0C1\uC810\uBC29"
         sceneName: shop
         connectedRooms: 
         roomType: 3
     - Key: 4
       Value:
+        roomTitle: "\uC804\uD22C\uBC29"
         sceneName: battle
         connectedRooms: 
         roomType: 4
     - Key: 5
       Value:
+        roomTitle: "\uBCF4\uBB3C\uBC29"
         sceneName: treasure
         connectedRooms: 
         roomType: 5
     - Key: 6
       Value:
+        roomTitle: "\uD568\uC815\uBC29"
         sceneName: trap
         connectedRooms: 
         roomType: 6
