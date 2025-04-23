@@ -29,7 +29,15 @@ namespace hvvan
             private set => _playerController = value;
         }
 
-        public PlayerStat PlayerStats => _playerData.PlayerStat;
+        public PlayerStat PlayerStats
+        {
+            get
+            {
+                _playerData ??= SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
+
+                return _playerData.PlayerStat;
+            }
+        }
 
         public CurrentRunData CurrentRunData
         {
