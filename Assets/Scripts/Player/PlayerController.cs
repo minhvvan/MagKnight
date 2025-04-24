@@ -168,7 +168,7 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
 
-            if(SceneManager.GetActiveScene().name == "Prototype")
+            if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
                 var stat = await GameManager.Instance.GetPlayerStat();
                 InitStat(stat);

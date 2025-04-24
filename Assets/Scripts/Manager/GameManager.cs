@@ -163,11 +163,11 @@ namespace hvvan
             _currentRunData = currentRunData;
         }
 
-        public void SaveData(string key)
+        public async UniTask SaveData(string key)
         {
             if (key == Constants.PlayerData)
             {
-                _ = SaveDataManager.Instance.SaveData(Constants.PlayerData, _playerData);
+                await SaveDataManager.Instance.SaveData(Constants.PlayerData, _playerData);
             }
             else if (key == Constants.CurrentRun)
             {
@@ -179,7 +179,7 @@ namespace hvvan
                 }
 
                 _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
-                _ = SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
+                await SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }
 
@@ -202,6 +202,20 @@ namespace hvvan
             if (_playerData == null)
             {
                 _playerData = SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
+                if (_playerData == null)
+                {
+                    _playerData = await CreatePlayerData();
+                }
+                else
+                {
+                    if (!_playerData.PlayerStat.IsValid())
+                    {
+                        SaveDataManager.Instance.DeleteData(Constants.PlayerData);
+                        _playerData = await CreatePlayerData();
+                        await SaveData(Constants.PlayerData);
+                    }
+                }
+                
                 await SetPlayerData(_playerData);
             }
 
