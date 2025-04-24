@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16988910415e10247915e39a16d9b59e, type: 3}
+  m_Name: ItemList
+  m_EditorClassIdentifier: 
+  lootCratePrefab: {fileID: 8824223289675638613, guid: eb139b4848b1a6a489f8aef9f763ac80,
+    type: 3}
+  artifactPrefab: {fileID: 5023272368703363778, guid: 1976de0664897a34bb6080b27334ac7e,
+    type: 3}
+  artifactList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 87a9d54d59da9254eaf5627ade703d7c, type: 2}
+      - {fileID: 11400000, guid: 2f1a565ffc578da44a73cb9bed2ae569, type: 2}
+      - {fileID: 11400000, guid: 3d0ecfc76240b54428a3ea7c76947eee, type: 2}
+      - {fileID: 11400000, guid: 681aee9bdbbe8e644b99fb432cbb0671, type: 2}
+      - {fileID: 11400000, guid: f0ecc1c378b326f4b9ac83e1c5aa7705, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
+  magCorePrefab: {fileID: 3542380653265055556, guid: 7d8c26c8fc32d01409d0cd9a938af646,
+    type: 3}
+  magCoreList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 4ab47e80bebf307439202e06a6736644, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
+  healthPackPrefab: {fileID: 28437076465678510, guid: 4e4fd0d115c4a2d4bbbda966c0edb68e,
+    type: 3}
+  healthPackList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 6cf67e38ae2b5a944bbeb13a9b890546, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
