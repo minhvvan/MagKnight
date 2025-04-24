@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
 using Moon;
+using UnityEngine;
 
 public class InitGameState: IGameState
 {
@@ -18,7 +19,7 @@ public class InitGameState: IGameState
         if (_currentRunData == null)
         {
             //회차 정보 없음 => BaseCamp로
-            SceneController.TransitionToScene(Constants.BaseCamp);
+            SceneController.TransitionToScene(Constants.BaseCamp, true, TransitionToBaseCampCallback);
             GameManager.Instance.ChangeGameState(GameState.BaseCamp);
         }
         else
@@ -32,6 +33,15 @@ public class InitGameState: IGameState
             //시작씬으로 이동
             SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
         }
+    }
+
+    private IEnumerator TransitionToBaseCampCallback()
+    {
+        var getPlayerStatTask = GameManager.Instance.GetPlayerStat();
+        yield return new WaitUntil(() => getPlayerStatTask.Status.IsCompleted());
+    
+        PlayerStat playerStat = getPlayerStatTask.GetAwaiter().GetResult();
+        GameManager.Instance.Player.InitStat(playerStat);
     }
 
     private IEnumerator MoveToLastRoom()

@@ -137,11 +137,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     public void OnPlayerExit()
     {
-        if (!_navMeshSurface)
-        {
-            Debug.Log("NavMesh Surface is null");
-        }
-        else
+        if (_navMeshSurface)
         {
             _navMeshSurface.RemoveData();
         }
