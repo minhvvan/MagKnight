@@ -610,7 +610,7 @@ namespace Moon
                     Vector3 rootMove = _animator.deltaPosition;
                     rootMove += Vector3.up * _verticalSpeed * Time.deltaTime;
                     _characterController.Move(rootMove);
-                    return;
+                    // return;
                 }
                 
                 // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
