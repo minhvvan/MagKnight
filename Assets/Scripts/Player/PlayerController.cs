@@ -206,6 +206,7 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
+            Reset();
         }
         
         
