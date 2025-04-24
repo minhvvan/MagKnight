@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using hvvan;
@@ -36,6 +37,8 @@ namespace Moon
         public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
         public bool isDead;
+        
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
         LockOnSystem _lockOnSystem;
         bool _lockOnLastFrame = false;
@@ -731,7 +734,9 @@ namespace Moon
         #region Weapon
         public void SetCurrentWeapon(WeaponType weaponType)
         {
+            _animator.runtimeAnimatorController = animatorControllers[weaponType];
             _weaponHandler.SetCurrentWeapon(weaponType);
+            canAttack = true;
         }
         #endregion
         
