@@ -5,30 +5,83 @@ using Moon; // CameraSettings 네임스페이스
 
 public class LockOnSystem : MonoBehaviour
 {
-    PlayerController _playerController;
+    private PlayerController _playerController;
+    private InputHandler _inputHandler;
 
-    public LayerMask                targetMask;
-    public float                    searchRadius = 15f;
+    public LayerMask targetMask;
+    public float searchRadius = 15f;
 
     [Header("회전 설정")]
     public float rotationSpeed = 5f;  // 회전 속도 조절
 
-    Transform[] candidates = new Transform[0];
-    public Transform   currentTarget;
+    // 대상 후보 목록 및 현재 락온 대상
+    private Transform[] candidates = new Transform[0];
+    public Transform currentTarget;
+
+    [Header("입력 설정")]
+    [Tooltip("마우스 이동으로 대상 변경 시 최소 화면 비율 값 (X축) ")]
+    public float mouseSwitchMaxDist = 8f;
+    [Tooltip("패드 우측 스틱 대상 변경 시 최소 입력 강도")]
+    public float stickDeadzone = 7f;
+
+    // 내부 스위치 상태
+    private bool _switchedRight;
+    private bool _switchedLeft;
 
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
+        _inputHandler = GetComponent<InputHandler>();
     }
 
     void Update()
     {
-        if (currentTarget != null && Input.GetKeyDown(KeyCode.E)) CycleTarget(1);
+        // 1) 현재 락온 대상이 사망 또는 비활성화되면 다음 후보로 자동 스위치
+        if (currentTarget != null && !currentTarget.gameObject.activeInHierarchy)
+        {
+            HandleDeadTarget();
+            return;
+        }
+
+        // 2) 방향 입력만으로 대상 변경
+        if (currentTarget != null)
+        {
+            // 카메라 입력(마우스 또는 우측 스틱)
+            Vector2 camInput = _inputHandler.CameraInput;
+            // 사용 중인 제어기 선택
+            bool usingController = _playerController.cameraSettings.inputChoice == CameraSettings.InputChoice.Controller;
+            float threshold = usingController ? stickDeadzone : mouseSwitchMaxDist;
+
+            // 오른쪽으로 입력했을 때
+            if (camInput.x > threshold)
+            {
+                if (!_switchedRight)
+                {
+                    CycleTarget(1);
+                    _switchedRight = true;
+                }
+            }
+            // 왼쪽으로 입력했을 때
+            else if (camInput.x < -threshold)
+            {
+                if (!_switchedLeft)
+                {
+                    CycleTarget(-1);
+                    _switchedLeft = true;
+                }
+            }
+            else
+            {
+                // 입력이 데드존으로 돌아오면 다시 스위치 허용
+                _switchedRight = false;
+                _switchedLeft = false;
+            }
+        }
     }
 
     void LateUpdate()
     {
-        // 락온 중일 때만 VirtualCamera 게임오브젝트를 회전
+        // 락온 중일 때만 VirtualCamera 회전
         if (currentTarget != null)
             RotateVCamTowardTarget();
     }
@@ -36,108 +89,111 @@ public class LockOnSystem : MonoBehaviour
     public void ToggleLockOn()
     {
         if (currentTarget == null) StartLockOn();
-        else                        StopLockOn();
+        else StopLockOn();
     }
 
-    void StartLockOn()
+    private void HandleDeadTarget()
+    {
+        // 반경 내 살아 있는 적만 재수집
+        var cols = Physics.OverlapSphere(transform.position, searchRadius, targetMask);
+        var alive = cols.Select(c => c.transform)
+                        .Where(t => t.gameObject.activeInHierarchy)
+                        .ToList();
+        alive.Remove(currentTarget);
+
+        if (alive.Count > 0)
+        {
+            // 화면 중앙 기준 가장 가까운 적 선택
+            currentTarget = alive.OrderBy(t =>
+            {
+                var vp = Camera.main.WorldToViewportPoint(t.position);
+                return (vp - new Vector3(0.5f, 0.5f, vp.z)).sqrMagnitude;
+            }).First();
+            ApplyLockOn();
+        }
+        else
+        {
+            StopLockOn();
+        }
+    }
+
+    private void StartLockOn()
     {
         var cols = Physics.OverlapSphere(transform.position, searchRadius, targetMask);
         candidates = cols.Select(c => c.transform).ToArray();
         if (candidates.Length == 0) return;
 
         // 화면 중앙에 가장 가까운 적 선택
-        currentTarget = candidates
-          .OrderBy(t => {
-              var vp = Camera.main.WorldToViewportPoint(t.position);
-              return (vp - new Vector3(0.5f, 0.5f, vp.z)).sqrMagnitude;
-          })
-          .First();
+        currentTarget = candidates.OrderBy(t =>
+        {
+            var vp = Camera.main.WorldToViewportPoint(t.position);
+            return (vp - new Vector3(0.5f, 0.5f, vp.z)).sqrMagnitude;
+        }).First();
 
         ApplyLockOn();
     }
 
-    void StopLockOn()
+    private void StopLockOn()
     {
-        // 1) 현재 보이는 카메라(락온 카메라)가 바라보는 방향을 가져와서 수평 벡터로 만들기
-        Vector3 camForward = Camera.main.transform.forward;
-        camForward.y = 0f;
-        camForward.Normalize();
+        var cs = _playerController.cameraSettings;
+        var rig = cs.Current;
 
-        // 2) 이 벡터의 heading 각도(0~360) 계산
-        float heading = Mathf.Atan2(camForward.x, camForward.z) * Mathf.Rad2Deg;
+        // FreeLook 축 값에 락온 카메라 방향 복사
+        Vector3 camF = Camera.main.transform.forward;
+        camF.y = 0f; camF.Normalize();
+        float heading = Mathf.Atan2(camF.x, camF.z) * Mathf.Rad2Deg;
+        rig.m_XAxis.Value = heading;
 
-        // 3) FreeLook 축 값에 복사
-        var rig = _playerController.cameraSettings.Current;          // 현재 사용 중인 FreeLook
-        rig.m_XAxis.Value = heading;           
+        // 락온 카메라 비활성화
+        cs.lockOnCamera.Priority = 0;
+        cs.EnableCameraMove();
 
-        // (선택) 수직(Pitch)까지 완벽히 맞추고 싶다면 아래처럼 YAxis도 설정할 수 있어요:
-        // float pitchAngle = Vector3.SignedAngle(
-        //     Vector3.ProjectOnPlane(camForward, Vector3.right),
-        //     Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.forward),
-        //     Vector3.right
-        // );
-        // rig.m_YAxis.Value = Mathf.InverseLerp(rig.m_YAxis.m_MinValue, rig.m_YAxis.m_MaxValue, pitchAngle);
+        // FreeLook 우선순위 복원
+        cs.keyboardAndMouseCamera.Priority = cs.inputChoice == CameraSettings.InputChoice.KeyboardAndMouse ? 1 : 0;
+        cs.controllerCamera.Priority = cs.inputChoice == CameraSettings.InputChoice.Controller ? 1 : 0;
 
-        // 4) Priority 낮춰서 FreeLook으로 복귀
-        _playerController.cameraSettings.lockOnCamera.Priority = 0;
-        _playerController.cameraSettings.EnableCameraMove();
+        // LookAt 복원
+        rig.LookAt = cs.lookAt;
 
-        // 5) LookAt도 원래 플레이어로 복원
-        rig.LookAt = _playerController.cameraSettings.lookAt;
-
+        // 초기화
         currentTarget = null;
+        candidates = new Transform[0];
     }
 
-
-    void ApplyLockOn()
+    private void ApplyLockOn()
     {
-        CinemachineVirtualCamera lockCam = _playerController.cameraSettings.lockOnCamera;
+        var cs = _playerController.cameraSettings;
+        var lockCam = cs.lockOnCamera;
 
-        // VirtualCamera를 활성화
-        lockCam.Follow   = _playerController.cameraSettings.follow;
-        lockCam.LookAt   = currentTarget;
+        lockCam.Follow = cs.follow;
+        lockCam.LookAt = currentTarget;
         lockCam.Priority = 20;
 
-        _playerController.cameraSettings.DisableCameraMove();
-
-        // 즉시 초기 회전 맞춰주고 싶다면 아래 한 줄 추가
-        lockCam.transform.rotation = Quaternion.LookRotation(
-            (currentTarget.position - _playerController.cameraSettings.follow.position).WithY(0f)
-        );
+        cs.DisableCameraMove();
+        lockCam.transform.rotation = Quaternion.LookRotation((currentTarget.position - cs.follow.position).WithY(0f));
     }
 
-    void CycleTarget(int dir)
+    private void CycleTarget(int dir)
     {
         if (candidates.Length <= 1) return;
         int idx = System.Array.IndexOf(candidates, currentTarget);
         idx = (idx + dir + candidates.Length) % candidates.Length;
         currentTarget = candidates[idx];
-        // LookAt만 교체
         _playerController.cameraSettings.lockOnCamera.LookAt = currentTarget;
     }
 
-    void RotateVCamTowardTarget()
+    private void RotateVCamTowardTarget()
     {
-        Vector3 playerPos = _playerController.cameraSettings.follow.position;
-        // 적 방향 (수평만)
-        Vector3 dir = currentTarget.position - playerPos;
+        var cs = _playerController.cameraSettings;
+        var lockCam = cs.lockOnCamera;
+        Vector3 dir = currentTarget.position - cs.follow.position;
         dir.y = 0f;
-        if (dir.sqrMagnitude < 0.001f) return;
-
         Quaternion desired = Quaternion.LookRotation(dir);
-        _playerController.cameraSettings.lockOnCamera.transform.rotation = Quaternion.Slerp(
-            _playerController.cameraSettings.lockOnCamera.transform.rotation,
-            desired,
-            Time.deltaTime * rotationSpeed
-        );
+        lockCam.transform.rotation = Quaternion.Slerp(lockCam.transform.rotation, desired, Time.deltaTime * rotationSpeed);
     }
 }
 
-// Vector3 편의 확장 메서드
 public static class Vector3Ext
 {
-    public static Vector3 WithY(this Vector3 v, float y)
-    {
-        return new Vector3(v.x, y, v.z);
-    }
+    public static Vector3 WithY(this Vector3 v, float y) => new Vector3(v.x, y, v.z);
 }

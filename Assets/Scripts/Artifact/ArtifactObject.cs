@@ -16,6 +16,11 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     {
         _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
     }
+
+    public void SetArtifactData(ArtifactDataSO artifactDataSO)
+    {
+        this.artifactDataSO = artifactDataSO;
+    }
     
     public void Interact(IInteractor interactor)
     {

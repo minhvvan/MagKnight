@@ -9,10 +9,14 @@ public class WeaponHandler: MonoBehaviour
 
     private WeaponPrefabSO _weaponSO;
     private BaseWeapon _currentWeapon;
+    private AbilitySystem _abilitySystem;
+    
     public WeaponType CurrentWeaponType { get; private set; }
 
     private async void Awake()
     {
+        _abilitySystem = GetComponent<AbilitySystem>();
+        
         try
         {
             _weaponSO = await DataManager.Instance.LoadScriptableObjectAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
@@ -38,6 +42,7 @@ public class WeaponHandler: MonoBehaviour
             return;
         }
         _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        _currentWeapon.OnHit += OnHitAction;
     }
     
     public void AttackStart()
@@ -49,6 +54,7 @@ public class WeaponHandler: MonoBehaviour
         }
 
         _currentWeapon.AttackStart();
+        _abilitySystem.TriggerEvent(TriggerEventType.OnAttack, _abilitySystem);
     }
 
     public void AttackEnd()
@@ -70,5 +76,20 @@ public class WeaponHandler: MonoBehaviour
     public void ChangePolarity()
     {
         _currentWeapon.ChangePolarity();
+    }
+
+    private void OnHitAction(HitInfo hitInfo)
+    {
+        if(hitInfo.hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            var damage = _abilitySystem.GetValue(AttributeType.Strength);
+            Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
+            GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+            GameplayEffect resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, damage);
+            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
+            enemy.OnHit(transform);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
+        }
     }
 }
