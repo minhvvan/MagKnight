@@ -1,4 +1,5 @@
 ﻿using System;
+using Managers;
 
 [Serializable]
 public class PlayerData: ISaveData
@@ -9,7 +10,6 @@ public class PlayerData: ISaveData
     public int Currency;
     
     //lock된 아티팩트 등 추가 가능
-    
     public string GetDataKey()
     {
         return Constants.PlayerData;

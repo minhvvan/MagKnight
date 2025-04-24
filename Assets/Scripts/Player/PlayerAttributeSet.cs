@@ -59,17 +59,16 @@ namespace Jun
                     Time.timeScale = 1;
                 });
 #endif
+                if (GetValue(AttributeType.HP) == 0)
+                {
+                    OnDead?.Invoke();
+                }
+                else
+                {
+                    OnDamaged?.Invoke();
+                }
                 // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
                 SetValue(AttributeType.Damage, 0);
-            }
-            
-            if (GetValue(AttributeType.HP) == 0)
-            {
-                OnDead?.Invoke();
-            }
-            else
-            {
-                OnDamaged?.Invoke();
             }
         }
     }

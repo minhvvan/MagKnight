@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -19,6 +22,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public AbilitySystem EnemyAbilitySystem { get; private set; }
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
+    public PatternController patternController;
+    public HpBarController hpBarController;
     
     
     // stateMachine
@@ -40,7 +45,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         _stateMachine.ChangeState(spawnState);
     }
-    public void Initialize()
+    private void Initialize()
     {
         Anim = GetComponent<Animator>();
         Agent = GetComponent<NavMeshAgent>();
@@ -59,9 +64,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler.Subscribe(this);
         }
         
-        InitializeState();
-        
         EnemyController.AddEnemy(this);
+        
+        InitializeState();
     }
 
     private void InitializeState()
@@ -128,18 +133,72 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnStagger()
     {
-        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MAXRES);
+        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MaxResistance);
         SetState(staggerState);
         
         // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
         //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
+    
+    public void OnPhaseChange(int phase)
+    {
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            Anim.SetTrigger("PhaseChange");
+            blackboard.phase = phase;
+            patternController.PhaseChange(phase);
+        }
+    }
+
+    public void OnHit(Transform playerTransform)
+    {
+        if (blackboard.onHitCancellation != null)
+        {
+            blackboard.onHitCancellation.Cancel();
+            blackboard.onHitCancellation.Dispose();
+        }
+        blackboard.onHitCancellation = new CancellationTokenSource();
+
+        OnHitHelper(playerTransform).Forget();
+    }
+
+    private async UniTask OnHitHelper(Transform playerTransform)
+    {
+        CancellationToken token = blackboard.onHitCancellation.Token;
+        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
+        Color originalColor = blackboard.enemyRenderer.material.color;
+        blackboard.enemyRenderer.material.color = Color.red;
+        
+        // Enemy 넉백 관련은 이 함수를 사용
+        float desiredDistance = 1.5f;
+        float enemyPositionCorrection = 1f;
+        float pullSpeed = 20f;
+        float moveTime = 0.2f;
+        float duration = 0f;
+        Vector3 playerFront = playerTransform.position + playerTransform.forward * desiredDistance;
+        Vector3 dir = playerFront - transform.position;
+        Vector3 targetPos = dir.magnitude <= enemyPositionCorrection ? playerFront : transform.position + dir.normalized * enemyPositionCorrection;
+        try
+        {
+            while (duration < moveTime)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
+                duration += Time.deltaTime;
+                await UniTask.Yield(token);
+            }
+        }
+        catch (OperationCanceledException){}
+        finally
+        {
+            blackboard.enemyRenderer.material.color = originalColor;
+        }
+    }
 
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = -blackboard.abilitySystem.GetValue(AttributeType.ATK);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.HP, damage);
-        hitInfo.hit.collider.gameObject.GetComponent<CharacterBlackBoardPro>().GetAbilitySystem().ApplyEffect(damageEffect);
+        float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
     }
 
     public void OnError(Exception error)
@@ -160,6 +219,17 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         HitHandler.StopDetection();
     }
+
+    public void PatternAttackStart()
+    {
+        patternController.AttackStart();
+    }
+
+    public void PatternAttackEnd()
+    {
+        patternController.AttackEnd();
+    }
+    
 
     public void OnDestroy()
     {

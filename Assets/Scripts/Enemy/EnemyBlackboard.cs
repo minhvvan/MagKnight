@@ -32,19 +32,21 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public GameObject target;
     [HideInInspector] public LayerMask targetLayer;
     [HideInInspector] public IEnemyAI ai;
+    [HideInInspector] public IEnemyAction action;
     [HideInInspector] public bool isDead;
+    [HideInInspector] public int phase;
     #endregion
     
     #region CancellationToken
 
+    [HideInInspector] public CancellationTokenSource onHitCancellation;
     [HideInInspector] public CancellationTokenSource actionRecoveryCancellation;
     [HideInInspector] public CancellationTokenSource staggerRecoveryCancellation;
     #endregion
     
-    #region Transform
-
     public Transform muzzleTransform;
-    #endregion
+    public Renderer enemyRenderer;
+
 
     private void Awake()
     {
@@ -67,6 +69,7 @@ public class EnemyBlackboard : MonoBehaviour
         projectileSpeed = _enemyDataSO.projectileSpeed;
         attackRange = _enemyDataSO.attackRange;
         projectilePrefab = _enemyDataSO.projectilePrefab;
+        phase = 1;
         
         targetLayer = LayerMask.GetMask("Player");
 
@@ -74,9 +77,15 @@ public class EnemyBlackboard : MonoBehaviour
         {
             case EnemyAIType.MeleeNormal:
                 ai = new MeleeNormalAI(_enemy);
+                action = new MeleeNormalAction(_enemy);
                 break;
             case EnemyAIType.RangedNormal:
                 ai = new RangedNormalAI(_enemy);
+                action = new RangedNormalAction(_enemy);
+                break;
+            case EnemyAIType.Boss:
+                ai = new BossAI(_enemy);
+                action = new BossAction(_enemy);
                 break;
         }
     }
@@ -86,47 +95,17 @@ public class EnemyBlackboard : MonoBehaviour
         // 버프, 디버프, 상호작용 가능 stat은 attribute로 관리
         abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
         abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
-        abilitySystem.AddAttribute(AttributeType.ATK, _enemyDataSO.atk);
+        abilitySystem.AddAttribute(AttributeType.Strength, _enemyDataSO.atk);
         abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
-        abilitySystem.AddAttribute(AttributeType.MAXRES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.MaxResistance, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
-        abilitySystem.AddAttribute(AttributeType.RES, _enemyDataSO.staggerResistance);
+        abilitySystem.AddAttribute(AttributeType.Resistance, _enemyDataSO.staggerResistance);
         abilitySystem.AddAttribute(AttributeType.Damage, 0);
+        abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
 
-        // 1. 힐 과잉방지
-        // abilitySystem.AddPostModify(AttributeType.HP, () =>
-        // {
-        //     float hp = abilitySystem.GetValue(AttributeType.HP);
-        //     float max = abilitySystem.GetValue(AttributeType.MaxHP);
-        //     if (hp > max)
-        //         abilitySystem.SetValue(AttributeType.HP, max);
-        // });
-        
-        // 2. 사망 처리
-        // abilitySystem.AddPostModify(AttributeType.HP, () =>
-        // {
-        //     if (abilitySystem.GetValue(AttributeType.HP) <= 0)
-        //     {
-        //         _enemy.OnDeath();
-        //     }
-        // });
-        
-        // 1. resistance 회복 과잉방지
-        // abilitySystem.AddPostModify(AttributeType.RES, () =>
-        // {
-        //     float res = abilitySystem.GetValue(AttributeType.RES);
-        //     float max = abilitySystem.GetValue(AttributeType.MAXRES);
-        //     if (res > max)
-        //         abilitySystem.SetValue(AttributeType.RES, max);
-        // });
-        
-        // 2. stagger 처리
-        // abilitySystem.AddPostModify(AttributeType.RES, () =>
-        // {
-        //     if (!isDead && abilitySystem.GetValue(AttributeType.RES) <= 0)
-        //     {
-        //         _enemy.OnStagger();
-        //     }
-        // });
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnDeath += _enemy.OnDeath;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnStagger += _enemy.OnStagger;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnPhaseChange += _enemy.OnPhaseChange;
+
     }
 }

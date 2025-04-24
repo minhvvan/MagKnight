@@ -50,8 +50,8 @@ public abstract class AttributeSet
             gameplayEffect.amount = PreAttributeChange(type, gameplayEffect.amount);
             
 
-            // 만약 EffectType이 Instant면 BaseValue를 수정
-            if(effectType == EffectType.Instant)
+            // 만약 EffectType이 Instant또는 Period를 가지는 Duration이면 BaseValue를 수정
+            if(effectType == EffectType.Instant || (effectType == EffectType.Duration && gameplayEffect.period > 0))
                 attributeDictionary[type].ModifyBaseValue(gameplayEffect.amount);
             // 그 외 CurrentValue를 수정
             else
@@ -75,7 +75,7 @@ public abstract class AttributeSet
     }
 
     // Attribute 변경 시 Action 추가하기 위한 함수
-    public void DelegateAttributeChanged(AttributeType type, Action action)
+    public void DelegateAttributeChanged(AttributeType type, Action<float> action)
     {
         if (attributeDictionary.ContainsKey(type))
         {
@@ -91,5 +91,17 @@ public abstract class AttributeSet
 
     // Effect 적용 후 호출
     protected virtual void PostGameplayEffectExecute(GameplayEffect effect){}
+    
+    // attributeDictionary의 키 목록을 가져오는 getter 추가
+    public IEnumerable<AttributeType> GetAttributeTypes()
+    {
+        return attributeDictionary.Keys;
+    }
+    
+    // attributeDictionary가 특정 키를 포함하는지 확인하는 메서드
+    public bool HasAttribute(AttributeType type)
+    {
+        return attributeDictionary.ContainsKey(type);
+    }
 }
 

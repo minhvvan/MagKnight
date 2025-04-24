@@ -3,13 +3,20 @@
 [Serializable]
 public class PlayerStat
 {
-    public int MaxHP;
-    public int HP; 
-    public int INT;
-    public int LUK;
-    public int DEF;
-    public int CRT;
-    public int DMG;
-    public int SPD;
-    public int BAS;
+    public AttributePair MaxHP;
+    public AttributePair HP;
+    public AttributePair Strength;
+    public AttributePair Intelligence;
+    public AttributePair CriticalRate;
+    public AttributePair Defense;
+    public AttributePair CriticalDamage;
+    public AttributePair Damage;
+    public AttributePair MoveSpeed;
+}
+
+[Serializable]
+public struct AttributePair
+{
+    public AttributeType Key;
+    public int Value;
 }
