@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Moon;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Jun
@@ -8,7 +9,7 @@ namespace Jun
     public class PlayerAttributeSet : AttributeSet
     {
         public Action OnDead;
-        public Action OnDamaged;
+        public Action<Transform> OnDamaged;
 
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
@@ -65,10 +66,18 @@ namespace Jun
                 }
                 else
                 {
-                    OnDamaged?.Invoke();
+                    //OnDamaged?.Invoke(effect.sourceTransform);
                 }
                 // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
                 SetValue(AttributeType.Damage, 0);
+            }
+
+            if (effect.attributeType == AttributeType.Impulse)
+            {
+                SetValue(AttributeType.Impulse, GetValue(AttributeType.ImpulseThreshold) - GetValue(AttributeType.Impulse));
+                OnDamaged?.Invoke(effect.sourceTransform);
+                
+                SetValue(AttributeType.Impulse, 0);
             }
         }
 
