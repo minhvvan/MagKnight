@@ -162,6 +162,8 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+            
+            Reset();
         }
 
         // Called automatically by Unity once every Physics step.
