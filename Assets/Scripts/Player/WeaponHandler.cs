@@ -9,7 +9,8 @@ public class WeaponHandler: MonoBehaviour
 
     private WeaponPrefabSO _weaponSO;
     private BaseWeapon _currentWeapon;
-    
+    public WeaponType CurrentWeaponType { get; private set; }
+
     private async void Awake()
     {
         try
@@ -30,9 +31,10 @@ public class WeaponHandler: MonoBehaviour
             return;
         }
 
+        CurrentWeaponType = weaponType;
         _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
     }
-
+    
     public void AttackStart()
     {
         if (_currentWeapon == null)

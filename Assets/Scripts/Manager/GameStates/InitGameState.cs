@@ -48,6 +48,14 @@ public class InitGameState: IGameState
             yield return null;
         }
         
+        //플레이어 설정
+        var player = GameManager.Instance.Player;
+        if (player)
+        {
+            //스탯 설정
+            player.InitializeByCurrentRunData(_currentRunData);
+        }
+        
         GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }
 

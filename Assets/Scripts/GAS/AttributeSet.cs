@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// ⚠ 내부 전용 클래스입니다. 외부에서 직접 접근하지 마세요.
@@ -13,25 +14,25 @@ using UnityEngine;
 
 public abstract class AttributeSet
 {
-    [SerializeField] SerializedDictionary<AttributeType, Attribute> attributeDictionary = new SerializedDictionary<AttributeType, Attribute>();
+    protected Dictionary<AttributeType, Attribute> _attributeDictionary = new Dictionary<AttributeType, Attribute>();
 
     public void AddAttribute(AttributeType type , float value)
     {
-        if (attributeDictionary.ContainsKey(type))
+        if (_attributeDictionary.ContainsKey(type))
         {
             Debug.LogWarning($"{type}은 이미 존재하는 Attribute입니다");
             return;
         }
         Attribute instance = new Attribute();
         instance.InitAttribute(value);
-        attributeDictionary.Add(type, instance);
+        _attributeDictionary.Add(type, instance);
     }
     
     // CurrentValue를 Return
     public float GetValue(AttributeType type)
     {
-        if (attributeDictionary.ContainsKey(type))
-            return attributeDictionary[type].GetValue();
+        if (_attributeDictionary.ContainsKey(type))
+            return _attributeDictionary[type].GetValue();
         
         Debug.LogError($"{type} not found");
         return 0;
@@ -43,7 +44,7 @@ public abstract class AttributeSet
         var type = gameplayEffect.attributeType;
         var effectType = gameplayEffect.effectType;
         
-        if (attributeDictionary.ContainsKey(type))
+        if (_attributeDictionary.ContainsKey(type))
         {
             // PreAttributeChange에 의해 실제로 적용된 값으로 GE에 Update
             // 이를 통해 Remove시 실제 적용된 값만큼 다시 적용 가능
@@ -52,10 +53,10 @@ public abstract class AttributeSet
 
             // 만약 EffectType이 Instant면 BaseValue를 수정
             if(effectType == EffectType.Instant)
-                attributeDictionary[type].ModifyBaseValue(gameplayEffect.amount);
+                _attributeDictionary[type].ModifyBaseValue(gameplayEffect.amount);
             // 그 외 CurrentValue를 수정
             else
-                attributeDictionary[type].ModifyCurrentValue(gameplayEffect.amount);
+                _attributeDictionary[type].ModifyCurrentValue(gameplayEffect.amount);
             
             PostGameplayEffectExecute(gameplayEffect);
         }
@@ -68,18 +69,18 @@ public abstract class AttributeSet
     // BaseValue를 수정 (EffectType Instant에서 사용됨)
     public void SetValue(AttributeType type, float value)
     {
-        if (attributeDictionary.ContainsKey(type))
+        if (_attributeDictionary.ContainsKey(type))
         {
-            attributeDictionary[type].SetValue(value);
+            _attributeDictionary[type].SetValue(value);
         }
     }
 
     // Attribute 변경 시 Action 추가하기 위한 함수
     public void DelegateAttributeChanged(AttributeType type, Action<float> action)
     {
-        if (attributeDictionary.ContainsKey(type))
+        if (_attributeDictionary.ContainsKey(type))
         {
-            attributeDictionary[type].DelegateChangeAction(action);
+            _attributeDictionary[type].DelegateChangeAction(action);
         }
     }
 
@@ -95,13 +96,18 @@ public abstract class AttributeSet
     // attributeDictionary의 키 목록을 가져오는 getter 추가
     public IEnumerable<AttributeType> GetAttributeTypes()
     {
-        return attributeDictionary.Keys;
+        return _attributeDictionary.Keys;
     }
     
     // attributeDictionary가 특정 키를 포함하는지 확인하는 메서드
     public bool HasAttribute(AttributeType type)
     {
-        return attributeDictionary.ContainsKey(type);
+        return _attributeDictionary.ContainsKey(type);
+    }
+
+    public void ClearAllAttributes()
+    {
+        _attributeDictionary.Clear();
     }
 }
 

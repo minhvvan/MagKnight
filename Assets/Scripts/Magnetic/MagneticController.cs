@@ -75,11 +75,6 @@ public class MagneticController : MagneticObject
     private float _counterPressRange;
     private float _counterPressPower;
     
-    private void Start()
-    {
-        InitializeMagnetic();
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -716,9 +711,9 @@ public class MagneticController : MagneticObject
         private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
-        if (!EditorApplication.isPlaying)
+        if (!EditorApplication.isPlaying || !mainCamera)
             return;
-        
+
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         

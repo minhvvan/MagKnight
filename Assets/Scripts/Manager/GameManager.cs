@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Jun;
 using Managers;
 using Moon;
 using UnityEngine;
@@ -175,6 +177,14 @@ namespace hvvan
             }
             else if (key == Constants.CurrentRun)
             {
+                if (!Player) return;
+                
+                if (Player.GetComponent<AbilitySystem>().TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
+                {
+                    _currentRunData.playerStat = attributeSet.GetDataStruct();
+                }
+
+                _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
                 _ = SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }
@@ -202,6 +212,12 @@ namespace hvvan
             }
 
             return _playerData.PlayerStat;
+        }
+
+        public PlayerStat GetCurrentStat()
+        {
+            _currentRunData ??= SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
+            return _currentRunData?.playerStat;
         }
     }
 }
