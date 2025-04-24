@@ -1,29 +1,16 @@
-﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Moon;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public enum WeaponType
+public class HealthPack : MonoBehaviour, IInteractable
 {
-    None = 0,
-    SwordKatana,
-}
-
-public enum PartsType
-{
-    None = 0,
-    PartA,
-    PartB,
-    PartC,
-    PartD
-}
-
-public class MagCore: MonoBehaviour, IInteractable
-{
-    private MagCoreSO magCoreSO;
-    [SerializeField] private WeaponType weaponType;
-    [SerializeField] private PartsType partsType;
+    private HealthPackSO healthPackSo;
+    public string name;
+    public string description;
+    public float value;
     
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
 
@@ -32,19 +19,20 @@ public class MagCore: MonoBehaviour, IInteractable
         _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
     }
 
-    public void SetMagCoreData(MagCoreSO magCoreData)
+    public void SetHealthPotionData(HealthPackSO healthPackData)
     {
-        magCoreSO = magCoreData;
-        weaponType = magCoreSO.weaponType;
-        partsType = magCoreSO.partsType;
+        healthPackSo = healthPackData;
+        name = healthPackSo.itemName;
+        description = healthPackSo.description;
+        value = healthPackSo.value;
     }
 
     public void Interact(IInteractor interactor)
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
-            //TODO: 무기교체 로직 추가 수행
-            player.SetCurrentWeapon(weaponType);
+            //player.SetCurrentWeapon(weaponType);
+            
             Destroy(gameObject);
         }
     }

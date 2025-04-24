@@ -20,6 +20,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     public void SetArtifactData(ArtifactDataSO artifactDataSO)
     {
         this.artifactDataSO = artifactDataSO;
+        gameObject.name = this.artifactDataSO.itemName;
     }
     
     public void Interact(IInteractor interactor)

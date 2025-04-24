@@ -31,6 +31,11 @@ public static class Addresses
         {
             public const string SceneData = "data/common/sceneData";
         }
+
+        public static class Item
+        {
+            public const string ItemListData = "data/itemList";
+        }
     }
     
     public static class Prefabs
