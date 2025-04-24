@@ -226,4 +226,11 @@ public class ItemManager : Singleton<ItemManager>
         return null;
     }
 
+    //지정한 등급의 상자 생성.
+    public void SpawnLootCrate(ItemCategory category, ItemRarity rarity, Vector3 position, Quaternion rotation)
+    {
+        var obj = Instantiate(_lootCratePrefab, position, rotation);
+        var lootCrate = obj.GetComponent<LootCrate>();
+        lootCrate.SetLootCrate(category, rarity);
+    }
 }
