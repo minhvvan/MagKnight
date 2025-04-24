@@ -31,6 +31,8 @@ namespace Moon
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
 
+        public WeaponHandler WeaponHandler => _weaponHandler;
+        public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
         public bool isDead;
 
@@ -158,8 +160,26 @@ namespace Moon
             _abilitySystem = GetComponent<AbilitySystem>();
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
+
+            _inputHandler.magneticInput = MagneticPress;
+            _inputHandler.magneticOutput = MagneticRelease;
+            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+        }
+        
+        //명시적 초기화
+        public void InitializeByCurrentRunData(CurrentRunData currentRunData)
+        {
+            InitStat(currentRunData.playerStat);
+
+            //마그네틱 컨트롤러 초기화
+            _magneticController.InitializeMagnetic();
             
-            var stat = await GameManager.Instance.GetPlayerStat();
+            //무기 지급
+            SetCurrentWeapon(currentRunData.currentWeapon);
+        }
+
+        public void InitStat(PlayerStat stat)
+        {
             _abilitySystem.InitializeFromPlayerStat(stat);
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
@@ -173,12 +193,9 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-
-            _inputHandler.magneticInput = MagneticPress;
-            _inputHandler.magneticOutput = MagneticRelease;
-            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
         }
-
+        
+        
         // Called automatically by Unity once every Physics step.
         void FixedUpdate()
         {
@@ -593,7 +610,7 @@ namespace Moon
                     Vector3 rootMove = _animator.deltaPosition;
                     rootMove += Vector3.up * _verticalSpeed * Time.deltaTime;
                     _characterController.Move(rootMove);
-                    return;
+                    // return;
                 }
                 
                 // 2) 락온 중, 콤보 아님 -> 입력 기반 이동

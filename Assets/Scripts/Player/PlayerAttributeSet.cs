@@ -71,5 +71,10 @@ namespace Jun
                 SetValue(AttributeType.Damage, 0);
             }
         }
+
+        public PlayerStat GetDataStruct()
+        {
+            return PlayerStat.FromDictionary(_attributeDictionary);
+        }
     }
 }

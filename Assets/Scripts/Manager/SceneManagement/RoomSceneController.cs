@@ -52,7 +52,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
         //targetRoom활성화 + currentRoom비활성화
         if (targetController != null)
         {
-            targetController.OnPlayerEnter(direction);
+            await targetController.OnPlayerEnter(direction);
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {
@@ -193,7 +193,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
 
         //Character위치 조정
         var player = GameManager.Instance.Player;
-        if (player && GameManager.Instance.Player.TryGetComponent<CharacterController>(out var characterController))
+        if (player && player.TryGetComponent<CharacterController>(out var characterController))
         {
             characterController.Teleport(player.gameObject, currentRunData.lastPlayerPosition, currentRunData.lastPlayerRotation);
         }

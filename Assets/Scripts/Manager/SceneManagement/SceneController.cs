@@ -25,7 +25,7 @@ namespace Moon
         async void  Start()
         {
             _inputHandler = FindObjectOfType<InputHandler>();
-            _sceneMapping = await DataManager.Instance.LoadDataAsync<SceneMappingSO>(Addresses.Data.Common.SceneData);
+            _sceneMapping = await DataManager.Instance.LoadScriptableObjectAsync<SceneMappingSO>(Addresses.Data.Common.SceneData);
         }
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
