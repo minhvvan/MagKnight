@@ -11,13 +11,15 @@ public class WeaponHandler: MonoBehaviour
     private BaseWeapon _currentWeapon;
     private AbilitySystem _abilitySystem;
     
+    public WeaponType CurrentWeaponType { get; private set; }
+
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
         
         try
         {
-            _weaponSO = await DataManager.Instance.LoadDataAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
+            _weaponSO = await DataManager.Instance.LoadScriptableObjectAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
         }
         catch (Exception e)
         {
@@ -33,10 +35,16 @@ public class WeaponHandler: MonoBehaviour
             return;
         }
 
+        CurrentWeaponType = weaponType;
+        if (CurrentWeaponType == WeaponType.None)
+        {
+            Debug.Log("WeaponType is null");
+            return;
+        }
         _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
-
+    
     public void AttackStart()
     {
         if (_currentWeapon == null)

@@ -19,6 +19,18 @@ public class StatusUIController : MonoBehaviour
             _attributeSet.DelegateAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
             _attributeSet.DelegateAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
         }
+        
+        //UI Update
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+        if(_attributeSet == null) return;
+        
+        //ui상태 갱신
+        ChangedMaxHealth(_attributeSet.GetValue(AttributeType.MaxHP));
+        ChangedCurrentHealth(_attributeSet.GetValue(AttributeType.HP));
     }
 
     private void ChangedMaxHealth(float newMaxHealth)
