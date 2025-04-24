@@ -27,11 +27,7 @@ namespace hvvan
             private set => _playerController = value;
         }
 
-        public CurrentRunData CurrentRunData
-        {
-            get { return _currentRunData ??= new CurrentRunData(); }
-            set => _currentRunData = value;
-        }
+        public CurrentRunData CurrentRunData => _currentRunData;
 
         private PlayerController _playerController;
 
@@ -165,8 +161,6 @@ namespace hvvan
             };
             
             _currentRunData = currentRunData;
-            
-            SaveData(Constants.CurrentRun);
         }
 
         public void SaveData(string key)
@@ -216,7 +210,6 @@ namespace hvvan
 
         public PlayerStat GetCurrentStat()
         {
-            _currentRunData ??= SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
             return _currentRunData?.playerStat;
         }
     }

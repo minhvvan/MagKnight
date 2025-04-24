@@ -52,9 +52,11 @@ public class InitGameState: IGameState
         var player = GameManager.Instance.Player;
         if (player)
         {
-            //스탯 설정
             player.InitializeByCurrentRunData(_currentRunData);
         }
+        
+        //룸 클리어
+        RoomSceneController.Instance.CurrentRoomController.ClearRoom();
         
         GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
 using hvvan;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 public class RoomController : MonoBehaviour, IObserver<bool>
@@ -13,6 +15,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     [SerializeField] private ClearRoomField clearRoomField;
 
     private EnemyController _enemyController;
+    private NavMeshSurface _navMeshSurface;
     
     private int _roomIndex;
     private bool _cleared = false;
@@ -22,10 +25,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     
     private void Awake()
     {
+        //Component Cache
         _enemyController = GetComponent<EnemyController>();
-        var gateContollers = GetComponentsInChildren<Gate>().ToList();
+        _navMeshSurface = GetComponentInChildren<NavMeshSurface>();
         
-        foreach (var gate in gateContollers)
+        var foundGates = GetComponentsInChildren<Gate>().ToList();
+        
+        foreach (var gate in foundGates)
         {
             gates[gate.roomDirection] = gate;
         }
@@ -84,6 +90,12 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     public void OnPlayerEnter(RoomDirection direction = RoomDirection.South)
     {
+        if (_navMeshSurface)
+        {
+            ConfigureNavMesh();
+            _navMeshSurface.BuildNavMesh();
+        }
+        
         SetGateOpen(false);
         var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
 
@@ -92,12 +104,39 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         CharacterController controller = player.GetComponent<CharacterController>();
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         
-        gameObject.SetActive(true);
         SetRoomReady(true);
+        gameObject.SetActive(true);
+    }
+    
+    private void ConfigureNavMesh()
+    {
+        //타깃 설정
+        _navMeshSurface.collectObjects = CollectObjects.MarkedWithModifier;
+        _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
+        
+        _navMeshSurface.defaultArea = 0;  // Walkable
+        _navMeshSurface.agentTypeID = 0;  // 기본 에이전트
+
+        _navMeshSurface.minRegionArea = 2;
+        
+        // 레이어 설정
+        _navMeshSurface.layerMask = LayerMask.GetMask("Default", "Environment");
+        
+        // 빌드 시 기존 데이터 정리
+        _navMeshSurface.RemoveData();
     }
 
     public void OnPlayerExit()
     {
+        if (!_navMeshSurface)
+        {
+            Debug.Log("NavMesh Surface is null");
+        }
+        else
+        {
+            _navMeshSurface.RemoveData();
+        }
+        
         SetGateOpen(false);
         gameObject.SetActive(false);
     }
@@ -118,7 +157,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private void RoomCompleted()
     {
         //해제
-
         if (_enemyController)
         {
             _enemyController.OnEnemiesClear -= RoomCompleted;
@@ -127,6 +165,15 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         _cleared = true;
         Reward();
         GameManager.Instance.ChangeGameState(GameState.RoomClear);
+    }
+
+    public void ClearRoom()
+    {
+        //적 없애기
+        if (_enemyController)
+        {
+            _enemyController.ClearAllEnemies();
+        }
     }
 
     public void OnNext(bool reached)

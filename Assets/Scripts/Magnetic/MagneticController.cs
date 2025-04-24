@@ -245,6 +245,7 @@ public class MagneticController : MagneticObject
     //실시간으로 플레이어 주변의 MagneticObject를 탐색합니다.
     private void ScanNearByMagneticTarget()
     {
+        if (!mainCamera) return;
         var targetPoint = GetTargetPoint();
         
         //범위 내 전체 감지
@@ -278,6 +279,7 @@ public class MagneticController : MagneticObject
     //조준한 범위 내의
     private void FocusMagneticTarget()
     {
+        if (!mainCamera) return;
         var targetPoint = GetTargetPoint();
         
         sphereRadius = GetDynamicSphereRadius(screenOffset, Vector3.Distance(mainCamera.transform.position, targetPoint));

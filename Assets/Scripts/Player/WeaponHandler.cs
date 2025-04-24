@@ -32,6 +32,11 @@ public class WeaponHandler: MonoBehaviour
         }
 
         CurrentWeaponType = weaponType;
+        if (CurrentWeaponType == WeaponType.None)
+        {
+            Debug.Log("WeaponType is null");
+            return;
+        }
         _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
     }
     

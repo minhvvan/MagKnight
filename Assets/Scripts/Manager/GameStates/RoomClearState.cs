@@ -14,6 +14,7 @@ public class RoomClearState: IGameState
         currentRunData.lastPlayerRotation = GameManager.Instance.Player.transform.rotation;
         currentRunData.clearedRooms.Add(RoomSceneController.Instance.CurrentRoomController.RoomIndex);
         GameManager.Instance.SetCurrentRunData(currentRunData);
+        GameManager.Instance.SaveData(Constants.CurrentRun);
         
         //Room 관리
         RoomSceneController.Instance.CurrentRoomController.SetGateOpen(true);

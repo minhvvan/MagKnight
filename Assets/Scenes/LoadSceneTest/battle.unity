@@ -306,7 +306,7 @@ Transform:
   m_GameObject: {fileID: 703322914}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0, z: 2.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -325,9 +325,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AgentTypeID: 0
-  m_CollectObjects: 0
-  m_Size: {x: 50, y: 50, z: 50}
-  m_Center: {x: 0, y: 2, z: 0}
+  m_CollectObjects: 3
+  m_Size: {x: 50, y: 15.33, z: 50}
+  m_Center: {x: 0, y: 1.4, z: 0}
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 2049
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: a00de7255ad92d841b92e288565ca463, type: 2}
+  m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
 --- !u!1001 &718854720
 PrefabInstance:
@@ -438,7 +438,7 @@ PrefabInstance:
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.380336
+      value: -9.379888
       objectReference: {fileID: 0}
     - target: {fileID: 5618458212850813880, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
@@ -1781,6 +1781,7 @@ GameObject:
   - component: {fileID: 4302195821833762032}
   - component: {fileID: 8164696724866519026}
   - component: {fileID: 8164696724866519027}
+  - component: {fileID: 8164696724866519028}
   m_Layer: 11
   m_Name: Testroom01
   m_TagString: Untagged
@@ -1945,6 +1946,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22a760686e291e34082c3f5d4dbe93f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8164696724866519028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6003647215888019296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 0
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!4 &8297235605156661922
 Transform:
   m_ObjectHideFlags: 0
