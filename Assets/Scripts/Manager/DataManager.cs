@@ -8,8 +8,14 @@ namespace Managers
 {
     public class DataManager : Singleton<DataManager>
     {
+        //Load 
+        public async UniTask<T> LoadData<T>(string address)
+        {
+            return await Addressables.LoadAssetAsync<T>(address).ToUniTask();
+        }
+        
         //Load ScriptableObject
-        public async UniTask<T> LoadDataAsync<T>(string address) where T : ScriptableObject
+        public async UniTask<T> LoadScriptableObjectAsync<T>(string address) where T : ScriptableObject
         {
             return await DataLoader.LoadAsync<T>(address);
         }

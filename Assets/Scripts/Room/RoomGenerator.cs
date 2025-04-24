@@ -62,7 +62,7 @@ public class RoomGenerator
 
     private async UniTask Initialize()
     {
-        _roomData = await DataManager.Instance.LoadDataAsync<RoomDataSO>(Addresses.Data.Room.RoomData);
+        _roomData = await DataManager.Instance.LoadScriptableObjectAsync<RoomDataSO>(Addresses.Data.Room.RoomData);
     }
 
     public async UniTask GenerateRooms()
