@@ -71,7 +71,10 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     void OnDestroy()
     {
+        if(!Application.isPlaying) return;
+        
         var player = FindObjectOfType<PlayerController>().gameObject;
+        if(player == null) return;
         
         var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
         instanceArtifact.SetArtifactData(artifact);
