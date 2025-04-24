@@ -23,6 +23,7 @@ public class GameplayEffect
     public int maxStack = 1;
     [NonSerialized] public int currentStack;
     
+    [NonSerialized] public Transform sourceTransform;
     
     public GameplayEffect(EffectType effectType, AttributeType attributeType, float amount, float duration = 0f, bool tracking = false)
     {
@@ -31,6 +32,7 @@ public class GameplayEffect
         this.amount = amount;
         this.duration = duration;
         this.tracking = tracking;
+        this.sourceTransform = sourceTransform;
     }
 
     public GameplayEffect DeepCopy()

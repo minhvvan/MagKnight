@@ -12,6 +12,8 @@ public class PlayerStat
     public AttributePair CriticalDamage;
     public AttributePair Damage;
     public AttributePair MoveSpeed;
+    public AttributePair Impluse;
+    public AttributePair ImpulseThreshold;
 }
 
 [Serializable]
