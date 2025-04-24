@@ -4,18 +4,33 @@ using UnityEngine;
 public class Katana: BaseWeapon
 {
     [SerializeField] GameObject _hitEffectPrefab;
+    WeaponTrail _weaponTrail;
+
+    void Start()
+    {
+        _weaponTrail = GetComponent<WeaponTrail>();
+    }
+    
 
     public override void AttackStart()
     {
         base.AttackStart();
         
         //TODO: FX
+        if(_weaponTrail != null)
+        {
+            _weaponTrail.EnableTrail(true);
+        }
     }
 
     public override void AttackEnd()
     {
         base.AttackEnd();
-
+        
+        if(_weaponTrail != null)
+        {
+            _weaponTrail.EnableTrail(false);
+        }
     }
 
     public override void OnNext(HitInfo hitInfo)
