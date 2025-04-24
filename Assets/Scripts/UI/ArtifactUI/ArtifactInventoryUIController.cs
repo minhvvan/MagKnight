@@ -44,7 +44,9 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
 
         var artifact = artifactSlot.GetChild();
         if (artifact != null)
-            Destroy(artifact);
+        {
+            artifact.GetComponent<ArtifactUI>().DumpArtifact();
+        }
         gameObject.SetActive(false);
     }
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using Jun;
 using Managers;
 using Moon;
 using UnityEngine;
@@ -17,11 +19,7 @@ namespace hvvan
             {
                 if (_playerController == null)
                 {
-                    _playerController = FindObjectOfType<PlayerController>();
-                    if (_playerController == null)
-                    {
-                        _playerController = Instantiate(playerCharacterPrefab).GetComponent<PlayerController>();
-                    }
+                    return _playerController = FindObjectOfType<PlayerController>();
                 }
 
                 return _playerController;
@@ -29,11 +27,7 @@ namespace hvvan
             private set => _playerController = value;
         }
 
-        public CurrentRunData CurrentRunData
-        {
-            get { return _currentRunData ??= new CurrentRunData(); }
-            set => _currentRunData = value;
-        }
+        public CurrentRunData CurrentRunData => _currentRunData;
 
         private PlayerController _playerController;
 
@@ -147,7 +141,7 @@ namespace hvvan
         private async UniTask<PlayerData> CreatePlayerData()
         {
             Debug.Log($"Create PlayerData");
-            var statSO = await DataManager.Instance.LoadDataAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
+            var statSO = await DataManager.Instance.LoadScriptableObjectAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
     
             // 새 PlayerData 생성
             var playerData = new PlayerData
@@ -167,8 +161,6 @@ namespace hvvan
             };
             
             _currentRunData = currentRunData;
-            
-            SaveData(Constants.CurrentRun);
         }
 
         public void SaveData(string key)
@@ -179,6 +171,14 @@ namespace hvvan
             }
             else if (key == Constants.CurrentRun)
             {
+                if (!Player) return;
+                
+                if (Player.GetComponent<AbilitySystem>().TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
+                {
+                    _currentRunData.playerStat = attributeSet.GetDataStruct();
+                }
+
+                _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
                 _ = SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }
@@ -206,6 +206,11 @@ namespace hvvan
             }
 
             return _playerData.PlayerStat;
+        }
+
+        public PlayerStat GetCurrentStat()
+        {
+            return _currentRunData?.playerStat;
         }
     }
 }

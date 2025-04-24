@@ -8,6 +8,7 @@ public class EnemyAttributeSet : AttributeSet
     public Action<int> OnPhaseChange;
     public Action OnDeath;
     public Action OnStagger;
+    public Action<Transform> OnHit;
     
     private bool _phase70Triggered = false;
     private bool _phase30Triggered = false;
@@ -53,11 +54,19 @@ public class EnemyAttributeSet : AttributeSet
         {
             // 체력은 항상 데미지를 통해서만 접근
             // 현재 체력에서 데미지를 뺀 값을 적용해서 Hp업데이트, 단 0보다 작거나, MaxHp보다 크지 않게
-            SetValue(AttributeType.HP,
-                Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
+            SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
+            if(effect.sourceTransform != null)
+                OnHit?.Invoke(effect.sourceTransform);
             // 예시 실드가 있다면?
             // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
 
+            if (GetValue(AttributeType.HP) <= 0)
+            {
+                // TODO : 사망로직
+                OnDeath?.Invoke();
+                // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
+            }
+            
             // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
             SetValue(AttributeType.Damage, 0);
         }
@@ -84,16 +93,10 @@ public class EnemyAttributeSet : AttributeSet
 
         if (GetValue(AttributeType.Resistance) <= 0)
         {
+            SetValue(AttributeType.Resistance, GetValue(AttributeType.MaxResistance));
             OnStagger?.Invoke();
         }
         
-        if (GetValue(AttributeType.HP) <= 0)
-        {
-            // TODO : 사망로직
-            Debug.Log("EnemyDead");
-            OnDeath?.Invoke();
-            // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
-        }
         else if (!_phase30Triggered && GetValue(AttributeType.HP) <= GetValue(AttributeType.MaxHP) * 0.3f)
         {
             _phase30Triggered = true;

@@ -75,11 +75,6 @@ public class MagneticController : MagneticObject
     private float _counterPressRange;
     private float _counterPressPower;
     
-    private void Start()
-    {
-        InitializeMagnetic();
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -250,6 +245,7 @@ public class MagneticController : MagneticObject
     //실시간으로 플레이어 주변의 MagneticObject를 탐색합니다.
     private void ScanNearByMagneticTarget()
     {
+        if (!mainCamera) return;
         var targetPoint = GetTargetPoint();
         
         //범위 내 전체 감지
@@ -283,6 +279,7 @@ public class MagneticController : MagneticObject
     //조준한 범위 내의
     private void FocusMagneticTarget()
     {
+        if (!mainCamera) return;
         var targetPoint = GetTargetPoint();
         
         sphereRadius = GetDynamicSphereRadius(screenOffset, Vector3.Distance(mainCamera.transform.position, targetPoint));
@@ -716,9 +713,9 @@ public class MagneticController : MagneticObject
         private void OnDrawGizmos()
     {
 #if UNITY_EDITOR
-        if (!EditorApplication.isPlaying)
+        if (!EditorApplication.isPlaying || !mainCamera)
             return;
-        
+
         Ray mainCameraRay = new Ray(mainCamera.transform.position, mainCamera.transform.forward);
         Vector3 targetPoint = GetAdjustRayOrigin(mainCameraRay, transform.position);
         

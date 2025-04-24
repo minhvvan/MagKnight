@@ -10,7 +10,8 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 {
     [SerializeField] private ArtifactDataSO artifact;
     [SerializeField] private Image icon;
-
+    [SerializeField] private GameObject artifactPrefab;
+    
     Vector3 startPos;
     [HideInInspector] public Transform startParent;
     
@@ -55,7 +56,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             // TODO: 아이템 버리기
             transform.SetParent(null);
             startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
-            Destroy(gameObject);
+            DumpArtifact();
             return;
         }
         
@@ -68,11 +69,15 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    void OnDestroy()
+    public void DumpArtifact()
     {
         var player = FindObjectOfType<PlayerController>().gameObject;
+        if(player == null) return;
         
-        var instanceArtifact = Instantiate(artifact.prefab);
+        var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
+        instanceArtifact.SetArtifactData(artifact);
         instanceArtifact.transform.position = player.transform.position + new Vector3(0, 0, 3);
+        
+        Destroy(gameObject);
     }
 }

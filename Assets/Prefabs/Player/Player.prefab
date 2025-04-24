@@ -2355,7 +2355,7 @@ Animator:
   m_GameObject: {fileID: 6999629288266388604}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 13abfa63db8dbca4e883322e86682b73, type: 3}
-  m_Controller: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7d6522474709f1d48824f1f39f3f89d7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -2399,9 +2399,13 @@ MonoBehaviour:
   minTurnSpeed: 400
   maxTurnSpeed: 1200
   idleTimeout: 5
-  canAttack: 1
+  canAttack: 0
   cameraSettings: {fileID: 0}
   isDead: 0
+  animatorControllers:
+    _serializedList:
+    - Key: 1
+      Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
 --- !u!114 &6796001127801567281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2500,6 +2504,8 @@ MonoBehaviour:
     rid: 4781514843088748545
   _activatedEffects:
     _serializedList: []
+  _registeredPassiveEffects:
+    _serializedList: []
   references:
     version: 2
     RefIds:
@@ -2520,7 +2526,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f4d5dd8540b612488135867d9bb3f2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilitySystem: {fileID: 7606081418953164142}
 --- !u!114 &5278516391698251394
 MonoBehaviour:
   m_ObjectHideFlags: 0

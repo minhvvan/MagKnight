@@ -21,6 +21,8 @@ public enum AttributeType
     Resistance,
     ResistanceDamage,
     GOLD, // 드롭 골드량
+    Impulse, // 충격량
+    ImpulseThreshold, // 충격량 임계값
 }
 
 /// <summary>
