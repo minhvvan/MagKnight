@@ -40,7 +40,7 @@ public abstract class IMagneticInteractCommand
 
     public async UniTask SetData()
     {
-        var data = await DataManager.Instance.LoadDataAsync<MagneticSetupSO>
+        var data = await DataManager.Instance.LoadScriptableObjectAsync<MagneticSetupSO>
             (Addresses.Data.Magnetic.MagneticSetupData);
         
         maxInCount = data.maxInCount;

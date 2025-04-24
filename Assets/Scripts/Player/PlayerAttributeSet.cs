@@ -80,5 +80,10 @@ namespace Jun
                 SetValue(AttributeType.Impulse, 0);
             }
         }
+
+        public PlayerStat GetDataStruct()
+        {
+            return PlayerStat.FromDictionary(_attributeDictionary);
+        }
     }
 }

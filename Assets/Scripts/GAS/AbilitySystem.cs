@@ -31,7 +31,10 @@ public class AbilitySystem : MonoBehaviour
             Debug.LogError("PlayerStat is not assigned!");
             return;
         }
-    
+
+        //이전 Attribute 삭제
+        Attributes.ClearAllAttributes();
+        
         // PlayerStat의 모든 필드를 순회
         foreach (var field in typeof(PlayerStat).GetFields())
         {

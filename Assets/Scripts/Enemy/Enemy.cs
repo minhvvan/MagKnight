@@ -25,6 +25,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public PatternController patternController;
     public HpBarController hpBarController;
     
+
+    public Action<Enemy> OnDead;
+    
     // stateMachine
     private StateMachine _stateMachine;
     
@@ -62,8 +65,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler = hitHandler;
             HitHandler.Subscribe(this);
         }
-        
-        EnemyController.AddEnemy(this);
         
         InitializeState();
     }
@@ -129,6 +130,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         if(blackboard.isDead) return;
         SetState(deadState);
+        OnDead?.Invoke(this);
     }
 
     public void OnStagger()
@@ -231,12 +233,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         patternController.AttackEnd();
     }
     
-
-    public void OnDestroy()
-    {
-        EnemyController.RemoveEnemy(this);
-    }
-
     #region debugging
     private void OnDrawGizmos()
     {
