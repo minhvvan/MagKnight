@@ -1,4 +1,5 @@
 using System.Collections;
+using Cysharp.Threading.Tasks;
 using hvvan;
 using UnityEngine;
 
@@ -19,7 +20,14 @@ namespace Moon
         private IEnumerator SceneLoaded()
         {
             GameManager.Instance.ChangeGameState(GameState.DungeonEnter);
-            yield return RoomSceneController.Instance.EnterFloor();
+            
+            var enterTask = RoomSceneController.Instance.EnterFloor();
+            while (!enterTask.Status.IsCompleted())
+            {
+                yield return null;
+            }
+            
+            RoomSceneController.Instance.CurrentRoomController.SetClearField(true);
         }
     }
 }

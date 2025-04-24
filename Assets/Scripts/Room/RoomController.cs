@@ -7,17 +7,17 @@ using hvvan;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RoomController : MonoBehaviour
+public class RoomController : MonoBehaviour, IObserver<bool>
 {
     [SerializeField] private SerializedDictionary<RoomDirection, Gate> gates;
+    [SerializeField] private ClearRoomField clearRoomField;
 
-    private int roomIndex;
+    private int _roomIndex;
+    private bool _cleared = false;
 
-    public int RoomIndex => roomIndex;
+    public int RoomIndex => _roomIndex;
     public Room Room { get; private set; }
     
-    //TODO: 클리어 판정을 위한 장소에 도착하면 Invoke
-    public Action OnClearSpotReached;
 
     private void Awake()
     {
@@ -33,10 +33,18 @@ public class RoomController : MonoBehaviour
         {
             gate.gameObject.SetActive(false);
         }
+        
+        //클리어 필드 비활성화
+        SetClearField(false);
     }
 
     private void Start()
     {
+        if (clearRoomField != null)
+        {
+            clearRoomField.Subscribe(this);
+        }
+        
         foreach (var gate in gates.Values)
         {
             gate.OnEnter += OnGateEntered;
@@ -45,12 +53,12 @@ public class RoomController : MonoBehaviour
 
     private void OnGateEntered(RoomDirection direction)
     {
-        _ = RoomSceneController.Instance.EnterRoom(roomIndex, direction);
+        _ = RoomSceneController.Instance.EnterRoom(_roomIndex, direction);
     }
 
     public void SetRoomData(Room roomData, int index)
     {
-        roomIndex = index;
+        _roomIndex = index;
         Room = roomData;
     }
 
@@ -75,6 +83,7 @@ public class RoomController : MonoBehaviour
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         
         gameObject.SetActive(true);
+        SetClearField(true);
     }
 
     public void OnPlayerExit()
@@ -86,5 +95,31 @@ public class RoomController : MonoBehaviour
     public void Reward()
     {
         //TODO: 보상 지급
+    }
+
+    public void SetClearField(bool isEnable)
+    {
+        if (clearRoomField)
+        {
+            clearRoomField.gameObject.SetActive(isEnable);
+        }
+    }
+    
+    public void OnNext(bool reached)
+    {
+        if (reached && !_cleared)
+        {
+            _cleared = true;
+            Reward();
+            GameManager.Instance.ChangeGameState(GameState.RoomClear);
+        }
+    }
+
+    public void OnError(Exception error)
+    {
+    }
+
+    public void OnCompleted()
+    {
     }
 }

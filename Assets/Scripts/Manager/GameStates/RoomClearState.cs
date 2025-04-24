@@ -24,10 +24,6 @@ public class RoomClearState: IGameState
 
     public void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            GameManager.Instance.ChangeGameState(GameState.GameOver);
-        }
     }
 
     public void OnExit()
