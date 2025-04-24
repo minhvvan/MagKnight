@@ -52,7 +52,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
         //targetRoom활성화 + currentRoom비활성화
         if (targetController != null)
         {
-            targetController.OnPlayerEnter(direction);
+            await targetController.OnPlayerEnter(direction);
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {

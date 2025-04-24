@@ -26,7 +26,7 @@ public class InitGameState: IGameState
             //회차 정보대로 씬 이동 및 설정
             GameManager.Instance.SetCurrentRunData(_currentRunData);
 
-            var floorList = await DataManager.Instance.LoadDataAsync<FloorDataSO>(Addresses.Data.Room.Floor);
+            var floorList = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
             var currentFloorRooms = floorList.Floor[_currentRunData.currentFloor];
             
             //시작씬으로 이동

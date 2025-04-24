@@ -141,7 +141,7 @@ namespace hvvan
         private async UniTask<PlayerData> CreatePlayerData()
         {
             Debug.Log($"Create PlayerData");
-            var statSO = await DataManager.Instance.LoadDataAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
+            var statSO = await DataManager.Instance.LoadScriptableObjectAsync<PlayerStatSO>(Addresses.Data.Player.Stat);
     
             // 새 PlayerData 생성
             var playerData = new PlayerData

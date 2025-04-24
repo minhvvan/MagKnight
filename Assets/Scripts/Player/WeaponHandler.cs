@@ -15,7 +15,7 @@ public class WeaponHandler: MonoBehaviour
     {
         try
         {
-            _weaponSO = await DataManager.Instance.LoadDataAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
+            _weaponSO = await DataManager.Instance.LoadScriptableObjectAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
         }
         catch (Exception e)
         {

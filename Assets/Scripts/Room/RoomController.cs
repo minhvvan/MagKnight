@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 using hvvan;
+using Managers;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,6 +17,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     [SerializeField] private ClearRoomField clearRoomField;
 
     private EnemyController _enemyController;
+    private NavMeshData _loadedNavMeshData;
     private NavMeshSurface _navMeshSurface;
     
     private int _roomIndex;
@@ -88,12 +91,12 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
     }
 
-    public void OnPlayerEnter(RoomDirection direction = RoomDirection.South)
+    public async UniTask OnPlayerEnter(RoomDirection direction = RoomDirection.South)
     {
         if (_navMeshSurface)
         {
-            ConfigureNavMesh();
-            _navMeshSurface.BuildNavMesh();
+            await LoadNavMeshData();
+            _navMeshSurface.navMeshData = _loadedNavMeshData;
         }
         
         SetGateOpen(false);
@@ -107,7 +110,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         SetRoomReady(true);
         gameObject.SetActive(true);
     }
-    
+
+    private async UniTask LoadNavMeshData()
+    {
+        if(_loadedNavMeshData) return;
+        _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(Addresses.Data.Room.NavMeshData);
+    }
+
     private void ConfigureNavMesh()
     {
         //타깃 설정
