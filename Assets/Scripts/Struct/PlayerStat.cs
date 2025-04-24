@@ -53,6 +53,12 @@ public class PlayerStat
                 case AttributeType.MoveSpeed:
                     stat.MoveSpeed = new AttributePair(AttributeType.MoveSpeed, entry.Value.GetValue());
                     break;
+                case AttributeType.Impulse:
+                    stat.Impluse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
+                    break;
+                case AttributeType.ImpulseThreshold:
+                    stat.ImpulseThreshold = new AttributePair(AttributeType.ImpulseThreshold, entry.Value.GetValue());
+                    break;
             }
         }
         
