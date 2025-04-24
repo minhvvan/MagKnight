@@ -27,7 +27,7 @@ namespace Moon
                 yield return null;
             }
             
-            RoomSceneController.Instance.CurrentRoomController.SetClearField(true);
+            RoomSceneController.Instance.CurrentRoomController.SetRoomReady(true);
         }
     }
 }

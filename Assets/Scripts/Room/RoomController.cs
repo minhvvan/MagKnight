@@ -12,15 +12,17 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     [SerializeField] private SerializedDictionary<RoomDirection, Gate> gates;
     [SerializeField] private ClearRoomField clearRoomField;
 
+    private EnemyController _enemyController;
+    
     private int _roomIndex;
     private bool _cleared = false;
 
     public int RoomIndex => _roomIndex;
     public Room Room { get; private set; }
     
-
     private void Awake()
     {
+        _enemyController = GetComponent<EnemyController>();
         var gateContollers = GetComponentsInChildren<Gate>().ToList();
         
         foreach (var gate in gateContollers)
@@ -35,7 +37,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         //클리어 필드 비활성화
-        SetClearField(false);
+        SetRoomReady(false);
     }
 
     private void Start()
@@ -60,6 +62,14 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     {
         _roomIndex = index;
         Room = roomData;
+        
+        if (Room is { roomType: RoomType.BattleRoom })
+        {
+            if (_enemyController)
+            {
+                _enemyController.OnEnemiesClear += RoomCompleted;
+            }
+        }
     }
 
     public void SetGateOpen(bool isOpen)
@@ -83,7 +93,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         
         gameObject.SetActive(true);
-        SetClearField(true);
+        SetRoomReady(true);
     }
 
     public void OnPlayerExit()
@@ -92,26 +102,38 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         gameObject.SetActive(false);
     }
 
-    public void Reward()
+    private void Reward()
     {
         //TODO: 보상 지급
     }
 
-    public void SetClearField(bool isEnable)
+    public void SetRoomReady(bool isEnable)
     {
         if (clearRoomField)
         {
             clearRoomField.gameObject.SetActive(isEnable);
         }
     }
-    
+
+    private void RoomCompleted()
+    {
+        //해제
+
+        if (_enemyController)
+        {
+            _enemyController.OnEnemiesClear -= RoomCompleted;
+        }
+        
+        _cleared = true;
+        Reward();
+        GameManager.Instance.ChangeGameState(GameState.RoomClear);
+    }
+
     public void OnNext(bool reached)
     {
         if (reached && !_cleared)
         {
-            _cleared = true;
-            Reward();
-            GameManager.Instance.ChangeGameState(GameState.RoomClear);
+            RoomCompleted();
         }
     }
 

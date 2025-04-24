@@ -1780,6 +1780,7 @@ GameObject:
   - component: {fileID: 3436078583196095092}
   - component: {fileID: 4302195821833762032}
   - component: {fileID: 8164696724866519026}
+  - component: {fileID: 8164696724866519027}
   m_Layer: 11
   m_Name: Testroom01
   m_TagString: Untagged
@@ -1931,6 +1932,19 @@ MonoBehaviour:
       Value: {fileID: 1739916958}
     - Key: 3
       Value: {fileID: 173347431}
+  clearRoomField: {fileID: 0}
+--- !u!114 &8164696724866519027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6003647215888019296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22a760686e291e34082c3f5d4dbe93f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8297235605156661922
 Transform:
   m_ObjectHideFlags: 0

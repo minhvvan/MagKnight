@@ -20,7 +20,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
     public PatternController patternController;
-    
+
+    public Action<Enemy> OnDead;
     
     // stateMachine
     private StateMachine _stateMachine;
@@ -59,8 +60,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler = hitHandler;
             HitHandler.Subscribe(this);
         }
-        
-        EnemyController.AddEnemy(this);
         
         InitializeState();
     }
@@ -125,6 +124,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public void OnDeath()
     {
         SetState(deadState);
+        OnDead?.Invoke(this);
     }
 
     public void OnStagger()
@@ -182,12 +182,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         patternController.AttackEnd();
     }
     
-
-    public void OnDestroy()
-    {
-        EnemyController.RemoveEnemy(this);
-    }
-
     #region debugging
     private void OnDrawGizmos()
     {
