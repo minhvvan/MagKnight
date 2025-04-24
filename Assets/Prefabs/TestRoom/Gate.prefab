@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6138984351696488547}
   - component: {fileID: 4682185620889404034}
   - component: {fileID: 1482989307526278666}
+  - component: {fileID: 3310774214116262838}
   m_Layer: 0
   m_Name: Gate
   m_TagString: Untagged
@@ -33,6 +34,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 258577481443518111}
+  - {fileID: 162860161165580936}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6138984351696488547
@@ -107,6 +109,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 0.9999999, z: 3.9999995}
   m_Center: {x: 0, y: 0, z: 1.9999998}
+--- !u!114 &3310774214116262838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 242442742911271409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0388725113740147a3c0428c3a9e27e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSpawnPoint: {fileID: 162860161165580936}
+  roomDirection: 0
 --- !u!1 &1377894224579844492
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,3 +176,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.2, y: 1, z: 3.9999995}
   m_Center: {x: 0, y: 0.1, z: 1.9999998}
+--- !u!1 &3027835130236367628
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 162860161165580936}
+  m_Layer: 0
+  m_Name: PlayerSpawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &162860161165580936
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3027835130236367628}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 0, y: -2.01, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3968088376332363782}
+  m_LocalEulerAnglesHint: {x: -90, y: 180, z: 0}

@@ -1,10 +1,12 @@
 using System;
 using System.Threading;
+using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Jun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Moon
 {
@@ -31,8 +33,12 @@ namespace Moon
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
 
+        public WeaponHandler WeaponHandler => _weaponHandler;
+        public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
         public bool isDead;
+        
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
         LockOnSystem _lockOnSystem;
         bool _lockOnLastFrame = false;
@@ -46,6 +52,8 @@ namespace Moon
         protected bool _isGrounded = true;            // Whether or not Ellen is currently standing on the ground.
         protected bool _previouslyGrounded = true;    // Whether or not Ellen was standing on the ground last frame.
         protected bool _readyToJump;                  // Whether or not the input state and Ellen are correct to allow jumping.
+        protected bool _isKnockDown = false;
+        protected bool _isKnockDownFront = false;
         protected float _desiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float _forwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float _verticalSpeed;               // How fast Ellen is currently moving up or down.
@@ -89,6 +97,7 @@ namespace Moon
         readonly int _HashMoveX   = Animator.StringToHash("MoveX");
         readonly int _HashMoveY   = Animator.StringToHash("MoveY");
         readonly int _HashSpeed   = Animator.StringToHash("Speed");
+        readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -158,8 +167,32 @@ namespace Moon
             _abilitySystem = GetComponent<AbilitySystem>();
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
+
+            if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
+            {
+                var stat = await GameManager.Instance.GetPlayerStat();
+                InitStat(stat);
+            }
+                
+            _inputHandler.magneticInput = MagneticPress;
+            _inputHandler.magneticOutput = MagneticRelease;
+            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+        }
+        
+        //명시적 초기화
+        public void InitializeByCurrentRunData(CurrentRunData currentRunData)
+        {
+            InitStat(currentRunData.playerStat);
+
+            //마그네틱 컨트롤러 초기화
+            _magneticController.InitializeMagnetic();
             
-            var stat = await GameManager.Instance.GetPlayerStat();
+            //무기 지급
+            SetCurrentWeapon(currentRunData.currentWeapon);
+        }
+
+        public void InitStat(PlayerStat stat)
+        {
             _abilitySystem.InitializeFromPlayerStat(stat);
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
@@ -173,12 +206,10 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-
-            _inputHandler.magneticInput = MagneticPress;
-            _inputHandler.magneticOutput = MagneticRelease;
-            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+            Reset();
         }
-
+        
+        
         // Called automatically by Unity once every Physics step.
         void FixedUpdate()
         {
@@ -243,6 +274,7 @@ namespace Moon
 
             //PlayAudio();
 
+            
             TimeoutToIdle();
 
             
@@ -579,56 +611,56 @@ namespace Moon
         
         void OnAnimatorMove()
         {
-            // 1) 콤보 중엔 항상 루트 모션만
-            if (_inCombo)
-            {
-                // 애니메이터에 박혀있는 이동(deltaPosition)만 적용
-                Vector3 move = _animator.deltaPosition;
-                // 필요하면 중력/점프 속도 추가
-                move += Vector3.up * _verticalSpeed * Time.deltaTime;
-                _characterController.Move(move);
+            // Early out: 사망 상태면 이동 중단
+            if (isDead)
                 return;
-            }
 
-            // 2) 락온 중이고 콤보가 아니면, 입력 기반 이동
-            if (_lockOnSystem.currentTarget != null)
-            {
-                Vector3 dirToTarget = _lockOnSystem.currentTarget.position - transform.position;
-                dirToTarget.y = 0f;
-                transform.rotation = Quaternion.LookRotation(dirToTarget);
-
-                Vector2 inp = _inputHandler.MoveInput;
-                Vector3 localInput = new Vector3(inp.x, 0f, inp.y);
-                if (localInput.sqrMagnitude > 1f) localInput.Normalize();
-
-                Vector3 move = (transform.right * localInput.x
-                                + transform.forward * localInput.z)
-                               * _forwardSpeed * Time.deltaTime;
-                move += Vector3.up * _verticalSpeed * Time.deltaTime;
-                _characterController.Move(move);
-                return;
-            }
-
-            
-            Vector3 movement;
-
-            if (isDead) return;
+            Vector3 movement = Vector3.zero;
 
             if (_isGrounded)
             {
-                // ★ Locomotion 뿐 아니라 LockOnWalk/Jog 도 같이
-                bool isStdMove = _currentStateInfo.shortNameHash == _HashLocomotion;
-
-                if (isStdMove)
+                // 1) 콤보 중엔 항상 루트 모션만 적용
+                if (_inCombo)
                 {
-                    movement = _forwardSpeed * transform.forward * Time.deltaTime;
+                    Vector3 rootMove = _animator.deltaPosition;
+                    rootMove += Vector3.up * _verticalSpeed * Time.deltaTime;
+                    _characterController.Move(rootMove);
+                    // return;
+                }
+                
+                // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
+                if (_lockOnSystem.currentTarget != null && !_inCombo)
+                {
+                    // 캐릭터 회전: 타겟 바라보기
+                    Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                    toTarget.y = 0f;
+                    if (toTarget.sqrMagnitude > 0.001f)
+                        transform.rotation = Quaternion.LookRotation(toTarget);
+
+                    // 이동 벡터: 입력 기준으로
+                    Vector2 raw = _inputHandler.MoveInput;
+                    Vector3 dir = new Vector3(raw.x, 0f, raw.y);
+                    if (dir.sqrMagnitude > 1f) dir.Normalize();
+
+                    movement = (transform.right * dir.x + transform.forward * dir.z) *
+                               (_forwardSpeed * Time.deltaTime);
+                    movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+
+                    _characterController.Move(movement);
+                }
+
+                // 3) 일반 로코모션 
+                bool useManualMove = (_currentStateInfo.shortNameHash == _HashLocomotion);
+                if (useManualMove)
+                {
+                    movement = transform.forward * (_forwardSpeed * Time.deltaTime);
                 }
                 else
                 {
-                    // 기존 Root Motion 처리
+                    // 루트 모션 기반 이동
                     RaycastHit hit;
-                    Ray ray = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, -Vector3.up);
-                    if (Physics.Raycast(ray, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                    Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
+                    if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
                         movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
                     else
                         movement = _animator.deltaPosition;
@@ -636,26 +668,29 @@ namespace Moon
             }
             else
             {
-                movement = _forwardSpeed * transform.forward * Time.deltaTime;
+                // 4) 공중 이동: 수동 이동
+                movement = transform.forward * (_forwardSpeed * Time.deltaTime);
             }
-            
+
+            // 5) 회전 보정: 애니메이터 deltaRotation 적용
             _characterController.transform.rotation *= _animator.deltaRotation;
-            movement += _verticalSpeed * Vector3.up * Time.deltaTime;
+
+            // 6) 중력/점프 속도 추가
+            movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+
+            // 7) 캐릭터 컨트롤러로 최종 이동
             _characterController.Move(movement);
 
-            Collider[] colliders = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
-
-            foreach(Collider hitCol in colliders)
+            // 8) 적 충돌 보정
+            var hits = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
+            foreach (Collider hitCol in hits)
             {
-
-                if (Physics.ComputePenetration(_collider, transform.position, transform.rotation,
-                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
-                    out Vector3 direction, out float distance))
+                if (Physics.ComputePenetration(
+                        _collider, transform.position, transform.rotation,
+                        hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                        out Vector3 pushDir, out float pushDist))
                 {
-                    //transform.position += direction * distance;
-
-                    transform.position = Vector3.Lerp(transform.position, transform.position + (direction * distance), 1f);
-
+                    transform.position = Vector3.Lerp(transform.position, transform.position + pushDir * pushDist, 1f);
                 }
             }
         }
@@ -704,7 +739,9 @@ namespace Moon
         #region Weapon
         public void SetCurrentWeapon(WeaponType weaponType)
         {
+            _animator.runtimeAnimatorController = animatorControllers[weaponType];
             _weaponHandler.SetCurrentWeapon(weaponType);
+            canAttack = true;
         }
         #endregion
         
@@ -717,6 +754,11 @@ namespace Moon
         public void RespawnFinished()
         {
             isDead = false;
+        }
+
+        public void StandFinished()
+        {
+            _isKnockDown = false;
         }
 
         public void Death()
@@ -733,13 +775,32 @@ namespace Moon
             }
         }
 
-        public void Damaged()
+        public void Damaged(Transform sourceTransform)
         {
-            if (isDead) return;
+            if (isDead || _isKnockDown) return;
 
-            _animator.SetTrigger(_HashHurt);
-            // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
-            // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
+            if(sourceTransform != null)
+            {
+                // 공격이 들어온 방향
+                var dir = sourceTransform.position - transform.position;
+                // 내 캐릭터에 방향에 맞게 계산
+                var hurtFrom = transform.InverseTransformDirection(dir.normalized);
+                _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
+                _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
+                
+                var impulse = _abilitySystem.GetValue(AttributeType.Impulse);
+                // 충격량이 임계값보다 작음 : 그냥 경직
+                if (impulse > 0)
+                {
+                    _animator.SetTrigger(_HashHurt);
+                }
+                // 큰 경직
+                else
+                {
+                    _animator.SetTrigger(_HashBigHurt); 
+                    _isKnockDown = true;
+                }
+            }
         }
 
         void OnAnimatorIK(int layerIndex)

@@ -25,6 +25,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public PatternController patternController;
     public HpBarController hpBarController;
     
+
+    public Action<Enemy> OnDead;
     
     // stateMachine
     private StateMachine _stateMachine;
@@ -63,8 +65,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             HitHandler = hitHandler;
             HitHandler.Subscribe(this);
         }
-        
-        EnemyController.AddEnemy(this);
         
         InitializeState();
     }
@@ -128,16 +128,15 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnDeath()
     {
+        if(blackboard.isDead) return;
         SetState(deadState);
+        OnDead?.Invoke(this);
     }
 
     public void OnStagger()
     {
         float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MaxResistance);
         SetState(staggerState);
-        
-        // Set은 할 수 없습니다. 초기화에만 사용해주세요 : 이민준
-        //blackboard.abilitySystem.SetValue(AttributeType.RES, maxRes);
     }
     
     public void OnPhaseChange(int phase)
@@ -158,7 +157,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             blackboard.onHitCancellation.Dispose();
         }
         blackboard.onHitCancellation = new CancellationTokenSource();
-
+        
         OnHitHelper(playerTransform).Forget();
     }
 
@@ -198,7 +197,11 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+        GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
+        damageEffect.sourceTransform = transform;
+        impulseEffect.sourceTransform = transform;
         hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
+        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
     }
 
     public void OnError(Exception error)
@@ -230,12 +233,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         patternController.AttackEnd();
     }
     
-
-    public void OnDestroy()
-    {
-        EnemyController.RemoveEnemy(this);
-    }
-
     #region debugging
     private void OnDrawGizmos()
     {

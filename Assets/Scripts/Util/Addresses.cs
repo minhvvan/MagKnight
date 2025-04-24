@@ -20,6 +20,7 @@ public static class Addresses
         {
             public const string Floor = "data/floor";
             public const string RoomData = "data/room";
+            public const string NavMeshData  = "data/navmesh";
         }
 
         public static class Magnetic

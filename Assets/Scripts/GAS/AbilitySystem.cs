@@ -31,13 +31,16 @@ public class AbilitySystem : MonoBehaviour
             Debug.LogError("PlayerStat is not assigned!");
             return;
         }
-    
+
+        //이전 Attribute 삭제
+        Attributes.ClearAllAttributes();
+        
         // PlayerStat의 모든 필드를 순회
         foreach (var field in typeof(PlayerStat).GetFields())
         {
             // 필드 값을 AttributePair로 가져옴
             AttributePair attributePair = (AttributePair)field.GetValue(playerStat);
-        
+            
             // AbilitySystem에 값 추가
             AddAttribute(attributePair.Key, attributePair.Value);
         }
@@ -176,6 +179,8 @@ public class AbilitySystem : MonoBehaviour
     
     private async UniTaskVoid ApplyPeriodicEffect(GameplayEffect gameplayEffect)
     {
+        if(_activatedEffects.ContainsKey(gameplayEffect.GetHashCode())) return;
+        
         float elapsed = 0f;
         while (elapsed < gameplayEffect.duration)
         {

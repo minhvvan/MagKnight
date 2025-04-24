@@ -663,9 +663,7 @@ MonoBehaviour:
     RefIds:
     - rid: 7511380119148822529
       type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
-      data:
-        attributeDictionary:
-          _serializedList: []
+      data: 
 --- !u!114 &8534206445701083951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,7 +699,7 @@ MonoBehaviour:
   isDead: 0
   phase: 0
   muzzleTransform: {fileID: 489340003819110710}
-  enemyRenderer: {fileID: 0}
+  enemyRenderer: {fileID: 6710252391427252474}
 --- !u!114 &4348407960360890687
 MonoBehaviour:
   m_ObjectHideFlags: 0
