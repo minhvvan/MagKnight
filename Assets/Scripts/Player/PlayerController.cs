@@ -52,6 +52,8 @@ namespace Moon
         protected bool _isGrounded = true;            // Whether or not Ellen is currently standing on the ground.
         protected bool _previouslyGrounded = true;    // Whether or not Ellen was standing on the ground last frame.
         protected bool _readyToJump;                  // Whether or not the input state and Ellen are correct to allow jumping.
+        protected bool _isKnockDown = false;
+        protected bool _isKnockDownFront = false;
         protected float _desiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float _forwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float _verticalSpeed;               // How fast Ellen is currently moving up or down.
@@ -95,6 +97,7 @@ namespace Moon
         readonly int _HashMoveX   = Animator.StringToHash("MoveX");
         readonly int _HashMoveY   = Animator.StringToHash("MoveY");
         readonly int _HashSpeed   = Animator.StringToHash("Speed");
+        readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -270,6 +273,7 @@ namespace Moon
 
             //PlayAudio();
 
+            
             TimeoutToIdle();
 
             
@@ -751,6 +755,11 @@ namespace Moon
             isDead = false;
         }
 
+        public void StandFinished()
+        {
+            _isKnockDown = false;
+        }
+
         public void Death()
         {
             if(isDead) return;
@@ -765,13 +774,32 @@ namespace Moon
             }
         }
 
-        public void Damaged()
+        public void Damaged(Transform sourceTransform)
         {
-            if (isDead) return;
+            if (isDead || _isKnockDown) return;
 
-            _animator.SetTrigger(_HashHurt);
-            // _animator.SetFloat(_HashHurtFromX, _inputHandler.MoveInput.x);
-            // _animator.SetFloat(_HashHurtFromY, _inputHandler.MoveInput.y);
+            if(sourceTransform != null)
+            {
+                // 공격이 들어온 방향
+                var dir = sourceTransform.position - transform.position;
+                // 내 캐릭터에 방향에 맞게 계산
+                var hurtFrom = transform.InverseTransformDirection(dir.normalized);
+                _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
+                _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
+                
+                var impulse = _abilitySystem.GetValue(AttributeType.Impulse);
+                // 충격량이 임계값보다 작음 : 그냥 경직
+                if (impulse > 0)
+                {
+                    _animator.SetTrigger(_HashHurt);
+                }
+                // 큰 경직
+                else
+                {
+                    _animator.SetTrigger(_HashBigHurt); 
+                    _isKnockDown = true;
+                }
+            }
         }
 
         void OnAnimatorIK(int layerIndex)

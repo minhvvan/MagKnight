@@ -106,6 +106,7 @@ public class EnemyBlackboard : MonoBehaviour
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnDeath += _enemy.OnDeath;
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnStagger += _enemy.OnStagger;
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnPhaseChange += _enemy.OnPhaseChange;
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnHit += _enemy.OnHit;
 
     }
 }
