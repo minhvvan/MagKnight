@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using hvvan;
 using Jun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Moon
 {
@@ -164,6 +165,12 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
 
+            if(SceneManager.GetActiveScene().name == "Prototype")
+            {
+                var stat = await GameManager.Instance.GetPlayerStat();
+                InitStat(stat);
+            }
+                
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
