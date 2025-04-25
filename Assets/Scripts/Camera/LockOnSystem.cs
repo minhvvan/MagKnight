@@ -22,7 +22,7 @@ public class LockOnSystem : MonoBehaviour
     [Tooltip("마우스 이동으로 대상 변경 시 최소 화면 비율 값 (X축) ")]
     public float mouseSwitchMaxDist = 8f;
     [Tooltip("패드 우측 스틱 대상 변경 시 최소 입력 강도")]
-    public float stickDeadzone = 7f;
+    public float stickDeadzone = 0.2f;
 
     // 내부 스위치 상태
     private bool _switchedRight;
