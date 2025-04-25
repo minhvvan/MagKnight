@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tip: {fileID: 8405509954639651256}
   _base: {fileID: 7224179057165760823}
-  _trailFrameLength: 15
+  _trailFrameLength: 30
   _trailMaterial: {fileID: 2100000, guid: 68d608c9746a94c15a3fdf4c1911abe4, type: 2}
 --- !u!1 &7224179057165760823
 GameObject:

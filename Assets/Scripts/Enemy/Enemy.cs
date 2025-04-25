@@ -140,6 +140,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         blackboard.isDead = true;
         SetState(deadState);
         OnDead?.Invoke(this);
+        
+        //죽으면 일정 확률로 힐팩 생성
+        if(ItemManager.Instance.CheckProbability(ItemCategory.HealthPack, ItemRarity.Common))
+        {
+            ItemManager.Instance.CreateItem(ItemCategory.HealthPack, ItemRarity.Common, 
+                MainCollider.bounds.center + Vector3.up, Quaternion.identity);
+        }
     }
 
     public void OnStagger()

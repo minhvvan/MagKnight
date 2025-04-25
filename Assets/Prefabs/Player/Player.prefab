@@ -2404,6 +2404,8 @@ MonoBehaviour:
   isDead: 0
   animatorControllers:
     _serializedList:
+    - Key: 0
+      Value: {fileID: 9100000, guid: 7d6522474709f1d48824f1f39f3f89d7, type: 2}
     - Key: 1
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
 --- !u!114 &6796001127801567281
@@ -2511,9 +2513,7 @@ MonoBehaviour:
     RefIds:
     - rid: 4781514843088748545
       type: {class: PlayerAttributeSet, ns: Jun, asm: Assembly-CSharp}
-      data:
-        attributeDictionary:
-          _serializedList: []
+      data: 
 --- !u!114 &4373900182711006843
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2589,6 +2589,8 @@ MonoBehaviour:
   searchRadius: 15
   rotationSpeed: 5
   currentTarget: {fileID: 0}
+  mouseSwitchMaxDist: 8
+  stickDeadzone: 7
 --- !u!1 &7010538823116905246
 GameObject:
   m_ObjectHideFlags: 0

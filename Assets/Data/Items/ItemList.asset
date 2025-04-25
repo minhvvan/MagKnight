@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16988910415e10247915e39a16d9b59e, type: 3}
+  m_Name: ItemList
+  m_EditorClassIdentifier: 
+  healthPackDropValue: 0.3
+  itemVfxPrefab:
+    _serializedList:
+    - Key: 0
+      Value: {fileID: 6745808954368080374, guid: 69833ad7fb0c79944921524afe2c8cbd,
+        type: 3}
+    - Key: 1
+      Value: {fileID: 1052643578210625554, guid: adeae228a08c8e04ba80d75c2d686d42,
+        type: 3}
+    - Key: 2
+      Value: {fileID: 8412461120769158924, guid: 02662a8926c5fcf4d918a7a76199b041,
+        type: 3}
+    - Key: 3
+      Value: {fileID: 5149531693756767107, guid: d73f2fcd8b9493a4a8beabbe79e90b0c,
+        type: 3}
+    - Key: 4
+      Value: {fileID: 1902279238067960212, guid: bf9df407f8dcb7742bd51d8c01773eba,
+        type: 3}
+  lootVfxPrefab:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 8008233888773521247, guid: 2991d49ea3d2df74eb5207c1a3a28e99, type: 3}
+      - {fileID: 5103677725177901178, guid: 82d330bb34ac80f45af7726924b2b968, type: 3}
+      - {fileID: 42877145304199852, guid: 6328cf80c6ba39f47b2626ea53eb46e5, type: 3}
+    - Key: 1
+      Value:
+      - {fileID: 7284039041946346299, guid: 9e2e822e41aad2b4d84b00e782f3f642, type: 3}
+      - {fileID: 4148028837480865426, guid: 5c75fd76450c3d8419c5ea5ae99326e8, type: 3}
+      - {fileID: 9133988382438702588, guid: 153560e13a12e3342842152c0df4dba9, type: 3}
+    - Key: 2
+      Value:
+      - {fileID: 1615091283473137273, guid: c3f4377dabdc6bb449d9132ac86a8748, type: 3}
+      - {fileID: 9171153252296567285, guid: bf3f1bbb5f932b445884cb0c518fda9d, type: 3}
+      - {fileID: 3469711867787316397, guid: 979de42a53f3278438f980eb8ca17e3c, type: 3}
+    - Key: 3
+      Value:
+      - {fileID: 7468784965237738127, guid: da3a30496745ad449bf50d1cb887acb1, type: 3}
+      - {fileID: 6315320615969385874, guid: b818a7a8c03e86b48a30c7bd49259b63, type: 3}
+      - {fileID: 9141117834955888948, guid: 19143d839e77f124ab20a57432be4658, type: 3}
+    - Key: 4
+      Value:
+      - {fileID: 6988477660654517424, guid: 38eb946c1067c3a4faaa5e5123677df7, type: 3}
+      - {fileID: 7411182059213639154, guid: 18ce36d6d7bac1145bd68cae7f505b07, type: 3}
+      - {fileID: 4378789414922344341, guid: 5d108c84e27cc5a44871c2fb75fd3359, type: 3}
+  lootCratePrefab: {fileID: 8193618553645803866, guid: 0a472726e2aaad449bb68d4efa88bf52,
+    type: 3}
+  artifactPrefab: {fileID: 5023272368703363778, guid: 1976de0664897a34bb6080b27334ac7e,
+    type: 3}
+  artifactList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 87a9d54d59da9254eaf5627ade703d7c, type: 2}
+      - {fileID: 11400000, guid: 2f1a565ffc578da44a73cb9bed2ae569, type: 2}
+      - {fileID: 11400000, guid: 3d0ecfc76240b54428a3ea7c76947eee, type: 2}
+      - {fileID: 11400000, guid: 681aee9bdbbe8e644b99fb432cbb0671, type: 2}
+      - {fileID: 11400000, guid: f0ecc1c378b326f4b9ac83e1c5aa7705, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
+  magCorePrefab: {fileID: 3542380653265055556, guid: 7d8c26c8fc32d01409d0cd9a938af646,
+    type: 3}
+  magCoreList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 4ab47e80bebf307439202e06a6736644, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []
+  healthPackPrefab: {fileID: 28437076465678510, guid: 4e4fd0d115c4a2d4bbbda966c0edb68e,
+    type: 3}
+  healthPackList:
+    _serializedList:
+    - Key: 0
+      Value:
+      - {fileID: 11400000, guid: 6cf67e38ae2b5a944bbeb13a9b890546, type: 2}
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+    - Key: 3
+      Value: []
+    - Key: 4
+      Value: []

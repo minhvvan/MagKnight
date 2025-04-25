@@ -158,6 +158,8 @@ namespace Moon
 
         async void Awake()
         {
+            Reset();
+
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
@@ -172,6 +174,7 @@ namespace Moon
             {
                 var stat = await GameManager.Instance.GetPlayerStat();
                 InitStat(stat);
+                _magneticController.InitializeMagnetic();
             }
                 
             _inputHandler.magneticInput = MagneticPress;
@@ -206,7 +209,7 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-            Reset();
+            
         }
         
         

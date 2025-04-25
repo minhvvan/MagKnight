@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
+using Moon;
 using UnityEngine;
 
 public class RangedNormalAction : IEnemyAction
@@ -30,6 +31,7 @@ public class RangedNormalAction : IEnemyAction
         if (!_shot && _enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("ActionRunning"))
         {
             _shot = true;
+            _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
             ProjectileFactory.Create(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity,
                 _blackboard.abilitySystem, targetCollider: _blackboard.target.GetComponent<Collider>());
         }
