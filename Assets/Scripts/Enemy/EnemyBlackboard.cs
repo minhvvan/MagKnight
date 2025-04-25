@@ -46,6 +46,7 @@ public class EnemyBlackboard : MonoBehaviour
     
     public Transform muzzleTransform;
     public Renderer enemyRenderer;
+    public Transform headTransform;
 
 
     private void Awake()
@@ -87,6 +88,15 @@ public class EnemyBlackboard : MonoBehaviour
                 ai = new BossAI(_enemy);
                 action = new BossAction(_enemy);
                 break;
+        }
+
+        if (headTransform == null)
+        {
+            headTransform = transform.Find("HeadTarget");
+            if (headTransform == null)
+            {
+                headTransform = transform;
+            }
         }
     }
 

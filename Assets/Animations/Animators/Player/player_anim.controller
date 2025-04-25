@@ -387,7 +387,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: f57f5f52133617945ba2882277d12087, type: 3}
     m_Threshold: 0.125
     m_Position: {x: 0, y: 1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -395,7 +395,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: c980d0f5670ee294b9983cde346a66fa, type: 3}
     m_Threshold: 0.234375
     m_Position: {x: 1, y: 1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -403,7 +403,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: b46fd0c5e802b604c8ae97814b3fe566, type: 3}
     m_Threshold: 0.34375
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -411,7 +411,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: de9a50f1eabdbc94f8d07fe586b917f0, type: 3}
     m_Threshold: 0.453125
     m_Position: {x: 1, y: -1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -419,7 +419,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 2c73c7fb9440b944eaebec258aebb16a, type: 3}
     m_Threshold: 0.5625
     m_Position: {x: 0, y: -1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -427,7 +427,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 8e17687b27b457c4897faf1de122a3c1, type: 3}
     m_Threshold: 0.671875
     m_Position: {x: -1, y: -1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -435,7 +435,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 1ab969bb4346ea9438b959ef9c66091b, type: 3}
     m_Threshold: 0.78125
     m_Position: {x: -1, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
@@ -443,7 +443,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 8bda4b9a96058da47bf3571c85a60af7, type: 3}
     m_Threshold: 0.890625
     m_Position: {x: -1, y: 1}
-    m_TimeScale: 1
+    m_TimeScale: 2
     m_CycleOffset: 0
     m_DirectBlendParameter: FootFall
     m_Mirror: 0
