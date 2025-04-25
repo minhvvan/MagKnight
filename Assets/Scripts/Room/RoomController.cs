@@ -149,6 +149,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private void Reward()
     {
         //TODO: 보상 지급
+        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), Quaternion.identity);
     }
 
     public void SetRoomReady(bool isEnable)
