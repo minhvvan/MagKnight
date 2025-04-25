@@ -17,11 +17,11 @@ public class StatusUIController : MonoBehaviour
         //attributeSet 받아오기
         if (abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out _attributeSet))
         {
-            _attributeSet.DelegateAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
-            _attributeSet.DelegateAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
             
-            _attributeSet.DelegateAttributeChanged(AttributeType.SkillGauge, ChangedCurrentSkillGauge);
-            _attributeSet.DelegateAttributeChanged(AttributeType.MaxSkillGauge, ChangedMaxSkillGauge);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.SkillGauge, ChangedCurrentSkillGauge);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.MaxSkillGauge, ChangedMaxSkillGauge);
         }
         
         //UI Update
