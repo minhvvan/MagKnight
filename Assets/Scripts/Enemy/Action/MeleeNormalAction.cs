@@ -9,6 +9,7 @@ public class MeleeNormalAction : IEnemyAction
     private Enemy _enemy;
     private EnemyBlackboard _blackboard;
     private float _startupDuration;
+    private bool _actionRunned;
     
     public MeleeNormalAction(Enemy enemy)
     {
@@ -26,14 +27,16 @@ public class MeleeNormalAction : IEnemyAction
     public void OnUpdate()
     {
         _startupDuration += Time.deltaTime;
-        if (_startupDuration > _blackboard.startupTime)
+        if (_startupDuration > _blackboard.startupTime && !_actionRunned)
         {
             _enemy.Anim.SetTrigger("ActionRun");
+            _actionRunned = true;
         }
     }
 
     public void OnExit()
     {
+        _actionRunned = false;
         _blackboard.actionRecoveryCancellation.Cancel();
     }
 }

@@ -46,6 +46,11 @@ public class LockOnSystem : MonoBehaviour
                     HandleDeadTarget();
                 }
             }
+            else
+            {
+                StopLockOn();
+                return;
+            }
         }
 
         // 2) 방향 입력만으로 대상 변경
@@ -169,13 +174,14 @@ public class LockOnSystem : MonoBehaviour
     {
         var cs = _playerController.cameraSettings;
         var lockCam = cs.lockOnCamera;
+        var targetHead = currentTarget.GetComponent<Enemy>().blackboard.headTransform;
 
-        lockCam.Follow = cs.follow;
-        lockCam.LookAt = currentTarget;
+        lockCam.Follow = cs.lookAt;
+        lockCam.LookAt = targetHead;
         lockCam.Priority = 20;
 
         cs.DisableCameraMove();
-        lockCam.transform.rotation = Quaternion.LookRotation((currentTarget.position - cs.follow.position).WithY(0f));
+        lockCam.transform.rotation = Quaternion.LookRotation((targetHead.position - cs.follow.position).WithY(0f));
     }
 
     private void CycleTarget(int dir)
