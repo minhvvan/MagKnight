@@ -9,5 +9,6 @@ public class HealthPackSO : ScriptableObject
     public Sprite icon;
     public string itemName;
     public string description;
-    public float value;
+    public float healValue;
+    public int scrapValue;
 }

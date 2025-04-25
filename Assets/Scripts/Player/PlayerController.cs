@@ -4,6 +4,7 @@ using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using hvvan;
+using JetBrains.Annotations;
 using Jun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -278,6 +279,12 @@ namespace Moon
             {
                 Interact();
                 _inputHandler.InteractInput = false;
+            }
+            
+            //임시지정키 G. 아이템 분해
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                Dismentle();
             }
 
             if (_inputHandler.SkillInput)
@@ -749,6 +756,14 @@ namespace Moon
                 _interactionController.Interact();
             }
         }
+        
+        void Dismentle()
+        {
+            if (_interactionController != null)
+            {
+                _interactionController.Interact(true);
+            }
+        }
 
         void SwitchMagneticInput()
         {
@@ -783,10 +798,18 @@ namespace Moon
         }
         
         #region Weapon
-        public void SetCurrentWeapon(WeaponType weaponType)
+        public void SetCurrentWeapon(WeaponType weaponType, [CanBeNull] MagCore currentMagCore = null)
         {
             _animator.runtimeAnimatorController = animatorControllers[weaponType];
             _weaponHandler.SetCurrentWeapon(weaponType);
+            
+            //현재 무기 정보 저장 & 이전 무기 드랍
+            if (currentMagCore != null)
+            {
+                if (_weaponHandler.currentMagCore != null) _weaponHandler.DropPrevWeapon(currentMagCore.transform);
+                _weaponHandler.currentMagCore = currentMagCore;
+            }
+            
             canAttack = true;
         }
         #endregion
