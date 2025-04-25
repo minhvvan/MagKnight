@@ -158,6 +158,8 @@ namespace Moon
 
         async void Awake()
         {
+            Reset();
+
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
@@ -206,7 +208,7 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-            Reset();
+            
         }
         
         
