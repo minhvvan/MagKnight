@@ -113,7 +113,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         _animator.SetBool("Open", false);
         foreach (var item in _items)
         {
-            item.GetComponent<Collider>().enabled = false;
+            if(item != null) item.GetComponent<Collider>().enabled = false;
         }
         
         //상자 점등 꺼지기
@@ -125,7 +125,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         Destroy(vfxObj);
         foreach (var item in _items)
         {
-            Destroy(item);
+            if(item != null) Destroy(item.gameObject);
         }
     }
 

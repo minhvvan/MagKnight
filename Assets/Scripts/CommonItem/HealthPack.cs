@@ -8,29 +8,42 @@ using UnityEngine.Serialization;
 
 public class HealthPack : MonoBehaviour, IInteractable
 {
+    public ItemCategory category;
+    public ItemRarity rarity;
+    
     private HealthPackSO healthPackSo;
-    public string name;
+    public string itemName;
     public string description;
-    public float value;
+    public float healValue;
+    public int scrapValue;
     
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
     public Action onChooseItem;
     private Rigidbody rb;
     private Collider col;
+    private bool _isStake;
     
     private void Awake()
     {
         _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
+
+        category = ItemCategory.HealthPack;
     }
 
     public void SetHealthPotionData(HealthPackSO healthPackData)
     {
         healthPackSo = healthPackData;
-        gameObject.name = name = healthPackSo.itemName;
+        gameObject.name = itemName = healthPackSo.itemName;
         description = healthPackSo.description;
-        value = healthPackSo.value;
+        healValue = healthPackSo.healValue;
+        scrapValue = healthPackSo.scrapValue;
+    }
+    
+    public void SetItemClass((ItemCategory, ItemRarity) itemClass)
+    {
+        (category, rarity) = itemClass;
     }
 
     public void Interact(IInteractor interactor)
@@ -64,8 +77,14 @@ public class HealthPack : MonoBehaviour, IInteractable
     {
         if(other.gameObject.layer != (1 <<LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy")))
         {
-            rb.isKinematic = true;
-            col.isTrigger = true;
+            if(!_isStake) OnStakeMode();
         }
+    }
+
+    public void OnStakeMode()
+    {
+        _isStake = true;
+        rb.isKinematic = true;
+        col.isTrigger = true;
     }
 }
