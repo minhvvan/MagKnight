@@ -41,11 +41,6 @@ public class ItemManager : Singleton<ItemManager>
     
     public bool IsInitialized { get; private set; } = false;
 
-    private async void Awake()
-    {
-       await Initialize();
-    }
-
     private void Update()
     {
         //테스트용
@@ -65,8 +60,13 @@ public class ItemManager : Singleton<ItemManager>
             SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, transform.position += Vector3.forward*3f , Quaternion.identity);
         }
     }
+
+    protected override async void Initialize()
+    {
+        await InitializeItemManager();
+    }
     
-    public async UniTask Initialize()
+    private async UniTask InitializeItemManager()
     {
         IsInitialized = true;
         await SetAllItemUpdate();
