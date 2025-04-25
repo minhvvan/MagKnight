@@ -174,6 +174,7 @@ namespace Moon
             {
                 var stat = await GameManager.Instance.GetPlayerStat();
                 InitStat(stat);
+                _magneticController.InitializeMagnetic();
             }
                 
             _inputHandler.magneticInput = MagneticPress;
