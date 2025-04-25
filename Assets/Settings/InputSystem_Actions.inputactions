@@ -132,7 +132,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "New action",
+                    "name": "Skill",
                     "type": "Button",
                     "id": "43c5851c-e16d-4486-a128-e1cf7c816975",
                     "expectedControlType": "",
@@ -651,11 +651,11 @@
                 {
                     "name": "",
                     "id": "643b65bf-9ac9-463f-a7d6-bdf8eb1060a1",
-                    "path": "",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Skill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
