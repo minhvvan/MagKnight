@@ -111,7 +111,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         SetRoomReady(true);
         gameObject.SetActive(true);
-        if (Room.roomType == RoomType.BattleRoom || Room.roomType == RoomType.BoosRoom)
+        if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && GameManager.Instance.CurrentGameState != GameState.RoomClear)
         {
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
@@ -224,9 +224,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
                 await UniTask.Delay(2000, cancellationToken: token);
             }
         }
-        catch (OperationCanceledException)
-        {
-            Debug.Log("던전 내부 작업 중단됨.");
-        }
+        catch (OperationCanceledException) {}
     }
 }
