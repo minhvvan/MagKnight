@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -26,7 +27,7 @@ public class ItemManager : Singleton<ItemManager>
     public Dictionary<ItemRarity, List<HealthPackSO>> healthPackList = new Dictionary<ItemRarity, List<HealthPackSO>>();
     
     //아이템 프리팹
-    private GameObject _artifactPrefab;
+    private GameObject _artifactPrefab; 
     private GameObject _magCorePrefab;
     private GameObject _healthPackPrefab;
     private GameObject _lootCratePrefab;
@@ -34,16 +35,14 @@ public class ItemManager : Singleton<ItemManager>
     //VFX 프리팹
     private Dictionary<ItemRarity, GameObject> _itemVfxPrefabs = new Dictionary<ItemRarity, GameObject>();
     private Dictionary<ItemRarity, List<GameObject>> _lootVfxPrefabs = new Dictionary<ItemRarity, List<GameObject>>();
+
+    public GameObject weaponChangeVfxPrefab;
+    public GameObject dismantleVfxPrefab;
     
     //확률값
     private float _healthPackDropValue;
     
     public bool IsInitialized { get; private set; } = false;
-
-    private async void Awake()
-    {
-       await Initialize();
-    }
 
     private void Update()
     {
@@ -57,15 +56,20 @@ public class ItemManager : Singleton<ItemManager>
             //     CreateItem(ItemCategory.HealthPack, ItemRarity.Common, 
             //         transform.position + Vector3.up, Quaternion.identity);
             // }
-            CreateItem(ItemCategory.Artifact, ItemRarity.Common, transform.position, Quaternion.identity);
-            CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position += Vector3.left*2f, Quaternion.identity);
-            CreateItem(ItemCategory.HealthPack, ItemRarity.Common, transform.position += Vector3.right*2f, Quaternion.identity);
+            //CreateItem(ItemCategory.Artifact, ItemRarity.Common, transform.position, Quaternion.identity);
+            CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position + Vector3.left*2f, Quaternion.identity);
+            //CreateItem(ItemCategory.HealthPack, ItemRarity.Common, transform.position += Vector3.right*2f, Quaternion.identity);
             
             SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, transform.position += Vector3.forward*3f , Quaternion.identity);
         }
     }
+
+    protected override async void Initialize()
+    {
+        await InitializeItemManager();
+    }
     
-    public async UniTask Initialize()
+    private async UniTask InitializeItemManager()
     {
         IsInitialized = true;
         await SetAllItemUpdate();
@@ -82,6 +86,9 @@ public class ItemManager : Singleton<ItemManager>
         
         _itemVfxPrefabs = datas.itemVfxPrefab;
         _lootVfxPrefabs = datas.lootVfxPrefab;
+
+        weaponChangeVfxPrefab = datas.weaponChangeVfxPrefab;
+        dismantleVfxPrefab = datas.dismantleVfxPrefab;
         
         _artifactPrefab = datas.artifactPrefab;
         artifactList?.Clear();
@@ -145,7 +152,6 @@ public class ItemManager : Singleton<ItemManager>
         return false;
     }
     
-    
     /// <summary>
     /// 원하는 위치에 아이템을 생성합니다. 기본적으로 해당 범주 내의 아이템을 랜덤하게 생성합니다.
     /// </summary>
@@ -200,6 +206,7 @@ public class ItemManager : Singleton<ItemManager>
                 var artifactObj = Instantiate(_artifactPrefab, position, rotation, parent);
                 var artifact = artifactObj.GetComponent<ArtifactObject>();
                 artifact.SetArtifactData(artifactData);
+                artifact.SetItemClass((category, rarity));
                 var artifactVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, artifactObj.transform);
                 artifactVfx.transform.localScale *= 0.5f;
                 
@@ -241,6 +248,7 @@ public class ItemManager : Singleton<ItemManager>
                 var magCoreObj = Instantiate(_magCorePrefab, position, rotation, parent);
                 var magCore = magCoreObj.GetComponent<MagCore>();
                 magCore.SetMagCoreData(magCoreData);
+                magCore.SetItemClass((category, rarity));
                 var magCoreVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, magCoreObj.transform);
                 magCoreVfx.transform.localScale *= 0.5f;
                 
@@ -282,6 +290,7 @@ public class ItemManager : Singleton<ItemManager>
                 var healthPackObj = Instantiate(_healthPackPrefab, position, rotation, parent);
                 var healthPack = healthPackObj.GetComponent<HealthPack>();
                 healthPack.SetHealthPotionData(healthPackData);
+                healthPack.SetItemClass((category, rarity));
                 var healthPackVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, healthPackObj.transform);
                 healthPackVfx.transform.localScale *= 0.5f;
                 
