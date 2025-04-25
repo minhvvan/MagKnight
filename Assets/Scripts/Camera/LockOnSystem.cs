@@ -22,7 +22,7 @@ public class LockOnSystem : MonoBehaviour
     [Tooltip("마우스 이동으로 대상 변경 시 최소 화면 비율 값 (X축) ")]
     public float mouseSwitchMaxDist = 8f;
     [Tooltip("패드 우측 스틱 대상 변경 시 최소 입력 강도")]
-    public float stickDeadzone = 7f;
+    public float stickDeadzone = 0.2f;
 
     // 내부 스위치 상태
     private bool _switchedRight;
@@ -37,10 +37,15 @@ public class LockOnSystem : MonoBehaviour
     void Update()
     {
         // 1) 현재 락온 대상이 사망 또는 비활성화되면 다음 후보로 자동 스위치
-        if (currentTarget != null && !currentTarget.gameObject.activeInHierarchy)
+        if (currentTarget != null)
         {
-            HandleDeadTarget();
-            return;
+            if(currentTarget.TryGetComponent(out Enemy enemy))
+            {
+                if(enemy.blackboard.isDead)
+                {
+                    HandleDeadTarget();
+                }
+            }
         }
 
         // 2) 방향 입력만으로 대상 변경
