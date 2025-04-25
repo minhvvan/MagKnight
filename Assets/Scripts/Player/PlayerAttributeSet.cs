@@ -79,6 +79,17 @@ namespace Jun
                 
                 SetValue(AttributeType.Impulse, 0);
             }
+
+            // 최대체력 증가시 그만큼 HP도 증가
+            if (effect.attributeType == AttributeType.MaxSkillGauge)
+            {
+                SetValue(AttributeType.SkillGauge, GetValue(AttributeType.MaxSkillGauge));
+            }
+            
+            if (effect.attributeType == AttributeType.SkillGauge)
+            {
+                SetValue(AttributeType.SkillGauge,Mathf.Clamp(GetValue(AttributeType.SkillGauge), 0f, GetValue(AttributeType.MaxSkillGauge)));
+            }
         }
 
         public PlayerStat GetDataStruct()

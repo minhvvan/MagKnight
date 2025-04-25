@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
@@ -22,7 +23,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     
     private int _roomIndex;
     private bool _cleared = false;
-
+    private CancellationTokenSource cancelTokenSource;
+    
     public int RoomIndex => _roomIndex;
     public Room Room { get; private set; }
     
@@ -109,6 +111,11 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         SetRoomReady(true);
         gameObject.SetActive(true);
+        if (Room.roomType == RoomType.BattleRoom || Room.roomType == RoomType.BoosRoom)
+        {
+            cancelTokenSource = new CancellationTokenSource();
+            ChargeSkillGauge(cancelTokenSource.Token).Forget();
+        }
     }
 
     private async UniTask LoadNavMeshData()
@@ -167,9 +174,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             _enemyController.OnEnemiesClear -= RoomCompleted;
         }
+        //TODO: 코루틴 끄기
         
         _cleared = true;
         Reward();
+        cancelTokenSource?.Cancel();
+        cancelTokenSource?.Dispose();
+        cancelTokenSource = null;
         GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }
 
@@ -196,5 +207,26 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     public void OnCompleted()
     {
+    }
+
+    private async UniTaskVoid ChargeSkillGauge(CancellationToken token)
+    {
+        var playerASC = GameManager.Instance.Player.AbilitySystem;
+        var effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 1);
+
+        try
+        {
+            while(true)
+            {
+                token.ThrowIfCancellationRequested();
+                playerASC.ApplyEffect(effect);
+                
+                await UniTask.Delay(2000, cancellationToken: token);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("던전 내부 작업 중단됨.");
+        }
     }
 }

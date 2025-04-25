@@ -40,6 +40,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Awake()
     {
         Initialize();
+        InitializeMagnetic();
         // TestCode();
     }
 

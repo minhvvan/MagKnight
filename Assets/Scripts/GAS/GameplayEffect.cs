@@ -32,7 +32,6 @@ public class GameplayEffect
         this.amount = amount;
         this.duration = duration;
         this.tracking = tracking;
-        this.sourceTransform = sourceTransform;
     }
 
     public GameplayEffect DeepCopy()

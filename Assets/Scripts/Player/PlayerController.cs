@@ -186,9 +186,6 @@ namespace Moon
         public void InitializeByCurrentRunData(CurrentRunData currentRunData)
         {
             InitStat(currentRunData.playerStat);
-
-            //마그네틱 컨트롤러 초기화
-            _magneticController.InitializeMagnetic();
             
             //무기 지급
             SetCurrentWeapon(currentRunData.currentWeapon);
@@ -201,6 +198,44 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
+
+                // OnHitPassive
+                var ChargeSkillGaugeHit = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 3),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnHit
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGaugeHit);
+                
+                // OnDamagePassive
+                var ChargeSkillGauageDamaged = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnDamage
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageDamaged);
+                
+                var ChargeSkillGauageMagnetic = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnMagnetic
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageMagnetic);
+                
+                var OnSkill = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, -500),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnSkill
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(OnSkill);
             }
             
             //HUD 생성 및 바인딩
@@ -209,7 +244,7 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-            
+            _magneticController.InitializeMagnetic();
         }
         
         
@@ -243,6 +278,15 @@ namespace Moon
             {
                 Interact();
                 _inputHandler.InteractInput = false;
+            }
+
+            if (_inputHandler.SkillInput)
+            {
+                Debug.Log("SKill");
+                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
+                {
+                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
+                }
             }
             
             UpdateMoveParameters();
@@ -804,6 +848,7 @@ namespace Moon
                     _isKnockDown = true;
                 }
             }
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
         void OnAnimatorIK(int layerIndex)
