@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Unit01
   description: "\uC591\uC0B0\uD615 \uC720\uB2DB\uC785\uB2C8\uB2E4"
-  health: 100
+  health: 1000
   atk: 5
   attckType: 1
   aiType: 1
   moveSpeed: 1
-  startupTime: 0.1
+  startupTime: 1
   recoveryTime: 2
   staggerResistance: 1
   staggerRecoveryTime: 3
