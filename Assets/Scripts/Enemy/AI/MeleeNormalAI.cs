@@ -50,7 +50,6 @@ public class MeleeNormalAI : IEnemyAI
             }
             else
             {
-                Debug.Log("No path");
                 _enemy.Anim.SetBool("Trace", false);
             }
         } 
