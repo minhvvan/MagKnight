@@ -252,17 +252,18 @@ namespace Moon
             if (lockOnNow && !_lockOnLastFrame)
             {
                 _lockOnSystem.ToggleLockOn();
-                if (_lockOnSystem.currentTarget != null)
-                {
-                    _animator.SetTrigger(_HashLockOn);
-                }
-                else
-                {
-                    _animator.ResetTrigger(_HashLockOn);
-                }
             }
             // 상태 저장
             _lockOnLastFrame = lockOnNow;
+
+            if (_lockOnSystem.currentTarget != null)
+            {
+                _animator.SetTrigger(_HashLockOn);
+            }
+            else
+            {
+                _animator.ResetTrigger(_HashLockOn);
+            }
             
 
             SetGrounded();
@@ -625,49 +626,47 @@ namespace Moon
                 // 1) 콤보 중엔 항상 루트 모션만 적용
                 if (_inCombo)
                 {
-                    Vector3 rootMove = _animator.deltaPosition;
-                    rootMove += Vector3.up * _verticalSpeed * Time.deltaTime;
-                    _characterController.Move(rootMove);
-                    // return;
-                }
-                
-                // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
-                if (_lockOnSystem.currentTarget != null && !_inCombo)
-                {
-                    // 캐릭터 회전: 타겟 바라보기
-                    Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
-                    toTarget.y = 0f;
-                    if (toTarget.sqrMagnitude > 0.001f)
-                        transform.rotation = Quaternion.LookRotation(toTarget);
-
-                    // 이동 벡터: 입력 기준으로
-                    Vector2 raw = _inputHandler.MoveInput;
-                    Vector3 dir = new Vector3(raw.x, 0f, raw.y);
-                    if (dir.sqrMagnitude > 1f) dir.Normalize();
-
-                    movement = (transform.right * dir.x + transform.forward * dir.z) *
-                               (_forwardSpeed * Time.deltaTime);
-                    movement += Vector3.up * _verticalSpeed * Time.deltaTime;
-
-                    _characterController.Move(movement);
-                }
-
-                // 3) 일반 로코모션 
-                bool useManualMove = (_currentStateInfo.shortNameHash == _HashLocomotion);
-                if (useManualMove)
-                {
-                    movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                    movement = _animator.deltaPosition;
                 }
                 else
                 {
-                    // 루트 모션 기반 이동
-                    RaycastHit hit;
-                    Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
-                    if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                        movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+                    // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
+                    if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+                    {
+                        // 캐릭터 회전: 타겟 바라보기
+                        Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                        toTarget.y = 0f;
+                        if (toTarget.sqrMagnitude > 0.001f)
+                            transform.rotation = Quaternion.LookRotation(toTarget);
+
+                        // 이동 벡터: 입력 기준으로
+                        Vector2 raw = _inputHandler.MoveInput;
+                        Vector3 dir = new Vector3(raw.x, 0f, raw.y);
+                        if (dir.sqrMagnitude > 1f) dir.Normalize();
+
+                        movement = (transform.right * dir.x + transform.forward * dir.z) *
+                                (_forwardSpeed * Time.deltaTime);
+                    }
                     else
-                        movement = _animator.deltaPosition;
-                }
+                    {
+                        // 3) 일반 로코모션 
+                        bool useManualMove = _currentStateInfo.shortNameHash == _HashLocomotion;
+                        if (useManualMove)
+                        {
+                            movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                        }
+                        else
+                        {
+                            // 루트 모션 기반 이동
+                            RaycastHit hit;
+                            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
+                            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                                movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+                            else
+                                movement = _animator.deltaPosition;
+                        }
+                    }
+                }                
             }
             else
             {
