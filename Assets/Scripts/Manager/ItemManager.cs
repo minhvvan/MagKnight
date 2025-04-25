@@ -16,7 +16,7 @@ public enum ItemCategory
 {
     Artifact,
     MagCore,
-    HealthPotion
+    HealthPack
 }
 
 public class ItemManager : Singleton<ItemManager>
@@ -25,10 +25,18 @@ public class ItemManager : Singleton<ItemManager>
     public Dictionary<ItemRarity, List<MagCoreSO>> magCoreList = new Dictionary<ItemRarity, List<MagCoreSO>>();
     public Dictionary<ItemRarity, List<HealthPackSO>> healthPackList = new Dictionary<ItemRarity, List<HealthPackSO>>();
     
+    //아이템 프리팹
     private GameObject _artifactPrefab;
     private GameObject _magCorePrefab;
     private GameObject _healthPackPrefab;
     private GameObject _lootCratePrefab;
+    
+    //VFX 프리팹
+    private Dictionary<ItemRarity, GameObject> _itemVfxPrefabs = new Dictionary<ItemRarity, GameObject>();
+    private Dictionary<ItemRarity, List<GameObject>> _lootVfxPrefabs = new Dictionary<ItemRarity, List<GameObject>>();
+    
+    //확률값
+    private float _healthPackDropValue;
     
     public bool IsInitialized { get; private set; } = false;
 
@@ -40,11 +48,20 @@ public class ItemManager : Singleton<ItemManager>
     private void Update()
     {
         //테스트용
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F))
         {
+            // //죽으면 일정 확률로 힐팩 생성
+            // if(CheckProbability(ItemCategory.HealthPack, ItemRarity.Common))
+            // {
+            //     Debug.Log("Good Luck.");
+            //     CreateItem(ItemCategory.HealthPack, ItemRarity.Common, 
+            //         transform.position + Vector3.up, Quaternion.identity);
+            // }
             CreateItem(ItemCategory.Artifact, ItemRarity.Common, transform.position, Quaternion.identity);
-            CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position += Vector3.left, Quaternion.identity);
-            CreateItem(ItemCategory.HealthPotion, ItemRarity.Common, transform.position += Vector3.right, Quaternion.identity);
+            CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position += Vector3.left*2f, Quaternion.identity);
+            CreateItem(ItemCategory.HealthPack, ItemRarity.Common, transform.position += Vector3.right*2f, Quaternion.identity);
+            
+            SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, transform.position += Vector3.forward*3f , Quaternion.identity);
         }
     }
     
@@ -59,9 +76,12 @@ public class ItemManager : Singleton<ItemManager>
     /// </summary>
     public async UniTask SetAllItemUpdate()
     {
-        var datas = await DataManager.Instance.LoadDataAsync<ItemListSO>(Addresses.Data.Item.ItemListData);
+        var datas = await DataManager.Instance.LoadData<ItemListSO>(Addresses.Data.Item.ItemListData);
 
         _lootCratePrefab = datas.lootCratePrefab;
+        
+        _itemVfxPrefabs = datas.itemVfxPrefab;
+        _lootVfxPrefabs = datas.lootVfxPrefab;
         
         _artifactPrefab = datas.artifactPrefab;
         artifactList?.Clear();
@@ -78,13 +98,52 @@ public class ItemManager : Singleton<ItemManager>
         }
 
         _healthPackPrefab = datas.healthPackPrefab;
+        _healthPackDropValue = datas.healthPackDropValue;
         healthPackList?.Clear();
         foreach (var data in datas.healthPackList)
         {
             healthPackList?.Add(data.Key, data.Value);
         }
     }
-    
+
+    /// <summary>
+    /// 카테고리와 등급을 입력하면 지정된 확률을 연산해 결과를 전달합니다.
+    /// </summary>
+    /// <param name="category">아이템의 분류</param>
+    /// <param name="rarity">아이템의 등급</param>
+    /// <returns></returns>
+    public bool CheckProbability(ItemCategory category, ItemRarity rarity)
+    {
+        switch (category)
+        {
+            case ItemCategory.Artifact:
+                switch (rarity)
+                {
+                    case ItemRarity.Common:
+                        break;
+                }
+                break;
+            
+            case ItemCategory.MagCore:
+                switch (rarity)
+                {
+                    case ItemRarity.Common:
+                        break;
+                }
+                break;
+            
+            case ItemCategory.HealthPack:
+                switch (rarity)
+                {
+                    case ItemRarity.Common:
+                        var result = Random.value < _healthPackDropValue;
+                        return result;
+                }
+                break;
+        }
+        
+        return false;
+    }
     
     
     /// <summary>
@@ -141,6 +200,8 @@ public class ItemManager : Singleton<ItemManager>
                 var artifactObj = Instantiate(_artifactPrefab, position, rotation, parent);
                 var artifact = artifactObj.GetComponent<ArtifactObject>();
                 artifact.SetArtifactData(artifactData);
+                var artifactVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, artifactObj.transform);
+                artifactVfx.transform.localScale *= 0.5f;
                 
                 return artifactObj;
             
@@ -180,14 +241,16 @@ public class ItemManager : Singleton<ItemManager>
                 var magCoreObj = Instantiate(_magCorePrefab, position, rotation, parent);
                 var magCore = magCoreObj.GetComponent<MagCore>();
                 magCore.SetMagCoreData(magCoreData);
+                var magCoreVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, magCoreObj.transform);
+                magCoreVfx.transform.localScale *= 0.5f;
                 
                 return magCoreObj;
             
-            case ItemCategory.HealthPotion:
+            case ItemCategory.HealthPack:
                 if (_healthPackPrefab == null) break;
                 if(isRandom) randomIndex = Random.Range(0, healthPackList[rarity].Count-1);
                 
-                HealthPackSO healthPotionData;
+                HealthPackSO healthPackData;
                 
                 //아이템명을 지정하여 생성한 경우.
                 if (itemName != null)
@@ -195,7 +258,7 @@ public class ItemManager : Singleton<ItemManager>
                     if (healthPackList[rarity].FirstOrDefault(data => data.itemName == itemName) 
                             is var containData && containData != null)
                     {
-                        healthPotionData = containData;
+                        healthPackData = containData;
                     }
                     else//해당 범주 내 아이템이 없음.
                     {
@@ -207,7 +270,7 @@ public class ItemManager : Singleton<ItemManager>
                 {
                     if (healthPackList[rarity][randomIndex] is var containData && containData != null)
                     {
-                        healthPotionData = containData;
+                        healthPackData = containData;
                     }
                     else
                     {
@@ -216,11 +279,13 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
-                var healthPotionObj = Instantiate(_healthPackPrefab, position, rotation, parent);
-                var healthPotion = healthPotionObj.GetComponent<HealthPack>();
-                healthPotion.SetHealthPotionData(healthPotionData);
+                var healthPackObj = Instantiate(_healthPackPrefab, position, rotation, parent);
+                var healthPack = healthPackObj.GetComponent<HealthPack>();
+                healthPack.SetHealthPotionData(healthPackData);
+                var healthPackVfx  = Instantiate(_itemVfxPrefabs[rarity], position, rotation, healthPackObj.transform);
+                healthPackVfx.transform.localScale *= 0.5f;
                 
-                return healthPotionObj;
+                return healthPackObj;
         }
         Debug.LogError($"Cannot found item / Path: {category}, {rarity}");
         return null;
@@ -232,5 +297,6 @@ public class ItemManager : Singleton<ItemManager>
         var obj = Instantiate(_lootCratePrefab, position, rotation);
         var lootCrate = obj.GetComponent<LootCrate>();
         lootCrate.SetLootCrate(category, rarity);
+        lootCrate.rarityVfxObjects = _lootVfxPrefabs;
     }
 }
