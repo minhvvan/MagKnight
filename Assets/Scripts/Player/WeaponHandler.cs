@@ -90,6 +90,7 @@ public class WeaponHandler: MonoBehaviour
             enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
             enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
     }
 }
