@@ -35,6 +35,9 @@ public class ItemManager : Singleton<ItemManager>
     //VFX 프리팹
     private Dictionary<ItemRarity, GameObject> _itemVfxPrefabs = new Dictionary<ItemRarity, GameObject>();
     private Dictionary<ItemRarity, List<GameObject>> _lootVfxPrefabs = new Dictionary<ItemRarity, List<GameObject>>();
+
+    public GameObject weaponChangeVfxPrefab;
+    public GameObject dismantleVfxPrefab;
     
     //확률값
     private float _healthPackDropValue;
@@ -83,6 +86,9 @@ public class ItemManager : Singleton<ItemManager>
         
         _itemVfxPrefabs = datas.itemVfxPrefab;
         _lootVfxPrefabs = datas.lootVfxPrefab;
+
+        weaponChangeVfxPrefab = datas.weaponChangeVfxPrefab;
+        dismantleVfxPrefab = datas.dismantleVfxPrefab;
         
         _artifactPrefab = datas.artifactPrefab;
         artifactList?.Clear();

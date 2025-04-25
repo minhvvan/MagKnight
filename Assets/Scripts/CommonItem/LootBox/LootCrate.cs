@@ -75,7 +75,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         vfxObj.transform.localScale = new Vector3(4,4,4);
         
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f);
         
         for (int i = 0; i < maxSpawnCount; i++)
         {

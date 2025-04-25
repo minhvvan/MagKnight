@@ -98,6 +98,10 @@ public class MagCore: MonoBehaviour, IInteractable
     //제거 연출 넣는 곳
     private void Dismantling()
     {
+        onChooseItem?.Invoke();
+        var vfxObj = Instantiate(ItemManager.Instance.dismantleVfxPrefab, transform.position, Quaternion.identity);
+        vfxObj.transform.localScale *= 0.1f;
+        Destroy(vfxObj, 3f);
         Destroy(gameObject);
     }
 

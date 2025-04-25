@@ -69,6 +69,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     //제거 연출 넣는 곳
     private void Dismantling()
     {
+        onChooseItem?.Invoke();
         Destroy(gameObject);
     }
 
