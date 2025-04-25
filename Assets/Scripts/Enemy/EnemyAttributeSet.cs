@@ -88,14 +88,16 @@ public class EnemyAttributeSet : AttributeSet
             SetValue(AttributeType.Resistance, 
                 Mathf.Clamp(GetValue(AttributeType.Resistance) - effect.amount, 0f, GetValue(AttributeType.MaxResistance)));
             
+            if (GetValue(AttributeType.Resistance) <= 0)
+            {
+                SetValue(AttributeType.Resistance, GetValue(AttributeType.MaxResistance));
+                OnStagger?.Invoke();
+            }
+            
             SetValue(AttributeType.ResistanceDamage, 0);
         }
 
-        if (GetValue(AttributeType.Resistance) <= 0)
-        {
-            SetValue(AttributeType.Resistance, GetValue(AttributeType.MaxResistance));
-            OnStagger?.Invoke();
-        }
+
         
         else if (!_phase30Triggered && GetValue(AttributeType.HP) <= GetValue(AttributeType.MaxHP) * 0.3f)
         {

@@ -16,8 +16,8 @@ public class StatusUIController : MonoBehaviour
         //attributeSet 받아오기
         if (abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out _attributeSet))
         {
-            _attributeSet.DelegateAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
-            _attributeSet.DelegateAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
+            _attributeSet.SubscribeAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
         }
         
         //UI Update

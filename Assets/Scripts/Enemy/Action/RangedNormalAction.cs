@@ -37,7 +37,7 @@ public class RangedNormalAction : IEnemyAction
         }
         
         _startupDuration += Time.deltaTime;
-        if (_startupDuration > _blackboard.startupTime)
+        if (!_shot && _startupDuration > _blackboard.startupTime)
         {
             _enemy.Anim.SetTrigger("ActionRun");
         }

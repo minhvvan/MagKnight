@@ -16,7 +16,6 @@ public class EnemyStateDead : BaseState<Enemy>
     {
         _controller.Anim.ResetTrigger("Stagger");
         _controller.Anim.SetTrigger("Dead");
-        _blackboard.isDead = true;
         _controller.Rb.Sleep();
         _controller.MainCollider.enabled = false;
     }
