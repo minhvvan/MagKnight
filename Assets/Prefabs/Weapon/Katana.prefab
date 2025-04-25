@@ -105,19 +105,19 @@ MonoBehaviour:
     hitboxes:
     - referenceTransform: {fileID: 82124021084689730}
       offset: {x: 0, y: 0, z: 0.3}
-      radius: 0.2
+      radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.6}
-      radius: 0.2
+      offset: {x: 0, y: 0, z: 0.7}
+      radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.9}
-      radius: 0.2
-    - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 1.2}
-      radius: 0.2
+      offset: {x: 0, y: 0, z: 1.1}
+      radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
       offset: {x: 0, y: 0, z: 1.5}
-      radius: 0.2
+      radius: 0.3
+    - referenceTransform: {fileID: 82124021084689730}
+      offset: {x: 0, y: 0, z: 1.9}
+      radius: 0.3
   _layerMask:
     serializedVersion: 2
     m_Bits: 128

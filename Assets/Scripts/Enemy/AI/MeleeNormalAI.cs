@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MeleeNormalAI : IEnemyAI
 {
@@ -18,8 +19,12 @@ public class MeleeNormalAI : IEnemyAI
     
     public void OnEnter()
     {
-        _enemy.Anim.SetBool("Trace", true);
         _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        if (_enemy.Agent.pathPending == false && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+        {
+            // 갈 수 없는 곳이거나, 경로 계산 실패!
+            _enemy.Anim.SetBool("Trace", true);
+        }
     }
 
     public void OnUpdate()
@@ -27,6 +32,7 @@ public class MeleeNormalAI : IEnemyAI
         if (TargetInRay())
         {
             _enemy.SetState(_enemy.actionState);
+            return;
         }
         else
         {
@@ -37,6 +43,18 @@ public class MeleeNormalAI : IEnemyAI
                 _destinationTimer = 0f;
             }
         }
+
+        if (_enemy.Agent.pathPending == false)
+        {
+            if (_enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+            {
+                _enemy.Anim.SetBool("Trace", true);
+            }
+            else
+            {
+                _enemy.Anim.SetBool("Trace", false);
+            }
+        } 
     }
 
     public void OnExit()
