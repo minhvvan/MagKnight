@@ -237,6 +237,8 @@ public class OnSeparation : IMagneticInteractCommand
         var direction = (targetPos - casterCenterPos).normalized;
         var destination = direction * maxDistance;
         var outDistance = Vector3.Distance(destination + casterCenterPos, targetPos);
+
+        var readyCounter = useCounterPress;
         
         var eta = 0f;
         var magnetSpeed = 0f;
@@ -261,7 +263,7 @@ public class OnSeparation : IMagneticInteractCommand
         //방향까지 가속
         while (elapsedTime < eta)
         {
-            if (!useCounterPress) break;
+            if (readyCounter && !useCounterPress) break;
             
             elapsedTime += Time.deltaTime;
             //Lerp로도 잘 어울려지도록 ETA 보정
