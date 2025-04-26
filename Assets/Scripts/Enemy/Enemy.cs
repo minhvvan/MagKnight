@@ -256,6 +256,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         patternController.AttackEnd();
     }
 
+    //특정 대상에게 극성 상관없이 정해진 동작만을 수행하게도 가능.
+    public override async UniTask OnMagneticInteract(MagneticObject target)
+    {
+        //ex. Enemy에겐 사용 시 무조건 돌진한다.
+        await magnetApproach.Execute(this, target);
+    }
+
     void ApplySoftCollision(Collider[] colliders)
     {
         Vector3 correction = Vector3.zero;
