@@ -67,7 +67,7 @@ public class WeaponHandler : MonoBehaviour
         Destroy(currentMagCore.gameObject);
     }
 
-    public void AttackStart()
+    public void AttackStart(int hitboxGroupId = default)
     {
         if (_currentWeapon == null)
         {
@@ -75,11 +75,11 @@ public class WeaponHandler : MonoBehaviour
             return;
         }
 
-        _currentWeapon.AttackStart();
+        _currentWeapon.AttackStart(hitboxGroupId);
         _abilitySystem.TriggerEvent(TriggerEventType.OnAttack, _abilitySystem);
     }
 
-    public void AttackEnd()
+    public void AttackEnd(int hitboxGroupId = default)
     {
         if (_currentWeapon == null)
         {
@@ -87,7 +87,7 @@ public class WeaponHandler : MonoBehaviour
             return;
         }
 
-        _currentWeapon.AttackEnd();
+        _currentWeapon.AttackEnd(hitboxGroupId);
     }
 
     public void ActivateSkill()
