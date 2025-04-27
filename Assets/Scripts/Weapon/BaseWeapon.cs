@@ -23,6 +23,11 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
         HitDetector.StopDetection(hitboxGroupId);
     }
 
+    public virtual void OnSkill()
+    {
+        
+    }
+
     public virtual void ChangePolarity()
     {
     }
