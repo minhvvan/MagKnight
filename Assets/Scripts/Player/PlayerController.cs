@@ -280,7 +280,7 @@ namespace Moon
                 Interact();
                 _inputHandler.InteractInput = false;
             }
-            
+
             //임시지정키 G. 아이템 분해
             if (Input.GetKeyDown(KeyCode.G))
             {
@@ -295,27 +295,10 @@ namespace Moon
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
             }
-            
-            UpdateMoveParameters();
-            
-            bool lockOnNow = _inputHandler.LockOnInput;  // true/false
-            // 눌린 순간(!이전 && 지금)
-            if (lockOnNow && !_lockOnLastFrame)
-            {
-                _lockOnSystem.ToggleLockOn();
-            }
-            // 상태 저장
-            _lockOnLastFrame = lockOnNow;
 
-            if (_lockOnSystem.currentTarget != null)
-            {
-                _animator.SetTrigger(_HashLockOn);
-            }
-            else
-            {
-                _animator.ResetTrigger(_HashLockOn);
-            }
-            
+            UpdateMoveParameters();
+
+            UpdateLockOn();
 
             SetGrounded();
 
@@ -329,10 +312,30 @@ namespace Moon
 
             //PlayAudio();
 
-            
+
             TimeoutToIdle();
 
+
+        }
+
+        void UpdateLockOn()
+        {
+            bool lockOnNow = _inputHandler.LockOnInput;
             
+            if (lockOnNow && !_lockOnLastFrame)
+            {
+                _lockOnSystem.ToggleLockOn();
+            }
+            _lockOnLastFrame = lockOnNow;
+
+            if (_lockOnSystem.IsLockOn)
+            {
+                _animator.SetTrigger(_HashLockOn);
+            }
+            else
+            {
+                _animator.ResetTrigger(_HashLockOn);
+            }
         }
 
         // Called at the start of FixedUpdate to record the current state of the base layer of the animator.
@@ -487,7 +490,7 @@ namespace Moon
             Quaternion targetRotation;
 
             // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
-            if (_lockOnSystem.currentTarget != null)
+            if (_lockOnSystem.IsLockOn)
             {
                 // --- 락온 모드 계산 ---
                 // 실제 락온 카메라를 기준으로 forward 추출
@@ -561,7 +564,7 @@ namespace Moon
         void UpdateOrientation()
         {
             // 1) 락온 중이면, 대상 바라보기만 하고 리턴
-            if (_lockOnSystem.currentTarget != null)
+            if (_lockOnSystem.IsLockOn)
             {
                 Vector3 dir = _lockOnSystem.currentTarget.position - transform.position;
                 dir.y = 0f;
@@ -682,7 +685,7 @@ namespace Moon
                 else
                 {
                     // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
-                    if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+                    if(_lockOnSystem.IsLockOn)
                     {
                         // 캐릭터 회전: 타겟 바라보기
                         Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
@@ -875,7 +878,7 @@ namespace Moon
 
         void OnAnimatorIK(int layerIndex)
         {
-            if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+            if(_lockOnSystem.IsLockOn)
             {
                 Transform target = _lockOnSystem.currentTarget;
                 _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);
