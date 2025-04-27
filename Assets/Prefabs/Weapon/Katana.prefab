@@ -100,28 +100,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _patternHitboxGroups:
-  - patternId: 0
+  _hitboxesGroups:
+  - groupId: 0
+    groupName: "\uAE30\uBCF8\uACF5\uACA9"
+    isAlwaysActive: 0
+    isContinuous: 0
+    isSingle: 0
+    isActive: 0
     hitboxes:
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.3}
+      offset: {x: 0, y: 0, z: 0.4}
       radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.7}
+      offset: {x: 0, y: 0, z: 0.8}
       radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 1.1}
+      offset: {x: 0, y: 0, z: 1.2}
       radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 1.5}
+      offset: {x: 0, y: 0, z: 1.6}
+      radius: 0.3
+  - groupId: 1
+    groupName: "\uD720\uC708\uB4DC"
+    isAlwaysActive: 0
+    isContinuous: 1
+    isSingle: 0
+    isActive: 0
+    hitboxes:
+    - referenceTransform: {fileID: 82124021084689730}
+      offset: {x: 0, y: 0, z: 0.4}
       radius: 0.3
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 1.9}
+      offset: {x: 0, y: 0, z: 0.8}
+      radius: 0.3
+    - referenceTransform: {fileID: 82124021084689730}
+      offset: {x: 0, y: 0, z: 1.2}
+      radius: 0.3
+    - referenceTransform: {fileID: 82124021084689730}
+      offset: {x: 0, y: 0, z: 1.6}
       radius: 0.3
   _layerMask:
     serializedVersion: 2
     m_Bits: 128
-  _hitType: 1
 --- !u!114 &5105682781939386770
 MonoBehaviour:
   m_ObjectHideFlags: 0
