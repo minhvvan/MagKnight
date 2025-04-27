@@ -13,14 +13,14 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
         HitDetector.Subscribe(this);
     }
 
-    public virtual void AttackStart()
+    public virtual void AttackStart(int hitboxGroupId)
     {
-        HitDetector.StartDetection();
+        HitDetector.StartDetection(hitboxGroupId);
     }
 
-    public virtual void AttackEnd()
+    public virtual void AttackEnd(int hitboxGroupId)
     {
-        HitDetector.StopDetection();
+        HitDetector.StopDetection(hitboxGroupId);
     }
 
     public virtual void ChangePolarity()
