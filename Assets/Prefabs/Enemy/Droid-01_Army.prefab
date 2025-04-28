@@ -1828,6 +1828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
+  _enemyStatSO: {fileID: 11400000, guid: d4b9cd22a828fd34fb3c5371668de946, type: 2}
   _enemy: {fileID: 8957364649605768314}
   abilitySystem: {fileID: -5346760470181023004}
   enemyName: 
