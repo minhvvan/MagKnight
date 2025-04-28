@@ -10,19 +10,22 @@ using UnityEngine;
 
 public class InteractionController : MonoBehaviour
 {
-    [SerializeField] private float viewAngle = 90f;
-    [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] private float interactionDistance = 10f;
+    [SerializeField] private float interactionRadius = .5f;
+    [SerializeField] private LayerMask interactableMask;
     [SerializeField] public CameraSettings cameraSettings;
     
-    private List<IInteractable> _interactables = new List<IInteractable>();
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
     
-
+    private Camera _mainCamera;
+    private RaycastHit[] _hits = new RaycastHit[10];
+    
     private void Awake()
     {
         _interactor = this.GetInterfaceInParent<IInteractor>();
         cameraSettings = FindObjectOfType<CameraSettings>();
+        _mainCamera = Camera.main;
     }
 
     public void Interact(bool isDismantle = false)
@@ -38,7 +41,6 @@ public class InteractionController : MonoBehaviour
             Debug.Log("interactor is null");
             return;
         }
-        
         
         InteractStart();
 
@@ -64,16 +66,72 @@ public class InteractionController : MonoBehaviour
             _currentInteractable.Interact(_interactor);
         }
         
-        if(_currentInteractable is not BaseNPCController)
-        {
-            _interactables.Remove(_currentInteractable);
-        }
-        
         FindClosestInteractable();
-
         _currentInteractable = null;
     }
+    
+    private Vector3 GetStartPoint()
+    {
+        Ray mainCameraRay = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+        
+        Vector3 rayOrigin = mainCameraRay.origin;
+        Vector3 rayDir = mainCameraRay.direction.normalized;
+    
+        Vector3 playerYAxisOrigin = transform.position;
+        Vector3 playerYAxisDir = Vector3.up;
 
+        // 방향 벡터 내적
+        Vector3 w0 = rayOrigin - playerYAxisOrigin;
+
+        float a = Vector3.Dot(rayDir, rayDir); // = 1 if rayDir is normalized
+        float b = Vector3.Dot(rayDir, playerYAxisDir);
+        float c = Vector3.Dot(playerYAxisDir, playerYAxisDir); // = 1 since Vector3.up
+        float d = Vector3.Dot(rayDir, w0);
+        float e = Vector3.Dot(playerYAxisDir, w0);
+
+        float denominator = a * c - b * b;
+
+        if (Mathf.Abs(denominator) < 0.0001f)
+        {
+            // 거의 평행하므로 그냥 ray origin 반환
+            return rayOrigin;
+        }
+
+        float sc = (b * e - c * d) / denominator;
+
+        Vector3 targetPoint = rayOrigin + sc * rayDir;
+        
+        return targetPoint;
+    }
+    
+    private void FindClosestInteractable()
+    {
+        if (!_mainCamera) return;
+        var targetPoint = GetStartPoint();
+        
+        //범위 내 감지
+        var hitCount = Physics.SphereCastNonAlloc(targetPoint, interactionRadius, _mainCamera.transform.forward, _hits, interactionDistance, interactableMask);
+        
+        if (hitCount <= 0)
+        {
+            _currentInteractable?.UnSelect();
+            _currentInteractable = null;
+            return;
+        }
+        
+        foreach (var hit in _hits)
+        {
+            if (hit.collider.IsUnityNull()) continue;
+            if (!hit.collider.TryGetComponent<IInteractable>(out var interactable)) continue;
+            
+            _currentInteractable?.UnSelect();
+            _currentInteractable = interactable;
+            _currentInteractable?.Select();
+
+            break;
+        }
+    }
+    
     //NPC와의 인터렉션 시작
     public void InteractStart()
     {
@@ -96,39 +154,10 @@ public class InteractionController : MonoBehaviour
         }
     }
 
-
     public void InteractEnd()
     {
         EndDialogue(cameraSettings.interactionCamera);
         InteractionEvent.OnDialogueEnd -= InteractEnd;
-    }
-
-  
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent<IInteractable>(out var interactable))
-        {
-            //*Visual Test(나중에 삭제)
-            interactable.GetGameObject().GetComponentsInChildren<MeshRenderer>().ForEach(mesh => mesh.material.color = Color.red);
-            
-            _interactables.Add(interactable);
-            FindClosestInteractable();
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent<IInteractable>(out var interactable))
-        {
-            if (_interactables.Contains(interactable))
-            {
-                //*Visual Test(나중에 삭제)
-                interactable.GetGameObject().GetComponentsInChildren<MeshRenderer>().ForEach(mesh => mesh.material.color = Color.gray);
-
-                _interactables.Remove(interactable);
-                FindClosestInteractable();
-            }
-        }
     }
 
     private void FixedUpdate()
@@ -136,41 +165,7 @@ public class InteractionController : MonoBehaviour
         FindClosestInteractable();
     }
 
-    private void FindClosestInteractable()
-    {
-        IInteractable closest = null;
-        
-        _interactables = _interactables.OrderBy(interactable => 
-        {
-            Vector3 dirToTarget = (interactable.GetGameObject().transform.position - transform.position).normalized;
-            float angle = Vector3.Angle(transform.forward, dirToTarget);
-            float distance = Vector3.Distance(transform.position, interactable.GetGameObject().transform.position);
-    
-            // 시야각 체크
-            bool isInViewAngle = angle < viewAngle / 2;
-            bool noObstacle = !Physics.Raycast(transform.position, dirToTarget, distance, obstacleMask);
-            bool isVisible = isInViewAngle && noObstacle;
-    
-            return (isVisible ? 0f : float.MaxValue) + distance;
-        }).ToList();
-
-        if (_interactables.Count == 0) return;
-        closest = _interactables.First();
-        if (closest == null) return;
-        
-        _currentInteractable?.UnSelect();
-        
-        //*Visual Test(나중에 삭제)
-        if (_interactables.Contains(_currentInteractable))
-        {
-            _currentInteractable?.GetGameObject().GetComponentsInChildren<MeshRenderer>().ForEach(mesh => mesh.material.color = Color.red);
-        }
-        
-        _currentInteractable = closest;
-        _currentInteractable?.Select();
-    }
-
-    public void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
+    private void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
     {
         if(lookFrom == null)
         {
@@ -198,5 +193,55 @@ public class InteractionController : MonoBehaviour
     {
         interactionCamera.Priority = 0;
         UIManager.Instance.inGameUIController.ShowInGameUI();
+    }
+
+    private void OnDrawGizmos()
+    {
+#if false
+
+        if (!Application.isPlaying) return;
+        
+        var start = GetStartPoint();
+        var end = start + _mainCamera.transform.forward * interactionDistance;
+        Gizmos.color = Color.yellow;
+        
+        Gizmos.DrawWireSphere(start, interactionRadius);
+        Gizmos.DrawWireSphere(end, interactionRadius);
+            
+        // 캡슐 측면 연결선
+        DrawCapsuleLines(start, end);
+#endif
+    }
+    
+    // 캡슐 측면 연결선을 그리는 보조 함수
+    private void DrawCapsuleLines(Vector3 start, Vector3 end)
+    {
+        // 방향에 수직인 두 벡터 찾기
+        Vector3 perpendicular1 = Vector3.zero;
+        Vector3 perpendicular2 = Vector3.zero;
+        
+        var direction = end - start;
+        
+        if (direction == Vector3.up || direction == Vector3.down)
+        {
+            perpendicular1 = Vector3.forward;
+            perpendicular2 = Vector3.right;
+        }
+        else if (direction == Vector3.forward || direction == Vector3.back)
+        {
+            perpendicular1 = Vector3.up;
+            perpendicular2 = Vector3.right;
+        }
+        else
+        {
+            perpendicular1 = Vector3.up;
+            perpendicular2 = Vector3.forward;
+        }
+        
+        // 네 개의 측면 선 그리기
+        Gizmos.DrawLine(start + perpendicular1 * interactionRadius, end + perpendicular1 * interactionRadius);
+        Gizmos.DrawLine(start - perpendicular1 * interactionRadius, end - perpendicular1 * interactionRadius);
+        Gizmos.DrawLine(start + perpendicular2 * interactionRadius, end + perpendicular2 * interactionRadius);
+        Gizmos.DrawLine(start - perpendicular2 * interactionRadius, end - perpendicular2 * interactionRadius);
     }
 }

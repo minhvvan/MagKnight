@@ -50,12 +50,9 @@ public class GameOverUIController : MonoBehaviour, IBasePopupUIController
         });
     }
 
-
-
     void OnClickRestart()
     {
-        SceneController.TransitionToScene(Constants.BaseCamp);
-        GameManager.Instance.ChangeGameState(GameState.BaseCamp);
+        GameManager.Instance.ChangeGameState(GameState.InitGame);
     }
 
     void OnClickExit()
