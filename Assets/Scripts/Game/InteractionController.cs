@@ -112,7 +112,7 @@ public class InteractionController : MonoBehaviour
         var targetPoint = GetStartPoint();
         
         //범위 내 감지
-        var hitCount = Physics.SphereCastNonAlloc(targetPoint, interactionRadius, _mainCamera.transform.forward, _hits, interactableMask);
+        var hitCount = Physics.SphereCastNonAlloc(targetPoint, interactionRadius, _mainCamera.transform.forward, _hits, interactionDistance, interactableMask);
         
         if (hitCount <= 0)
         {
