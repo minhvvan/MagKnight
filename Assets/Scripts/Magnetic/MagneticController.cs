@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -144,6 +143,8 @@ public class MagneticController : MagneticObject
     //Q 누르기 유지
     public void OnPressEnter()
     {
+        if(_magneticUIController == null) return;
+
         _isShortRelease = true;
         //입력 유지 시 할 로직
         
@@ -161,6 +162,8 @@ public class MagneticController : MagneticObject
     //Q 짧게 누르고 뗐을때
     public async UniTask OnShortRelease()
     {
+        if(_magneticUIController == null) return;
+
         _isShortRelease = true;
         //짧게 입력시 할 로직
         _isPressMagnetic = false;
@@ -178,6 +181,8 @@ public class MagneticController : MagneticObject
     //Q 길게 누르고 뗐을때
     public async UniTask OnLongRelease()
     {
+        if(_magneticUIController == null) return;
+
         _isLongRelease = true;
         //길게 입력 시 할 로직
         _isPressMagnetic = false;
@@ -217,6 +222,8 @@ public class MagneticController : MagneticObject
     //V, 극성전환
     public override void SwitchMagneticType(MagneticType? type = null)
     {
+        if(_magneticUIController == null) return;
+
         //극성 전환 이전
         if (_isActivatedMagnetic)
         {
