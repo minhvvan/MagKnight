@@ -38,6 +38,8 @@ namespace Moon
         public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
         public bool isDead;
+        public bool isInvisible;
+        public bool IsInvisible => isInvisible || isDead;
         
         [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
@@ -822,10 +824,15 @@ namespace Moon
             return gameObject;
         }
 
+        public void RespawnStart()
+        {
+            isInvisible = true;
+        }
         
         public void RespawnFinished()
         {
             isDead = false;
+            isInvisible = false;
         }
 
         public void StandFinished()
@@ -840,7 +847,6 @@ namespace Moon
             _abilitySystem.TriggerEvent(TriggerEventType.OnDeath, _abilitySystem);
             if(_abilitySystem.GetValue(AttributeType.HP) <= 0)
             {
-                Debug.Log("Dead Player");
                 isDead = true;
                 _animator.SetTrigger(_HashDeath);
                 GameManager.Instance.ChangeGameState(GameState.GameOver);
