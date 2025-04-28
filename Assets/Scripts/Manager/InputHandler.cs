@@ -119,8 +119,6 @@ namespace Moon
         Action<InputAction.CallbackContext> _releaseJumpCallback;
         Action<InputAction.CallbackContext> _pressInteractCallback;
         Action<InputAction.CallbackContext> _releaseInteractCallback;
-        Action<InputAction.CallbackContext> _pressSprintCallback;
-        Action<InputAction.CallbackContext> _releaseSprintCallback;        
         Action<InputAction.CallbackContext> _pressPauseCallback;
         Action<InputAction.CallbackContext> _releasePauseCallback;
         Action<InputAction.CallbackContext> _pressLockOnCallback;
@@ -220,9 +218,6 @@ namespace Moon
             playerInput.actions["Attack1"].performed -= _pressAttack1Callback;
             playerInput.actions["Attack2"].performed -= _pressAttack2Callback;
 
-            playerInput.actions["Sprint"].performed -= _pressSprintCallback;
-            playerInput.actions["Sprint"].canceled -= _releaseSprintCallback;
-
             playerInput.actions["Interact"].performed -= _pressInteractCallback;
             playerInput.actions["Interact"].canceled -= _releaseInteractCallback;
 
@@ -232,8 +227,8 @@ namespace Moon
             playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
             
-            playerInput.actions["LockOn"].performed     -= _pressLockOnCallback;
-            playerInput.actions["LockOn"].canceled     -= _releaseLockOnCallback;
+            playerInput.actions["LockOn"].performed -= _pressLockOnCallback;
+            playerInput.actions["LockOn"].canceled -= _releaseLockOnCallback;
             
             playerInput.actions["Dodge"].performed -= _pressDodgeCallback;
             playerInput.actions["Dodge"].canceled -= _releaseDodgeCallback;
