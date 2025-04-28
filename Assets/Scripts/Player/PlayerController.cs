@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Collections;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace Moon
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
         private bool _dodgeLastFrame = false;
+        private bool _isDodging = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -264,16 +266,17 @@ namespace Moon
 
             EquipMeleeWeapon(IsInAttackComboState());
             
+            // Dodge 입력 처리
             bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
 
-            // 3) rising-edge 체크: 지금 눌렸고, 지난 프레임엔 안 눌렸다면 PerformDodge()
-            if (dodgeNow && !_dodgeLastFrame)
+            if (dodgeNow && !_dodgeLastFrame && !_isDodging)  // ★ 추가: _isDodging 체크
             {
                 PerformDodge();
-                // 구르기 실행 후 나머지 로직 스킵
-                _dodgeLastFrame = true;  // 바로 true로 세팅해서 연속 호출 방지
+                _dodgeLastFrame = true;
                 return;
             }
+
+            _dodgeLastFrame = dodgeNow;
 
             // 4) 매 프레임 마지막에 상태 저장
             _dodgeLastFrame = dodgeNow;
@@ -911,15 +914,20 @@ namespace Moon
         
         void PerformDodge()
         {
-            // 1) 만약 콤보 상태였다면 해제
             _inCombo = false;
+            _isDodging = true;  // ★ 회피 시작 플래그 켜기
+            _inputHandler.playerControllerInputBlocked = true;
 
-            // 2) 회피 애니메이터 호출
             _animator.SetTrigger(_HashDodge);
 
-            // 3) (Optional) 회피 중 입력 막기
-            //_inputHandler.playerControllerInputBlocked = true;
+            StartCoroutine(UnblockAfterDodge());
+        }
 
+        IEnumerator UnblockAfterDodge()
+        {
+            yield return new WaitForSeconds(0.8f);
+            _inputHandler.playerControllerInputBlocked = false;
+            _isDodging = false;   // ★ 회피 끝났으니 다시 허용
         }
     }
 }
