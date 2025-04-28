@@ -109,17 +109,14 @@ MonoBehaviour:
     isActive: 0
     hitboxes:
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.4}
-      radius: 0.3
-    - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 0.8}
-      radius: 0.3
+      offset: {x: 0, y: 0, z: 0.6}
+      radius: 0.5
     - referenceTransform: {fileID: 82124021084689730}
       offset: {x: 0, y: 0, z: 1.2}
-      radius: 0.3
+      radius: 0.5
     - referenceTransform: {fileID: 82124021084689730}
-      offset: {x: 0, y: 0, z: 1.6}
-      radius: 0.3
+      offset: {x: 0, y: 0, z: 1.8}
+      radius: 0.5
   - groupId: 1
     groupName: "\uD720\uC708\uB4DC"
     isAlwaysActive: 0
