@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,7 +17,10 @@ public class MeleeNormalAI : IEnemyAI
     
     public void OnEnter()
     {
-        SetDestination(_blackboard.target.transform.position);
+         if(_enemy.IsAvailableTarget())
+        {
+            _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        }
         if (!_enemy.Agent.pathPending && _enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
         {
             // 갈 수 있는 경로
@@ -38,7 +39,11 @@ public class MeleeNormalAI : IEnemyAI
         _destinationTimer += Time.deltaTime;
         if (_destinationTimer >= destinationUpdateInterval)
         {
-            SetDestination(_blackboard.target.transform.position);
+            if(_enemy.IsAvailableTarget())
+            {
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+            }
+
             _destinationTimer = 0f;
         }
         

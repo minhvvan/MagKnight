@@ -260,6 +260,7 @@ MonoBehaviour:
     - Key: 3
       Value: {fileID: 1384075175}
   clearRoomField: {fileID: 1524162076}
+  hasReward: 1
 --- !u!1001 &1384075174
 PrefabInstance:
   m_ObjectHideFlags: 0

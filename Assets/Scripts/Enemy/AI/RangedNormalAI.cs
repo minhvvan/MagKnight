@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RangedNormalAI : IEnemyAI
@@ -21,7 +19,10 @@ public class RangedNormalAI : IEnemyAI
     public void OnEnter()
     {
         _enemy.Anim.SetBool("Trace", true);
-        _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        if(_enemy.IsAvailableTarget())
+        {
+            _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        }
     }
 
     public void OnUpdate()
@@ -35,7 +36,11 @@ public class RangedNormalAI : IEnemyAI
             _destinationTimer += Time.deltaTime;
             if (_destinationTimer >= destinationUpdateInterval)
             {
-                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+                if(_enemy.IsAvailableTarget())
+                {
+                    _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+                }
+
                 _destinationTimer = 0f;
             }
         }

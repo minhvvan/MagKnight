@@ -1934,6 +1934,7 @@ MonoBehaviour:
     - Key: 3
       Value: {fileID: 173347431}
   clearRoomField: {fileID: 0}
+  hasReward: 1
 --- !u!114 &8164696724866519027
 MonoBehaviour:
   m_ObjectHideFlags: 0

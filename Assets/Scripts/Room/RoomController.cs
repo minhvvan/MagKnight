@@ -16,6 +16,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 {
     [SerializeField] private SerializedDictionary<RoomDirection, Gate> gates;
     [SerializeField] private ClearRoomField clearRoomField;
+    [SerializeField] private bool hasReward;
 
     private EnemyController _enemyController;
     private NavMeshData _loadedNavMeshData;
@@ -124,24 +125,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(Addresses.Data.Room.NavMeshData);
     }
 
-    private void ConfigureNavMesh()
-    {
-        //타깃 설정
-        _navMeshSurface.collectObjects = CollectObjects.MarkedWithModifier;
-        _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
-        
-        _navMeshSurface.defaultArea = 0;  // Walkable
-        _navMeshSurface.agentTypeID = 0;  // 기본 에이전트
-
-        _navMeshSurface.minRegionArea = 2;
-        
-        // 레이어 설정
-        _navMeshSurface.layerMask = LayerMask.GetMask("Default", "Environment");
-        
-        // 빌드 시 기존 데이터 정리
-        _navMeshSurface.RemoveData();
-    }
-
     public void OnPlayerExit()
     {
         if (_navMeshSurface)
@@ -155,7 +138,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     private void Reward()
     {
-        //TODO: 보상 지급
         ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), Quaternion.identity);
     }
 
@@ -174,14 +156,14 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             _enemyController.OnEnemiesClear -= RoomCompleted;
         }
-        //TODO: 코루틴 끄기
         
         _cleared = true;
-        Reward();
+        if(hasReward)Reward();
         cancelTokenSource?.Cancel();
         cancelTokenSource?.Dispose();
         cancelTokenSource = null;
-        GameManager.Instance.ChangeGameState(GameState.RoomClear);
+
+        ClearRoom();
     }
 
     public void ClearRoom()
@@ -191,6 +173,15 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             _enemyController.ClearAllEnemies();
         }
+        
+        //클리어 필드 없애기
+        if (clearRoomField)
+        {
+            clearRoomField.gameObject.SetActive(false);
+        }
+        
+        SetGateOpen(true);
+        GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }
 
     public void OnNext(bool reached)
