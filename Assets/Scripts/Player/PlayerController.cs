@@ -68,6 +68,8 @@ namespace Moon
         protected bool _inCombo;                      // Whether Ellen is currently in the middle of her melee combo.        
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
+        private bool _dodgeLastFrame = false;
+
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
         const float k_AirborneTurnSpeedProportion = 5.4f;
@@ -101,6 +103,7 @@ namespace Moon
         readonly int _HashMoveY   = Animator.StringToHash("MoveY");
         readonly int _HashSpeed   = Animator.StringToHash("Speed");
         readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
+        readonly int _HashDodge = Animator.StringToHash("Dodge");
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -120,7 +123,7 @@ namespace Moon
         readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
         readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
         readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
-
+        
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
 
@@ -260,6 +263,20 @@ namespace Moon
             UpdateCameraHandler();
 
             EquipMeleeWeapon(IsInAttackComboState());
+            
+            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
+
+            // 3) rising-edge 체크: 지금 눌렸고, 지난 프레임엔 안 눌렸다면 PerformDodge()
+            if (dodgeNow && !_dodgeLastFrame)
+            {
+                PerformDodge();
+                // 구르기 실행 후 나머지 로직 스킵
+                _dodgeLastFrame = true;  // 바로 true로 세팅해서 연속 호출 방지
+                return;
+            }
+
+            // 4) 매 프레임 마지막에 상태 저장
+            _dodgeLastFrame = dodgeNow;
 
             _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
             _animator.ResetTrigger(_HashMeleeAttack);
@@ -890,6 +907,19 @@ namespace Moon
                 _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);
                 _animator.SetLookAtWeight(0.6f);
             }
+        }
+        
+        void PerformDodge()
+        {
+            // 1) 만약 콤보 상태였다면 해제
+            _inCombo = false;
+
+            // 2) 회피 애니메이터 호출
+            _animator.SetTrigger(_HashDodge);
+
+            // 3) (Optional) 회피 중 입력 막기
+            //_inputHandler.playerControllerInputBlocked = true;
+
         }
     }
 }
