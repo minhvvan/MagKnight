@@ -203,6 +203,7 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
 
+                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
                 var artifactObj = Instantiate(_artifactPrefab, position, rotation, parent);
                 var artifact = artifactObj.GetComponent<ArtifactObject>();
                 artifact.SetArtifactData(artifactData);
@@ -245,6 +246,7 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
+                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
                 var magCoreObj = Instantiate(_magCorePrefab, position, rotation, parent);
                 var magCore = magCoreObj.GetComponent<MagCore>();
                 magCore.SetMagCoreData(magCoreData);
@@ -287,6 +289,7 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
+                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
                 var healthPackObj = Instantiate(_healthPackPrefab, position, rotation, parent);
                 var healthPack = healthPackObj.GetComponent<HealthPack>();
                 healthPack.SetHealthPotionData(healthPackData);
@@ -303,7 +306,9 @@ public class ItemManager : Singleton<ItemManager>
     //지정한 등급의 상자 생성.
     public void SpawnLootCrate(ItemCategory category, ItemRarity rarity, Vector3 position, Quaternion rotation)
     {
-        var obj = Instantiate(_lootCratePrefab, position, rotation);
+        var currentRoom = RoomSceneController.Instance.CurrentRoomController;
+        
+        var obj = Instantiate(_lootCratePrefab, position, rotation, currentRoom.transform);
         var lootCrate = obj.GetComponent<LootCrate>();
         lootCrate.SetLootCrate(category, rarity);
         lootCrate.rarityVfxObjects = _lootVfxPrefabs;
