@@ -168,7 +168,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnHit(Transform playerTransform)
     {
-        // 체력바 감소, 붉은색으로 변환, enemy 위치 보정
+        // 붉은색으로 변환, enemy 위치 보정
         
         if(blackboard.isDead) return;
         
@@ -185,7 +185,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private async UniTask OnHitHelper(Transform playerTransform)
     {
         CancellationToken token = blackboard.onHitCancellation.Token;
-        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
         blackboard.enemyRenderer.material.color = Color.red;
         
         // Enemy 넉백 관련은 이 함수를 사용
@@ -214,6 +213,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         {
             blackboard.enemyRenderer.material.color = Color.white;
         }
+    }
+    
+    public void OnDamaged()
+    {
+        // 체력바 감소
+        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
     }
 
     public void OnNext(HitInfo hitInfo)
