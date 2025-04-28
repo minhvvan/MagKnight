@@ -66,9 +66,7 @@ public class InteractionController : MonoBehaviour
             _currentInteractable.Interact(_interactor);
         }
         
-        _currentInteractable.Interact(_interactor);
         FindClosestInteractable();
-
         _currentInteractable = null;
     }
     
