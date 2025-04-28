@@ -45,6 +45,25 @@ public class AbilitySystem : MonoBehaviour
             AddAttribute(attributePair.Key, attributePair.Value);
         }
     }
+
+    public void InitializeFromEnemyStat(EnemyStat enemyStat = null)
+    {
+        if (enemyStat == null)
+        {
+            Debug.LogError("EnemyStat is not assigned!");
+            return;
+        }
+        
+        Attributes.ClearAllAttributes();
+        foreach (var field in typeof(EnemyStat).GetFields())
+        {
+            // 필드 값을 AttributePair로 가져옴
+            AttributePair attributePair = (AttributePair)field.GetValue(enemyStat);
+            
+            // AbilitySystem에 값 추가
+            AddAttribute(attributePair.Key, attributePair.Value);
+        }
+    }
     
     #region Attribute
     
