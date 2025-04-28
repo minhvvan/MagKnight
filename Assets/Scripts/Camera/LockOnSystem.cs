@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
-using Cinemachine;
-using Moon; // CameraSettings 네임스페이스
+using Moon;
+
 
 public class LockOnSystem : MonoBehaviour
 {
@@ -17,6 +17,35 @@ public class LockOnSystem : MonoBehaviour
     // 대상 후보 목록 및 현재 락온 대상
     private Transform[] candidates = new Transform[0];
     public Transform currentTarget;
+
+    //해당값으로 락온 상태에 들어갈지 말지 결정
+    public bool IsLockOn {
+        get {
+            return currentTarget != null;
+        }
+    }
+
+    //락온이 끝나는지 판단하는 조건
+    bool IsTargetDead {
+        get {
+            if (currentTarget == null)
+            {
+                return true;
+            } 
+            if (currentTarget.TryGetComponent(out Enemy enemy))
+            {
+                return enemy.blackboard.isDead;
+            }
+            if (currentTarget.gameObject.activeInHierarchy == false)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+
 
     [Header("입력 설정")]
     [Tooltip("마우스 이동으로 대상 변경 시 최소 화면 비율 값 (X축) ")]
@@ -36,64 +65,58 @@ public class LockOnSystem : MonoBehaviour
 
     void Update()
     {
+        if(!IsLockOn) return;
+
         // 1) 현재 락온 대상이 사망 또는 비활성화되면 다음 후보로 자동 스위치
-        if (currentTarget != null)
+        if(IsTargetDead)
         {
-            if(currentTarget.TryGetComponent(out Enemy enemy))
-            {
-                if(enemy.blackboard.isDead)
-                {
-                    HandleDeadTarget();
-                }
-            }
+            HandleDeadTarget();
         }
 
-        // 2) 방향 입력만으로 대상 변경
-        if (currentTarget != null)
-        {
-            // 카메라 입력(마우스 또는 우측 스틱)
-            Vector2 camInput = _inputHandler.CameraInput;
-            // 사용 중인 제어기 선택
-            bool usingController = _playerController.cameraSettings.inputChoice == CameraSettings.InputChoice.Controller;
-            float threshold = usingController ? stickDeadzone : mouseSwitchMaxDist;
+        // 2) 방향 입력만으로 대상 변경        
+        // 카메라 입력(마우스 또는 우측 스틱)
+        Vector2 camInput = _inputHandler.CameraInput;
+        // 사용 중인 제어기 선택
+        bool usingController = _playerController.cameraSettings.inputChoice == CameraSettings.InputChoice.Controller;
+        float threshold = usingController ? stickDeadzone : mouseSwitchMaxDist;
 
-            // 오른쪽으로 입력했을 때
-            if (camInput.x > threshold)
+        // 오른쪽으로 입력했을 때
+        if (camInput.x > threshold)
+        {
+            if (!_switchedRight)
             {
-                if (!_switchedRight)
-                {
-                    CycleTarget(1);
-                    _switchedRight = true;
-                }
-            }
-            // 왼쪽으로 입력했을 때
-            else if (camInput.x < -threshold)
-            {
-                if (!_switchedLeft)
-                {
-                    CycleTarget(-1);
-                    _switchedLeft = true;
-                }
-            }
-            else
-            {
-                // 입력이 데드존으로 돌아오면 다시 스위치 허용
-                _switchedRight = false;
-                _switchedLeft = false;
+                CycleTarget(1);
+                _switchedRight = true;
             }
         }
+        // 왼쪽으로 입력했을 때
+        else if (camInput.x < -threshold)
+        {
+            if (!_switchedLeft)
+            {
+                CycleTarget(-1);
+                _switchedLeft = true;
+            }
+        }
+        else
+        {
+            // 입력이 데드존으로 돌아오면 다시 스위치 허용
+            _switchedRight = false;
+            _switchedLeft = false;
+        }
+        
     }
 
     void LateUpdate()
     {
         // 락온 중일 때만 VirtualCamera 회전
-        if (currentTarget != null)
+        if (IsLockOn)
             RotateVCamTowardTarget();
     }
 
     public void ToggleLockOn()
     {
-        if (currentTarget == null) StartLockOn();
+        if (!IsLockOn) StartLockOn();
         else StopLockOn();
     }
 
@@ -169,13 +192,14 @@ public class LockOnSystem : MonoBehaviour
     {
         var cs = _playerController.cameraSettings;
         var lockCam = cs.lockOnCamera;
+        var targetHead = currentTarget.GetComponent<Enemy>().blackboard.headTransform;
 
-        lockCam.Follow = cs.follow;
-        lockCam.LookAt = currentTarget;
+        lockCam.Follow = cs.lookAt;
+        lockCam.LookAt = targetHead;
         lockCam.Priority = 20;
 
         cs.DisableCameraMove();
-        lockCam.transform.rotation = Quaternion.LookRotation((currentTarget.position - cs.follow.position).WithY(0f));
+        lockCam.transform.rotation = Quaternion.LookRotation((targetHead.position - cs.follow.position).WithY(0f));
     }
 
     private void CycleTarget(int dir)

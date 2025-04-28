@@ -52,15 +52,17 @@ public class RoomSceneController: Singleton<RoomSceneController>
         //targetRoom활성화 + currentRoom비활성화
         if (targetController != null)
         {
+            _currentRoomController = targetController;
+            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
+            
             await targetController.OnPlayerEnter(direction);
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {
                 targetController.SetGateOpen(true);
+                GameManager.Instance.ChangeGameState(GameState.RoomClear);
+                targetController.ClearRoom();
             }
-            
-            _currentRoomController = targetController;
-            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
 
         RoomController currentController = _loadedRoomControllers[currentRoomIndex];

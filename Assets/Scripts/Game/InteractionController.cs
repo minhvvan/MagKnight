@@ -28,7 +28,7 @@ public class InteractionController : MonoBehaviour
         _mainCamera = Camera.main;
     }
 
-    public void Interact()
+    public void Interact(bool isDismantle = false)
     {
         if (_currentInteractable == null)
         {
@@ -43,6 +43,28 @@ public class InteractionController : MonoBehaviour
         }
         
         InteractStart();
+
+        if (isDismantle)//아이템 분해
+        {
+            if (_currentInteractable.GetType() == typeof(MagCore))
+            {
+                if (_currentInteractable.GetGameObject().TryGetComponent(out MagCore magCore))
+                {
+                    magCore.Dismantle(_interactor);
+                }
+            }
+            else if (_currentInteractable.GetType() == typeof(ArtifactObject))
+            {
+                if (_currentInteractable.GetGameObject().TryGetComponent(out ArtifactObject artifactObject))
+                {
+                    artifactObject.Dismantle(_interactor);
+                }
+            }
+        }
+        else
+        {
+            _currentInteractable.Interact(_interactor);
+        }
         
         _currentInteractable.Interact(_interactor);
         FindClosestInteractable();

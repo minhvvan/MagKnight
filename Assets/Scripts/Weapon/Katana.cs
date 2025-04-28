@@ -13,9 +13,9 @@ public class Katana: BaseWeapon
     }
     
 
-    public override void AttackStart()
+    public override void AttackStart(int hitboxGroupId)
     {
-        base.AttackStart();
+        base.AttackStart(hitboxGroupId);
         //TODO: FX
         if(_weaponTrail != null)
         {
@@ -23,9 +23,9 @@ public class Katana: BaseWeapon
         }
     }
 
-    public override void AttackEnd()
+    public override void AttackEnd(int hitboxGroupId)
     {
-        base.AttackEnd();
+        base.AttackEnd(hitboxGroupId);
         
         if(_weaponTrail != null)
         {

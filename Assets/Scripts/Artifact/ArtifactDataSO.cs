@@ -7,6 +7,7 @@ public abstract class ArtifactDataSO : ScriptableObject
 {
    public Sprite icon;
    public string itemName;
+   public int scrapValue;
    
    public virtual void N_ApplyTo(AbilitySystem target) {}
    

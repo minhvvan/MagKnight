@@ -4,6 +4,7 @@ using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using hvvan;
+using JetBrains.Annotations;
 using Jun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -186,9 +187,6 @@ namespace Moon
         public void InitializeByCurrentRunData(CurrentRunData currentRunData)
         {
             InitStat(currentRunData.playerStat);
-
-            //마그네틱 컨트롤러 초기화
-            _magneticController.InitializeMagnetic();
             
             //무기 지급
             SetCurrentWeapon(currentRunData.currentWeapon);
@@ -201,6 +199,44 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
+
+                // OnHitPassive
+                var ChargeSkillGaugeHit = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 3),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnHit
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGaugeHit);
+                
+                // OnDamagePassive
+                var ChargeSkillGauageDamaged = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnDamage
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageDamaged);
+                
+                var ChargeSkillGauageMagnetic = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnMagnetic
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageMagnetic);
+                
+                var OnSkill = new PassiveEffectData
+                {
+                    effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, -500),
+                    triggerChance = 1,
+                    triggerEvent = TriggerEventType.OnSkill
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(OnSkill);
             }
             
             //HUD 생성 및 바인딩
@@ -209,7 +245,7 @@ namespace Moon
             {
                 inGameUIController.BindAttributeChanges(_abilitySystem);
             }
-            
+            _magneticController.InitializeMagnetic();
         }
         
         
@@ -244,26 +280,25 @@ namespace Moon
                 Interact();
                 _inputHandler.InteractInput = false;
             }
-            
-            UpdateMoveParameters();
-            
-            bool lockOnNow = _inputHandler.LockOnInput;  // true/false
-            // 눌린 순간(!이전 && 지금)
-            if (lockOnNow && !_lockOnLastFrame)
+
+            //임시지정키 G. 아이템 분해
+            if (Input.GetKeyDown(KeyCode.G))
             {
-                _lockOnSystem.ToggleLockOn();
-                if (_lockOnSystem.currentTarget != null)
+                Dismentle();
+            }
+
+            if (_inputHandler.SkillInput)
+            {
+                Debug.Log("SKill");
+                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
-                    _animator.SetTrigger(_HashLockOn);
-                }
-                else
-                {
-                    _animator.ResetTrigger(_HashLockOn);
+                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
             }
-            // 상태 저장
-            _lockOnLastFrame = lockOnNow;
-            
+
+            UpdateMoveParameters();
+
+            UpdateLockOn();
 
             SetGrounded();
 
@@ -277,10 +312,30 @@ namespace Moon
 
             //PlayAudio();
 
-            
+
             TimeoutToIdle();
 
+
+        }
+
+        void UpdateLockOn()
+        {
+            bool lockOnNow = _inputHandler.LockOnInput;
             
+            if (lockOnNow && !_lockOnLastFrame)
+            {
+                _lockOnSystem.ToggleLockOn();
+            }
+            _lockOnLastFrame = lockOnNow;
+
+            if (_lockOnSystem.IsLockOn)
+            {
+                _animator.SetTrigger(_HashLockOn);
+            }
+            else
+            {
+                _animator.ResetTrigger(_HashLockOn);
+            }
         }
 
         // Called at the start of FixedUpdate to record the current state of the base layer of the animator.
@@ -435,7 +490,7 @@ namespace Moon
             Quaternion targetRotation;
 
             // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
-            if (_lockOnSystem.currentTarget != null)
+            if (_lockOnSystem.IsLockOn)
             {
                 // --- 락온 모드 계산 ---
                 // 실제 락온 카메라를 기준으로 forward 추출
@@ -509,7 +564,7 @@ namespace Moon
         void UpdateOrientation()
         {
             // 1) 락온 중이면, 대상 바라보기만 하고 리턴
-            if (_lockOnSystem.currentTarget != null)
+            if (_lockOnSystem.IsLockOn)
             {
                 Vector3 dir = _lockOnSystem.currentTarget.position - transform.position;
                 dir.y = 0f;
@@ -625,49 +680,47 @@ namespace Moon
                 // 1) 콤보 중엔 항상 루트 모션만 적용
                 if (_inCombo)
                 {
-                    Vector3 rootMove = _animator.deltaPosition;
-                    rootMove += Vector3.up * _verticalSpeed * Time.deltaTime;
-                    _characterController.Move(rootMove);
-                    // return;
-                }
-                
-                // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
-                if (_lockOnSystem.currentTarget != null && !_inCombo)
-                {
-                    // 캐릭터 회전: 타겟 바라보기
-                    Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
-                    toTarget.y = 0f;
-                    if (toTarget.sqrMagnitude > 0.001f)
-                        transform.rotation = Quaternion.LookRotation(toTarget);
-
-                    // 이동 벡터: 입력 기준으로
-                    Vector2 raw = _inputHandler.MoveInput;
-                    Vector3 dir = new Vector3(raw.x, 0f, raw.y);
-                    if (dir.sqrMagnitude > 1f) dir.Normalize();
-
-                    movement = (transform.right * dir.x + transform.forward * dir.z) *
-                               (_forwardSpeed * Time.deltaTime);
-                    movement += Vector3.up * _verticalSpeed * Time.deltaTime;
-
-                    _characterController.Move(movement);
-                }
-
-                // 3) 일반 로코모션 
-                bool useManualMove = (_currentStateInfo.shortNameHash == _HashLocomotion);
-                if (useManualMove)
-                {
-                    movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                    movement = _animator.deltaPosition;
                 }
                 else
                 {
-                    // 루트 모션 기반 이동
-                    RaycastHit hit;
-                    Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
-                    if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                        movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+                    // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
+                    if(_lockOnSystem.IsLockOn)
+                    {
+                        // 캐릭터 회전: 타겟 바라보기
+                        Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                        toTarget.y = 0f;
+                        if (toTarget.sqrMagnitude > 0.001f)
+                            transform.rotation = Quaternion.LookRotation(toTarget);
+
+                        // 이동 벡터: 입력 기준으로
+                        Vector2 raw = _inputHandler.MoveInput;
+                        Vector3 dir = new Vector3(raw.x, 0f, raw.y);
+                        if (dir.sqrMagnitude > 1f) dir.Normalize();
+
+                        movement = (transform.right * dir.x + transform.forward * dir.z) *
+                                (_forwardSpeed * Time.deltaTime);
+                    }
                     else
-                        movement = _animator.deltaPosition;
-                }
+                    {
+                        // 3) 일반 로코모션 
+                        bool useManualMove = _currentStateInfo.shortNameHash == _HashLocomotion;
+                        if (useManualMove)
+                        {
+                            movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                        }
+                        else
+                        {
+                            // 루트 모션 기반 이동
+                            RaycastHit hit;
+                            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
+                            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                                movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+                            else
+                                movement = _animator.deltaPosition;
+                        }
+                    }
+                }                
             }
             else
             {
@@ -706,6 +759,14 @@ namespace Moon
                 _interactionController.Interact();
             }
         }
+        
+        void Dismentle()
+        {
+            if (_interactionController != null)
+            {
+                _interactionController.Interact(true);
+            }
+        }
 
         void SwitchMagneticInput()
         {
@@ -740,10 +801,18 @@ namespace Moon
         }
         
         #region Weapon
-        public void SetCurrentWeapon(WeaponType weaponType)
+        public void SetCurrentWeapon(WeaponType weaponType, [CanBeNull] MagCore currentMagCore = null)
         {
             _animator.runtimeAnimatorController = animatorControllers[weaponType];
             _weaponHandler.SetCurrentWeapon(weaponType);
+            
+            //현재 무기 정보 저장 & 이전 무기 드랍
+            if (currentMagCore != null)
+            {
+                if (_weaponHandler.currentMagCore != null) _weaponHandler.DropPrevWeapon(currentMagCore.transform);
+                _weaponHandler.currentMagCore = currentMagCore;
+            }
+            
             canAttack = true;
         }
         #endregion
@@ -804,11 +873,12 @@ namespace Moon
                     _isKnockDown = true;
                 }
             }
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
         void OnAnimatorIK(int layerIndex)
         {
-            if(_animator.GetBool(_HashLockOn) && _lockOnSystem.currentTarget != null)
+            if(_lockOnSystem.IsLockOn)
             {
                 Transform target = _lockOnSystem.currentTarget;
                 _animator.SetLookAtPosition(target.position + Vector3.up * 1.5f);

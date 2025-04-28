@@ -1375,6 +1375,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9213736089020366856}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7539469217121054355
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6945995252320744630}
+  m_Layer: 7
+  m_Name: HeadTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6945995252320744630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7539469217121054355}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.805, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5618458212850813880}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7585066317598356905
 GameObject:
   m_ObjectHideFlags: 0
@@ -1613,6 +1644,7 @@ Transform:
   - {fileID: 2238269356838965132}
   - {fileID: 6302325696356411037}
   - {fileID: 6123313574200071827}
+  - {fileID: 6945995252320744630}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5372615029374827457
@@ -1740,14 +1772,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _patternHitboxGroups:
-  - patternId: 0
+  _hitboxesGroups:
+  - groupId: 0
+    isAlwaysActive: 0
+    isContinuous: 0
+    isSingle: 1
+    isActive: 0
     hitboxes:
     - referenceTransform: {fileID: 5889882352773017890}
-      offset: {x: 0, y: 0, z: 0}
+      offset: {x: -0.05, y: 0, z: 0}
       radius: 0.2
     - referenceTransform: {fileID: 9098425608971865769}
-      offset: {x: 0.1, y: 0, z: 0}
+      offset: {x: 0, y: 0, z: 0}
       radius: 0.2
     - referenceTransform: {fileID: 238397485176193913}
       offset: {x: 0, y: 0, z: 0}
@@ -1755,7 +1791,6 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 8
-  _hitType: 1
 --- !u!114 &-5346760470181023004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1779,9 +1814,7 @@ MonoBehaviour:
     RefIds:
     - rid: 7511380179482312706
       type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
-      data:
-        attributeDictionary:
-          _serializedList: []
+      data: 
 --- !u!114 &-5029212273671297109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1795,6 +1828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
+  _enemyStatSO: {fileID: 11400000, guid: d4b9cd22a828fd34fb3c5371668de946, type: 2}
   _enemy: {fileID: 8957364649605768314}
   abilitySystem: {fileID: -5346760470181023004}
   enemyName: 
@@ -1818,6 +1852,7 @@ MonoBehaviour:
   phase: 0
   muzzleTransform: {fileID: 0}
   enemyRenderer: {fileID: 7856709393154707899}
+  headTransform: {fileID: 0}
 --- !u!114 &8965972555179330726
 MonoBehaviour:
   m_ObjectHideFlags: 0

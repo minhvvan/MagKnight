@@ -40,6 +40,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Awake()
     {
         Initialize();
+        InitializeMagnetic();
         // TestCode();
     }
 
@@ -106,6 +107,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         return info.IsName(animName);
     }
 
+    private void FixedUpdate()
+    { 
+        var enemies = Physics.OverlapSphere(transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
+
+        ApplySoftCollision(enemies);
+    }
+
     private void OnAnimatorMove()
     {
         Vector3 rootDelta = Anim.deltaPosition;
@@ -129,6 +137,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public void OnDeath()
     {
         if(blackboard.isDead) return;
+
+        blackboard.isDead = true;
         SetState(deadState);
         OnDead?.Invoke(this);
         
@@ -142,7 +152,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnStagger()
     {
-        float maxRes = blackboard.abilitySystem.GetValue(AttributeType.MaxResistance);
+        if (blackboard.isDead) return;
         SetState(staggerState);
     }
     
@@ -158,6 +168,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnHit(Transform playerTransform)
     {
+        // 붉은색으로 변환, enemy 위치 보정
+        
+        if(blackboard.isDead) return;
+        
         if (blackboard.onHitCancellation != null)
         {
             blackboard.onHitCancellation.Cancel();
@@ -171,24 +185,25 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private async UniTask OnHitHelper(Transform playerTransform)
     {
         CancellationToken token = blackboard.onHitCancellation.Token;
-        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
-        Color originalColor = blackboard.enemyRenderer.material.color;
         blackboard.enemyRenderer.material.color = Color.red;
         
         // Enemy 넉백 관련은 이 함수를 사용
         float desiredDistance = 1.5f;
-        float enemyPositionCorrection = 1f;
+        float enemyPositionCorrection = 0.5f;
         float pullSpeed = 20f;
         float moveTime = 0.2f;
         float duration = 0f;
         Vector3 playerFront = playerTransform.position + playerTransform.forward * desiredDistance;
         Vector3 dir = playerFront - transform.position;
         Vector3 targetPos = dir.magnitude <= enemyPositionCorrection ? playerFront : transform.position + dir.normalized * enemyPositionCorrection;
+        
         try
         {
             while (duration < moveTime)
             {
-                transform.position = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
+                Vector3 newPos = Vector3.Lerp(transform.position, targetPos, duration / moveTime);
+                transform.position = newPos;
+                Agent.nextPosition = newPos;
                 duration += Time.deltaTime;
                 await UniTask.Yield(token);
             }
@@ -196,8 +211,14 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         catch (OperationCanceledException){}
         finally
         {
-            blackboard.enemyRenderer.material.color = originalColor;
+            blackboard.enemyRenderer.material.color = Color.white;
         }
+    }
+    
+    public void OnDamaged()
+    {
+        // 체력바 감소
+        hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
     }
 
     public void OnNext(HitInfo hitInfo)
@@ -239,7 +260,41 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         patternController.AttackEnd();
     }
-    
+
+    //특정 대상에게 극성 상관없이 정해진 동작만을 수행하게도 가능.
+    public override async UniTask OnMagneticInteract(MagneticObject target)
+    {
+        //ex. Enemy에겐 사용 시 무조건 돌진한다.
+        await magnetApproach.Execute(this, target);
+    }
+
+    void ApplySoftCollision(Collider[] colliders)
+    {
+        Vector3 correction = Vector3.zero;
+        foreach (var other in colliders)
+        {
+            if (other.gameObject == gameObject) continue;
+
+            Vector3 diff = transform.position - other.transform.position;
+            float dist = diff.magnitude;
+            float minDist = 0.2f; // 적당한 간격
+            
+            if (dist < 0.001f) // 완벽하게 겹칠 경우에는 diff가 Vector3.zero가 되므로 예외처리
+                correction += new Vector3(1, 0, 0);
+            
+            else if (dist < minDist && dist > 0.001f)
+            {
+                float pushStrength = (minDist - dist) / minDist;
+                correction += diff.normalized * pushStrength;
+            }
+        }
+
+        Vector3 newPos = transform.position + correction * Time.deltaTime * 2f;
+        newPos.y = Agent.nextPosition.y;
+
+        transform.position = newPos;
+        Agent.nextPosition = newPos;
+    }
     #region debugging
     private void OnDrawGizmos()
     {
