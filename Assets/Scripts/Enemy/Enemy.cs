@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using Moon;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
@@ -313,4 +314,15 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     }
     
     #endregion
+    
+    public bool IsAvailableTarget()
+    {
+        GameObject target = blackboard.target;
+        if (target == null) return false;
+        if (target.TryGetComponent(out PlayerController player))
+        {
+            return !player.IsInvisible;
+        }
+        return false;
+    }
 }
