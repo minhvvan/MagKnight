@@ -9,6 +9,7 @@ public class EnemyAttributeSet : AttributeSet
     public Action OnDeath;
     public Action OnStagger;
     public Action<Transform> OnHit;
+    public Action OnDamage;
     
     private bool _phase70Triggered = false;
     private bool _phase30Triggered = false;
@@ -59,11 +60,13 @@ public class EnemyAttributeSet : AttributeSet
                 OnHit?.Invoke(effect.sourceTransform);
             // 예시 실드가 있다면?
             // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
-
+            OnDamage?.Invoke();
+            
             if (GetValue(AttributeType.HP) <= 0)
             {
                 // TODO : 사망로직
                 OnDeath?.Invoke();
+                return;
                 // ex) OnDead?.Invoke(); OnDead는 PlayerAttribute에서 선언
             }
             
@@ -88,14 +91,16 @@ public class EnemyAttributeSet : AttributeSet
             SetValue(AttributeType.Resistance, 
                 Mathf.Clamp(GetValue(AttributeType.Resistance) - effect.amount, 0f, GetValue(AttributeType.MaxResistance)));
             
+            if (GetValue(AttributeType.Resistance) <= 0)
+            {
+                SetValue(AttributeType.Resistance, GetValue(AttributeType.MaxResistance));
+                OnStagger?.Invoke();
+            }
+            
             SetValue(AttributeType.ResistanceDamage, 0);
         }
 
-        if (GetValue(AttributeType.Resistance) <= 0)
-        {
-            SetValue(AttributeType.Resistance, GetValue(AttributeType.MaxResistance));
-            OnStagger?.Invoke();
-        }
+
         
         else if (!_phase30Triggered && GetValue(AttributeType.HP) <= GetValue(AttributeType.MaxHP) * 0.3f)
         {

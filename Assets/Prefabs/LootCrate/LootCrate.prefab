@@ -395,7 +395,7 @@ GameObject:
   - component: {fileID: 910195297965748649}
   - component: {fileID: 8031377539972837140}
   - component: {fileID: 7061128455917692145}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: LootCrate
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -45,6 +45,25 @@ public class AbilitySystem : MonoBehaviour
             AddAttribute(attributePair.Key, attributePair.Value);
         }
     }
+
+    public void InitializeFromEnemyStat(EnemyStat enemyStat = null)
+    {
+        if (enemyStat == null)
+        {
+            Debug.LogError("EnemyStat is not assigned!");
+            return;
+        }
+        
+        Attributes.ClearAllAttributes();
+        foreach (var field in typeof(EnemyStat).GetFields())
+        {
+            // 필드 값을 AttributePair로 가져옴
+            AttributePair attributePair = (AttributePair)field.GetValue(enemyStat);
+            
+            // AbilitySystem에 값 추가
+            AddAttribute(attributePair.Key, attributePair.Value);
+        }
+    }
     
     #region Attribute
     
@@ -219,22 +238,26 @@ public class AbilitySystem : MonoBehaviour
         {
             if (passiveEffect.Value.triggerEvent == eventType)
             {
-                if (Random.value <= passiveEffect.Value.triggerChance && target != null)
+                // 나한테 적용하는 이펙트인지, 상대에게 적용하는 이펙트인지 확인
+                if ((target == this && !passiveEffect.Value.isTarget) || (target != this && passiveEffect.Value.isTarget))
                 {
-                    if (passiveEffect.Value.hasCount)
+                    if (Random.value <= passiveEffect.Value.triggerChance && target != null)
                     {
-                        if (passiveEffect.Value.triggerCount > 0)
+                        if (passiveEffect.Value.hasCount)
+                        {
+                            if (passiveEffect.Value.triggerCount > 0)
+                            {
+                                target.ApplyEffect(passiveEffect.Value.effect);
+                                passiveEffect.Value.triggerCount--;
+                                if(passiveEffect.Value.triggerCount == 0)
+                                    removeList.Add(passiveEffect.Value);
+                            }
+                        }
+                        else
                         {
                             target.ApplyEffect(passiveEffect.Value.effect);
-                            passiveEffect.Value.triggerCount--;
-                            if(passiveEffect.Value.triggerCount == 0)
-                                removeList.Add(passiveEffect.Value);
                         }
-                    }
-                    else
-                    {
-                        target.ApplyEffect(passiveEffect.Value.effect);
-                    }
+                    }   
                 }
             }   
         }

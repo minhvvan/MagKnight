@@ -168,4 +168,17 @@ public class WeaponTrail : MonoBehaviour
             _previousBasePosition = _base.transform.position;
         }
     }
+
+    void OnDestroy()
+    {
+        if (_mesh != null)
+        {
+            Destroy(_mesh);
+        }
+        
+        if (_meshParent != null)
+        {
+            Destroy(_meshParent);
+        }
+    }
 }

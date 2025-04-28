@@ -20,9 +20,11 @@ public enum AttributeType
     MaxResistance, // 최대저항력
     Resistance,
     ResistanceDamage,
-    GOLD, // 드롭 골드량
+    Gold, // 드롭 골드량
     Impulse, // 충격량
     ImpulseThreshold, // 충격량 임계값
+    MaxSkillGauge,
+    SkillGauge,
 }
 
 /// <summary>

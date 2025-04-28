@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -190,6 +191,10 @@ public class MagneticController : MagneticObject
             _isActivatedMagnetic = true;
             _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
             await targetMagneticObject.OnMagneticInteract(this);
+            
+            var playerASC = GameManager.Instance.Player.AbilitySystem;
+            playerASC.TriggerEvent(TriggerEventType.OnMagnetic, playerASC);
+            
             // if (targetMagneticObject.GetMagneticType() != magneticType)
             // {
             //     targetMagneticObject.MagneticInteract(this);
@@ -710,9 +715,9 @@ public class MagneticController : MagneticObject
 
     #region Debug
 
-        private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-#if UNITY_EDITOR
+#if false
         if (!EditorApplication.isPlaying || !mainCamera)
             return;
 

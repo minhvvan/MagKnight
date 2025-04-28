@@ -52,15 +52,15 @@ public class RoomSceneController: Singleton<RoomSceneController>
         //targetRoom활성화 + currentRoom비활성화
         if (targetController != null)
         {
+            _currentRoomController = targetController;
+            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
+            
             await targetController.OnPlayerEnter(direction);
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {
-                targetController.SetGateOpen(true);
+                targetController.ClearRoom();
             }
-            
-            _currentRoomController = targetController;
-            GameManager.Instance.ChangeGameState(GameState.RoomEnter);
         }
 
         RoomController currentController = _loadedRoomControllers[currentRoomIndex];
@@ -86,8 +86,6 @@ public class RoomSceneController: Singleton<RoomSceneController>
         Time.timeScale = 1f;
         SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);
     }
-
-
     
     private async UniTask LoadConnectedRooms(List<int> roomIndices)
     {
@@ -177,7 +175,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
                     _currentRoomController = loadedSceneController;
                     
                     _loadedRoomControllers.TryAdd(currentRunData.currentRoomIndex, loadedSceneController);
-                    loadedSceneController.OnPlayerEnter();
+                    await loadedSceneController.OnPlayerEnter();
                 }
             }
             

@@ -15,6 +15,8 @@ public class PlayerStat
     public AttributePair MoveSpeed;
     public AttributePair Impluse;
     public AttributePair ImpulseThreshold;
+    public AttributePair MaxSkillGauge;
+    public AttributePair SkillGauge;
     
     // Dictionary에서 PlayerStat으로 변환하는 정적 메서드
     public static PlayerStat FromDictionary(Dictionary<AttributeType, Attribute> attributeDictionary)
@@ -58,6 +60,12 @@ public class PlayerStat
                     break;
                 case AttributeType.ImpulseThreshold:
                     stat.ImpulseThreshold = new AttributePair(AttributeType.ImpulseThreshold, entry.Value.GetValue());
+                    break;
+                case AttributeType.MaxSkillGauge:
+                    stat.MaxSkillGauge = new AttributePair(AttributeType.MaxSkillGauge, entry.Value.GetValue());
+                    break;
+                case AttributeType.SkillGauge:
+                    stat.SkillGauge = new AttributePair(AttributeType.SkillGauge, entry.Value.GetValue());
                     break;
             }
         }

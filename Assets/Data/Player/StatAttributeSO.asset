@@ -46,3 +46,9 @@ MonoBehaviour:
     ImpulseThreshold:
       Key: 15
       Value: 50
+    MaxSkillGauge:
+      Key: 16
+      Value: 100
+    SkillGauge:
+      Key: 17
+      Value: 0

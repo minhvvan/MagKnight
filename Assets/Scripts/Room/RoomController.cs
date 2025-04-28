@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
@@ -15,6 +16,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 {
     [SerializeField] private SerializedDictionary<RoomDirection, Gate> gates;
     [SerializeField] private ClearRoomField clearRoomField;
+    [SerializeField] private bool hasReward;
 
     private EnemyController _enemyController;
     private NavMeshData _loadedNavMeshData;
@@ -22,7 +24,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     
     private int _roomIndex;
     private bool _cleared = false;
-
+    private CancellationTokenSource cancelTokenSource;
+    
     public int RoomIndex => _roomIndex;
     public Room Room { get; private set; }
     
@@ -109,30 +112,17 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         SetRoomReady(true);
         gameObject.SetActive(true);
+        if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && GameManager.Instance.CurrentGameState != GameState.RoomClear)
+        {
+            cancelTokenSource = new CancellationTokenSource();
+            ChargeSkillGauge(cancelTokenSource.Token).Forget();
+        }
     }
 
     private async UniTask LoadNavMeshData()
     {
         if(_loadedNavMeshData) return;
         _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(Addresses.Data.Room.NavMeshData);
-    }
-
-    private void ConfigureNavMesh()
-    {
-        //타깃 설정
-        _navMeshSurface.collectObjects = CollectObjects.MarkedWithModifier;
-        _navMeshSurface.useGeometry = NavMeshCollectGeometry.RenderMeshes;
-        
-        _navMeshSurface.defaultArea = 0;  // Walkable
-        _navMeshSurface.agentTypeID = 0;  // 기본 에이전트
-
-        _navMeshSurface.minRegionArea = 2;
-        
-        // 레이어 설정
-        _navMeshSurface.layerMask = LayerMask.GetMask("Default", "Environment");
-        
-        // 빌드 시 기존 데이터 정리
-        _navMeshSurface.RemoveData();
     }
 
     public void OnPlayerExit()
@@ -148,7 +138,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     private void Reward()
     {
-        //TODO: 보상 지급
         ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), Quaternion.identity);
     }
 
@@ -169,8 +158,12 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         _cleared = true;
-        Reward();
-        GameManager.Instance.ChangeGameState(GameState.RoomClear);
+        if(hasReward)Reward();
+        cancelTokenSource?.Cancel();
+        cancelTokenSource?.Dispose();
+        cancelTokenSource = null;
+
+        ClearRoom();
     }
 
     public void ClearRoom()
@@ -180,6 +173,15 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             _enemyController.ClearAllEnemies();
         }
+        
+        //클리어 필드 없애기
+        if (clearRoomField)
+        {
+            clearRoomField.gameObject.SetActive(false);
+        }
+        
+        SetGateOpen(true);
+        GameManager.Instance.ChangeGameState(GameState.RoomClear);
     }
 
     public void OnNext(bool reached)
@@ -196,5 +198,23 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     public void OnCompleted()
     {
+    }
+
+    private async UniTaskVoid ChargeSkillGauge(CancellationToken token)
+    {
+        var playerASC = GameManager.Instance.Player.AbilitySystem;
+        var effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 1);
+
+        try
+        {
+            while(true)
+            {
+                token.ThrowIfCancellationRequested();
+                playerASC.ApplyEffect(effect);
+                
+                await UniTask.Delay(2000, cancellationToken: token);
+            }
+        }
+        catch (OperationCanceledException) {}
     }
 }

@@ -76,7 +76,7 @@ public abstract class AttributeSet
     }
 
     // Attribute 변경 시 Action 추가하기 위한 함수
-    public void DelegateAttributeChanged(AttributeType type, Action<float> action)
+    public void SubscribeAttributeChanged(AttributeType type, Action<float> action)
     {
         if (_attributeDictionary.ContainsKey(type))
         {

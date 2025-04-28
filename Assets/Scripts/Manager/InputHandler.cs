@@ -30,6 +30,7 @@ namespace Moon
         bool _magnetic;
         bool _magneticSecond;
         bool _switchMangetic;
+        bool _skill;
         
         //다른 이유로 조작이 불가능한 경우 사용하는 변수
         bool _externalInputBlocked;
@@ -81,6 +82,11 @@ namespace Moon
             set { _interact = value; }
         }
 
+        public bool SkillInput
+        {
+            get { return _skill && !IsContollerInputBlocked(); }
+        }
+
         public bool DodgeInput
         {
             get { return _dodge && !IsContollerInputBlocked(); }
@@ -124,6 +130,8 @@ namespace Moon
         Action<InputAction.CallbackContext> _releasePauseCallback;
         Action<InputAction.CallbackContext> _pressLockOnCallback;
         Action<InputAction.CallbackContext> _releaseLockOnCallback;
+        Action<InputAction.CallbackContext> _pressSkillOnCallback;
+        Action<InputAction.CallbackContext> _releaseSkillOnCallback;
         Action<InputAction.CallbackContext> _pressDodgeCallback;
         Action<InputAction.CallbackContext> _releaseDodgeCallback;
         
@@ -142,6 +150,7 @@ namespace Moon
             _pressSprintCallback = ctx => PressSprintInput(ctx);
             _pressPauseCallback = ctx => PressPauseInput(ctx);
             _pressLockOnCallback   = ctx => PressLockOnInput(ctx);
+            _pressSkillOnCallback = ctx => PressSkillInput(ctx);
             _pressDodgeCallback = ctx => PressDodgeInput(ctx);
 
             _releaseAttack1Callback = ctx => ReleaseAttack1Input(ctx);
@@ -155,6 +164,7 @@ namespace Moon
             _releaseSprintCallback = ctx => ReleaseSprintInput(ctx);
             _releasePauseCallback = ctx => ReleasePauseInput(ctx);
             _releaseLockOnCallback   = ctx => ReleaseLockOnInput(ctx);
+            _releaseSkillOnCallback = ctx => ReleaseSkillInput(ctx);
             _releaseDodgeCallback   = ctx => ReleaseDodgeInput(ctx);
 
 
@@ -198,6 +208,9 @@ namespace Moon
             playerInput.actions["Pause"].performed += _pressPauseCallback;
             playerInput.actions["Pause"].canceled += _releasePauseCallback;
 
+            playerInput.actions["Skill"].performed += _pressSkillOnCallback;
+            playerInput.actions["Skill"].canceled += _releaseSkillOnCallback;
+            
             UIManager.Instance.DisableCursor();
             InteractionEvent.OnDialogueStart += ReleaseControl;
             InteractionEvent.OnDialogueEnd += GainControlDelayed;
@@ -235,6 +248,9 @@ namespace Moon
             playerInput.actions["Dodge"].performed -= _pressDodgeCallback;
             playerInput.actions["Dodge"].canceled -= _releaseDodgeCallback;
 
+            playerInput.actions["Skill"].performed -= _pressSkillOnCallback;
+            playerInput.actions["Skill"].canceled -= _releaseSkillOnCallback;
+            
             InteractionEvent.OnDialogueStart -= ReleaseControl;
             InteractionEvent.OnDialogueEnd -= GainControlDelayed;
         }
@@ -392,6 +408,16 @@ namespace Moon
             {
                 GameManager.Instance.RecoverPreviousState();
             }
+        }
+
+        void PressSkillInput(InputAction.CallbackContext ctx)
+        {
+            _skill = true;
+        }
+
+        void ReleaseSkillInput(InputAction.CallbackContext ctx)
+        {
+            _skill = false;
         }
         
         public bool IsContollerInputBlocked()

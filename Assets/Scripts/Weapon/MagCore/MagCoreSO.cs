@@ -11,4 +11,5 @@ public class MagCoreSO : ScriptableObject
     public string description;
     public WeaponType weaponType;
     public PartsType partsType;
+    public int scrapValue;
 }
