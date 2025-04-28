@@ -5,11 +5,13 @@ using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using Moon;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InteractionController : MonoBehaviour
 {
     [SerializeField] private float interactionDistance = 10f;
+    [SerializeField] private float interactionRadius = .5f;
     [SerializeField] private LayerMask interactableMask;
     [SerializeField] public CameraSettings cameraSettings;
     
@@ -88,7 +90,7 @@ public class InteractionController : MonoBehaviour
         var targetPoint = GetStartPoint();
         
         //범위 내 감지
-        var hitCount = Physics.RaycastNonAlloc(targetPoint, _mainCamera.transform.forward, _hits, interactionDistance, interactableMask);
+        var hitCount = Physics.SphereCastNonAlloc(targetPoint, interactionRadius, _mainCamera.transform.forward, _hits, interactableMask);
         
         if (hitCount <= 0)
         {
@@ -99,7 +101,8 @@ public class InteractionController : MonoBehaviour
         
         foreach (var hit in _hits)
         {
-            if (!hit.transform.TryGetComponent<IInteractable>(out var interactable)) continue;
+            if (hit.collider.IsUnityNull()) continue;
+            if (!hit.collider.TryGetComponent<IInteractable>(out var interactable)) continue;
             
             _currentInteractable?.UnSelect();
             _currentInteractable = interactable;
@@ -142,7 +145,7 @@ public class InteractionController : MonoBehaviour
         FindClosestInteractable();
     }
 
-    public void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
+    private void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
     {
         if(lookFrom == null)
         {
@@ -170,5 +173,55 @@ public class InteractionController : MonoBehaviour
     {
         interactionCamera.Priority = 0;
         UIManager.Instance.inGameUIController.ShowInGameUI();
+    }
+
+    private void OnDrawGizmos()
+    {
+#if false
+
+        if (!Application.isPlaying) return;
+        
+        var start = GetStartPoint();
+        var end = start + _mainCamera.transform.forward * interactionDistance;
+        Gizmos.color = Color.yellow;
+        
+        Gizmos.DrawWireSphere(start, interactionRadius);
+        Gizmos.DrawWireSphere(end, interactionRadius);
+            
+        // 캡슐 측면 연결선
+        DrawCapsuleLines(start, end);
+#endif
+    }
+    
+    // 캡슐 측면 연결선을 그리는 보조 함수
+    private void DrawCapsuleLines(Vector3 start, Vector3 end)
+    {
+        // 방향에 수직인 두 벡터 찾기
+        Vector3 perpendicular1 = Vector3.zero;
+        Vector3 perpendicular2 = Vector3.zero;
+        
+        var direction = end - start;
+        
+        if (direction == Vector3.up || direction == Vector3.down)
+        {
+            perpendicular1 = Vector3.forward;
+            perpendicular2 = Vector3.right;
+        }
+        else if (direction == Vector3.forward || direction == Vector3.back)
+        {
+            perpendicular1 = Vector3.up;
+            perpendicular2 = Vector3.right;
+        }
+        else
+        {
+            perpendicular1 = Vector3.up;
+            perpendicular2 = Vector3.forward;
+        }
+        
+        // 네 개의 측면 선 그리기
+        Gizmos.DrawLine(start + perpendicular1 * interactionRadius, end + perpendicular1 * interactionRadius);
+        Gizmos.DrawLine(start - perpendicular1 * interactionRadius, end - perpendicular1 * interactionRadius);
+        Gizmos.DrawLine(start + perpendicular2 * interactionRadius, end + perpendicular2 * interactionRadius);
+        Gizmos.DrawLine(start - perpendicular2 * interactionRadius, end - perpendicular2 * interactionRadius);
     }
 }
