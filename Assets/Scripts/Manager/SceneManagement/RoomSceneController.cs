@@ -59,8 +59,6 @@ public class RoomSceneController: Singleton<RoomSceneController>
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {
-                targetController.SetGateOpen(true);
-                GameManager.Instance.ChangeGameState(GameState.RoomClear);
                 targetController.ClearRoom();
             }
         }
@@ -88,8 +86,6 @@ public class RoomSceneController: Singleton<RoomSceneController>
         Time.timeScale = 1f;
         SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);
     }
-
-
     
     private async UniTask LoadConnectedRooms(List<int> roomIndices)
     {
@@ -179,7 +175,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
                     _currentRoomController = loadedSceneController;
                     
                     _loadedRoomControllers.TryAdd(currentRunData.currentRoomIndex, loadedSceneController);
-                    loadedSceneController.OnPlayerEnter();
+                    await loadedSceneController.OnPlayerEnter();
                 }
             }
             

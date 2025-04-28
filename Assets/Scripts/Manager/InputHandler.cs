@@ -24,6 +24,7 @@ namespace Moon
         bool _attack1;
         bool _attack2;
         bool _lockOn;
+        bool _dodge;
         bool _nextTarget;
         bool _interact;
         bool _magnetic;
@@ -86,6 +87,11 @@ namespace Moon
             get { return _skill && !IsContollerInputBlocked(); }
         }
 
+        public bool DodgeInput
+        {
+            get { return _dodge && !IsContollerInputBlocked(); }
+        }
+        
         public Action SwitchMangeticInput;
         public Action magneticInput;
         public Action<bool> magneticOutput;
@@ -126,6 +132,9 @@ namespace Moon
         Action<InputAction.CallbackContext> _releaseLockOnCallback;
         Action<InputAction.CallbackContext> _pressSkillOnCallback;
         Action<InputAction.CallbackContext> _releaseSkillOnCallback;
+        Action<InputAction.CallbackContext> _pressDodgeCallback;
+        Action<InputAction.CallbackContext> _releaseDodgeCallback;
+        
         
 
         void Start()
@@ -142,6 +151,7 @@ namespace Moon
             _pressPauseCallback = ctx => PressPauseInput(ctx);
             _pressLockOnCallback   = ctx => PressLockOnInput(ctx);
             _pressSkillOnCallback = ctx => PressSkillInput(ctx);
+            _pressDodgeCallback = ctx => PressDodgeInput(ctx);
 
             _releaseAttack1Callback = ctx => ReleaseAttack1Input(ctx);
             _releaseAttack2Callback = ctx => ReleaseAttack2Input(ctx);
@@ -155,6 +165,8 @@ namespace Moon
             _releasePauseCallback = ctx => ReleasePauseInput(ctx);
             _releaseLockOnCallback   = ctx => ReleaseLockOnInput(ctx);
             _releaseSkillOnCallback = ctx => ReleaseSkillInput(ctx);
+            _releaseDodgeCallback   = ctx => ReleaseDodgeInput(ctx);
+
 
 
 
@@ -177,6 +189,9 @@ namespace Moon
 
             playerInput.actions["LockOn"].performed     += _pressLockOnCallback;
             playerInput.actions["LockOn"].canceled += _releaseLockOnCallback;
+            
+            playerInput.actions["Dodge"].performed += _pressDodgeCallback;
+            playerInput.actions["Dodge"].canceled += _releaseDodgeCallback;
             
             playerInput.actions["Sprint"].performed += _pressSprintCallback;
             playerInput.actions["Sprint"].canceled += _releaseSprintCallback;
@@ -229,6 +244,9 @@ namespace Moon
             
             playerInput.actions["LockOn"].performed     -= _pressLockOnCallback;
             playerInput.actions["LockOn"].canceled     -= _releaseLockOnCallback;
+            
+            playerInput.actions["Dodge"].performed -= _pressDodgeCallback;
+            playerInput.actions["Dodge"].canceled -= _releaseDodgeCallback;
 
             playerInput.actions["Skill"].performed -= _pressSkillOnCallback;
             playerInput.actions["Skill"].canceled -= _releaseSkillOnCallback;
@@ -327,7 +345,16 @@ namespace Moon
         {
             _lockOn = false;
         }
+
+        void PressDodgeInput(InputAction.CallbackContext context)
+        {
+            _dodge = true;
+        }
         
+        void ReleaseDodgeInput(InputAction.CallbackContext context)
+        {
+            _dodge = false;
+        }
         void PressInteractInput(InputAction.CallbackContext context)
         {
             _interact = true;        
