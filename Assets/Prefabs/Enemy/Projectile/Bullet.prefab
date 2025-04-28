@@ -166,13 +166,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f85d1d92ebec4c6aa3a3703b7a8305e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _patternHitboxGroups:
-  - patternId: 0
+  _hitboxesGroups:
+  - groupId: 0
+    isAlwaysActive: 1
+    isContinuous: 0
+    isSingle: 1
+    isActive: 0
     hitboxes:
-    - referenceTransform: {fileID: 3062686034775090039}
+    - referenceTransform: {fileID: 2812258086134596805}
       offset: {x: 0, y: 0, z: 0}
       radius: 0.1
   _layerMask:
     serializedVersion: 2
     m_Bits: 8
-  _hitType: 2

@@ -49,7 +49,13 @@ public class MagneticTarget : MonoBehaviour
     {
         if (target != null)
         {
-            _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(target.position));
+            var targetPosition = target.position;
+            if(target.TryGetComponent(out Enemy enemy))
+            {
+                targetPosition = enemy.blackboard.headTransform.position;
+            }
+
+            _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition));
         }
         else
         {

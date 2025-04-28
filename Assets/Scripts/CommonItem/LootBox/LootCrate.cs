@@ -75,7 +75,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         vfxObj.transform.localScale = new Vector3(4,4,4);
         
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f);
+                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f);
         
         for (int i = 0; i < maxSpawnCount; i++)
         {
@@ -113,7 +113,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         _animator.SetBool("Open", false);
         foreach (var item in _items)
         {
-            item.GetComponent<Collider>().enabled = false;
+            if(item != null) item.GetComponent<Collider>().enabled = false;
         }
         
         //상자 점등 꺼지기
@@ -125,7 +125,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         Destroy(vfxObj);
         foreach (var item in _items)
         {
-            Destroy(item);
+            if(item != null) Destroy(item.gameObject);
         }
     }
 

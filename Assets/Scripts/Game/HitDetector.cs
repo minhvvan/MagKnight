@@ -4,14 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Moon;
 using UnityEngine;
-
-public enum HitType
-{
-    None,
-    Melee,
-    Projectile,
-    Max
-}
+using UnityEngine.Serialization;
 
 public class HitInfo
 {
@@ -30,96 +23,138 @@ public class HitInfo
 }
 
 [Serializable]
-public class HitboxZone
+public class Hitbox
 {
+    // 단일 Hitbox
     public Transform referenceTransform; // 기준점
     public Vector3 offset;
     public float radius;
 }
 
 [Serializable]
-public class PatternHitboxGroup
+public class HitboxesGroup
 {
-    public int patternId;
-    public HitboxZone[] hitboxes;
+    // 함께 활성화되는 Hitbox들을 묶어놓음
+    [FormerlySerializedAs("groupId")] public int groupId;
+    public string groupName;
+    [FormerlySerializedAs("isAlwaysActive")] public bool isAlwaysActive; // 공격 type이 projectile인지
+    [FormerlySerializedAs("isContinuous")] public bool isContinuous; // 공격이 틱데미지 형태인지
+    [FormerlySerializedAs("isSingle")] public bool isSingle; // 단일 공격인지
+    [HideInInspector] public bool isActive;
+    [FormerlySerializedAs("hitboxes")] public Hitbox[] hitboxes;
 }
 
 public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 {
-    [SerializeField] private PatternHitboxGroup[] _patternHitboxGroups; 
+    [SerializeField] private HitboxesGroup[] _hitboxesGroups;
     [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private HitType _hitType;
     
-    private bool _isDetecting = false;
-    private HitboxZone[] _currentHitboxZones;
-    private List<Vector3> _previousPoints = new List<Vector3>();
-    private HashSet<Collider> _hitColliders = new HashSet<Collider>();
+    private Dictionary<int, Vector3[]> _previousPointsGroups = new Dictionary<int, Vector3[]>();
+    private Dictionary<int, HashSet<Collider>> _hitCollidersGroups = new Dictionary<int, HashSet<Collider>>();
     private RaycastHit[] _hitResults = new RaycastHit[10];
     private List<HitInfo> _debugHits = new List<HitInfo>();
     private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
 
+    private Color[] gizmoColors = {Color.red, Color.green, Color.blue, Color.yellow, Color.magenta, Color.white, Color.cyan};
+    
     void Awake()
     {
-        if (_hitType == HitType.Projectile)
+        // 상시 활성화되어있는 hitbox는 StartDetection과 상관없이 작동
+        foreach (var group in _hitboxesGroups)
         {
-            _currentHitboxZones = _patternHitboxGroups[0].hitboxes;
+            _previousPointsGroups[group.groupId] = new Vector3[group.hitboxes.Length];
+            for (int i = 0; i < group.hitboxes.Length; i++)
+            {
+                Hitbox hitbox = group.hitboxes[i];
+                _previousPointsGroups[group.groupId][i] = hitbox.referenceTransform.TransformPoint(hitbox.offset);
+            }
+            
+            if (group.isAlwaysActive)
+            {
+                group.isActive = true;
+                _hitCollidersGroups[group.groupId] = new HashSet<Collider>();
+            }
+
         }
     }
     
-    public void StartDetection(int patternId = default)
+    public void StartDetection(int groupId = default)
     {
-        _currentHitboxZones = _patternHitboxGroups
-            .FirstOrDefault(x => x.patternId == patternId)?.hitboxes;
-        if (_currentHitboxZones == null)
+        var group = _hitboxesGroups.FirstOrDefault(g => g.groupId == groupId);
+        if (group == null)
         {
-            Debug.LogError($"Pattern {patternId} not found");
+            Debug.LogError($"Pattern {groupId} not found");
             return;
         }
         
-        _isDetecting = true;
-        _hitColliders.Clear();
-        
-        _previousPoints.Clear();
-        _currentHitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
+        group.isActive = true;
+        _hitCollidersGroups[group.groupId] = new HashSet<Collider>();
+
+        for (int i = 0; i < group.hitboxes.Length; i++)
+        {
+            Hitbox hitbox = group.hitboxes[i];
+            _previousPointsGroups[group.groupId][i] = hitbox.referenceTransform.TransformPoint(hitbox.offset);
+        }
     }
 
-    public void StopDetection()
+    public void StopDetection(int patternId = default)
     {
-        _isDetecting = false;
+        var group = _hitboxesGroups.FirstOrDefault(g => g.groupId == patternId);
+        if (group != null) group.isActive = false;
+        _hitCollidersGroups[patternId].Clear();
     }
 
     private void FixedUpdate()
     {
-        // projectile은 항상 공격모션과 별개로 히트판정이 항상 존재하기 때문에 isDetecting에 여부와 관계없이 히트 여부를 확인한다.
-        if(!_isDetecting && _hitType != HitType.Projectile) return;
-
-        for (var i = 0; i < _previousPoints.Count; i++)
+        foreach (var group in _hitboxesGroups)
         {
-            Vector3 currentPos = _currentHitboxZones[i].referenceTransform.TransformPoint(_currentHitboxZones[i].offset);
-            Vector3 previousPos = _previousPoints[i];
-            Vector3 direction = currentPos - previousPos;
-            float distance = direction.magnitude;
+            if (!group.isActive) continue;
+            int groupId = group.groupId;
             
-            if (distance > 0)
+            for (int i = 0; i < group.hitboxes.Length; i++)
             {
-                direction.Normalize();
-            
-                int hitCount = Physics.SphereCastNonAlloc(previousPos, _currentHitboxZones[i].radius, direction, _hitResults, distance, _layerMask);
-                for (int j = 0; j < hitCount; j++)
-                {
-                    RaycastHit hit = _hitResults[j];
+                if (!group.isActive) continue;
+                
+                Hitbox hitbox = group.hitboxes[i];
+                Vector3 currentPos = hitbox.referenceTransform.TransformPoint(hitbox.offset);
+                Vector3 previousPos = _previousPointsGroups[groupId][i];
+                Vector3 direction = currentPos - previousPos;
+                float distance = direction.magnitude;
 
-                    if(!_hitColliders.Contains(hit.collider))
+                if (distance > 0)
+                {
+                    direction.Normalize();
+                    if (group.isSingle) // 단일 공격
                     {
-                        _hitColliders.Add(hit.collider);
-                        HandleHit(hit, previousPos, currentPos);
+                        int hitCount = Physics.SphereCastNonAlloc(previousPos, hitbox.radius, direction, _hitResults, distance, _layerMask);
+                        if (hitCount > 0)
+                        {
+                            HandleHit(_hitResults[0], previousPos, currentPos); // 가장 먼저 충돌한 collider에 대해서만 처리
+                            group.isActive = false; // 같은 그룹의 나머지 히트박스들도 전부 비활성화
+                        }
+                    }
+                    else
+                    {
+                        int hitCount = Physics.SphereCastNonAlloc(previousPos, hitbox.radius, direction, _hitResults, distance, _layerMask);
+                        for (int k = 0; k < hitCount; k++)
+                        {
+                            RaycastHit hit = _hitResults[k];
+
+                            if (!_hitCollidersGroups[groupId].Contains(hit.collider))
+                            {
+                                _hitCollidersGroups[group.groupId].Add(hit.collider);
+                                HandleHit(hit, previousPos, currentPos);
+                            }
+                        }
                     }
                 }
+                _previousPointsGroups[group.groupId][i] = hitbox.referenceTransform.TransformPoint(hitbox.offset);
+            }
+            if (group.isContinuous) // 다음 프레임에 같은 object를 다시 인식할 수 있도록 한다
+            {
+                _hitCollidersGroups[group.groupId].Clear();
             }
         }
-    
-        _previousPoints.Clear();
-        _currentHitboxZones.ForEach(hitboxZone => _previousPoints.Add(hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset)));
     }
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
@@ -139,15 +174,16 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (_patternHitboxGroups == null || _patternHitboxGroups.Length == 0) return;
+        if (_hitboxesGroups == null || _hitboxesGroups.Length == 0) return;
 
-        Gizmos.color = Color.blue;
-        foreach (var group in _patternHitboxGroups)
+        
+        foreach (var group in _hitboxesGroups)
         {
-            foreach (var hitboxZone in group.hitboxes)
+            Gizmos.color = gizmoColors[group.groupId];
+            foreach (var hitbox in group.hitboxes)
             {
-                Vector3 worldPoint = hitboxZone.referenceTransform.TransformPoint(hitboxZone.offset);
-                Gizmos.DrawSphere(worldPoint, hitboxZone.radius);
+                Vector3 worldPoint = hitbox.referenceTransform.TransformPoint(hitbox.offset);
+                Gizmos.DrawSphere(worldPoint, hitbox.radius);
             }
         }
         
@@ -190,10 +226,5 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     public void Notify(HitInfo hitInfo)
     {
         _observers.ForEach(observer => observer.OnNext(hitInfo));
-    }
-
-    public HitboxZone[] GetHitboxZones()
-    {
-        return _currentHitboxZones;
     }
 }

@@ -25,6 +25,8 @@ public class ItemListSO : ScriptableObject
     [Header("ItemEffect"), Tooltip("[0]: Spawn&Stay \n [1]: OpenCrate \n [2]: CrateSpawnItem")]
     public SerializedDictionary<ItemRarity, GameObject> itemVfxPrefab;
     public SerializedDictionary<ItemRarity, List<GameObject>> lootVfxPrefab;
+    public GameObject weaponChangeVfxPrefab;
+    public GameObject dismantleVfxPrefab;
     
     [Header("LootCrate")]
     public GameObject lootCratePrefab;

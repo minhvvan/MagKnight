@@ -19,10 +19,11 @@ public class CurrentRunData : ISaveData
 
     //TODO
     /*
-     * 현재 스탯, 무기, 아티팩트, 재화
+     * 현재 스탯, 무기, 아티팩트, 재화(철가루)
      */
     public PlayerStat playerStat = new();
     public WeaponType currentWeapon;
+    public int scrap;
     
     public string GetDataKey()
     {

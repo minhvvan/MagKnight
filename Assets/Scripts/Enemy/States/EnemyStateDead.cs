@@ -26,7 +26,6 @@ public class EnemyStateDead : BaseState<Enemy>
         {
             _controller.gameObject.Destroy();
         }
-        
     }
 
     public override void Exit()

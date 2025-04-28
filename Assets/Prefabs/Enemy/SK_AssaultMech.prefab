@@ -368,6 +368,37 @@ Transform:
   - {fileID: 8066632709396189503}
   m_Father: {fileID: 4440244098012827710}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2443231252849678941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5802701955740869511}
+  m_Layer: 7
+  m_Name: HeadTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5802701955740869511
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2443231252849678941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2205477906364658151}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2854463120491952946
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,6 +626,7 @@ Transform:
   m_Children:
   - {fileID: 4882392973828609769}
   - {fileID: 4597919957289261702}
+  - {fileID: 5802701955740869511}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7716937621547919411
@@ -701,6 +733,7 @@ MonoBehaviour:
   phase: 0
   muzzleTransform: {fileID: 489340003819110710}
   enemyRenderer: {fileID: 6710252391427252474}
+  headTransform: {fileID: 0}
 --- !u!114 &4348407960360890687
 MonoBehaviour:
   m_ObjectHideFlags: 0
