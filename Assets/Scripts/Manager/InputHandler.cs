@@ -19,7 +19,6 @@ namespace Moon
         /// Player Input
         Vector2 _movement;
         Vector2 _cameraMovement;
-        bool _run;
         bool _jump;
         bool _attack1;
         bool _attack2;
@@ -52,10 +51,6 @@ namespace Moon
                     return Vector2.zero;
                 return _cameraMovement;
             }
-        }
-        public bool RunInput
-        {
-            get { return _run && !IsContollerInputBlocked(); }
         }
         public bool JumpInput
         {
@@ -147,7 +142,6 @@ namespace Moon
             _pressCameraCallback = ctx => PressCameraInput(ctx);
             _pressJumpCallback = ctx => PressJumpInput(ctx);
             _pressInteractCallback = ctx => PressInteractInput(ctx);
-            _pressSprintCallback = ctx => PressSprintInput(ctx);
             _pressPauseCallback = ctx => PressPauseInput(ctx);
             _pressLockOnCallback   = ctx => PressLockOnInput(ctx);
             _pressSkillOnCallback = ctx => PressSkillInput(ctx);
@@ -161,7 +155,6 @@ namespace Moon
             _releaseCameraCallback = ctx => ReleaseCameraInput(ctx);
             _releaseJumpCallback = ctx => ReleaseJumpInput(ctx);
             _releaseInteractCallback = ctx => ReleaseInteractInput(ctx);
-            _releaseSprintCallback = ctx => ReleaseSprintInput(ctx);
             _releasePauseCallback = ctx => ReleasePauseInput(ctx);
             _releaseLockOnCallback   = ctx => ReleaseLockOnInput(ctx);
             _releaseSkillOnCallback = ctx => ReleaseSkillInput(ctx);
@@ -193,9 +186,6 @@ namespace Moon
             playerInput.actions["Dodge"].performed += _pressDodgeCallback;
             playerInput.actions["Dodge"].canceled += _releaseDodgeCallback;
             
-            playerInput.actions["Sprint"].performed += _pressSprintCallback;
-            playerInput.actions["Sprint"].canceled += _releaseSprintCallback;
-
             playerInput.actions["Interact"].performed += _pressInteractCallback;
             playerInput.actions["Interact"].canceled += _releaseInteractCallback;
 
@@ -284,17 +274,6 @@ namespace Moon
         {
             _jump = false;
         }
-
-        void PressSprintInput(InputAction.CallbackContext context)
-        {
-            _run = true;
-        }
-
-        void ReleaseSprintInput(InputAction.CallbackContext context)
-        {
-            _run = false;
-        }
-
         void PressAttack1Input(InputAction.CallbackContext context)
         {
             if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())

@@ -455,7 +455,7 @@ namespace Moon
                 moveInput.Normalize();
 
             // Calculate the speed intended by input.
-            _desiredForwardSpeed = moveInput.magnitude *  (_inputHandler.RunInput ?  maxForwardSpeed : maxForwardSpeed / 2);
+            _desiredForwardSpeed = moveInput.magnitude *  (_lockOnSystem.IsLockOn ?  maxForwardSpeed / 2 : maxForwardSpeed);
 
             // Determine change to speed based on whether there is currently any move input.
             float acceleration = IsMoveInput ? k_GroundAcceleration : k_GroundDeceleration;
