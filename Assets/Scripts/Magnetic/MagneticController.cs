@@ -715,9 +715,9 @@ public class MagneticController : MagneticObject
 
     #region Debug
 
-        private void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-#if UNITY_EDITOR
+#if false
         if (!EditorApplication.isPlaying || !mainCamera)
             return;
 

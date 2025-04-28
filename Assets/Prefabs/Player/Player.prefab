@@ -167,7 +167,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4320287908361065859}
-  - component: {fileID: 6630644152339566517}
   - component: {fileID: 5378873323398674128}
   m_Layer: 0
   m_Name: InteractionSystem
@@ -191,27 +190,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6405904943649314114}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &6630644152339566517
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 338960094367526779}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 3
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &5378873323398674128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -224,10 +202,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24792fef886477a44b5904eab76eb6cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewAngle: 90
-  obstacleMask:
+  interactionDistance: 3
+  interactionRadius: 0.5
+  interactableMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   cameraSettings: {fileID: 0}
 --- !u!1 &450063133152014215
 GameObject:
