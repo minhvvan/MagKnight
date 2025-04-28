@@ -66,15 +66,10 @@ public class ItemManager : Singleton<ItemManager>
 
     protected override async void Initialize()
     {
-        await InitializeItemManager();
+        await SetAllItemUpdate();
+        IsInitialized = true;
     }
     
-    private async UniTask InitializeItemManager()
-    {
-        IsInitialized = true;
-        await SetAllItemUpdate();
-    }
-
     /// <summary>
     /// 모든 아이템 리스트를 갱신, 로드 합니다.
     /// </summary>
