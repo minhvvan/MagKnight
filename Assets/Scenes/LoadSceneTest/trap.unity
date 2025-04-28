@@ -967,6 +967,7 @@ MonoBehaviour:
     - Key: 3
       Value: {fileID: 1357253807}
   clearRoomField: {fileID: 440396505}
+  hasReward: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
