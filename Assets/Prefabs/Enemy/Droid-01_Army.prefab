@@ -1779,9 +1779,7 @@ MonoBehaviour:
     RefIds:
     - rid: 7511380179482312706
       type: {class: EnemyAttributeSet, ns: , asm: Assembly-CSharp}
-      data:
-        attributeDictionary:
-          _serializedList: []
+      data: 
 --- !u!114 &-5029212273671297109
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1795,6 +1793,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyDataSO: {fileID: 11400000, guid: 7d7439383f7102e41857d804e8b268fc, type: 2}
+  _enemyStatSO: {fileID: 11400000, guid: d4b9cd22a828fd34fb3c5371668de946, type: 2}
   _enemy: {fileID: 8957364649605768314}
   abilitySystem: {fileID: -5346760470181023004}
   enemyName: 

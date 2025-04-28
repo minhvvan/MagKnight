@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemyBlackboard : MonoBehaviour
 {
     [SerializeField] private EnemyDataSO _enemyDataSO;
+    [SerializeField] private EnemyStatSO _enemyStatSO;
     [SerializeField] private Enemy _enemy;
     public AbilitySystem abilitySystem;
     
@@ -92,21 +93,12 @@ public class EnemyBlackboard : MonoBehaviour
 
     private void InitializeAttributes()
     {
-        // 버프, 디버프, 상호작용 가능 stat은 attribute로 관리
-        abilitySystem.AddAttribute(AttributeType.MaxHP, _enemyDataSO.health);
-        abilitySystem.AddAttribute(AttributeType.HP, _enemyDataSO.health);
-        abilitySystem.AddAttribute(AttributeType.Strength, _enemyDataSO.atk);
-        abilitySystem.AddAttribute(AttributeType.MoveSpeed, _enemyDataSO.moveSpeed);
-        abilitySystem.AddAttribute(AttributeType.MaxResistance, _enemyDataSO.staggerResistance);
-        abilitySystem.AddAttribute(AttributeType.GOLD, _enemyDataSO.item);
-        abilitySystem.AddAttribute(AttributeType.Resistance, _enemyDataSO.staggerResistance);
-        abilitySystem.AddAttribute(AttributeType.Damage, 0);
-        abilitySystem.AddAttribute(AttributeType.ResistanceDamage, 0);
+        abilitySystem.InitializeFromEnemyStat(_enemyStatSO.Stat);
 
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnDeath += _enemy.OnDeath;
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnStagger += _enemy.OnStagger;
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnPhaseChange += _enemy.OnPhaseChange;
         abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnHit += _enemy.OnHit;
-
+        abilitySystem.GetAttributeSet<EnemyAttributeSet>().OnDamage += _enemy.OnDamaged;
     }
 }
