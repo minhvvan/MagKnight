@@ -60,7 +60,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 8
+          amount: 12
           duration: 5
           period: 0
           tracking: 1
