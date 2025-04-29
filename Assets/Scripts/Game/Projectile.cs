@@ -53,7 +53,7 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
     private HitDetector _hitDetector;
 
     private Vector3 _velocity;
-    private float _gravity = 1f;
+    private float _gravity = -1f;
     private float _elapsedTime = 0f;
     
 
@@ -98,8 +98,6 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
 
     private void MoveParabolic()
     {
-        Vector3 _velocity = Vector3.zero;
-        
         _velocity += Vector3.up * (_gravity * Time.deltaTime);
         transform.position += _velocity * Time.deltaTime;
 
@@ -114,7 +112,6 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
 
     private Vector3 CalculateInitialVelocity(ProjectileLaunchData launchData)
     {
-
         // 목적지 position을 가지고 있는 경우
         if (launchData.TargetPosition.HasValue)
         {

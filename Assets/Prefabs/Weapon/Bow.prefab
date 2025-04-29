@@ -115,3 +115,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitEffectPrefab: {fileID: 0}
   skillIndex: 0
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 3200
+  _arrowPrefab: {fileID: 0}

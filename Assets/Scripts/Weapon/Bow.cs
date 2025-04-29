@@ -7,7 +7,7 @@ public class Bow : BaseWeapon
 {
     [SerializeField] GameObject _hitEffectPrefab;
     [SerializeField] int skillIndex;
-
+    [SerializeField] LayerMask _layerMask;
     [SerializeField] GameObject _arrowPrefab;
 
     private Camera _mainCamera;
@@ -30,18 +30,19 @@ public class Bow : BaseWeapon
 
     public override Projectile CreateProjectile(GameObject projectilePrefab)
     {
-        // ProjectileFactory.Create(_arrowPrefab, transform.position, Quaternion.identity, )
-        Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+
         ProjectileLaunchData projectileLaunchData;
-        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance))
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask))
         {
             projectileLaunchData = new ProjectileLaunchData(hit.point, true);
-            
         }
         else
         {
             projectileLaunchData = new ProjectileLaunchData(ray.direction);
         }
+        
+        Quaternion rotation = Quaternion.LookRotation(transform.forward, transform.up);
         Projectile projectile = ProjectileFactory.Create(projectilePrefab, transform.position, Quaternion.identity, projectileLaunchData);
         return projectile;
     }
