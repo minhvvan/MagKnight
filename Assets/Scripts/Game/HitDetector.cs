@@ -52,6 +52,7 @@ public class HitboxesGroup
     [FormerlySerializedAs("isSingle")] public bool isSingle; // 단일 공격인지
     [HideInInspector] public bool isActive;
     [FormerlySerializedAs("hitboxes")] public Hitbox[] hitboxes;
+    public float hitInterval;
 }
 
 public class HitDetector: MonoBehaviour, IObservable<HitInfo>
@@ -156,7 +157,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                             {
                                 if (group.isContinuous)
                                 {
-                                    _hitCollidersGroups[group.groupId][hit.collider] = Time.time + 0.1f;
+                                    _hitCollidersGroups[group.groupId][hit.collider] = Time.time + group.hitInterval;
                                 }
                                 else
                                 {
@@ -192,7 +193,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                             {
                                 if (group.isContinuous)
                                 {
-                                    _hitCollidersGroups[group.groupId][hit.GetComponent<Collider>()] = Time.time + 0.1f;
+                                    _hitCollidersGroups[group.groupId][hit.GetComponent<Collider>()] = Time.time + group.hitInterval;
                                 }
                                 else
                                 {
@@ -209,7 +210,6 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
-        Debug.Log("hit");
         HitInfo hitInfo = new HitInfo(hit, prev, current);
         _debugHits.Add(hitInfo);
         
@@ -224,7 +224,6 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 
     private void HandleHit(Collider col, Vector3 prev, Vector3 current)
     {
-        Debug.Log("hit");
         HitInfo hitInfo = new HitInfo(col, prev, current);
         _debugHits.Add(hitInfo);
         
@@ -253,28 +252,28 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
             }
         }
         
-        // 저장된 히트 정보 시각화
-        foreach (var hitInfo in _debugHits)
-        {
-            // 히트 포인트 (빨간색)
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(hitInfo.hit.point, 0.1f);
-        
-            // 이전 위치 (노란색)
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(hitInfo.previousPoint, 0.08f);
-        
-            // 현재 위치 (녹색)
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(hitInfo.currentPoint, 0.08f);
-        
-            // 선으로 연결
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(hitInfo.previousPoint, hitInfo.hit.point);
-            Gizmos.DrawLine(hitInfo.hit.point, hitInfo.currentPoint);
-        
-            UnityEditor.Handles.Label(hitInfo.hit.point + Vector3.up * 0.2f, $"Hit at {hitInfo.time:F1}s");
-        }
+        // // 저장된 히트 정보 시각화
+        // foreach (var hitInfo in _debugHits)
+        // {
+        //     // 히트 포인트 (빨간색)
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawSphere(hitInfo.hit.point, 0.1f);
+        //
+        //     // 이전 위치 (노란색)
+        //     Gizmos.color = Color.yellow;
+        //     Gizmos.DrawSphere(hitInfo.previousPoint, 0.08f);
+        //
+        //     // 현재 위치 (녹색)
+        //     Gizmos.color = Color.green;
+        //     Gizmos.DrawSphere(hitInfo.currentPoint, 0.08f);
+        //
+        //     // 선으로 연결
+        //     Gizmos.color = Color.white;
+        //     Gizmos.DrawLine(hitInfo.previousPoint, hitInfo.hit.point);
+        //     Gizmos.DrawLine(hitInfo.hit.point, hitInfo.currentPoint);
+        //
+        //     UnityEditor.Handles.Label(hitInfo.hit.point + Vector3.up * 0.2f, $"Hit at {hitInfo.time:F1}s");
+        // }
     }
     #endif
     public void Subscribe(IObserver<HitInfo> observer)

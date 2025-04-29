@@ -120,6 +120,7 @@ MonoBehaviour:
     - referenceTransform: {fileID: 82124021084689730}
       offset: {x: 0, y: 0, z: 1.6}
       radius: 0.3
+    hitInterval: 0
   - groupId: 1
     groupName: "\uD720\uC708\uB4DC"
     isAlwaysActive: 0
@@ -139,6 +140,7 @@ MonoBehaviour:
     - referenceTransform: {fileID: 82124021084689730}
       offset: {x: 0, y: 0, z: 1.6}
       radius: 0.3
+    hitInterval: 0.1
   _layerMask:
     serializedVersion: 2
     m_Bits: 128

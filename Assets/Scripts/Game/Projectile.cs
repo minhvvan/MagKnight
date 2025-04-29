@@ -60,7 +60,7 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
 
     public void OnNext(HitInfo hitInfo)
     {
-        GameObject colliderObject = hitInfo.hit.collider.gameObject;
+        GameObject colliderObject = hitInfo.collider.gameObject;
 
         // 히트한 object의 layer에 따라 다르게 처리
         switch (LayerMask.LayerToName(colliderObject.layer))
