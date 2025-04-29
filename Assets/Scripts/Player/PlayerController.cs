@@ -24,6 +24,7 @@ namespace Moon
         private InteractionController _interactionController;
         private WeaponHandler _weaponHandler;
         private AbilitySystem _abilitySystem;
+        private float _maxForwardSpeed;
         Collider _collider;
 
         [SerializeField] private GameObject hudPrefab;
@@ -107,8 +108,10 @@ namespace Moon
         readonly int _HashDodge = Animator.StringToHash("Dodge");
         readonly int _HashDodgeX = Animator.StringToHash("DodgeX");
         readonly int _HashDodgeY = Animator.StringToHash("DodgeY");
-
-
+        readonly int _HashMoveSpeed = Animator.StringToHash("MoveSpeed");
+        readonly int _HashAttackSpeed = Animator.StringToHash("AttackSpeed");
+        readonly int _HashImpulse = Animator.StringToHash("Impulse");
+        
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
         readonly int _HashLockOnWalk = Animator.StringToHash("LockOnWalk");
@@ -190,6 +193,8 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+
+            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
         
         //명시적 초기화
@@ -208,7 +213,9 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
-
+                attributeSet.OnMoveSpeedChanged += MoveSpeedChanged;
+                attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
+                
                 // OnHitPassive
                 var ChargeSkillGaugeHit = new PassiveEffectData
                 {
@@ -467,7 +474,7 @@ namespace Moon
                 moveInput.Normalize();
 
             // Calculate the speed intended by input.
-            _desiredForwardSpeed = moveInput.magnitude *  (_lockOnSystem.IsLockOn ?  maxForwardSpeed / 2 : maxForwardSpeed);
+            _desiredForwardSpeed = moveInput.magnitude *  (_lockOnSystem.IsLockOn ?  _maxForwardSpeed / 2 : _maxForwardSpeed);
 
             // Determine change to speed based on whether there is currently any move input.
             float acceleration = IsMoveInput ? k_GroundAcceleration : k_GroundDeceleration;
@@ -910,21 +917,29 @@ namespace Moon
                 var hurtFrom = transform.InverseTransformDirection(dir.normalized);
                 _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
                 _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
+                _animator.SetFloat(_HashImpulse, _abilitySystem.GetValue(AttributeType.Impulse));
                 
-                var impulse = _abilitySystem.GetValue(AttributeType.Impulse);
-                // 충격량이 임계값보다 작음 : 그냥 경직
-                if (impulse > 0)
-                {
-                    _animator.SetTrigger(_HashHurt);
-                }
-                // 큰 경직
-                else
-                {
-                    _animator.SetTrigger(_HashBigHurt); 
-                    _isKnockDown = true;
-                }
+                Debug.Log(_abilitySystem.GetValue(AttributeType.Impulse));
+                
+                _animator.SetTrigger(_HashHurt);
             }
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public void OnKnockDown()
+        {
+            _isKnockDown = true;
+        }
+
+        void MoveSpeedChanged()
+        {
+            _animator.SetFloat(_HashMoveSpeed, _abilitySystem.GetValue(AttributeType.MoveSpeed));
+            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+        }
+
+        void AttackSpeedChanged()
+        {
+            _animator.SetFloat(_HashAttackSpeed, _abilitySystem.GetValue(AttributeType.AttackSpeed));
         }
 
         void OnAnimatorIK(int layerIndex)
