@@ -240,6 +240,11 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnNext(HitInfo hitInfo)
     {
+        GiveDamageEffect(hitInfo);
+    }
+
+    public void GiveDamageEffect(HitInfo hitInfo)
+    {
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);

@@ -194,4 +194,10 @@ public class WeaponHandler : MonoBehaviour
     {
         Instantiate(skillObj, transform.position, transform.rotation);
     }
+    
+    public void CreateProjectile(GameObject prefab)
+    {
+        Projectile projectile = _currentWeapon.CreateProjectile(prefab);
+        projectile.OnHit += OnHitAction;
+    }
 }
