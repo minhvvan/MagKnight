@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Moon;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -30,6 +32,8 @@ public class LootCrate : MonoBehaviour, IInteractable
 
     public Dictionary<ItemRarity, List<GameObject>> rarityVfxObjects;
     private GameObject vfxObj;
+
+    private CancellationTokenSource _cts;
     
     private void Awake()
     {
@@ -53,6 +57,7 @@ public class LootCrate : MonoBehaviour, IInteractable
 
     private void InitializeCrate()
     {
+        if (rarityVfxObjects.IsUnityNull()) return;
         vfxObj = Instantiate(rarityVfxObjects[crateRarity][0], transform);
         vfxObj.transform.localScale = new Vector3(2,2,2);
     }
@@ -63,19 +68,28 @@ public class LootCrate : MonoBehaviour, IInteractable
         crateRarity = rarity;
     }
 
-    private async UniTask OpenCrate()
+    public async UniTask OpenCrate()
     {
         _isOpen = true;
         _animator.SetBool("Open", true);
         
-        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
-        Destroy(vfxObj);
-        vfxObj = Instantiate(rarityVfxObjects[crateRarity][1], transform);
-        vfxObj.transform.localScale = new Vector3(4,4,4);
+        _cts?.Cancel();
+        _cts?.Dispose();
+        
+        _cts = new CancellationTokenSource();
         
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f);
+                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f, cancellationToken: _cts.Token);
+        
+        if(vfxObj) Destroy(vfxObj);
+        if (!rarityVfxObjects.IsUnityNull())
+        {
+            vfxObj = Instantiate(rarityVfxObjects[crateRarity][1], transform);
+            vfxObj.transform.localScale = new Vector3(4,4,4);
+        }
+        
+        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
+                                    && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f, cancellationToken: _cts.Token);
         
         for (int i = 0; i < maxSpawnCount; i++)
         {
@@ -85,8 +99,13 @@ public class LootCrate : MonoBehaviour, IInteractable
                 (crateCategory,crateRarity,itemPoint[i].position,Quaternion.identity, parent: itemPoint[i]);
             item.TryGetComponent(out Rigidbody rb);
             rb.isKinematic = true;
-            var flashVfx = Instantiate(rarityVfxObjects[crateRarity][2], item.transform);
-            Destroy(flashVfx.gameObject, 0.25f);
+
+            if (!rarityVfxObjects.IsUnityNull())
+            {
+                var flashVfx = Instantiate(rarityVfxObjects[crateRarity][2], item.transform);
+                Destroy(flashVfx.gameObject, 0.25f);
+            }
+
             switch (crateCategory)
             {
                 case ItemCategory.Artifact:
@@ -119,10 +138,16 @@ public class LootCrate : MonoBehaviour, IInteractable
         //상자 점등 꺼지기
         _baseMaterial.SetColor("_EmissionColor", Color.red);
         
+        _cts?.Cancel();
+        _cts?.Dispose();
+        
+        _cts = new CancellationTokenSource();
+        
         //상자 위에 제공된 모든 아이템 제거
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Close"));
-        Destroy(vfxObj);
+                                    && _animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Close"), cancellationToken: _cts.Token);
+        
+        if(vfxObj) Destroy(vfxObj);
         foreach (var item in _items)
         {
             if(item != null) Destroy(item.gameObject);
@@ -153,4 +178,11 @@ public class LootCrate : MonoBehaviour, IInteractable
     {
         return gameObject;
     }   
+    
+    private void OnDestroy()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+        _cts = null;
+    }
 }
