@@ -38,6 +38,7 @@ public class ItemManager : Singleton<ItemManager>
 
     public GameObject weaponChangeVfxPrefab;
     public GameObject dismantleVfxPrefab;
+    public GameObject magnetSwitchVfxPrefab;
     
     //확률값
     private float _healthPackDropValue;
@@ -84,6 +85,7 @@ public class ItemManager : Singleton<ItemManager>
 
         weaponChangeVfxPrefab = datas.weaponChangeVfxPrefab;
         dismantleVfxPrefab = datas.dismantleVfxPrefab;
+        magnetSwitchVfxPrefab = datas.magnetSwitchVfxPrefab;
         
         _artifactPrefab = datas.artifactPrefab;
         artifactList?.Clear();

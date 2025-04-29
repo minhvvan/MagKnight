@@ -13,6 +13,7 @@ public class PlayerStat
     public AttributePair CriticalDamage;
     public AttributePair Damage;
     public AttributePair MoveSpeed;
+    public AttributePair AttackSpeed;
     public AttributePair Impluse;
     public AttributePair ImpulseThreshold;
     public AttributePair MaxSkillGauge;
@@ -55,11 +56,14 @@ public class PlayerStat
                 case AttributeType.MoveSpeed:
                     stat.MoveSpeed = new AttributePair(AttributeType.MoveSpeed, entry.Value.GetValue());
                     break;
+                case AttributeType.AttackSpeed:
+                    stat.AttackSpeed = new AttributePair(AttributeType.AttackSpeed, entry.Value.GetValue());
+                    break;
                 case AttributeType.Impulse:
                     stat.Impluse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
                     break;
-                case AttributeType.ImpulseThreshold:
-                    stat.ImpulseThreshold = new AttributePair(AttributeType.ImpulseThreshold, entry.Value.GetValue());
+                case AttributeType.EndureImpulse:
+                    stat.ImpulseThreshold = new AttributePair(AttributeType.EndureImpulse, entry.Value.GetValue());
                     break;
                 case AttributeType.MaxSkillGauge:
                     stat.MaxSkillGauge = new AttributePair(AttributeType.MaxSkillGauge, entry.Value.GetValue());

@@ -6,19 +6,19 @@ using UnityEngine;
 public class WeaponHandler : MonoBehaviour
 {
     [SerializeField] private Transform weaponSocket;
-
-    private WeaponPrefabSO _weaponSO;
     [SerializeField] private BaseWeapon _currentWeapon;
+    private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;
+    
     public MagCore currentMagCore;
     public WeaponType CurrentWeaponType { get; private set; }
-    private SkillHandler _skillHandler;
-    
+    private bool _isActiveMagneticSwitchEffect = false;
+    private Animator _animator;
+
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
-        _skillHandler = GetComponent<SkillHandler>();
-        
+        _animator = GetComponent<Animator>();
         try
         {
             _weaponSO =
@@ -61,12 +61,56 @@ public class WeaponHandler : MonoBehaviour
         //TODO: 추후 MagCore강화수치 같은게 생길 시 아래를 통해 접근하여 반영
         var magCoreData = dropObj.GetComponent<MagCore>();
         magCoreData.SetMagCoreData(newMagCore: currentMagCore);
+
+        //이전 무기의 고유효과 제거.
+        currentMagCore.RemovePartsEffect(_abilitySystem);
+        
         var vfxObj = Instantiate(ItemManager.Instance.weaponChangeVfxPrefab, _currentWeapon.transform);
         vfxObj.transform.localScale *= 0.5f;
         vfxObj.transform.rotation *= Quaternion.Euler(90f,0, 0);
         Destroy(vfxObj, 0.25f);
         
         Destroy(currentMagCore.gameObject);
+    }
+
+    //착용중인 파츠의 레벨 업그레이드
+    public void UpgradeCurrentParts()
+    {
+        if(currentMagCore != null) currentMagCore.Upgrade(_abilitySystem);
+    }
+    
+    //극성 전환 효과 활성화
+    public void ActivateMagnetSwitchEffect(AbilitySystem abilitySystem, MagneticType type)
+    {
+        var vfxObj = Instantiate(ItemManager.Instance.magnetSwitchVfxPrefab, _currentWeapon.transform);
+        //vfxObj.transform.localScale *= 2f;
+        var vfxs = vfxObj.GetComponentsInChildren<ParticleSystem>();
+        foreach (var vfx in vfxs)
+        {
+            var main = vfx.main;
+            if(type == MagneticType.N) main.startColor = Color.red;
+            else if(type == MagneticType.S) main.startColor = Color.blue;
+        }
+        Destroy(vfxObj, 0.25f);
+        
+        switch (_isActiveMagneticSwitchEffect)
+        {
+            case true:
+                return;
+            case false:
+                _isActiveMagneticSwitchEffect = true;
+                break;
+        }
+        
+        var magCoreSO = currentMagCore.GetMagCoreSO();
+        var currentUpgradeValue = currentMagCore.currentUpgradeValue;
+        var duration = magCoreSO.magnetEffectDuration;
+        
+        StartCoroutine(magCoreSO.MagnetSwitchEffect(abilitySystem, currentUpgradeValue, duration,
+            ()=>
+            {
+                _isActiveMagneticSwitchEffect = false;
+            }));
     }
 
     public void AttackStart(int hitboxGroupId = default)
@@ -94,13 +138,12 @@ public class WeaponHandler : MonoBehaviour
 
     public void ActivateSkill()
     {
-        if (_currentWeapon == null)
+		if (_currentWeapon == null) 
         {
-            Debug.Log("CurrentWeapon is null");
+		    Debug.Log("CurrentWeapon is null");
             return;
         }
-
-        _skillHandler.UseSkill(_currentWeapon.OnSkill());
+        UseSkill(_currentWeapon.OnSkill());
     }
 
     public void ChangePolarity()
@@ -124,10 +167,31 @@ public class WeaponHandler : MonoBehaviour
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
     }
-
-    public void CreateProjectile(GameObject prefab)
+    
+    private void UseSkill(int skillNumber)
     {
-        Projectile projectile = _currentWeapon.CreateProjectile(prefab);
-        projectile.OnHit += OnHitAction;
+        switch (skillNumber)
+        {
+            case 1:
+                _animator.SetInteger("SkillIndex", 1);
+                _animator.SetTrigger("Skill");
+                break;
+            case 2:
+                _animator.SetInteger("SkillIndex", 2);
+                _animator.SetTrigger("Skill");
+                break;
+            case 3:
+                //animator.SetTrigger("Skill3");
+                break;
+            default:
+                Debug.LogWarning("Invalid Skill Number");
+                break;
+        }
+    }
+
+    
+    public void SpawnSkillEffect(GameObject skillObj)
+    {
+        Instantiate(skillObj, transform.position, transform.rotation);
     }
 }

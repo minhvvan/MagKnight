@@ -16,6 +16,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
+    public IMagneticInteractCommand magnetDashAction;
     
     public virtual void InitializeMagnetic()
     {
@@ -45,6 +46,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     {
         magnetApproach = MagneticInteractFactory.GetInteract<OnApproach>();
         magnetSeparation = MagneticInteractFactory.GetInteract<OnSeparation>();
+        magnetDashAction = MagneticInteractFactory.GetInteract<MagnetDashAction>();
     }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)
@@ -52,6 +54,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         //끌려오기 날아가기 등 다양한 액션을 override하여 사용.
         
         //디폴트
+
         if (target.magneticType != magneticType)
         {
             await magnetApproach.Execute(target, this);
