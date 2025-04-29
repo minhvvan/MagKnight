@@ -284,6 +284,12 @@ namespace Moon
             {
                 Dismentle();
             }
+            
+            //임의로 무기 강화 강제로 올리기.
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                UpgradeParts();
+            }
 
             TriggerSkill();
 
@@ -801,6 +807,7 @@ namespace Moon
             if (_magneticController != null)
             {
                 _magneticController.SwitchMagneticType();
+                OnMagneticEffect();
             }
         }
 
@@ -842,6 +849,18 @@ namespace Moon
             }
             
             canAttack = true;
+        }
+        
+        public void OnMagneticEffect()
+        {
+            if (_magneticController == null) return;
+            var magneticType = _magneticController.GetMagneticType();
+            _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+        }
+
+        public void UpgradeParts()
+        {
+            _weaponHandler.UpgradeCurrentParts();
         }
         #endregion
         

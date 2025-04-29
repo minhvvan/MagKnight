@@ -40,6 +40,9 @@ MonoBehaviour:
     MoveSpeed:
       Key: 7
       Value: 20
+    AttackSpeed:
+      Key: 8
+      Value: 1
     Impluse:
       Key: 14
       Value: 0
