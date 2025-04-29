@@ -1012,9 +1012,10 @@ ModelImporter:
       curves: []
       events:
       - time: 0.46350467
-        functionName: OnFieldSpawn
+        functionName: SpawnSkillEffect
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 8393036786112450277, guid: 41c8240a866672648a6bfcd3b05a5b4c,
+          type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0

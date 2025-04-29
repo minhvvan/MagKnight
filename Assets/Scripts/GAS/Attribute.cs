@@ -14,7 +14,7 @@ public enum AttributeType
     Defense, // 방어력
     CriticalRate, // 치명타 확률
     CriticalDamage, // 치명타 피해량
-    MoveSpeed, // 이동속
+    MoveSpeed, // 이동속도
     AttackSpeed, // 공격속도
     Damage, // 메타 Attribute, 받은 피해량
     MaxResistance, // 최대저항력
@@ -22,7 +22,7 @@ public enum AttributeType
     ResistanceDamage,
     Gold, // 드롭 골드량
     Impulse, // 충격량
-    ImpulseThreshold, // 충격량 임계값
+    EndureImpulse, // 충격량 저항값
     MaxSkillGauge,
     SkillGauge,
 }
