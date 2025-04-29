@@ -8,32 +8,46 @@ public class Bow : BaseWeapon
     [SerializeField] GameObject _hitEffectPrefab;
     [SerializeField] int skillIndex;
 
+    [SerializeField] GameObject _arrowPrefab;
+
+    private Camera _mainCamera;
+    private float _rayDistance = 100f;
+    
     WeaponTrail _weaponTrail;
 
     void Start()
     {
-        // _weaponTrail = GetComponent<WeaponTrail>();
+        _mainCamera = Camera.main;
     }
     
 
     public override void AttackStart(int hitboxGroupId)
     {
-        base.AttackStart(hitboxGroupId);
-        //TODO: FX
-        if(_weaponTrail != null)
+
+        
+        
+    }
+
+    public override Projectile CreateProjectile(GameObject projectilePrefab)
+    {
+        // ProjectileFactory.Create(_arrowPrefab, transform.position, Quaternion.identity, )
+        Ray ray = _mainCamera.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        ProjectileLaunchData projectileLaunchData;
+        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance))
         {
-            _weaponTrail.EnableTrail(true);
+            projectileLaunchData = new ProjectileLaunchData(hit.point, true);
+            
         }
+        else
+        {
+            projectileLaunchData = new ProjectileLaunchData(ray.direction);
+        }
+        Projectile projectile = ProjectileFactory.Create(projectilePrefab, transform.position, Quaternion.identity, projectileLaunchData);
+        return projectile;
     }
 
     public override void AttackEnd(int hitboxGroupId)
     {
-        base.AttackEnd(hitboxGroupId);
-        
-        if(_weaponTrail != null)
-        {
-            _weaponTrail.EnableTrail(false);
-        }
     }
 
     public override int OnSkill()
@@ -49,7 +63,6 @@ public class Bow : BaseWeapon
         hitEffect.transform.forward = hitInfo.hit.normal;
         hitEffect.transform.localScale = Vector3.one * 0.3f;
         Destroy(hitEffect, 0.2f);
-
     }
 
     public override void OnError(Exception error)

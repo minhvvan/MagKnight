@@ -125,8 +125,9 @@ public class WeaponHandler : MonoBehaviour
         }
     }
 
-    public void CreateEffect(GameObject prefab)
+    public void CreateProjectile(GameObject prefab)
     {
-        Instantiate(prefab, transform.position, Quaternion.identity);
+        Projectile projectile = _currentWeapon.CreateProjectile(prefab);
+        projectile.OnHit += OnHitAction;
     }
 }
