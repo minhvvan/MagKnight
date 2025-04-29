@@ -69,22 +69,40 @@ namespace Moon
 
         public bool LockOnInput
         {
-            get { return _lockOn && !IsContollerInputBlocked(); }
+            get
+            {
+                bool ret = _lockOn && !IsContollerInputBlocked();
+                _lockOn = false;
+                return ret;    
+            }
         }
         public bool InteractInput
         {
-            get { return _interact && !IsContollerInputBlocked(); }
-            set { _interact = value; }
+            get { 
+                bool ret = _interact && !IsContollerInputBlocked();
+                _interact = false;
+                return ret;    
+            }
         }
 
         public bool SkillInput
         {
-            get { return _skill && !IsContollerInputBlocked(); }
+            get
+            {
+                bool ret = _skill && !IsContollerInputBlocked();
+                _skill = false;
+                return ret;    
+            }
         }
 
         public bool DodgeInput
         {
-            get { return _dodge && !IsContollerInputBlocked(); }
+            get 
+            { 
+                bool ret = _dodge && !IsContollerInputBlocked();
+                _dodge = false;
+                return ret;
+            }
         }
         
         public Action SwitchMangeticInput;
@@ -418,15 +436,6 @@ namespace Moon
             yield return _attackInputWait;
 
             _attack2 = false;
-        }
-
-        IEnumerator InteractWait()
-        {
-            _interact = true;
-
-            yield return _inputWait;
-
-            _interact = false;
         }
 
         IEnumerator MagneticWait()

@@ -45,7 +45,6 @@ namespace Moon
         [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
         LockOnSystem _lockOnSystem;
-        bool _lockOnLastFrame = false;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -69,7 +68,6 @@ namespace Moon
         protected bool _inCombo;                      // Whether Ellen is currently in the middle of her melee combo.        
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
-        private bool _dodgeLastFrame = false;
         private bool _isDodging = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
@@ -106,6 +104,9 @@ namespace Moon
         readonly int _HashSpeed   = Animator.StringToHash("Speed");
         readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
         readonly int _HashDodge = Animator.StringToHash("Dodge");
+        readonly int _HashDodgeX = Animator.StringToHash("DodgeX");
+        readonly int _HashDodgeY = Animator.StringToHash("DodgeY");
+
 
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
@@ -266,42 +267,16 @@ namespace Moon
 
             EquipMeleeWeapon(IsInAttackComboState());
             
-            // Dodge 입력 처리
             bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
 
-            if (dodgeNow && !_dodgeLastFrame && !_isDodging)  // ★ 추가: _isDodging 체크
+            if (dodgeNow)
             {
                 PerformDodge();
-                _dodgeLastFrame = true;
-                return;
             }
 
-            _dodgeLastFrame = dodgeNow;
+            TriggerAttack();
 
-            // 4) 매 프레임 마지막에 상태 저장
-            _dodgeLastFrame = dodgeNow;
-
-            _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
-            _animator.ResetTrigger(_HashMeleeAttack);
-
-            if (_inputHandler.Attack1 && canAttack)
-            {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 0);
-            }
-
-
-            if (_inputHandler.Attack2 && canAttack)
-            {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 1);
-            }
-
-            if (_inputHandler.InteractInput)
-            {
-                Interact();
-                _inputHandler.InteractInput = false;
-            }
+            TriggerInteract();
 
             //임시지정키 G. 아이템 분해
             if (Input.GetKeyDown(KeyCode.G))
@@ -309,6 +284,7 @@ namespace Moon
                 Dismentle();
             }
 
+            TriggerSkill();
             if (_inputHandler.SkillInput)
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
@@ -340,15 +316,51 @@ namespace Moon
 
         }
 
+        private void TriggerAttack()
+        {
+            _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
+            _animator.ResetTrigger(_HashMeleeAttack);
+
+            if (_inputHandler.Attack1 && canAttack)
+            {
+                _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 0);
+            }
+
+
+            if (_inputHandler.Attack2 && canAttack)
+            {
+                _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 1);
+            }
+        }
+
+        void TriggerInteract()
+        {
+            if (_inputHandler.InteractInput)
+            {
+                Interact();
+            }
+        }
+
+        void TriggerSkill()
+        {
+            if (_inputHandler.SkillInput)
+            {
+                Debug.Log("SKill");
+                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
+                {
+                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
+                }
+            }
+        }
+
         void UpdateLockOn()
         {
-            bool lockOnNow = _inputHandler.LockOnInput;
-            
-            if (lockOnNow && !_lockOnLastFrame)
+            if (_inputHandler.LockOnInput)
             {
                 _lockOnSystem.ToggleLockOn();
             }
-            _lockOnLastFrame = lockOnNow;
 
             if (_lockOnSystem.IsLockOn)
             {
@@ -700,7 +712,7 @@ namespace Moon
             if (_isGrounded)
             {
                 // 1) 콤보 중엔 항상 루트 모션만 적용
-                if (_inCombo)
+                if (_inCombo || _isDodging)
                 {
                     movement = _animator.deltaPosition;
                 }
@@ -916,8 +928,9 @@ namespace Moon
         {
             _inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
-            _inputHandler.playerControllerInputBlocked = true;
-
+            Vector2 moveInput = _inputHandler.MoveInput;
+            _animator.SetFloat(_HashDodgeX, moveInput.x);
+            _animator.SetFloat(_HashDodgeY, moveInput.y);
             _animator.SetTrigger(_HashDodge);
 
             StartCoroutine(UnblockAfterDodge());
@@ -926,8 +939,9 @@ namespace Moon
         IEnumerator UnblockAfterDodge()
         {
             yield return new WaitForSeconds(0.8f);
-            _inputHandler.playerControllerInputBlocked = false;
             _isDodging = false;   // ★ 회피 끝났으니 다시 허용
+            _animator.SetFloat(_HashDodgeX, 0f);
+            _animator.SetFloat(_HashDodgeY, 0f);
         }
     }
 }
