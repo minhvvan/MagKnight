@@ -69,22 +69,40 @@ namespace Moon
 
         public bool LockOnInput
         {
-            get { return _lockOn && !IsContollerInputBlocked(); }
+            get
+            {
+                bool ret = _lockOn && !IsContollerInputBlocked();
+                _lockOn = false;
+                return ret;    
+            }
         }
         public bool InteractInput
         {
-            get { return _interact && !IsContollerInputBlocked(); }
-            set { _interact = value; }
+            get { 
+                bool ret = _interact && !IsContollerInputBlocked();
+                _interact = false;
+                return ret;    
+            }
         }
 
         public bool SkillInput
         {
-            get { return _skill && !IsContollerInputBlocked(); }
+            get
+            {
+                bool ret = _skill && !IsContollerInputBlocked();
+                _skill = false;
+                return ret;    
+            }
         }
 
         public bool DodgeInput
         {
-            get { return _dodge && !IsContollerInputBlocked(); }
+            get 
+            { 
+                bool ret = _dodge && !IsContollerInputBlocked();
+                _dodge = false;
+                return ret;
+            }
         }
         
         public Action SwitchMangeticInput;
@@ -119,8 +137,6 @@ namespace Moon
         Action<InputAction.CallbackContext> _releaseJumpCallback;
         Action<InputAction.CallbackContext> _pressInteractCallback;
         Action<InputAction.CallbackContext> _releaseInteractCallback;
-        Action<InputAction.CallbackContext> _pressSprintCallback;
-        Action<InputAction.CallbackContext> _releaseSprintCallback;        
         Action<InputAction.CallbackContext> _pressPauseCallback;
         Action<InputAction.CallbackContext> _releasePauseCallback;
         Action<InputAction.CallbackContext> _pressLockOnCallback;
@@ -220,9 +236,6 @@ namespace Moon
             playerInput.actions["Attack1"].performed -= _pressAttack1Callback;
             playerInput.actions["Attack2"].performed -= _pressAttack2Callback;
 
-            playerInput.actions["Sprint"].performed -= _pressSprintCallback;
-            playerInput.actions["Sprint"].canceled -= _releaseSprintCallback;
-
             playerInput.actions["Interact"].performed -= _pressInteractCallback;
             playerInput.actions["Interact"].canceled -= _releaseInteractCallback;
 
@@ -232,8 +245,8 @@ namespace Moon
             playerInput.actions["SwitchMagnetic"].performed -= _pressSwitchMagneticCallback;
             playerInput.actions["SwitchMagnetic"].canceled -= _releaseSwitchMagneticCallback;
             
-            playerInput.actions["LockOn"].performed     -= _pressLockOnCallback;
-            playerInput.actions["LockOn"].canceled     -= _releaseLockOnCallback;
+            playerInput.actions["LockOn"].performed -= _pressLockOnCallback;
+            playerInput.actions["LockOn"].canceled -= _releaseLockOnCallback;
             
             playerInput.actions["Dodge"].performed -= _pressDodgeCallback;
             playerInput.actions["Dodge"].canceled -= _releaseDodgeCallback;
@@ -423,15 +436,6 @@ namespace Moon
             yield return _attackInputWait;
 
             _attack2 = false;
-        }
-
-        IEnumerator InteractWait()
-        {
-            _interact = true;
-
-            yield return _inputWait;
-
-            _interact = false;
         }
 
         IEnumerator MagneticWait()
