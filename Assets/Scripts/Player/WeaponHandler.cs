@@ -13,13 +13,12 @@ public class WeaponHandler : MonoBehaviour
     public MagCore currentMagCore;
     public WeaponType CurrentWeaponType { get; private set; }
     private bool _isActiveMagneticSwitchEffect = false;
-
-	private SkillHandler _skillHandler;
+    private Animator _animator;
 
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
-		_skillHandler = GetComponent<SkillHandler>();
+        _animator = GetComponent<Animator>();
         try
         {
             _weaponSO =
@@ -139,13 +138,12 @@ public class WeaponHandler : MonoBehaviour
 
     public void ActivateSkill()
     {
-		if (_currentWeapon == null)
-		        {
-		            Debug.Log("CurrentWeapon is null");
-		            return;
-		        }
-
-		_skillHandler.UseSkill(_currentWeapon.OnSkill());
+		if (_currentWeapon == null) 
+        {
+		    Debug.Log("CurrentWeapon is null");
+            return;
+        }
+        UseSkill(_currentWeapon.OnSkill());
     }
 
     public void ChangePolarity()
@@ -168,5 +166,32 @@ public class WeaponHandler : MonoBehaviour
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
+    }
+    
+    private void UseSkill(int skillNumber)
+    {
+        switch (skillNumber)
+        {
+            case 1:
+                _animator.SetInteger("SkillIndex", 1);
+                _animator.SetTrigger("Skill");
+                break;
+            case 2:
+                _animator.SetInteger("SkillIndex", 2);
+                _animator.SetTrigger("Skill");
+                break;
+            case 3:
+                //animator.SetTrigger("Skill3");
+                break;
+            default:
+                Debug.LogWarning("Invalid Skill Number");
+                break;
+        }
+    }
+
+    
+    public void SpawnSkillEffect(GameObject skillObj)
+    {
+        Instantiate(skillObj, transform.position, transform.rotation);
     }
 }
