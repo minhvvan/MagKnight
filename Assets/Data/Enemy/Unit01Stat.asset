@@ -15,10 +15,10 @@ MonoBehaviour:
   Stat:
     MaxHP:
       Key: 0
-      Value: 200
+      Value: 10000
     HP:
       Key: 1
-      Value: 200
+      Value: 10000
     Strength:
       Key: 2
       Value: 5
@@ -27,13 +27,13 @@ MonoBehaviour:
       Value: 1
     MaxResistance:
       Key: 10
-      Value: 1
+      Value: 20
     Gold:
       Key: 13
       Value: 1
     Resistance:
       Key: 11
-      Value: 1
+      Value: 20
     Damage:
       Key: 9
       Value: 0

@@ -22,7 +22,7 @@ MonoBehaviour:
   startupTime: 1
   recoveryTime: 2
   staggerResistance: 1
-  staggerRecoveryTime: 3
+  staggerRecoveryTime: 1
   abilities: 
   item: 10
   appearanceFloor: 1

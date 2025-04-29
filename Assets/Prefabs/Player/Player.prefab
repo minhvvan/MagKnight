@@ -2272,6 +2272,7 @@ GameObject:
   - component: {fileID: 4373900182711006843}
   - component: {fileID: 5278516391698251394}
   - component: {fileID: 4137939099155573968}
+  - component: {fileID: 9145484738902257012}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2573,6 +2574,23 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   mouseSwitchMaxDist: 8
   stickDeadzone: 7
+--- !u!114 &9145484738902257012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999629288266388604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98ef4f1c2c1fb90459bdc27d5d103cfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FieldSkillObj: {fileID: 8393036786112450277, guid: 41c8240a866672648a6bfcd3b05a5b4c,
+    type: 3}
+  TornadoObj: {fileID: 4199890183255762575, guid: 9c702e5d1cd9c044294ef059d6679bd2,
+    type: 3}
+  ProjectilObj: {fileID: 0}
 --- !u!1 &7010538823116905246
 GameObject:
   m_ObjectHideFlags: 0

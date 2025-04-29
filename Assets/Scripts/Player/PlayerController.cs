@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -285,6 +286,12 @@ namespace Moon
             {
                 Dismentle();
             }
+            
+            //임의로 무기 강화 강제로 올리기.
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                UpgradeParts();
+            }
 
             TriggerSkill();
 
@@ -341,9 +348,10 @@ namespace Moon
         {
             if (_inputHandler.SkillInput)
             {
-                Debug.Log("SKill");
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
+                    gameObject.tag = "SuperArmor";
+                    _weaponHandler.ActivateSkill();
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
             }
@@ -811,6 +819,7 @@ namespace Moon
             if (_magneticController != null)
             {
                 _magneticController.SwitchMagneticType();
+                OnMagneticEffect();
             }
         }
 
@@ -852,6 +861,18 @@ namespace Moon
             }
             
             canAttack = true;
+        }
+        
+        public void OnMagneticEffect()
+        {
+            if (_magneticController == null) return;
+            var magneticType = _magneticController.GetMagneticType();
+            _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+        }
+
+        public void UpgradeParts()
+        {
+            _weaponHandler.UpgradeCurrentParts();
         }
         #endregion
         
