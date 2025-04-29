@@ -117,7 +117,7 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         InteractionEvent.OnDialogueEnd -= InteractExit;
     }
 
-    protected void StartDialogue(PlayerController playerCharacter, int dialogueID, Action DialogueEndAction = null)
+    protected void StartDialogue(PlayerController playerCharacter, int dialogueID)
     {
         Transform playerHead = playerCharacter.cameraSettings.lookAt;
         FocusOnTarget(playerCharacter.cameraSettings.interactionCamera,  GetHeadTransform(), playerHead);
@@ -127,8 +127,6 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         UIManager.Instance.inGameUIController.ShowDialogUI(npcSO.dialogueData[dialogueID]);
 
         InteractionEvent.OnDialogueEnd += InteractExit;
-        if (DialogueEndAction != null) InteractionEvent.OnDialogueEnd += DialogueEndAction;
-        
         InteractionEvent.DialogueStart();
     }
     

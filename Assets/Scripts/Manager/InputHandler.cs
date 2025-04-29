@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using hvvan;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace Moon
         {
             get
             {
-                if(IsContollerInputBlocked())
+                if(IsControllerInputBlocked())
                     return Vector2.zero;
                 return _movement;
             }
@@ -47,44 +48,44 @@ namespace Moon
         {
             get
             {
-                if(IsContollerInputBlocked())
+                if(IsControllerInputBlocked())
                     return Vector2.zero;
                 return _cameraMovement;
             }
         }
         public bool JumpInput
         {
-            get { return _jump && !IsContollerInputBlocked(); }
+            get { return _jump && !IsControllerInputBlocked(); }
         }
 
         public bool Attack1
         {
-            get { return _attack1 && !IsContollerInputBlocked(); }
+            get { return _attack1 && !IsControllerInputBlocked(); }
         }
 
         public bool Attack2
         {
-            get { return _attack2 && !IsContollerInputBlocked(); }
+            get { return _attack2 && !IsControllerInputBlocked(); }
         }
 
         public bool LockOnInput
         {
-            get { return _lockOn && !IsContollerInputBlocked(); }
+            get { return _lockOn && !IsControllerInputBlocked(); }
         }
         public bool InteractInput
         {
-            get { return _interact && !IsContollerInputBlocked(); }
+            get { return _interact && !IsControllerInputBlocked(); }
             set { _interact = value; }
         }
 
         public bool SkillInput
         {
-            get { return _skill && !IsContollerInputBlocked(); }
+            get { return _skill && !IsControllerInputBlocked(); }
         }
 
         public bool DodgeInput
         {
-            get { return _dodge && !IsContollerInputBlocked(); }
+            get { return _dodge && !IsControllerInputBlocked(); }
         }
         
         public Action SwitchMangeticInput;
@@ -128,7 +129,7 @@ namespace Moon
         Action<InputAction.CallbackContext> _pressDodgeCallback;
         Action<InputAction.CallbackContext> _releaseDodgeCallback;
         
-        
+        private CancellationTokenSource _controlCts;
 
         void Start()
         {
@@ -394,11 +395,10 @@ namespace Moon
             _skill = false;
         }
         
-        public bool IsContollerInputBlocked()
+        public bool IsControllerInputBlocked()
         {
             return playerControllerInputBlocked || _externalInputBlocked;
         }
-        
 
         IEnumerator Attack1Wait()
         {
@@ -449,20 +449,37 @@ namespace Moon
 
         public void ReleaseControl()
         {
+            CancelPendingControlGain();
             _externalInputBlocked = true;
         }
 
         public void GainControl()
         {
+            CancelPendingControlGain();
             _externalInputBlocked = false;
         }
 
         void GainControlDelayed()
         {
-            UniTask.Delay(TimeSpan.FromSeconds(0.5f)).ContinueWith(() =>
+            _controlCts = new CancellationTokenSource();
+            
+            UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _controlCts.Token).ContinueWith(() =>
             {
-                _externalInputBlocked = false;
-            });            
+                if (!_controlCts.Token.IsCancellationRequested)
+                {
+                    _externalInputBlocked = false;
+                }
+            });
+        }
+        
+        private void CancelPendingControlGain()
+        {
+            if (_controlCts != null)
+            {
+                _controlCts.Cancel();
+                _controlCts.Dispose();
+                _controlCts = null;
+            }
         }
     }
 }

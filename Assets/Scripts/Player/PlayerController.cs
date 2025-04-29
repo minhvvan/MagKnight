@@ -4,6 +4,7 @@ using System.Collections;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
@@ -16,6 +17,7 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
+        #region Conponent
         private CharacterController _characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
@@ -23,8 +25,10 @@ namespace Moon
         private InteractionController _interactionController;
         private WeaponHandler _weaponHandler;
         private AbilitySystem _abilitySystem;
-        Collider _collider;
-
+        private LockOnSystem _lockOnSystem;
+        private Collider _collider;
+        #endregion
+        
         [SerializeField] private GameObject hudPrefab;
 
         [SerializeField] public float maxForwardSpeed = 8f;        
@@ -35,17 +39,24 @@ namespace Moon
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
 
+        #region Property
         public WeaponHandler WeaponHandler => _weaponHandler;
         public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
+        public InputHandler InputHandler => _inputHandler;
+        public bool IsInvisible => isInvisible || isDead;
+        #endregion
+        
+        #region Variable
         public bool isDead;
         public bool isInvisible;
-        public bool IsInvisible => isInvisible || isDead;
         
-        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
+        private bool _lockOnLastFrame = false;
+        private bool _isInputUpdate = true;
+        #endregion
 
-        LockOnSystem _lockOnSystem;
-        bool _lockOnLastFrame = false;
+        #region Animation
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -128,7 +139,8 @@ namespace Moon
         
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
-
+        #endregion
+        
         protected bool IsMoveInput
         {
             get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
@@ -164,7 +176,7 @@ namespace Moon
             }
         }
 
-        async void Awake()
+        private async void Awake()
         {
             Reset();
 
@@ -334,12 +346,9 @@ namespace Moon
 
             //PlayAudio();
 
-
             TimeoutToIdle();
-
-
         }
-
+        
         void UpdateLockOn()
         {
             bool lockOnNow = _inputHandler.LockOnInput;
@@ -382,7 +391,7 @@ namespace Moon
 
         void UpdateCameraHandler()
         {
-            if(_inputHandler.IsContollerInputBlocked())
+            if(_inputHandler.IsControllerInputBlocked())
             {
                 cameraSettings.DisableCameraMove();
                 if(isDead)
@@ -432,7 +441,6 @@ namespace Moon
             equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo5_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo5_Charge;
             equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo6_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo6_Charge;
             
-
             return equipped;
         }
 
@@ -446,6 +454,8 @@ namespace Moon
                 _animator.ResetTrigger(_HashMeleeAttack);
         }
 
+        
+        #region Move
         // Called each physics step.
         void CalculateForwardMovement()
         {
@@ -461,7 +471,10 @@ namespace Moon
             float acceleration = IsMoveInput ? k_GroundAcceleration : k_GroundDeceleration;
 
             // Adjust the forward speed towards the desired speed.
-            _forwardSpeed = Mathf.MoveTowards(_forwardSpeed, _desiredForwardSpeed, acceleration * Time.deltaTime);
+            if (_isInputUpdate)
+            {
+                _forwardSpeed = Mathf.MoveTowards(_forwardSpeed, _desiredForwardSpeed, acceleration * Time.deltaTime);
+            }
 
             // Set the animator parameter to control what animation is being played.
             _animator.SetFloat(_HashForwardSpeed, _forwardSpeed);
@@ -502,7 +515,6 @@ namespace Moon
             }
         }
 
-        
         void SetTargetRotation()
         {
             Vector2 moveInput = _inputHandler.MoveInput;
@@ -551,7 +563,6 @@ namespace Moon
             _targetRotation = targetRotation;
         }
 
-
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()
         {
@@ -582,7 +593,6 @@ namespace Moon
             _previouslyGrounded = _isGrounded;
         }
 
-        
         void UpdateOrientation()
         {
             // 1) 락온 중이면, 대상 바라보기만 하고 리턴
@@ -614,6 +624,64 @@ namespace Moon
             }
         }
 
+        public void MoveForce(Transform targetTransform, Action onComplete = null, Action onFail = null)
+        {
+            _inputHandler.ReleaseControl();
+            _isInputUpdate = false;
+            
+            //*임시 -> 회전시킨후 직진
+            LookAtForce(targetTransform, () =>
+            {
+                StartCoroutine(MoveToTarget(targetTransform, onComplete, onFail));
+            });
+        }
+
+        private IEnumerator MoveToTarget(Transform targetTransform, Action onComplete, Action onFail = null)
+        {
+            var currentPosition = transform.position;
+            var currentTime = 0f;
+            var timeout = 3f;
+
+            _forwardSpeed = 4f;
+            while ((currentPosition - targetTransform.position).sqrMagnitude >= .05f && currentTime <= timeout)
+            {
+                var dir = targetTransform.transform.position - transform.position;
+                dir.y = 0;
+                transform.rotation = Quaternion.LookRotation(dir);
+                currentTime += Time.deltaTime;
+                currentPosition = transform.position;
+                yield return null;
+            }
+
+            if (currentPosition != targetTransform.position)
+            {
+                onFail?.Invoke();
+            }
+            else
+            {
+                onComplete?.Invoke();
+            }
+
+            _forwardSpeed = 0f;
+            
+            _inputHandler.GainControl();
+            _isInputUpdate = true;
+        }
+
+        public void LookAtForce(Transform targetTransform, Action onComplete = null)
+        {
+            var dir = targetTransform.transform.position - transform.position;
+            dir.y = 0;
+            var targetRotation = Quaternion.LookRotation(dir);
+            
+            //*임시
+            transform.DORotateQuaternion(targetRotation, 0.5f).OnComplete(() =>
+            {
+                onComplete?.Invoke();
+            });
+        }
+
+        #endregion
 
 #if false  //오디오 관련 비활성화
         // Called each physics step to check if audio should be played and if so instruct the relevant random audio player to do so.
@@ -755,6 +823,7 @@ namespace Moon
 
             // 6) 중력/점프 속도 추가
             movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+
 
             // 7) 캐릭터 컨트롤러로 최종 이동
             _characterController.Move(movement);
@@ -928,6 +997,14 @@ namespace Moon
             yield return new WaitForSeconds(0.8f);
             _inputHandler.playerControllerInputBlocked = false;
             _isDodging = false;   // ★ 회피 끝났으니 다시 허용
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!Application.isPlaying) return;
+            
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
         }
     }
 }
