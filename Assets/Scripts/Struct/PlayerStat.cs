@@ -62,8 +62,8 @@ public class PlayerStat
                 case AttributeType.Impulse:
                     stat.Impluse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
                     break;
-                case AttributeType.ImpulseThreshold:
-                    stat.ImpulseThreshold = new AttributePair(AttributeType.ImpulseThreshold, entry.Value.GetValue());
+                case AttributeType.EndureImpulse:
+                    stat.ImpulseThreshold = new AttributePair(AttributeType.EndureImpulse, entry.Value.GetValue());
                     break;
                 case AttributeType.MaxSkillGauge:
                     stat.MaxSkillGauge = new AttributePair(AttributeType.MaxSkillGauge, entry.Value.GetValue());

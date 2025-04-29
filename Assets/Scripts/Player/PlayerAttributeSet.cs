@@ -11,7 +11,9 @@ namespace Jun
     {
         public Action OnDead;
         public Action<Transform> OnDamaged;
-
+        public Action OnMoveSpeedChanged;
+        public Action OnAttackSpeedChanged;
+        
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
             float returnValue = newValue;
@@ -55,6 +57,17 @@ namespace Jun
                 
                 
             }
+
+            if (effect.attributeType == AttributeType.MoveSpeed)
+            {
+                OnMoveSpeedChanged?.Invoke();
+            }
+
+            if (effect.attributeType == AttributeType.AttackSpeed)
+            {
+                OnAttackSpeedChanged?.Invoke();
+            }
+            
             
             if (effect.attributeType == AttributeType.Damage)
             {
@@ -86,12 +99,12 @@ namespace Jun
 
             if (effect.attributeType == AttributeType.Impulse)
             {
-                if (effect.amount == 0)
-                {
+                SetValue(AttributeType.Impulse, Mathf.Clamp(GetValue(AttributeType.Impulse) - GetValue(AttributeType.EndureImpulse), 0, 100));
+             
+                // 적용 후 충격량이 0일 때
+                if(GetValue(AttributeType.Impulse) == 0)
                     return;
-                }
                 
-                SetValue(AttributeType.Impulse, GetValue(AttributeType.ImpulseThreshold) - GetValue(AttributeType.Impulse));
                 OnDamaged?.Invoke(effect.sourceTransform);
                 SetValue(AttributeType.Impulse, 0);
             }

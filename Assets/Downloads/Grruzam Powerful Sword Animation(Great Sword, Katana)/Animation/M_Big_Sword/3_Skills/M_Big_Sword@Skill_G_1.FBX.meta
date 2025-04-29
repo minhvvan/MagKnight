@@ -1048,9 +1048,10 @@ ModelImporter:
       curves: []
       events:
       - time: 0.38863826
-        functionName: OnTornadoSpawn
+        functionName: SpawnSkillEffect
         data: 
-        objectReferenceParameter: {instanceID: 0}
+        objectReferenceParameter: {fileID: 4199890183255762575, guid: 9c702e5d1cd9c044294ef059d6679bd2,
+          type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
