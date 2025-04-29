@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,9 +21,20 @@ namespace Jun
                 // 데미지가 음수면 0으로 처리
                 returnValue = newValue < 0 ? 0 : newValue;
                 
-                // ex) 무적효과
-                // if(무적효과 적용시)
-                // returnValue = 0  -> 데미지를 0으로 초기화
+                // 무적효과
+                if (GameManager.Instance.Player.gameObject.CompareTag("Invincibility"))
+                    returnValue = 0;
+            }
+
+            if (type == AttributeType.Impulse)
+            {
+                returnValue = newValue < 0 ? 0 : newValue;
+
+                // SuperArmor 상태
+                if (GameManager.Instance.Player.gameObject.CompareTag("SuperArmor"))
+                {
+                    returnValue = 0;   
+                }
             }
             
             return returnValue;
@@ -74,9 +86,13 @@ namespace Jun
 
             if (effect.attributeType == AttributeType.Impulse)
             {
+                if (effect.amount == 0)
+                {
+                    return;
+                }
+                
                 SetValue(AttributeType.Impulse, GetValue(AttributeType.ImpulseThreshold) - GetValue(AttributeType.Impulse));
                 OnDamaged?.Invoke(effect.sourceTransform);
-                
                 SetValue(AttributeType.Impulse, 0);
             }
 

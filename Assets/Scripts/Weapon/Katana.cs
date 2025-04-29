@@ -5,6 +5,8 @@ using UnityEngine;
 public class Katana: BaseWeapon
 {
     [SerializeField] GameObject _hitEffectPrefab;
+    [SerializeField] int skillIndex;
+
     WeaponTrail _weaponTrail;
 
     void Start()
@@ -31,6 +33,11 @@ public class Katana: BaseWeapon
         {
             _weaponTrail.EnableTrail(false);
         }
+    }
+
+    public override int OnSkill()
+    {
+        return skillIndex;
     }
 
     public override void OnNext(HitInfo hitInfo)

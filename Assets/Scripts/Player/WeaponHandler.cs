@@ -12,11 +12,13 @@ public class WeaponHandler : MonoBehaviour
     private AbilitySystem _abilitySystem;
     public MagCore currentMagCore;
     public WeaponType CurrentWeaponType { get; private set; }
-
+    private SkillHandler _skillHandler;
+    
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
-
+        _skillHandler = GetComponent<SkillHandler>();
+        
         try
         {
             _weaponSO =
@@ -92,7 +94,13 @@ public class WeaponHandler : MonoBehaviour
 
     public void ActivateSkill()
     {
+        if (_currentWeapon == null)
+        {
+            Debug.Log("CurrentWeapon is null");
+            return;
+        }
 
+        _skillHandler.UseSkill(_currentWeapon.OnSkill());
     }
 
     public void ChangePolarity()
@@ -102,10 +110,10 @@ public class WeaponHandler : MonoBehaviour
 
     private void OnHitAction(HitInfo hitInfo)
     {
-        if (hitInfo.hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
-            Enemy enemy = hitInfo.hit.collider.gameObject.GetComponent<Enemy>();
+            Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
             GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
             damageEffect.sourceTransform = transform;
             GameplayEffect resistanceEffect =
