@@ -2968,7 +2968,6 @@ MonoBehaviour:
       Value: {fileID: 9100000, guid: 7d6522474709f1d48824f1f39f3f89d7, type: 2}
     - Key: 1
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
-  inMagnetSkill: 0
   _blinkEffectPrefab: {fileID: 0}
   _electricLine: {fileID: 2301916739899957595}
 --- !u!114 &6796001127801567281

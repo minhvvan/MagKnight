@@ -73,7 +73,7 @@ namespace Moon
 
         private bool _isDodging = false;
 
-        public bool inMagnetSkill = false;
+        [NonSerialized] public bool inMagnetSkill = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
