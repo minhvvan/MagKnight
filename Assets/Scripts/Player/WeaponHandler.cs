@@ -124,4 +124,9 @@ public class WeaponHandler : MonoBehaviour
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
     }
+
+    public void CreateEffect(GameObject prefab)
+    {
+        Instantiate(prefab, transform.position, Quaternion.identity);
+    }
 }
