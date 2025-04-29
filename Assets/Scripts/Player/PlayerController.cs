@@ -7,6 +7,7 @@ using Cysharp.Threading.Tasks;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -339,9 +340,10 @@ namespace Moon
         {
             if (_inputHandler.SkillInput)
             {
-                Debug.Log("SKill");
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
+                    gameObject.tag = "SuperArmor";
+                    _weaponHandler.ActivateSkill();
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
             }

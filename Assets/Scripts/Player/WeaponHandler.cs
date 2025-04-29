@@ -12,11 +12,13 @@ public class WeaponHandler : MonoBehaviour
     private AbilitySystem _abilitySystem;
     public MagCore currentMagCore;
     public WeaponType CurrentWeaponType { get; private set; }
-
+    private SkillHandler _skillHandler;
+    
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
-
+        _skillHandler = GetComponent<SkillHandler>();
+        
         try
         {
             _weaponSO =
@@ -92,7 +94,13 @@ public class WeaponHandler : MonoBehaviour
 
     public void ActivateSkill()
     {
+        if (_currentWeapon == null)
+        {
+            Debug.Log("CurrentWeapon is null");
+            return;
+        }
 
+        _skillHandler.UseSkill(_currentWeapon.OnSkill());
     }
 
     public void ChangePolarity()
