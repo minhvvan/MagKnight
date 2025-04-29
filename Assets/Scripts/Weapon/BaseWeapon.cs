@@ -45,4 +45,9 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
     public virtual void OnCompleted()
     {
     }
+
+    public virtual Projectile CreateProjectile(GameObject projectilePrefab)
+    {
+        return null;
+    }
 }
