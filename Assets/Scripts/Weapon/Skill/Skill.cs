@@ -25,11 +25,9 @@ public class Skill : MonoBehaviour, IObserver<HitInfo>
 
     public virtual void OnNext(HitInfo hitInfo)
     {
-        Debug.Log("OnNext");
-        if (hitInfo.hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            Debug.Log("OnHit");
-            var enemyASC = hitInfo.hit.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
+            var enemyASC = hitInfo.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
             enemyASC.ApplyEffect(_damageEffect);
             enemyASC.ApplyEffect(_resEffect);
         }
