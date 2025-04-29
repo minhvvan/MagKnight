@@ -276,13 +276,8 @@ namespace Moon
             UpdateCameraHandler();
 
             EquipMeleeWeapon(IsInAttackComboState());
-            
-            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
 
-            if (dodgeNow)
-            {
-                PerformDodge();
-            }
+            TriggerDodge();
 
             TriggerAttack();
 
@@ -293,7 +288,7 @@ namespace Moon
             {
                 Dismentle();
             }
-            
+
             //임의로 무기 강화 강제로 올리기.
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -322,6 +317,16 @@ namespace Moon
             TimeoutToIdle();
 
 
+        }
+
+        private void TriggerDodge()
+        {
+            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
+
+            if (dodgeNow)
+            {
+                PerformDodge();
+            }
         }
 
         private void TriggerAttack()
