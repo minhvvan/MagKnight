@@ -128,5 +128,17 @@ namespace Moon
                 controllerCamera.GetComponent<CinemachineInputProvider>().enabled = false;          
             }
         }
+
+        public IEnumerator AdjustFOV(float from, float to, float duration)
+        {
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.deltaTime;
+                Current.m_Lens.FieldOfView = Mathf.Lerp(from, to, t / duration);
+                yield return null;
+            }
+            Current.m_Lens.FieldOfView = to;
+        }
     } 
 }
