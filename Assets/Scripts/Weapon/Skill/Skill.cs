@@ -1,55 +1,46 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
 
-public class Skill : MonoBehaviour
+[RequireComponent(typeof(HitDetector))]
+public class Skill : MonoBehaviour, IObserver<HitInfo>
 {
-    [SerializeField] float damageInterval = 0.5f;
-    [SerializeField] GameplayEffect _damageEffect;
-    [SerializeField] GameplayEffect _resEffect;
-    //[SerializeField] LayerMask _layerMask;
+    //[SerializeField] float damageInterval = 0.5f;
+    [SerializeField] protected GameplayEffect _damageEffect;
+    [SerializeField] protected GameplayEffect _resEffect;
+    //[SerializeField] private SerializedDictionary<Collider, float> damageTimers;
 
-    [SerializeField] private SerializedDictionary<Collider, float> damageTimers;
+    private HitDetector _hitDetector;
 
-    void Start()
+    protected void Start()
     {
-        //_layerMask = LayerMask.GetMask("Enemy");
+        _hitDetector = GetComponent<HitDetector>();
+        _hitDetector.Subscribe(this);
+        _damageEffect.sourceTransform = transform;
+        _resEffect.sourceTransform = transform;
     }
-    void FixedUpdate()
+
+
+    public virtual void OnNext(HitInfo hitInfo)
     {
-        //transform.position += Vector3.forward * (Time.deltaTime * 10);
-    }
-    
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        Debug.Log("OnNext");
+        if (hitInfo.hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            if (damageTimers.TryAdd(other, 0f))
-            {
-                var enemyASC = other.GetComponent<Enemy>().blackboard.abilitySystem;
-                enemyASC.ApplyEffect(_damageEffect);
-                enemyASC.ApplyEffect(_resEffect);
-            }
-
-            // 새로 들어온 적이면 타이머 0으로 시작
-            damageTimers[other] += Time.deltaTime;
-
-            if (damageTimers[other] >= damageInterval)
-            {
-                damageTimers[other] = 0f;
-                var enemyASC = other.GetComponent<Enemy>().blackboard.abilitySystem;
-                enemyASC.ApplyEffect(_damageEffect);
-                enemyASC.ApplyEffect(_resEffect);     
-            }
+            Debug.Log("OnHit");
+            var enemyASC = hitInfo.hit.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
+            enemyASC.ApplyEffect(_damageEffect);
+            enemyASC.ApplyEffect(_resEffect);
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public void OnError(Exception error)
     {
-        if (damageTimers.ContainsKey(other))
-        {
-            damageTimers.Remove(other); // 영역을 벗어나면 타이머 삭제
-        }
+        Debug.LogError(error);
+    }
+
+    public void OnCompleted()
+    {
     }
 }

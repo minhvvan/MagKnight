@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5105682781939386770}
   - component: {fileID: 1649273249709524683}
   m_Layer: 0
-  m_Name: Katana
+  m_Name: Katana 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bf3739b4d53347c4ab88bad4e567aafa, type: 3}
+  - {fileID: 7227527523439970200, guid: 78619ea0e9e2ea84f9d02ae4880f9382, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitEffectPrefab: {fileID: 4503612902121041701, guid: 777aa409d52b2473fa97f4ae322375ee,
     type: 3}
-  skillIndex: 1
+  _skillIndex: 1
 --- !u!114 &1649273249709524683
 MonoBehaviour:
   m_ObjectHideFlags: 0
