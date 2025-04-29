@@ -16,7 +16,7 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
-        private CharacterController _characterController;
+        public CharacterController characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
         private MagneticController _magneticController;
@@ -69,6 +69,8 @@ namespace Moon
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
         private bool _isDodging = false;
+
+        public bool inMagnetSkill = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -172,7 +174,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            _characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -482,7 +484,7 @@ namespace Moon
                 //땅에 붙도록
                 _verticalSpeed = -gravity * k_StickingGravityProportion;
                 
-                if (_inputHandler.JumpInput && _readyToJump && !_inCombo)
+                if (_inputHandler.JumpInput && _readyToJump && !_inCombo && !_isDodging)
                 {                    
                     _verticalSpeed = jumpSpeed;
                     _isGrounded = false;
@@ -575,7 +577,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = _characterController.isGrounded;
+            _isGrounded = characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
@@ -700,11 +702,15 @@ namespace Moon
                 return;
 
             Vector3 movement = Vector3.zero;
-
-            if (_isGrounded)
+  
+            if(_isDodging)
+            {
+                movement = _animator.deltaPosition;
+            }
+            else if (_isGrounded)
             {
                 // 1) 콤보 중엔 항상 루트 모션만 적용
-                if (_inCombo || _isDodging)
+                if (_inCombo)
                 {
                     movement = _animator.deltaPosition;
                 }
@@ -754,14 +760,20 @@ namespace Moon
                 movement = transform.forward * (_forwardSpeed * Time.deltaTime);
             }
 
-            // 5) 회전 보정: 애니메이터 deltaRotation 적용
-            _characterController.transform.rotation *= _animator.deltaRotation;
 
-            // 6) 중력/점프 속도 추가
-            movement += Vector3.up * _verticalSpeed * Time.deltaTime;
-
-            // 7) 캐릭터 컨트롤러로 최종 이동
-            _characterController.Move(movement);
+            if(inMagnetSkill)
+            {
+                //마그넷 컨트롤러에서 제어
+            }
+            else
+            {
+                // 5) 회전 보정: 애니메이터 deltaRotation 적용
+                characterController.transform.rotation *= _animator.deltaRotation;
+                // 6) 중력/점프 속도 추가
+                movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+                // 7) 캐릭터 컨트롤러로 최종 이동
+                characterController.Move(movement);
+            }
 
             // 8) 적 충돌 보정
             var hits = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
@@ -864,6 +876,15 @@ namespace Moon
             _isKnockDown = false;
         }
 
+        public void StartNormalAttack()
+        {
+            //Force play animation
+            _animator.Play(_HashEllenCombo1, 0, 0f);
+            
+            // _animator.SetTrigger(_HashMeleeAttack);
+            // _animator.SetInteger(_HashAttackType, 0);
+        }
+
         public void Death()
         {
             if(isDead) return;
@@ -918,7 +939,7 @@ namespace Moon
         
         void PerformDodge()
         {
-            _inCombo = false;
+            //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
             Vector2 moveInput = _inputHandler.MoveInput;
             _animator.SetFloat(_HashDodgeX, moveInput.x);
