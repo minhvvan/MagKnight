@@ -1,14 +1,10 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class LootCrate : MonoBehaviour, IInteractable
 {
@@ -20,6 +16,8 @@ public class LootCrate : MonoBehaviour, IInteractable
     public MeshRenderer BaseRenderer;
     public Transform[] itemPoint;
     public int maxSpawnCount;
+
+    public bool IsOpen => _isOpen;
     
     private Animator _animator;
     private List<GameObject> _items = new List<GameObject>();
@@ -181,8 +179,8 @@ public class LootCrate : MonoBehaviour, IInteractable
     
     private void OnDestroy()
     {
-        _cts.Cancel();
-        _cts.Dispose();
+        _cts?.Cancel();
+        _cts?.Dispose();
         _cts = null;
     }
 }

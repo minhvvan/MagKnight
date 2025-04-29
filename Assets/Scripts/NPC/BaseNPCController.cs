@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using Cinemachine;
 using Moon;
 using UnityEngine;
@@ -105,16 +104,8 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
         _currentInteractor = interactor;
         _isInteract = true;
-        
-        Transform playerHead = playerCharacter.cameraSettings.lookAt;
-        FocusOnTarget(playerCharacter.cameraSettings.interactionCamera,  GetHeadTransform(), playerHead);
 
-        //NPC가 대화가 가능할 경우 대화창을 열고 대화를 진행
-        UIManager.Instance.inGameUIController.HideInGameUI();
-        UIManager.Instance.inGameUIController.ShowDialogUI(npcSO);
-
-        InteractionEvent.OnDialogueEnd += InteractExit;
-        InteractionEvent.DialogueStart();
+        StartDialogue(playerCharacter, 0);
     }
     
     protected virtual void InteractExit()
@@ -125,14 +116,29 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         EndDialogue(playerCharacter.cameraSettings.interactionCamera);
         InteractionEvent.OnDialogueEnd -= InteractExit;
     }
+
+    protected void StartDialogue(PlayerController playerCharacter, int dialogueID, Action DialogueEndAction = null)
+    {
+        Transform playerHead = playerCharacter.cameraSettings.lookAt;
+        FocusOnTarget(playerCharacter.cameraSettings.interactionCamera,  GetHeadTransform(), playerHead);
+
+        //NPC가 대화가 가능할 경우 대화창을 열고 대화를 진행
+        UIManager.Instance.inGameUIController.HideInGameUI();
+        UIManager.Instance.inGameUIController.ShowDialogUI(npcSO.dialogueData[dialogueID]);
+
+        InteractionEvent.OnDialogueEnd += InteractExit;
+        if (DialogueEndAction != null) InteractionEvent.OnDialogueEnd += DialogueEndAction;
+        
+        InteractionEvent.DialogueStart();
+    }
     
-    private void EndDialogue(CinemachineVirtualCamera interactionCamera)
+    protected void EndDialogue(CinemachineVirtualCamera interactionCamera)
     {
         interactionCamera.Priority = 0;
         UIManager.Instance.inGameUIController.ShowInGameUI();
     }
     
-    private void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
+    protected void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
     {
         if(lookFrom == null)
         {
@@ -171,7 +177,7 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         return gameObject;
     }
 
-    private Transform GetHeadTransform()
+    protected Transform GetHeadTransform()
     {
         return headTransform ? headTransform : transform;
     }

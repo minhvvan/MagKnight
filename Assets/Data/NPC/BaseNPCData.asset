@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcName: "\uAE30\uBCF8NPC"
   npcDescription: "\uC544\uBB34\uB7F0 \uD2B9\uC131\uC774 \uC5C6\uB294 NPC"
-  dialogueData: {fileID: 11400000, guid: c8077bab4131d445a969b4718efc7d85, type: 2}
+  dialogueData:
+  - {fileID: 11400000, guid: c8077bab4131d445a969b4718efc7d85, type: 2}
   npcType: 0
