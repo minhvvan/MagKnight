@@ -285,14 +285,6 @@ namespace Moon
             }
 
             TriggerSkill();
-            if (_inputHandler.SkillInput)
-            {
-                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
-                {
-                    _weaponHandler.ActivateSkill();
-                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
-                }
-            }
 
             UpdateMoveParameters();
 
@@ -347,9 +339,9 @@ namespace Moon
         {
             if (_inputHandler.SkillInput)
             {
-                Debug.Log("SKill");
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
+                    _weaponHandler.ActivateSkill();
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
             }
