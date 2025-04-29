@@ -27,6 +27,7 @@ public class ItemListSO : ScriptableObject
     public SerializedDictionary<ItemRarity, List<GameObject>> lootVfxPrefab;
     public GameObject weaponChangeVfxPrefab;
     public GameObject dismantleVfxPrefab;
+    public GameObject magnetSwitchVfxPrefab;
     
     [Header("LootCrate")]
     public GameObject lootCratePrefab;
