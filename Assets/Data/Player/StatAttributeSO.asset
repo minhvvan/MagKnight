@@ -30,7 +30,7 @@ MonoBehaviour:
       Value: 0
     CriticalDamage:
       Key: 5
-      Value: 0
+      Value: 2
     Damage:
       Key: 8
       Value: 0
