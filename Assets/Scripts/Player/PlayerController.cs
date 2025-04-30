@@ -28,8 +28,7 @@ namespace Moon
         Collider _collider;
 
         [SerializeField] private GameObject hudPrefab;
-
-        [SerializeField] public float maxForwardSpeed = 8f;        
+        
         [SerializeField] public float gravity = 20f;               
         [SerializeField] public float jumpSpeed = 10f;             
         [SerializeField] public float minTurnSpeed = 400f;         
@@ -58,7 +57,6 @@ namespace Moon
         protected bool _previouslyGrounded = true;    // Whether or not Ellen was standing on the ground last frame.
         protected bool _readyToJump;                  // Whether or not the input state and Ellen are correct to allow jumping.
         protected bool _isKnockDown = false;
-        protected bool _isKnockDownFront = false;
         protected float _desiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float _forwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float _verticalSpeed;               // How fast Ellen is currently moving up or down.
@@ -82,7 +80,7 @@ namespace Moon
         const float k_GroundAcceleration = 20f;
         const float k_GroundDeceleration = 25f;
         const float k_MinEnemyDotCoeff = 0.2f;
-
+        const float k_maxForwardSpeed = 8f;
         // Parameters
 
         readonly int _HashAirborneVerticalSpeed = Animator.StringToHash("AirborneVerticalSpeed");
@@ -194,7 +192,7 @@ namespace Moon
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
 
-            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
         
         //명시적 초기화
@@ -907,8 +905,11 @@ namespace Moon
 
         public void Damaged(Transform sourceTransform)
         {
+            Debug.Log(_isKnockDown);
+            
             if (isDead || _isKnockDown) return;
-
+            
+            
             if(sourceTransform != null)
             {
                 // 공격이 들어온 방향
@@ -934,7 +935,7 @@ namespace Moon
         void MoveSpeedChanged()
         {
             _animator.SetFloat(_HashMoveSpeed, _abilitySystem.GetValue(AttributeType.MoveSpeed));
-            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
 
         void AttackSpeedChanged()
