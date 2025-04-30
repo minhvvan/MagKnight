@@ -19,4 +19,11 @@ public static class Constants
     public const string BaseCamp = "BaseCampScene";
     public const string Start = "start";
     #endregion
+
+    #region AnimationName
+
+    public const string CrateOpen = "CrateOpen";
+    public const string CrateClose = "CrateClose";
+
+    #endregion
 }

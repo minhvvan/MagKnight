@@ -76,7 +76,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         
         _cts = new CancellationTokenSource();
         
-        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
+        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName(Constants.CrateOpen) 
                                     && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f, cancellationToken: _cts.Token);
         
         if(vfxObj) Destroy(vfxObj);
@@ -86,7 +86,7 @@ public class LootCrate : MonoBehaviour, IInteractable
             vfxObj.transform.localScale = new Vector3(4,4,4);
         }
         
-        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Open") 
+        await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName(Constants.CrateOpen) 
                                     && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f, cancellationToken: _cts.Token);
         
         for (int i = 0; i < maxSpawnCount; i++)
@@ -143,7 +143,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         
         //상자 위에 제공된 모든 아이템 제거
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f 
-                                    && _animator.GetCurrentAnimatorStateInfo(0).IsName("WeaponCrate_Close"), cancellationToken: _cts.Token);
+                                    && _animator.GetCurrentAnimatorStateInfo(0).IsName(Constants.CrateClose), cancellationToken: _cts.Token);
         
         if(vfxObj) Destroy(vfxObj);
         foreach (var item in _items)

@@ -32,6 +32,8 @@ public class WeaponNPCController : BaseNPCController
 
     private void BlockGateAccess(PlayerController playerController)
     {
+        //강제 이동중이면 감지 X
+        if (playerController.InputHandler.IsControllerInputBlocked()) return;
         playableDirector.Play();
     }
 
