@@ -30,7 +30,7 @@ namespace Moon
         [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
         
         #region Conponent
-        private CharacterController _characterController;
+        [NonSerialized] public CharacterController characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
         private MagneticController _magneticController;
@@ -140,7 +140,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            _characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -558,7 +558,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = _characterController.isGrounded;
+            _isGrounded = characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
@@ -819,11 +819,11 @@ namespace Moon
             else
             {
                 // 5) 회전 보정: 애니메이터 deltaRotation 적용
-                _characterController.transform.rotation *= _animator.deltaRotation;
+                characterController.transform.rotation *= _animator.deltaRotation;
                 // 6) 중력/점프 속도 추가
                 movement += Vector3.up * _verticalSpeed * Time.deltaTime;
                 // 7) 캐릭터 컨트롤러로 최종 이동
-                _characterController.Move(movement);
+                characterController.Move(movement);
             }
 
             // 8) 적 충돌 보정
