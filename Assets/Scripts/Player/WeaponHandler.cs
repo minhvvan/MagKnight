@@ -99,16 +99,20 @@ public class WeaponHandler : MonoBehaviour
     //극성 전환 효과 활성화
     public void ActivateMagnetSwitchEffect(AbilitySystem abilitySystem, MagneticType type)
     {
-        var vfxObj = Instantiate(ItemManager.Instance.magnetSwitchVfxPrefab, _currentWeapon.transform);
-        //vfxObj.transform.localScale *= 2f;
-        var vfxs = vfxObj.GetComponentsInChildren<ParticleSystem>();
-        foreach (var vfx in vfxs)
-        {
-            var main = vfx.main;
-            if(type == MagneticType.N) main.startColor = Color.red;
-            else if(type == MagneticType.S) main.startColor = Color.blue;
-        }
-        Destroy(vfxObj, 0.25f);
+        // var vfxObj = Instantiate(ItemManager.Instance.magnetSwitchVfxPrefab, _currentWeapon.transform);
+        // //vfxObj.transform.localScale *= 2f;
+        // var vfxs = vfxObj.GetComponentsInChildren<ParticleSystem>();
+        // foreach (var vfx in vfxs)
+        // {
+        //     var main = vfx.main;
+        //     if(type == MagneticType.N) main.startColor = Color.red;
+        //     else if(type == MagneticType.S) main.startColor = Color.blue;
+        // }
+        // Destroy(vfxObj, 0.25f);
+        
+        VFXType vfxType = type == MagneticType.N ? VFXType.MAGNETIC_SWITCH_N : VFXType.MAGNETIC_SWITCH_S;
+        VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon.transform);
+
         
         switch (_isActiveMagneticSwitchEffect)
         {
@@ -208,6 +212,7 @@ public class WeaponHandler : MonoBehaviour
     public void SpawnSkillEffect(GameObject skillObj)
     {
         Instantiate(skillObj, transform.position, transform.rotation);
+        VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
     }
     
     public void CreateProjectile(GameObject prefab)

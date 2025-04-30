@@ -55,8 +55,8 @@ namespace Moon
         #endregion
         
         #region Variable
-        public bool isDead;
-        public bool isInvisible;
+        bool isDead = false;
+        bool isInvisible = true;
         
         private bool _lockOnLastFrame = false;
         private bool _isInputUpdate = true;
@@ -471,6 +471,7 @@ namespace Moon
                     _verticalSpeed = jumpSpeed;
                     _isGrounded = false;
                     _readyToJump = false;
+                    VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
                 }
             }
             else
@@ -558,6 +559,10 @@ namespace Moon
         void SetGrounded()
         {   
             _isGrounded = characterController.isGrounded;
+
+            if (_isGrounded && !_previouslyGrounded && !IsInvisible)
+                VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
@@ -1025,6 +1030,8 @@ namespace Moon
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
+
+            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, transform.rotation);
 
             StartCoroutine(UnblockAfterDodge());
         }

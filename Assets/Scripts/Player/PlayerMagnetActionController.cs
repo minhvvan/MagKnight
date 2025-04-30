@@ -55,9 +55,10 @@ public class PlayerMagnetActionController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         
         // Step 1: 살짝 뜨기
-        sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.05f)
+        sequence.Append(transform.DOMove(targetPos, 0.05f)
             .SetEase(Ease.OutCubic)
             .OnStart(() => {
+                VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, targetCenterPos, Quaternion.identity);
                 _electricLine.startPosition = targetCenterPos;
                 _electricLine.endPosition = casterCenterPos;
                 _electricLine.gameObject.SetActive(true);
@@ -82,8 +83,11 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         // Step 2: 대쉬 시작
         sequence.AppendCallback(()=>{                
-            if(!isCloseTarget)
-            StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+            if(!isCloseTarget) StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+            
+            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
+            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+
             StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration, hitTiming, () => {
                     MotionBlurController.Play(0, 0.1f);
                     Time.timeScale = 1f;
@@ -98,7 +102,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         var targetWidth = targetCollider.bounds.size.x;
         var toTargetVector = startPos - targetCenterPos;
         var toTargetVectorRemoveY = new Vector3(toTargetVector.x, 0f, toTargetVector.z);
-        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f;
+        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f - (targetCollider.bounds.size.y * 0.5f * Vector3.up);
 
         return targetFrontPos;
     }
