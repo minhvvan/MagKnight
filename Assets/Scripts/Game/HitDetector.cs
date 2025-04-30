@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Moon;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -216,7 +217,8 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         Notify(hitInfo);
         
         //Debug.Shaker
-        CameraShake.Shake(0.05f, 0.2f);
+        HitEffect();
+        
         
         //*Temp Debug
         // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
@@ -230,10 +232,21 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         Notify(hitInfo);
         
         //Debug.Shaker
-        CameraShake.Shake(0.05f, 0.2f);
+        HitEffect();
         
         //*Temp Debug
         // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+    }
+
+    void HitEffect(){
+        CameraShake.Shake(0.05f, 0.2f);
+
+        //Critical Hit Effect
+        Time.timeScale = 0.1f;
+        UniTask.Delay(TimeSpan.FromMilliseconds(150f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
+        {
+            Time.timeScale = 1;
+        });
     }
 
     #if UNITY_EDITOR
