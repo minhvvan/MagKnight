@@ -606,7 +606,7 @@ namespace Moon
             _isInputUpdate = false;
             
             //*임시 -> 회전시킨후 직진
-            LookAtForce(targetTransform, () =>
+            LookAtForce(targetTransform, false, () =>
             {
                 StartCoroutine(MoveToTarget(targetTransform, onComplete, onFail));
             });
