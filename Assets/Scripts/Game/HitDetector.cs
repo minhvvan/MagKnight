@@ -212,7 +212,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
         HitInfo hitInfo = new HitInfo(hit, prev, current);
-        _debugHits.Add(hitInfo);
+        //_debugHits.Add(hitInfo);
         
         Notify(hitInfo);
         
@@ -227,7 +227,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void HandleHit(Collider col, Vector3 prev, Vector3 current)
     {
         HitInfo hitInfo = new HitInfo(col, prev, current);
-        _debugHits.Add(hitInfo);
+        //_debugHits.Add(hitInfo);
         
         Notify(hitInfo);
         
