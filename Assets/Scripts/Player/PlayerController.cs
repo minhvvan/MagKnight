@@ -759,6 +759,11 @@ namespace Moon
                 if (_inCombo)
                 {
                     movement = _animator.deltaPosition;
+                    
+                    Vector3 cameraForward = Camera.main.transform.forward;
+                    Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
+                    
+                    transform.rotation = Quaternion.LookRotation(rotation);
                 }
                 else
                 {
