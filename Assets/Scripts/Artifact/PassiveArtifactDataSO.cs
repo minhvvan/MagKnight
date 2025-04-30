@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Artifact/PassiveArtifactDataSO")]
+[CreateAssetMenu(menuName = "SO/Artifact/PassiveArtifactDataSO")]
 public class PassiveArtifactDataSO : ArtifactDataSO
 {
     [SerializeField] List<PassiveEffectData> N_passiveArtifacts = new List<PassiveEffectData>();
