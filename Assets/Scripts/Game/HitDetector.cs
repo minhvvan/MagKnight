@@ -243,7 +243,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
 
         //Critical Hit Effect
         Time.timeScale = 0.1f;
-        UniTask.Delay(TimeSpan.FromMilliseconds(150f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
+        UniTask.Delay(TimeSpan.FromMilliseconds(100f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
         {
             Time.timeScale = 1;
         });
