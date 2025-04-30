@@ -39,9 +39,9 @@ public class InGameUIController : MonoBehaviour
         _inGameUI.gameObject.SetActive(false);
     }
 
-    public void ShowDialogUI(NPCSO npcSO)
+    public void ShowDialogUI(DialogueDataSO dialogueData)
     {
-        dialogueUIController.ShowDialogue(npcSO);
+        dialogueUIController.ShowDialogue(dialogueData);
         // dialogueUIController.SetText("테스트 기본 대화 입니다. 이 부분에 대화에 관한 컨텍스트를 만들어서 넣을 예정입니다.");
     }
 
