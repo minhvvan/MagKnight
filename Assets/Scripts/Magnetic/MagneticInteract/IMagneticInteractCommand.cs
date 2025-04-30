@@ -319,92 +319,11 @@ public class MagnetDashAction : IMagneticInteractCommand
 {
     public override async UniTask Execute(MagneticObject caster, MagneticObject target)
     {
-        var targetPos = target.transform.position;
-        var targetCollider = target.GetComponent<Collider>();
-        var targetCenterPos = targetCollider.bounds.center;
-         
-        var casterPos = caster.transform.position;
-        var casterCollider = caster.GetComponent<Collider>();
-        var casterCenterPos = casterCollider.bounds.center;
+        target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController);
+        if(targetPlayerMagnetActionController == null)  return;            
 
-        var casterWidth = casterCollider.bounds.size.x;
-
-        var targetVector = targetPos - casterCenterPos;
-        var targetVectorRemoveY = new Vector3(targetVector.x, 0f, targetVector.z);
-
-
-        Vector3 casterFrontPos = casterPos + targetVectorRemoveY.normalized * casterWidth * 1.5f;
-        
-
-        #if true //new action 
-        //제어를 위함 플레이어 공중에 살짝 붕 뜨는 모션
-        
-        target.TryGetComponent(out PlayerController targetPlayerController);
-        if(targetPlayerController == null)  return;            
-        
-        targetPlayerController.inMagnetSkill = true;
-
-
-        float distance = Vector3.Distance(targetPos, casterFrontPos);
-        float speed = 30f;
-        float dashDuration =  distance / speed;
-        float hitTiming = Mathf.Clamp(dashDuration - 0.15f, 0, 1);
-
-        Sequence sequence = DOTween.Sequence();
-
-        targetPlayerController.inMagnetSkill = true;
-
-        // Step 1: 살짝 뜨기
-        sequence.Append(target.transform.DOMove(targetPos + Vector3.up * 0.2f, 0.03f)        
-            .SetEase(Ease.OutCubic)
-            .OnStart(() => {
-                Time.timeScale = 0.2f;
-                targetPlayerController.StartCoroutine(AdjustFOV(targetPlayerController, 50f, 80f, 0.2f));
-            })
-            .OnComplete(() => {
-                Time.timeScale = 1f;
-            })); 
-        sequence.Join(targetPlayerController.transform.DOLookAt(casterPos, 0.05f, AxisConstraint.Y)
-                .SetEase(Ease.Linear));
-
-        sequence.AppendInterval(0.02f);
-
-        // Step 2: 대쉬 시작
-        sequence.Append(target.transform.DOMove(casterFrontPos, dashDuration)
-            .SetEase(Ease.OutCubic)
-            .OnStart(() => {
-                Time.timeScale = 0.8f;
-                DOVirtual.DelayedCall(hitTiming, () =>
-                {
-                    targetPlayerController.StartNormalAttack();
-                });
-            })
-            .OnComplete(() => {
-                Time.timeScale = 1f;
-                targetPlayerController.StartCoroutine(AdjustFOV(targetPlayerController, 80f, 50f, 0.2f));
-            }));
-
-        // Step 3: 마무리
-        sequence.OnComplete(() =>
-        {
-            targetPlayerController.inMagnetSkill = false;
-        });
-
-        #endif
+        targetPlayerMagnetActionController.StartMagnetDash(caster);
     }
-
-
-        IEnumerator AdjustFOV(PlayerController playerController, float from, float to, float duration)
-        {
-            float t = 0f;
-            while (t < duration)
-            {
-                t += Time.deltaTime;
-                playerController.cameraSettings.Current.m_Lens.FieldOfView = Mathf.Lerp(from, to, t / duration);
-                yield return null;
-            }
-            playerController.cameraSettings.Current.m_Lens.FieldOfView = to;
-        }
 }
 
 public static class MagneticInteractFactory

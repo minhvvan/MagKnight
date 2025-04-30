@@ -11,6 +11,7 @@ using Jun;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 namespace Moon
 {
@@ -32,8 +33,7 @@ namespace Moon
         #endregion
         
         [SerializeField] private GameObject hudPrefab;
-
-        [SerializeField] public float maxForwardSpeed = 8f;        
+        
         [SerializeField] public float gravity = 20f;               
         [SerializeField] public float jumpSpeed = 10f;             
         [SerializeField] public float minTurnSpeed = 400f;         
@@ -68,7 +68,6 @@ namespace Moon
         protected bool _previouslyGrounded = true;    // Whether or not Ellen was standing on the ground last frame.
         protected bool _readyToJump;                  // Whether or not the input state and Ellen are correct to allow jumping.
         protected bool _isKnockDown = false;
-        protected bool _isKnockDownFront = false;
         protected float _desiredForwardSpeed;         // How fast Ellen aims be going along the ground based on input.
         protected float _forwardSpeed;                // How fast Ellen is currently going along the ground.
         protected float _verticalSpeed;               // How fast Ellen is currently moving up or down.
@@ -82,7 +81,7 @@ namespace Moon
 
         private bool _isDodging = false;
 
-        public bool inMagnetSkill = false;
+        [NonSerialized] public bool inMagnetSkill = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -94,58 +93,7 @@ namespace Moon
         const float k_GroundAcceleration = 20f;
         const float k_GroundDeceleration = 25f;
         const float k_MinEnemyDotCoeff = 0.2f;
-
-        // Parameters
-
-        readonly int _HashAirborneVerticalSpeed = Animator.StringToHash("AirborneVerticalSpeed");
-        readonly int _HashForwardSpeed = Animator.StringToHash("ForwardSpeed");
-        readonly int _HashAngleDeltaRad = Animator.StringToHash("AngleDeltaRad");
-        readonly int _HashTimeoutToIdle = Animator.StringToHash("TimeoutToIdle");
-        readonly int _HashGrounded = Animator.StringToHash("Grounded");
-        readonly int _HashInputDetected = Animator.StringToHash("InputDetected");
-        readonly int _HashMeleeAttack = Animator.StringToHash("MeleeAttack");
-        readonly int _HashHurt = Animator.StringToHash("Hurt");
-        readonly int _HashDeath = Animator.StringToHash("Death");
-        readonly int _HashRespawn = Animator.StringToHash("Respawn");
-        readonly int _HashHurtFromX = Animator.StringToHash("HurtFromX");
-        readonly int _HashHurtFromY = Animator.StringToHash("HurtFromY");
-        readonly int _HashStateTime = Animator.StringToHash("StateTime");
-        readonly int _HashFootFall = Animator.StringToHash("FootFall");
-        readonly int _HashAttackType = Animator.StringToHash("AttackType");
-        readonly int _HashLockOn = Animator.StringToHash("LockOn");
-        readonly int _HashMoveX   = Animator.StringToHash("MoveX");
-        readonly int _HashMoveY   = Animator.StringToHash("MoveY");
-        readonly int _HashSpeed   = Animator.StringToHash("Speed");
-        readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
-        readonly int _HashDodge = Animator.StringToHash("Dodge");
-        readonly int _HashDodgeX = Animator.StringToHash("DodgeX");
-        readonly int _HashDodgeY = Animator.StringToHash("DodgeY");
-        readonly int _HashMoveSpeed = Animator.StringToHash("MoveSpeed");
-        readonly int _HashAttackSpeed = Animator.StringToHash("AttackSpeed");
-        readonly int _HashImpulse = Animator.StringToHash("Impulse");
-        
-        // States
-        readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
-        readonly int _HashLockOnWalk = Animator.StringToHash("LockOnWalk");
-        readonly int _HashLockOnJog = Animator.StringToHash("LockOnJog");
-        readonly int _HashAirborne = Animator.StringToHash("Airborne");
-        readonly int _HashLanding = Animator.StringToHash("Landing");
-        readonly int _HashEllenCombo1 = Animator.StringToHash("EllenCombo1");
-        readonly int _HashEllenCombo2 = Animator.StringToHash("EllenCombo2");
-        readonly int _HashEllenCombo3 = Animator.StringToHash("EllenCombo3");
-        readonly int _HashEllenCombo4 = Animator.StringToHash("EllenCombo4");
-        readonly int _HashEllenCombo5 = Animator.StringToHash("EllenCombo5");
-        readonly int _HashEllenCombo6 = Animator.StringToHash("EllenCombo6");
-        readonly int _HashEllenCombo1_Charge = Animator.StringToHash("EllenCombo1 Charge");
-        readonly int _HashEllenCombo2_Charge = Animator.StringToHash("EllenCombo2 Charge");
-        readonly int _HashEllenCombo3_Charge = Animator.StringToHash("EllenCombo3 Charge");
-        readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
-        readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
-        readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
-        
-        // Tags
-        readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
-        #endregion
+        const float k_maxForwardSpeed = 8f;
         
         protected bool IsMoveInput
         {
@@ -155,11 +103,11 @@ namespace Moon
         void UpdateMoveParameters()
         {
             Vector2 moveInput = _inputHandler.MoveInput;
-            _animator.SetFloat(_HashMoveX, moveInput.x, 0.2f, Time.deltaTime);
-            _animator.SetFloat(_HashMoveY, moveInput.y, 0.2f, Time.deltaTime);
+            _animator.SetFloat(PlayerAnimatorConst.hashMoveX, moveInput.x, 0.2f, Time.deltaTime);
+            _animator.SetFloat(PlayerAnimatorConst.hashMoveY, moveInput.y, 0.2f, Time.deltaTime);
             
             float speed = moveInput.magnitude;
-            _animator.SetFloat(_HashSpeed, speed);
+            _animator.SetFloat(PlayerAnimatorConst.hashSpeed, speed);
         }
         
         public void SetCanAttack(bool newCanAttack)
@@ -340,20 +288,20 @@ namespace Moon
 
         private void TriggerAttack()
         {
-            _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
-            _animator.ResetTrigger(_HashMeleeAttack);
+            _animator.SetFloat(PlayerAnimatorConst.hashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
+            _animator.ResetTrigger(PlayerAnimatorConst.hashMeleeAttack);
 
             if (_inputHandler.Attack1 && canAttack)
             {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 0);
+                _animator.SetTrigger(PlayerAnimatorConst.hashMeleeAttack);
+                _animator.SetInteger(PlayerAnimatorConst.hashAttackType, 0);
             }
 
 
             if (_inputHandler.Attack2 && canAttack)
             {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 1);
+                _animator.SetTrigger(PlayerAnimatorConst.hashMeleeAttack);
+                _animator.SetInteger(PlayerAnimatorConst.hashAttackType, 1);
             }
         }
 
@@ -387,11 +335,11 @@ namespace Moon
 
             if (_lockOnSystem.IsLockOn)
             {
-                _animator.SetTrigger(_HashLockOn);
+                _animator.SetTrigger(PlayerAnimatorConst.hashLockOn);
             }
             else
             {
-                _animator.ResetTrigger(_HashLockOn);
+                _animator.ResetTrigger(PlayerAnimatorConst.hashLockOn);
             }
         }
 
@@ -410,8 +358,8 @@ namespace Moon
         // Called after the animator state has been cached to determine whether this script should block user input.
         void UpdateInputBlocking()
         {
-            bool inputBlocked = _currentStateInfo.tagHash == _HashBlockInput && !_isAnimatorTransitioning;
-            inputBlocked |= _nextStateInfo.tagHash == _HashBlockInput;
+            bool inputBlocked = _currentStateInfo.tagHash == PlayerAnimatorConst.hashBlockInput && !_isAnimatorTransitioning;
+            inputBlocked |= _nextStateInfo.tagHash == PlayerAnimatorConst.hashBlockInput;
             _inputHandler.playerControllerInputBlocked = inputBlocked;
         }
 
@@ -454,18 +402,18 @@ namespace Moon
         
         bool IsInAttackComboState()
         {
-            bool equipped = _nextStateInfo.shortNameHash == _HashEllenCombo1 || _currentStateInfo.shortNameHash == _HashEllenCombo1;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo2 || _currentStateInfo.shortNameHash == _HashEllenCombo2;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo3 || _currentStateInfo.shortNameHash == _HashEllenCombo3;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo4 || _currentStateInfo.shortNameHash == _HashEllenCombo4;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo5 || _currentStateInfo.shortNameHash == _HashEllenCombo5;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo6 || _currentStateInfo.shortNameHash == _HashEllenCombo6;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo1_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo1_Charge;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo2_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo2_Charge;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo3_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo3_Charge;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo4_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo4_Charge;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo5_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo5_Charge;
-            equipped |= _nextStateInfo.shortNameHash == _HashEllenCombo6_Charge || _currentStateInfo.shortNameHash == _HashEllenCombo6_Charge;
+            bool equipped = _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo1 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo1;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo2 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo2;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo3 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo3;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo4 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo4;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6 || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo1_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo1_Charge;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo2_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo2_Charge;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo3_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo3_Charge;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo4_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo4_Charge;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5_Charge;
+            equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6_Charge;
             
             return equipped;
         }
@@ -477,7 +425,7 @@ namespace Moon
             _inCombo = equip;
 
             if (!equip)
-                _animator.ResetTrigger(_HashMeleeAttack);
+                _animator.ResetTrigger(PlayerAnimatorConst.hashMeleeAttack);
         }
 
         
@@ -503,7 +451,7 @@ namespace Moon
             }
 
             // Set the animator parameter to control what animation is being played.
-            _animator.SetFloat(_HashForwardSpeed, _forwardSpeed);
+            _animator.SetFloat(PlayerAnimatorConst.hashForwardSpeed, _forwardSpeed);
         }
 
         // Called each physics step.
@@ -592,16 +540,16 @@ namespace Moon
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()
         {
-            bool updateOrientationForLocomotion = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLocomotion || _nextStateInfo.shortNameHash == _HashLocomotion;
-            bool updateOrientationForAirborne = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashAirborne || _nextStateInfo.shortNameHash == _HashAirborne;
-            bool updateOrientationForLanding = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLanding || _nextStateInfo.shortNameHash == _HashLanding;
+            bool updateOrientationForLocomotion = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion || _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion;
+            bool updateOrientationForAirborne = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashAirborne || _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashAirborne;
+            bool updateOrientationForLanding = !_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLanding || _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLanding;
             // ★ 락온 워크/조그 상태 추가
             bool updateForLockOnWalk = 
-                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLockOnWalk) 
-                || (_nextStateInfo.shortNameHash == _HashLockOnWalk);
+                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnWalk) 
+                || (_nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnWalk);
             bool updateForLockOnJog  = 
-                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == _HashLockOnJog) 
-                || (_nextStateInfo.shortNameHash == _HashLockOnJog);
+                (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog) 
+                || (_nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog);
 
             return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
         }
@@ -611,10 +559,10 @@ namespace Moon
             _isGrounded = _characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
-                _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
+                _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
 
             
-            _animator.SetBool(_HashGrounded, _isGrounded || _previouslyGrounded);
+            _animator.SetBool(PlayerAnimatorConst.hashGrounded, _isGrounded || _previouslyGrounded);
 
             _previouslyGrounded = _isGrounded;
         }
@@ -632,9 +580,9 @@ namespace Moon
             }
 
             // 2) 평소 locomotion / airborne / landing 회전 처리
-            _animator.SetFloat(_HashAngleDeltaRad, _angleDiff * Mathf.Deg2Rad);
+            _animator.SetFloat(PlayerAnimatorConst.hashAngleDeltaRad, _angleDiff * Mathf.Deg2Rad);
 
-            if (_currentStateInfo.shortNameHash == _HashLocomotion)
+            if (_currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion)
             {
                 Vector3 localInput = new Vector3(_inputHandler.MoveInput.x, 0f, _inputHandler.MoveInput.y);
                 float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, _forwardSpeed / _desiredForwardSpeed);
@@ -713,7 +661,7 @@ namespace Moon
         // Called each physics step to check if audio should be played and if so instruct the relevant random audio player to do so.
         void PlayAudio()
         {
-            float footfallCurve = _Animator.GetFloat(_HashFootFall);
+            float footfallCurve = _Animator.GetFloat(PlayerAnimatorConst.HashFootFall);
 
             if (footfallCurve > 0.01f && !footstepPlayer.playing && footstepPlayer.canPlay)
             {
@@ -741,20 +689,20 @@ namespace Moon
                 emoteJumpPlayer.PlayRandomClip();
             }
 
-            if (_CurrentStateInfo.shortNameHash == _HashHurt && _PreviousCurrentStateInfo.shortNameHash != _HashHurt)
+            if (_CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashHurt && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashHurt)
             {
                 hurtAudioPlayer.PlayRandomClip();
             }
 
-            if (_CurrentStateInfo.shortNameHash == _HashEllenDeath && _PreviousCurrentStateInfo.shortNameHash != _HashEllenDeath)
+            if (_CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashEllenDeath && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashEllenDeath)
             {
                 emoteDeathPlayer.PlayRandomClip();
             }
 
-            if (_CurrentStateInfo.shortNameHash == _HashEllenCombo1 && _PreviousCurrentStateInfo.shortNameHash != _HashEllenCombo1 ||
-                _CurrentStateInfo.shortNameHash == _HashEllenCombo2 && _PreviousCurrentStateInfo.shortNameHash != _HashEllenCombo2 ||
-                _CurrentStateInfo.shortNameHash == _HashEllenCombo3 && _PreviousCurrentStateInfo.shortNameHash != _HashEllenCombo3 ||
-                _CurrentStateInfo.shortNameHash == _HashEllenCombo4 && _PreviousCurrentStateInfo.shortNameHash != _HashEllenCombo4)
+            if (_CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashEllenCombo1 && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashEllenCombo1 ||
+                _CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashEllenCombo2 && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashEllenCombo2 ||
+                _CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashEllenCombo3 && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashEllenCombo3 ||
+                _CurrentStateInfo.shortNameHash == PlayerAnimatorConst.HashEllenCombo4 && _PreviousCurrentStateInfo.shortNameHash != PlayerAnimatorConst.HashEllenCombo4)
             {
                 emoteAttackPlayer.PlayRandomClip();
             }
@@ -771,16 +719,16 @@ namespace Moon
                 if (_idleTimer >= idleTimeout)
                 {
                     _idleTimer = 0f;
-                    _animator.SetTrigger(_HashTimeoutToIdle);
+                    _animator.SetTrigger(PlayerAnimatorConst.hashTimeoutToIdle);
                 }
             }
             else
             {
                 _idleTimer = 0f;
-                _animator.ResetTrigger(_HashTimeoutToIdle);
+                _animator.ResetTrigger(PlayerAnimatorConst.hashTimeoutToIdle);
             }
 
-            _animator.SetBool(_HashInputDetected, inputDetected);
+            _animator.SetBool(PlayerAnimatorConst.hashInputDetected, inputDetected);
         }
         
         void OnAnimatorMove()
@@ -824,7 +772,7 @@ namespace Moon
                     else
                     {
                         // 3) 일반 로코모션 
-                        bool useManualMove = _currentStateInfo.shortNameHash == _HashLocomotion;
+                        bool useManualMove = _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion;
                         if (useManualMove)
                         {
                             movement = transform.forward * (_forwardSpeed * Time.deltaTime);
@@ -980,10 +928,10 @@ namespace Moon
         public void StartNormalAttack()
         {
             //Force play animation
-            _animator.Play(_HashEllenCombo1, 0, 0f);
+            _animator.Play(PlayerAnimatorConst.hashEllenCombo1, 0, 0f);
             
-            // _animator.SetTrigger(_HashMeleeAttack);
-            // _animator.SetInteger(_HashAttackType, 0);
+            // _animator.SetTrigger(PlayerAnimatorConst.HashMeleeAttack);
+            // _animator.SetInteger(PlayerAnimatorConst.HashAttackType, 0);
         }
 
         public void Death()
@@ -994,7 +942,7 @@ namespace Moon
             if(_abilitySystem.GetValue(AttributeType.HP) <= 0)
             {
                 isDead = true;
-                _animator.SetTrigger(_HashDeath);
+                _animator.SetTrigger(PlayerAnimatorConst.hashDeath);
                 GameManager.Instance.ChangeGameState(GameState.GameOver);
             }
         }
@@ -1002,20 +950,19 @@ namespace Moon
         public void Damaged(Transform sourceTransform)
         {
             if (isDead || _isKnockDown) return;
-
+            
+            
             if(sourceTransform != null)
             {
                 // 공격이 들어온 방향
                 var dir = sourceTransform.position - transform.position;
                 // 내 캐릭터에 방향에 맞게 계산
                 var hurtFrom = transform.InverseTransformDirection(dir.normalized);
-                _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
-                _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
-                _animator.SetFloat(_HashImpulse, _abilitySystem.GetValue(AttributeType.Impulse));
+                _animator.SetFloat(PlayerAnimatorConst.hashHurtFromX, hurtFrom.x);
+                _animator.SetFloat(PlayerAnimatorConst.hashHurtFromY, hurtFrom.z);
+                _animator.SetFloat(PlayerAnimatorConst.hashImpulse, _abilitySystem.GetValue(AttributeType.Impulse));
                 
-                Debug.Log(_abilitySystem.GetValue(AttributeType.Impulse));
-                
-                _animator.SetTrigger(_HashHurt);
+                _animator.SetTrigger(PlayerAnimatorConst.hashHurt);
             }
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
@@ -1027,13 +974,13 @@ namespace Moon
 
         void MoveSpeedChanged()
         {
-            _animator.SetFloat(_HashMoveSpeed, _abilitySystem.GetValue(AttributeType.MoveSpeed));
-            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+            _animator.SetFloat(PlayerAnimatorConst.hashMoveSpeed, _abilitySystem.GetValue(AttributeType.MoveSpeed));
+            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
 
         void AttackSpeedChanged()
         {
-            _animator.SetFloat(_HashAttackSpeed, _abilitySystem.GetValue(AttributeType.AttackSpeed));
+            _animator.SetFloat(PlayerAnimatorConst.hashAttackSpeed, _abilitySystem.GetValue(AttributeType.AttackSpeed));
         }
 
         void OnAnimatorIK(int layerIndex)
@@ -1051,9 +998,9 @@ namespace Moon
             //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
             Vector2 moveInput = _inputHandler.MoveInput;
-            _animator.SetFloat(_HashDodgeX, moveInput.x);
-            _animator.SetFloat(_HashDodgeY, moveInput.y);
-            _animator.SetTrigger(_HashDodge);
+            _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
+            _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
+            _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
 
             StartCoroutine(UnblockAfterDodge());
         }
@@ -1062,16 +1009,10 @@ namespace Moon
         {
             yield return new WaitForSeconds(0.8f);
             _isDodging = false;   // ★ 회피 끝났으니 다시 허용
-            _animator.SetFloat(_HashDodgeX, 0f);
-            _animator.SetFloat(_HashDodgeY, 0f);
+            _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, 0f);
+            _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, 0f);
         }
 
-        private void OnDrawGizmos()
-        {
-            if (!Application.isPlaying) return;
-            
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, transform.position + transform.forward * 2f);
-        }
+
     }
 }
