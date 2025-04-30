@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,7 +16,7 @@ public class ArtifactInventory : MonoBehaviour
     
     void Start()
     {
-        abilitySystem = GetComponent<AbilitySystem>();
+        abilitySystem = GameManager.Instance.Player.AbilitySystem;
         _magneticController = GetComponent<MagneticController>();
     }
     

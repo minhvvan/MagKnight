@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class PlayerStat
@@ -7,17 +8,18 @@ public class PlayerStat
     public AttributePair MaxHP;
     public AttributePair HP;
     public AttributePair Strength;
-    public AttributePair Intelligence;
     public AttributePair CriticalRate;
     public AttributePair Defense;
     public AttributePair CriticalDamage;
     public AttributePair Damage;
     public AttributePair MoveSpeed;
     public AttributePair AttackSpeed;
-    public AttributePair Impluse;
-    public AttributePair ImpulseThreshold;
+    public AttributePair Impulse;
+    public AttributePair EndureImpulse;
     public AttributePair MaxSkillGauge;
     public AttributePair SkillGauge;
+    public AttributePair MagneticRange;
+    public AttributePair MagneticPower;
     
     // Dictionary에서 PlayerStat으로 변환하는 정적 메서드
     public static PlayerStat FromDictionary(Dictionary<AttributeType, Attribute> attributeDictionary)
@@ -38,9 +40,6 @@ public class PlayerStat
                 case AttributeType.Strength:
                     stat.Strength = new AttributePair(AttributeType.Strength, entry.Value.GetValue());
                     break;
-                case AttributeType.Intelligence:
-                    stat.Intelligence = new AttributePair(AttributeType.Intelligence, entry.Value.GetValue());
-                    break;
                 case AttributeType.CriticalRate:
                     stat.CriticalRate = new AttributePair(AttributeType.CriticalRate, entry.Value.GetValue());
                     break;
@@ -60,16 +59,22 @@ public class PlayerStat
                     stat.AttackSpeed = new AttributePair(AttributeType.AttackSpeed, entry.Value.GetValue());
                     break;
                 case AttributeType.Impulse:
-                    stat.Impluse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
+                    stat.Impulse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
                     break;
                 case AttributeType.EndureImpulse:
-                    stat.ImpulseThreshold = new AttributePair(AttributeType.EndureImpulse, entry.Value.GetValue());
+                    stat.EndureImpulse = new AttributePair(AttributeType.EndureImpulse, entry.Value.GetValue());
                     break;
                 case AttributeType.MaxSkillGauge:
                     stat.MaxSkillGauge = new AttributePair(AttributeType.MaxSkillGauge, entry.Value.GetValue());
                     break;
                 case AttributeType.SkillGauge:
                     stat.SkillGauge = new AttributePair(AttributeType.SkillGauge, entry.Value.GetValue());
+                    break;
+                case AttributeType.MagneticRange:
+                    stat.MagneticRange = new AttributePair(AttributeType.MagneticRange, entry.Value.GetValue());
+                    break;
+                case AttributeType.MagneticPower:
+                    stat.MagneticPower = new AttributePair(AttributeType.MagneticPower, entry.Value.GetValue());
                     break;
             }
         }

@@ -23,20 +23,20 @@ MonoBehaviour:
       Key: 2
       Value: 5
     MoveSpeed:
-      Key: 7
+      Key: 6
       Value: 1
     MaxResistance:
-      Key: 10
+      Key: 9
       Value: 1
     Gold:
-      Key: 13
+      Key: 12
       Value: 1
     Resistance:
-      Key: 11
+      Key: 10
       Value: 1
     Damage:
-      Key: 9
+      Key: 8
       Value: 0
     ResistanceDamage:
-      Key: 12
+      Key: 11
       Value: 0

@@ -1,11 +1,15 @@
 ﻿using System;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WeaponHandler : MonoBehaviour
 {
-    [SerializeField] private Transform weaponSocket;
+    [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
+    
     [SerializeField] private BaseWeapon _currentWeapon;
     private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;
@@ -15,10 +19,23 @@ public class WeaponHandler : MonoBehaviour
     private bool _isActiveMagneticSwitchEffect = false;
     private Animator _animator;
 
+    private GameplayEffect _damageEffect;
+    private GameplayEffect _resistanceEffect;
+    
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
         _animator = GetComponent<Animator>();
+        
+        _damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, 0)
+        {
+            sourceTransform = transform
+        };
+        _resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, 10)
+        {
+            sourceTransform = transform
+        };
+        
         try
         {
             _weaponSO =
@@ -46,7 +63,7 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
 
@@ -155,14 +172,12 @@ public class WeaponHandler : MonoBehaviour
     {
         if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            var damage = _abilitySystem.GetValue(AttributeType.Strength);
             Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
-            GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
-            damageEffect.sourceTransform = transform;
-            GameplayEffect resistanceEffect =
-                new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, damage);
-            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
-            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
+            
+            _damageEffect.amount = GameManager.Instance.Player.GetAttackDamage();
+            
+            enemy.blackboard.abilitySystem.ApplyEffect(_damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(_resistanceEffect);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }

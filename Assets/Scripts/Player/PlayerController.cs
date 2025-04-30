@@ -4,6 +4,7 @@ using System.Collections;
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
@@ -11,6 +12,7 @@ using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 namespace Moon
 {
@@ -18,7 +20,17 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
-        public CharacterController characterController;
+        [SerializeField] private GameObject hudPrefab;
+        [SerializeField] public float gravity = 20f;               
+        [SerializeField] public float jumpSpeed = 10f;             
+        [SerializeField] public float minTurnSpeed = 400f;         
+        [SerializeField] public float maxTurnSpeed = 1200f;        
+        [SerializeField] public float idleTimeout = 5f;            
+        [SerializeField] public bool canAttack;
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
+        
+        #region Conponent
+        private CharacterController _characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
         private MagneticController _magneticController;
@@ -26,28 +38,33 @@ namespace Moon
         private WeaponHandler _weaponHandler;
         private AbilitySystem _abilitySystem;
         private float _maxForwardSpeed;
-        Collider _collider;
-
-        [SerializeField] private GameObject hudPrefab;
-        
-        [SerializeField] public float gravity = 20f;               
-        [SerializeField] public float jumpSpeed = 10f;             
-        [SerializeField] public float minTurnSpeed = 400f;         
-        [SerializeField] public float maxTurnSpeed = 1200f;        
-        [SerializeField] public float idleTimeout = 5f;            
-        [SerializeField] public bool canAttack;
-
+        private Collider _collider;
+        private LockOnSystem _lockOnSystem;
+        #endregion
+            
+        #region Property
         public WeaponHandler WeaponHandler => _weaponHandler;
         public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
-        public bool isDead;
-        public bool isInvisible;
+        public InputHandler InputHandler => _inputHandler;
         public bool IsInvisible => isInvisible || isDead;
         
-        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
+        protected bool IsMoveInput
+        {
+            get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
+        }
+        #endregion
+        
+        #region Variable
+        public bool isDead;
+        public bool isInvisible;
+        
+        private bool _lockOnLastFrame = false;
+        private bool _isInputUpdate = true;
+        private bool _isDodging = false;
+        #endregion
 
-        LockOnSystem _lockOnSystem;
-
+        #region Animation
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
         protected bool _isAnimatorTransitioning;
@@ -69,7 +86,7 @@ namespace Moon
         protected bool _inCombo;                      // Whether Ellen is currently in the middle of her melee combo.        
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
-        private bool _isDodging = false;
+        #endregion
 
         [NonSerialized] public bool inMagnetSkill = false;
 
@@ -85,10 +102,6 @@ namespace Moon
         const float k_MinEnemyDotCoeff = 0.2f;
         const float k_maxForwardSpeed = 8f;
         
-        protected bool IsMoveInput
-        {
-            get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
-        }
 
         void UpdateMoveParameters()
         {
@@ -100,9 +113,9 @@ namespace Moon
             _animator.SetFloat(PlayerAnimatorConst.hashSpeed, speed);
         }
         
-        public void SetCanAttack(bool canAttack)
+        public void SetCanAttack(bool newCanAttack)
         {
-            this.canAttack = canAttack;
+            this.canAttack = newCanAttack;
         }
 
         // Called automatically by Unity when the script is first added to a gameobject or is reset from the context menu.
@@ -120,14 +133,14 @@ namespace Moon
             }
         }
 
-        async void Awake()
+        private async void Awake()
         {
             Reset();
 
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            characterController = GetComponent<CharacterController>();
+            _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -144,8 +157,6 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
-
-            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
         
         //명시적 초기화
@@ -160,6 +171,8 @@ namespace Moon
         public void InitStat(PlayerStat stat)
         {
             _abilitySystem.InitializeFromPlayerStat(stat);
+            
+            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
                 attributeSet.OnDead += Death;
@@ -168,42 +181,42 @@ namespace Moon
                 attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
                 
                 // OnHitPassive
-                var ChargeSkillGaugeHit = new PassiveEffectData
+                var chargeSkillGaugeHit = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 3),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnHit
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGaugeHit);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGaugeHit);
                 
                 // OnDamagePassive
-                var ChargeSkillGauageDamaged = new PassiveEffectData
+                var chargeSkillGauageDamaged = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnDamage
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageDamaged);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageDamaged);
                 
-                var ChargeSkillGauageMagnetic = new PassiveEffectData
+                var chargeSkillGauageMagnetic = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnMagnetic
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageMagnetic);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageMagnetic);
                 
-                var OnSkill = new PassiveEffectData
+                var onSkill = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, -500),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnSkill
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(OnSkill);
+                _abilitySystem.RegisterPassiveEffect(onSkill);
             }
             
             //HUD 생성 및 바인딩
@@ -262,10 +275,7 @@ namespace Moon
 
             //PlayAudio();
 
-
             TimeoutToIdle();
-
-
         }
 
         private void TriggerDodge()
@@ -357,7 +367,7 @@ namespace Moon
 
         void UpdateCameraHandler()
         {
-            if(_inputHandler.IsContollerInputBlocked())
+            if(_inputHandler.IsControllerInputBlocked())
             {
                 cameraSettings.DisableCameraMove();
                 if(isDead)
@@ -371,9 +381,9 @@ namespace Moon
             }
         }
 
-        async UniTask AnimateCameraYAxis(CinemachineFreeLook camera, float targetValue, float duration, CancellationToken token)
+        async UniTask AnimateCameraYAxis(CinemachineFreeLook cam, float targetValue, float duration, CancellationToken token)
         {
-            float startValue = camera.m_YAxis.Value;
+            float startValue = cam.m_YAxis.Value;
             float time = 0f;
 
             while (time < duration)
@@ -385,11 +395,11 @@ namespace Moon
 
                 time += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(time / duration);
-                camera.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
+                cam.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
 
-            camera.m_YAxis.Value = targetValue;
+            cam.m_YAxis.Value = targetValue;
         }
         
         bool IsInAttackComboState()
@@ -407,7 +417,6 @@ namespace Moon
             equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo5_Charge;
             equipped |= _nextStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6_Charge || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashEllenCombo6_Charge;
             
-
             return equipped;
         }
 
@@ -421,6 +430,8 @@ namespace Moon
                 _animator.ResetTrigger(PlayerAnimatorConst.hashMeleeAttack);
         }
 
+        
+        #region Move
         // Called each physics step.
         void CalculateForwardMovement()
         {
@@ -436,7 +447,10 @@ namespace Moon
             float acceleration = IsMoveInput ? k_GroundAcceleration : k_GroundDeceleration;
 
             // Adjust the forward speed towards the desired speed.
-            _forwardSpeed = Mathf.MoveTowards(_forwardSpeed, _desiredForwardSpeed, acceleration * Time.deltaTime);
+            if (_isInputUpdate)
+            {
+                _forwardSpeed = Mathf.MoveTowards(_forwardSpeed, _desiredForwardSpeed, acceleration * Time.deltaTime);
+            }
 
             // Set the animator parameter to control what animation is being played.
             _animator.SetFloat(PlayerAnimatorConst.hashForwardSpeed, _forwardSpeed);
@@ -477,7 +491,6 @@ namespace Moon
             }
         }
 
-        
         void SetTargetRotation()
         {
             Vector2 moveInput = _inputHandler.MoveInput;
@@ -526,7 +539,6 @@ namespace Moon
             _targetRotation = targetRotation;
         }
 
-
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()
         {
@@ -546,7 +558,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = characterController.isGrounded;
+            _isGrounded = _characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
@@ -557,7 +569,6 @@ namespace Moon
             _previouslyGrounded = _isGrounded;
         }
 
-        
         void UpdateOrientation()
         {
             // 1) 락온 중이면, 대상 바라보기만 하고 리턴
@@ -589,6 +600,72 @@ namespace Moon
             }
         }
 
+        public void MoveForce(Transform targetTransform, Action onComplete = null, Action onFail = null)
+        {
+            _inputHandler.ReleaseControl();
+            _isInputUpdate = false;
+            
+            //*임시 -> 회전시킨후 직진
+            LookAtForce(targetTransform, false, () =>
+            {
+                StartCoroutine(MoveToTarget(targetTransform, onComplete, onFail));
+            });
+        }
+
+        private IEnumerator MoveToTarget(Transform targetTransform, Action onComplete, Action onFail = null)
+        {
+            var currentPosition = transform.position;
+            var currentTime = 0f;
+            var timeout = 3f;
+
+            _forwardSpeed = 4f;
+            while ((currentPosition - targetTransform.position).sqrMagnitude >= .05f && currentTime <= timeout)
+            {
+                var dir = targetTransform.transform.position - transform.position;
+                dir.y = 0;
+                transform.rotation = Quaternion.LookRotation(dir);
+                currentTime += Time.deltaTime;
+                currentPosition = transform.position;
+                yield return null;
+            }
+
+            if (currentPosition != targetTransform.position)
+            {
+                onFail?.Invoke();
+            }
+            else
+            {
+                onComplete?.Invoke();
+            }
+
+            _forwardSpeed = 0f;
+            
+            _inputHandler.GainControl();
+            _isInputUpdate = true;
+        }
+
+        public void LookAtForce(Transform targetTransform, bool runImmediately, Action onComplete = null)
+        {
+            var dir = targetTransform.transform.position - transform.position;
+            dir.y = 0;
+            var targetRotation = Quaternion.LookRotation(dir);
+            
+            if(runImmediately)
+            {
+                transform.rotation = targetRotation;
+                onComplete?.Invoke();
+            }
+            else
+            {
+                //*임시
+                transform.DORotateQuaternion(targetRotation, 0.5f).OnComplete(() =>
+                {
+                    onComplete?.Invoke();
+                });
+            }
+        }
+
+        #endregion
 
 #if false  //오디오 관련 비활성화
         // Called each physics step to check if audio should be played and if so instruct the relevant random audio player to do so.
@@ -682,6 +759,11 @@ namespace Moon
                 if (_inCombo)
                 {
                     movement = _animator.deltaPosition;
+                    
+                    Vector3 cameraForward = Camera.main.transform.forward;
+                    Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
+                    
+                    transform.rotation = Quaternion.LookRotation(rotation);
                 }
                 else
                 {
@@ -737,11 +819,11 @@ namespace Moon
             else
             {
                 // 5) 회전 보정: 애니메이터 deltaRotation 적용
-                characterController.transform.rotation *= _animator.deltaRotation;
+                _characterController.transform.rotation *= _animator.deltaRotation;
                 // 6) 중력/점프 속도 추가
                 movement += Vector3.up * _verticalSpeed * Time.deltaTime;
                 // 7) 캐릭터 컨트롤러로 최종 이동
-                characterController.Move(movement);
+                _characterController.Move(movement);
             }
 
             // 8) 적 충돌 보정
@@ -898,6 +980,16 @@ namespace Moon
                 _animator.SetTrigger(PlayerAnimatorConst.hashHurt);
             }
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public float GetAttackDamage(float damageMultiplier = 1f)
+        {
+            var damage = _abilitySystem.GetValue(AttributeType.Strength);
+            if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
+            {
+                damage *= (2 + _abilitySystem.GetValue(AttributeType.CriticalDamage));
+            }
+            return damage * damageMultiplier;
         }
 
         public void OnKnockDown()

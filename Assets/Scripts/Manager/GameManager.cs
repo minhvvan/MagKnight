@@ -173,7 +173,7 @@ namespace hvvan
             {
                 if (!Player) return;
                 
-                if (Player.GetComponent<AbilitySystem>().TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
+                if (Player.AbilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
                 {
                     _currentRunData.playerStat = attributeSet.GetDataStruct();
                 }

@@ -110,15 +110,14 @@ public class MagCore: MonoBehaviour, IInteractable
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
-            //TODO: 무기교체 로직 추가 수행
             transform.SetParent(player.transform);
             gameObject.SetActive(false);
             
             player.SetCurrentWeapon(weaponType, this);
-            var abilitySystem = player.GetComponent<AbilitySystem>();
+            var abilitySystem = player.AbilitySystem;
             SetPartsEffect(abilitySystem);
-            GameManager.Instance.CurrentRunData.currentMagCore = this;
-            GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
+            // GameManager.Instance.CurrentRunData.currentMagCore = this;
+            // GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
             
             onChooseItem?.Invoke();
         }
