@@ -11,7 +11,7 @@ public static class Constants
     #region SaveDataKey
 
     public const string PlayerData = "PlayerData";
-    public const string CurrentRun = "CurrentRun";
+    public const string CurrentRun = "CurrentRunData";
 
     #endregion
     

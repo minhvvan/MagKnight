@@ -116,7 +116,7 @@ public class MagCore: MonoBehaviour, IInteractable
             player.SetCurrentWeapon(weaponType, this);
             var abilitySystem = player.AbilitySystem;
             SetPartsEffect(abilitySystem);
-            GameManager.Instance.CurrentRunData.currentMagCore = this;
+            // GameManager.Instance.CurrentRunData.currentMagCore = this;
             GameManager.Instance.CurrentRunData.currentWeapon = weaponType;
             GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
 

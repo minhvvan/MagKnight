@@ -21,12 +21,12 @@ public class CurrentRunData : ISaveData
 
     //TODO
     /*
-     * 현재 스탯, 무기, 아티팩트, 재화(철가루)
+     * 아티팩트
      */
     public PlayerStat playerStat = new();
     
     //무기
-    public MagCore currentMagCore;
+    // public MagCore currentMagCore;
     public WeaponType currentWeapon;
     public PartsType currentPartsType;
     public int currentPartsUpgradeValue;
