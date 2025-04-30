@@ -644,17 +644,25 @@ namespace Moon
             _isInputUpdate = true;
         }
 
-        public void LookAtForce(Transform targetTransform, Action onComplete = null)
+        public void LookAtForce(Transform targetTransform, bool runImmediately, Action onComplete = null)
         {
             var dir = targetTransform.transform.position - transform.position;
             dir.y = 0;
             var targetRotation = Quaternion.LookRotation(dir);
             
-            //*임시
-            transform.DORotateQuaternion(targetRotation, 0.5f).OnComplete(() =>
+            if(runImmediately)
             {
+                transform.rotation = targetRotation;
                 onComplete?.Invoke();
-            });
+            }
+            else
+            {
+                //*임시
+                transform.DORotateQuaternion(targetRotation, 0.5f).OnComplete(() =>
+                {
+                    onComplete?.Invoke();
+                });
+            }
         }
 
         #endregion
