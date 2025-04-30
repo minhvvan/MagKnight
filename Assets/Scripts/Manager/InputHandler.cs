@@ -72,7 +72,7 @@ namespace Moon
         {
             get
             {
-                bool ret = _lockOn && !IsContollerInputBlocked();
+                bool ret = _lockOn && !IsControllerInputBlocked();
                 _lockOn = false;
                 return ret;    
             }
@@ -80,7 +80,7 @@ namespace Moon
         public bool InteractInput
         {
             get { 
-                bool ret = _interact && !IsContollerInputBlocked();
+                bool ret = _interact && !IsControllerInputBlocked();
                 _interact = false;
                 return ret;    
             }
@@ -90,7 +90,7 @@ namespace Moon
         {
             get
             {
-                bool ret = _skill && !IsContollerInputBlocked();
+                bool ret = _skill && !IsControllerInputBlocked();
                 _skill = false;
                 return ret;    
             }
@@ -100,7 +100,7 @@ namespace Moon
         {
             get 
             { 
-                bool ret = _dodge && !IsContollerInputBlocked();
+                bool ret = _dodge && !IsControllerInputBlocked();
                 _dodge = false;
                 return ret;
             }

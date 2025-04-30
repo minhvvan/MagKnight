@@ -27,7 +27,7 @@ namespace Moon
         private WeaponHandler _weaponHandler;
         private AbilitySystem _abilitySystem;
         private float _maxForwardSpeed;
-        Collider _collider;
+        private Collider _collider;
         private LockOnSystem _lockOnSystem;
         #endregion
         
@@ -40,7 +40,7 @@ namespace Moon
         [SerializeField] public float maxTurnSpeed = 1200f;        
         [SerializeField] public float idleTimeout = 5f;            
         [SerializeField] public bool canAttack;
-
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
         #region Property
         public WeaponHandler WeaponHandler => _weaponHandler;
         public AbilitySystem AbilitySystem => _abilitySystem;
@@ -57,7 +57,7 @@ namespace Moon
         private bool _isInputUpdate = true;
         #endregion
 
-
+        #region Animation
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
         protected bool _isAnimatorTransitioning;
@@ -162,9 +162,9 @@ namespace Moon
             _animator.SetFloat(_HashSpeed, speed);
         }
         
-        public void SetCanAttack(bool canAttack)
+        public void SetCanAttack(bool newCanAttack)
         {
-            this.canAttack = canAttack;
+            this.canAttack = newCanAttack;
         }
 
         // Called automatically by Unity when the script is first added to a gameobject or is reset from the context menu.
@@ -189,7 +189,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            characterController = GetComponent<CharacterController>();
+            _characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -206,8 +206,6 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
-
-            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
         
         //명시적 초기화
@@ -222,6 +220,9 @@ namespace Moon
         public void InitStat(PlayerStat stat)
         {
             _abilitySystem.InitializeFromPlayerStat(stat);
+            
+            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+            
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
                 attributeSet.OnDead += Death;
@@ -230,42 +231,42 @@ namespace Moon
                 attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
                 
                 // OnHitPassive
-                var ChargeSkillGaugeHit = new PassiveEffectData
+                var chargeSkillGaugeHit = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 3),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnHit
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGaugeHit);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGaugeHit);
                 
                 // OnDamagePassive
-                var ChargeSkillGauageDamaged = new PassiveEffectData
+                var chargeSkillGauageDamaged = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnDamage
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageDamaged);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageDamaged);
                 
-                var ChargeSkillGauageMagnetic = new PassiveEffectData
+                var chargeSkillGauageMagnetic = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 2),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnMagnetic
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(ChargeSkillGauageMagnetic);
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageMagnetic);
                 
-                var OnSkill = new PassiveEffectData
+                var onSkill = new PassiveEffectData
                 {
                     effect = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, -500),
                     triggerChance = 1,
                     triggerEvent = TriggerEventType.OnSkill
                 };
                 
-                _abilitySystem.RegisterPassiveEffect(OnSkill);
+                _abilitySystem.RegisterPassiveEffect(onSkill);
             }
             
             //HUD 생성 및 바인딩
@@ -430,9 +431,9 @@ namespace Moon
             }
         }
 
-        async UniTask AnimateCameraYAxis(CinemachineFreeLook camera, float targetValue, float duration, CancellationToken token)
+        async UniTask AnimateCameraYAxis(CinemachineFreeLook cam, float targetValue, float duration, CancellationToken token)
         {
-            float startValue = camera.m_YAxis.Value;
+            float startValue = cam.m_YAxis.Value;
             float time = 0f;
 
             while (time < duration)
@@ -444,11 +445,11 @@ namespace Moon
 
                 time += Time.unscaledDeltaTime;
                 float t = Mathf.Clamp01(time / duration);
-                camera.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
+                cam.m_YAxis.Value = Mathf.Lerp(startValue, targetValue, t);
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
 
-            camera.m_YAxis.Value = targetValue;
+            cam.m_YAxis.Value = targetValue;
         }
         
         bool IsInAttackComboState()
@@ -607,7 +608,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = characterController.isGrounded;
+            _isGrounded = _characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
@@ -855,11 +856,11 @@ namespace Moon
             else
             {
                 // 5) 회전 보정: 애니메이터 deltaRotation 적용
-                characterController.transform.rotation *= _animator.deltaRotation;
+                _characterController.transform.rotation *= _animator.deltaRotation;
                 // 6) 중력/점프 속도 추가
                 movement += Vector3.up * _verticalSpeed * Time.deltaTime;
                 // 7) 캐릭터 컨트롤러로 최종 이동
-                characterController.Move(movement);
+                _characterController.Move(movement);
             }
 
             // 8) 적 충돌 보정
