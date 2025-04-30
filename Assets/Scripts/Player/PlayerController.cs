@@ -11,7 +11,6 @@ using Jun;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DG.Tweening;
 using Random = UnityEngine.Random;
 
 namespace Moon

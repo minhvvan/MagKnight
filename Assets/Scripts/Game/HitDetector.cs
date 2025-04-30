@@ -142,6 +142,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         int hitCount = Physics.SphereCastNonAlloc(previousPos, hitbox.radius, direction, _hitResults, distance, _layerMask);
                         if (hitCount > 0)
                         {
+                            if (_hitResults[0].point == Vector3.zero)
+                            {
+                                _hitResults[0].point = _hitResults[0].collider.ClosestPoint(previousPos);
+                            }
                             HandleHit(_hitResults[0], previousPos, currentPos); // 가장 먼저 충돌한 collider에 대해서만 처리
                             group.isActive = false; // 같은 그룹의 나머지 히트박스들도 전부 비활성화
                             _hitCollidersGroups.Remove(groupId);
@@ -153,6 +157,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         for (int k = 0; k < hitCount; k++)
                         {
                             RaycastHit hit = _hitResults[k];
+                            if (hit.point == Vector3.zero)
+                            {
+                                hit.point = hit.collider.ClosestPoint(previousPos);
+                            }
 
                             if (!_hitCollidersGroups[groupId].ContainsKey(hit.collider) || _hitCollidersGroups[groupId][hit.collider] < Time.time)
                             {
