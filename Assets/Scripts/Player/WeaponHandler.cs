@@ -1,10 +1,13 @@
 ﻿using System;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using Managers;
 using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour
 {
+    [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
+    
     [SerializeField] private Transform weaponSocket;
     [SerializeField] private Transform weaponSocketLeftHand;
     [SerializeField] private BaseWeapon _currentWeapon;
@@ -47,10 +50,7 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        if(weaponType == WeaponType.SwordKatana)
-            _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
-        if(weaponType == WeaponType.Bow)
-            _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocketLeftHand).GetComponent<BaseWeapon>();
+        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
 

@@ -59,6 +59,7 @@ public class ItemManager : Singleton<ItemManager>
             // }
             //CreateItem(ItemCategory.Artifact, ItemRarity.Common, transform.position, Quaternion.identity);
             CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position + Vector3.left*2f, Quaternion.identity);
+            // CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position + Vector3.left*2f, Quaternion.identity, itemName:"Bow");
             //CreateItem(ItemCategory.HealthPack, ItemRarity.Common, transform.position += Vector3.right*2f, Quaternion.identity);
             
             SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, transform.position += Vector3.forward*3f , Quaternion.identity);
