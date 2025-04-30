@@ -240,6 +240,11 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public void OnNext(HitInfo hitInfo)
     {
+        GiveDamageEffect(hitInfo);
+    }
+
+    public void GiveDamageEffect(HitInfo hitInfo)
+    {
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
@@ -282,7 +287,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
         //ex. Enemy에겐 사용 시 무조건 돌진한다.
-        await magnetApproach.Execute(this, target);
+        //await magnetApproach.Execute(this, target);
+        await magnetDashAction.Execute(this, target);
     }
 
     void ApplySoftCollision(Collider[] colliders)

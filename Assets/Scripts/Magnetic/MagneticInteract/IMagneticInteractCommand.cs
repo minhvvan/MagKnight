@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Managers;
+using Moon;
 using UnityEngine;
+using DG.Tweening;
 
 //TODO: 시전자, 대상자만 넣으면 상호간의 액션을 실행할 수 있도록 기능 제공
 public abstract class IMagneticInteractCommand
@@ -212,6 +214,8 @@ public class OnApproach : IMagneticInteractCommand
                 await UniTask.Yield();
             }
         }
+
+        
     }
 }
 
@@ -308,6 +312,17 @@ public class OnSeparation : IMagneticInteractCommand
             
             await UniTask.Yield();
         }
+    }
+}
+
+public class MagnetDashAction : IMagneticInteractCommand
+{
+    public override async UniTask Execute(MagneticObject caster, MagneticObject target)
+    {
+        target.TryGetComponent(out PlayerController targetPlayerController);
+        if(targetPlayerController == null)  return;            
+
+        targetPlayerController.StartMagnetDash(caster);
     }
 }
 

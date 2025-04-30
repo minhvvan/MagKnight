@@ -32,8 +32,9 @@ public class RangedNormalAction : IEnemyAction
         {
             _shot = true;
             _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
-            ProjectileFactory.Create(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity,
-                _blackboard.abilitySystem, targetCollider: _blackboard.target.GetComponent<Collider>());
+            ProjectileLaunchData launchData = new ProjectileLaunchData(_blackboard.target.GetComponent<Collider>());
+            Projectile projectile = ProjectileFactory.Create(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity, launchData);
+            projectile.OnHit += _enemy.GiveDamageEffect;
         }
         
         _startupDuration += Time.deltaTime;

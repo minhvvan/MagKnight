@@ -10,6 +10,7 @@ using Jun;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 namespace Moon
 {
@@ -17,7 +18,7 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
-        private CharacterController _characterController;
+        public CharacterController characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
         private MagneticController _magneticController;
@@ -69,6 +70,8 @@ namespace Moon
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
         private bool _isDodging = false;
+
+        [NonSerialized] public bool inMagnetSkill = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -128,6 +131,8 @@ namespace Moon
         readonly int _HashEllenCombo4_Charge = Animator.StringToHash("EllenCombo4 Charge");
         readonly int _HashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
         readonly int _HashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
+
+        readonly int _HashMagnetSkillDash = Animator.StringToHash("MagnetSkillDash");
         
         // Tags
         readonly int _HashBlockInput = Animator.StringToHash("BlockInput");
@@ -174,7 +179,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            _characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -272,13 +277,8 @@ namespace Moon
             UpdateCameraHandler();
 
             EquipMeleeWeapon(IsInAttackComboState());
-            
-            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
 
-            if (dodgeNow)
-            {
-                PerformDodge();
-            }
+            TriggerDodge();
 
             TriggerAttack();
 
@@ -289,7 +289,7 @@ namespace Moon
             {
                 Dismentle();
             }
-            
+
             //임의로 무기 강화 강제로 올리기.
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -318,6 +318,16 @@ namespace Moon
             TimeoutToIdle();
 
 
+        }
+
+        private void TriggerDodge()
+        {
+            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
+
+            if (dodgeNow)
+            {
+                PerformDodge();
+            }
         }
 
         private void TriggerAttack()
@@ -495,7 +505,7 @@ namespace Moon
                 //땅에 붙도록
                 _verticalSpeed = -gravity * k_StickingGravityProportion;
                 
-                if (_inputHandler.JumpInput && _readyToJump && !_inCombo)
+                if (_inputHandler.JumpInput && _readyToJump && !_inCombo && !_isDodging)
                 {                    
                     _verticalSpeed = jumpSpeed;
                     _isGrounded = false;
@@ -588,7 +598,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = _characterController.isGrounded;
+            _isGrounded = characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
@@ -713,11 +723,15 @@ namespace Moon
                 return;
 
             Vector3 movement = Vector3.zero;
-
-            if (_isGrounded)
+  
+            if(_isDodging)
+            {
+                movement = _animator.deltaPosition;
+            }
+            else if (_isGrounded)
             {
                 // 1) 콤보 중엔 항상 루트 모션만 적용
-                if (_inCombo || _isDodging)
+                if (_inCombo)
                 {
                     movement = _animator.deltaPosition;
                 }
@@ -767,14 +781,20 @@ namespace Moon
                 movement = transform.forward * (_forwardSpeed * Time.deltaTime);
             }
 
-            // 5) 회전 보정: 애니메이터 deltaRotation 적용
-            _characterController.transform.rotation *= _animator.deltaRotation;
 
-            // 6) 중력/점프 속도 추가
-            movement += Vector3.up * _verticalSpeed * Time.deltaTime;
-
-            // 7) 캐릭터 컨트롤러로 최종 이동
-            _characterController.Move(movement);
+            if(inMagnetSkill)
+            {
+                //마그넷 컨트롤러에서 제어
+            }
+            else
+            {
+                // 5) 회전 보정: 애니메이터 deltaRotation 적용
+                characterController.transform.rotation *= _animator.deltaRotation;
+                // 6) 중력/점프 속도 추가
+                movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+                // 7) 캐릭터 컨트롤러로 최종 이동
+                characterController.Move(movement);
+            }
 
             // 8) 적 충돌 보정
             var hits = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
@@ -890,6 +910,15 @@ namespace Moon
             _isKnockDown = false;
         }
 
+        public void StartNormalAttack()
+        {
+            //Force play animation
+            _animator.Play(_HashEllenCombo1, 0, 0f);
+            
+            // _animator.SetTrigger(_HashMeleeAttack);
+            // _animator.SetInteger(_HashAttackType, 0);
+        }
+
         public void Death()
         {
             if(isDead) return;
@@ -955,7 +984,7 @@ namespace Moon
         
         void PerformDodge()
         {
-            _inCombo = false;
+            //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
             Vector2 moveInput = _inputHandler.MoveInput;
             _animator.SetFloat(_HashDodgeX, moveInput.x);
@@ -972,5 +1001,114 @@ namespace Moon
             _animator.SetFloat(_HashDodgeX, 0f);
             _animator.SetFloat(_HashDodgeY, 0f);
         }
+
+#region Magnet Actions
+
+        [SerializeField] GameObject _blinkEffectPrefab;
+        [SerializeField] ElectricLine _electricLine;
+
+        public void StartMagnetDash(MagneticObject caster)
+        {
+            _animator.Play(_HashMagnetSkillDash, 0, 0f);
+
+            var targetPos = transform.position;
+            var targetCollider = GetComponent<Collider>();
+            var targetCenterPos = targetCollider.bounds.center;
+            
+            var casterPos = caster.transform.position;
+            var casterCollider = caster.GetComponent<Collider>();
+            var casterCenterPos = casterCollider.bounds.center;
+
+            var casterWidth = casterCollider.bounds.size.x;
+
+            var targetVector = targetPos - casterCenterPos;
+            var targetVectorRemoveY = new Vector3(targetVector.x, 0f, targetVector.z);
+
+            Vector3 casterFrontPos = casterPos + targetVectorRemoveY.normalized * casterWidth * 1.5f;
+
+            //제어를 위함 플레이어 공중에 살짝 붕 뜨는 모션
+            inMagnetSkill = true;
+
+            float distance = Vector3.Distance(targetPos, casterFrontPos);
+            float speed = 30f;
+            float dashDuration =  distance / speed;
+            float hitTiming = Mathf.Clamp(dashDuration - 0.15f, 0, 1);
+            bool isCloseTarget = distance < 3f;
+
+            Sequence sequence = DOTween.Sequence();
+
+            inMagnetSkill = true;
+
+            // Step 1: 살짝 뜨기
+            sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.1f)        
+                .SetEase(Ease.OutCubic)
+                .OnStart(() => {
+                    _electricLine.startPosition = targetCenterPos;
+                    _electricLine.endPosition = casterCenterPos;
+                    _electricLine.gameObject.SetActive(true);
+
+                    Time.timeScale = 0.2f;
+                    if(!isCloseTarget){
+                        StartCoroutine(cameraSettings.AdjustFOV(50f, 80f, 0.2f));
+                        MotionBlurController.Play(0.8f, 0.1f);
+                    } 
+                })
+                .OnComplete(() => {
+                    Time.timeScale = 1f;
+                    _electricLine.gameObject.SetActive(false);
+                })); 
+            sequence.Join(transform.DOLookAt(casterPos, 0.05f, AxisConstraint.Y)
+                    .SetEase(Ease.Linear));
+
+            sequence.AppendInterval(0.1f);
+
+            // Step 2: 대쉬 시작
+            sequence.AppendCallback(()=>{                
+                if(!isCloseTarget)
+                StartCoroutine(cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+                StartCoroutine(MagnetDashCoroutine(casterFrontPos, dashDuration, hitTiming, () => {
+                        MotionBlurController.Play(0, 0.1f);
+                        Time.timeScale = 1f;
+                        inMagnetSkill = false;
+                    }));
+            });
+        }
+
+        IEnumerator MagnetDashCoroutine(Vector3 destination, float duration, float hitTiming, Action onComplete)
+        {
+            float elapsed = 0f;
+            Vector3 startPos = transform.position;
+            CharacterController controller = GetComponent<CharacterController>();
+            
+
+            bool hasAttacked = false;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+
+                Vector3 nextPos = Vector3.Lerp(startPos, destination, t);
+                Vector3 delta = nextPos - transform.position;
+
+                controller.Move(delta);
+
+                if (!hasAttacked && elapsed >= hitTiming)
+                {
+                    hasAttacked = true;
+                    StartNormalAttack();
+                }
+
+                yield return null;
+            }
+
+            // 보정
+            Vector3 finalDelta = destination - transform.position;
+            controller.Move(finalDelta);
+
+            // 종료 처리
+            onComplete?.Invoke();
+        }
+#endregion
     }
 }
