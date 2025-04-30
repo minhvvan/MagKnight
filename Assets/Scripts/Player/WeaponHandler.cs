@@ -1,4 +1,5 @@
 ﻿using System;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
@@ -7,7 +8,8 @@ using Random = UnityEngine.Random;
 
 public class WeaponHandler : MonoBehaviour
 {
-    [SerializeField] private Transform weaponSocket;
+    [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
+    
     [SerializeField] private BaseWeapon _currentWeapon;
     private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;
@@ -61,7 +63,7 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
 
