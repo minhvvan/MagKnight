@@ -72,6 +72,11 @@ public class Attribute
         ChangeAction?.Invoke(CurrentValue);
     }
 
+    public void SetCurrentValue(float value)
+    {
+        CurrentValue = value;
+    }
+    
     public float GetValue()
     {
         return CurrentValue;

@@ -13,11 +13,41 @@ namespace Jun
         public Action<Transform> OnDamaged;
         public Action OnMoveSpeedChanged;
         public Action OnAttackSpeedChanged;
+
+        private float maxAttackSpeed = 2f;
+        private float minAttackSpeed = 0.5f;
+        private float maxMoveSpeed = 2f;
+        private float minMoveSpeed = 0.8f;
+        
         
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
             float returnValue = newValue;
 
+            if (type == AttributeType.MoveSpeed)
+            {
+                if (GetValue(AttributeType.MoveSpeed) + newValue <= minMoveSpeed)
+                {
+                    returnValue = minMoveSpeed - GetValue(AttributeType.MoveSpeed) ;
+                }
+                else if (GetValue(AttributeType.MoveSpeed) + newValue >= maxMoveSpeed)
+                {
+                    returnValue = maxMoveSpeed - GetValue(AttributeType.MoveSpeed);
+                }
+            }
+
+            if (type == AttributeType.AttackSpeed)
+            {
+                if (GetValue(AttributeType.AttackSpeed) + newValue <= minAttackSpeed)
+                {
+                    returnValue = minAttackSpeed - GetValue(AttributeType.AttackSpeed);
+                }
+                else if (GetValue(AttributeType.AttackSpeed) + newValue >= maxAttackSpeed)
+                {
+                    returnValue = maxAttackSpeed - GetValue(AttributeType.AttackSpeed);
+                }
+            }
+            
             if (type == AttributeType.Damage)
             {
                 // 데미지가 음수면 0으로 처리

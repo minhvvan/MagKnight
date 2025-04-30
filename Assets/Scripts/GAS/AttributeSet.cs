@@ -67,11 +67,19 @@ public abstract class AttributeSet
     }
     
     // BaseValue를 수정 (EffectType Instant에서 사용됨)
-    public void SetValue(AttributeType type, float value)
+    protected void SetValue(AttributeType type, float value)
     {
         if (_attributeDictionary.ContainsKey(type))
         {
             _attributeDictionary[type].SetValue(value);
+        }
+    }
+
+    protected void SetCurrentValue(AttributeType type, float value)
+    {
+        if (_attributeDictionary.ContainsKey(type))
+        {
+            _attributeDictionary[type].SetCurrentValue(value);
         }
     }
 
