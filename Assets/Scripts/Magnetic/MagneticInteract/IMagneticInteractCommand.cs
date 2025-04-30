@@ -319,10 +319,10 @@ public class MagnetDashAction : IMagneticInteractCommand
 {
     public override async UniTask Execute(MagneticObject caster, MagneticObject target)
     {
-        target.TryGetComponent(out PlayerController targetPlayerController);
-        if(targetPlayerController == null)  return;            
+        target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController);
+        if(targetPlayerMagnetActionController == null)  return;            
 
-        targetPlayerController.StartMagnetDash(caster);
+        targetPlayerMagnetActionController.StartMagnetDash(caster);
     }
 }
 

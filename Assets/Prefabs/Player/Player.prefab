@@ -1601,37 +1601,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3326796808174471759}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4540555981896026657
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8917879888208041315}
-  m_Layer: 0
-  m_Name: LeftHandAttach
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8917879888208041315
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4540555981896026657}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -0.117, y: -0.017, z: -0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7601716390455327617}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1 &4560203658343101225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,7 +1857,6 @@ Transform:
   - {fileID: 5966728337568436698}
   - {fileID: 7489210524092849534}
   - {fileID: 5359745391886362356}
-  - {fileID: 8917879888208041315}
   m_Father: {fileID: 4863572905281252261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5125105996982044892
@@ -2873,6 +2841,7 @@ GameObject:
   - component: {fileID: 7618285741710296628}
   - component: {fileID: 1895797284832264210}
   - component: {fileID: 3871821562387904727}
+  - component: {fileID: 701427713464704324}
   - component: {fileID: 6796001127801567281}
   - component: {fileID: 1744086792932031990}
   - component: {fileID: 8697986797843376553}
@@ -2967,7 +2936,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSocket: {fileID: 6575478012002503276}
-  weaponSocketLeftHand: {fileID: 8917879888208041315}
   _currentWeapon: {fileID: 0}
   currentMagCore: {fileID: 0}
 --- !u!114 &3871821562387904727
@@ -2985,7 +2953,6 @@ MonoBehaviour:
   characterController: {fileID: 0}
   hudPrefab: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
     type: 3}
-  maxForwardSpeed: 8
   gravity: 20
   jumpSpeed: 10
   minTurnSpeed: 400
@@ -3001,9 +2968,18 @@ MonoBehaviour:
       Value: {fileID: 9100000, guid: 7d6522474709f1d48824f1f39f3f89d7, type: 2}
     - Key: 1
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
-    - Key: 2
-      Value: {fileID: 9100000, guid: 0fa7b19c9c9aa164aa68bcd8e2611daa, type: 2}
-  _blinkEffectPrefab: {fileID: 0}
+--- !u!114 &701427713464704324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999629288266388604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2910d6d590af462e8dd0a1ac94b749a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _electricLine: {fileID: 2301916739899957595}
 --- !u!114 &6796001127801567281
 MonoBehaviour:
