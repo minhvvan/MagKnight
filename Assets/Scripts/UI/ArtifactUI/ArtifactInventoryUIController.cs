@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -19,7 +20,8 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     
     private ArtifactInventory inventory;
     private MagneticController magneticController;
-
+    private PlayerDetailUIController playerDetailUIController;
+    
     public void ShowUI(ArtifactDataSO artifactDataSO = null)
     {
         SetSlotColor(magneticController.GetMagneticType());
@@ -97,16 +99,19 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         
         inventory = FindObjectOfType<ArtifactInventory>();
         magneticController = FindObjectOfType<MagneticController>();
+        playerDetailUIController = UIManager.Instance.popupUIController.playerDetailUIController;
         HideButton.onClick.AddListener(HideUI);
     }
 
-    void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
+    async void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
     {
-        inventory.SetLeftArtifact(index, artifact).Forget();
+        await inventory.SetLeftArtifact(index, artifact);
+        playerDetailUIController.UpdateUI();
     }
     
-    void UpdateArtifact_Right(int index, ArtifactDataSO artifact)
+    async void UpdateArtifact_Right(int index, ArtifactDataSO artifact)
     {
-        inventory.SetRightArtifact(index, artifact).Forget();
+        await inventory.SetRightArtifact(index, artifact);
+        playerDetailUIController.UpdateUI();
     }
 }
