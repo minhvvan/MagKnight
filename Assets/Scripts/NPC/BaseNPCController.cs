@@ -1,5 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Cinemachine;
+using Moon;
 using UnityEngine;
 
 public class BaseNPCController : MonoBehaviour, IInteractable
@@ -16,7 +17,7 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     public float rightHandWeight = 1f;
 
     public float detectDistance = 3.0f;
-    bool _isInteract = false;
+    protected bool _isInteract = false;
 
     float _currentLookWeight = 0.0f;
     float _targetLookWeight = 0.0f;
@@ -25,13 +26,15 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     float _targetRightHandWeight = 0.0f;
 
     Vector3 _lastTargetPosition = Vector3.zero;
+    
+    protected IInteractor _currentInteractor;
 
-    void Start()
+    protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         IKWeightHandler();
     }
@@ -53,7 +56,6 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         if (!isPlayerInRange)
         {
             player = null;
-            InteractExit();
         }
 
         if (player != null)
@@ -78,7 +80,6 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     {
         if(player == null && _lastTargetPosition == Vector3.zero) return;
         
-
         animator.SetLookAtWeight(_currentLookWeight);
         animator.SetIKPositionWeight(AvatarIKGoal.RightHand, _currentRightHandWeight);
 
@@ -91,21 +92,72 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         animator.SetIKPosition(AvatarIKGoal.RightHand, _lastTargetPosition + Vector3.up * 0.8f);
     }
 
-    public void Interact(IInteractor interactor)
+    public virtual void Interact(IInteractor interactor)
     {
-        InteractEnter();
+        InteractEnter(interactor);
         InteractionEvent.OnDialogueEnd += InteractExit;
     }
 
-    public void InteractEnter()
+    protected virtual void InteractEnter(IInteractor interactor)
     {
+        if(interactor is not PlayerController playerCharacter) return;
+
+        _currentInteractor = interactor;
         _isInteract = true;
+
+        StartDialogue(playerCharacter, 0);
+    }
+    
+    protected virtual void InteractExit()
+    {
+        if(_currentInteractor is not PlayerController playerCharacter) return;
+        
+        _isInteract = false;
+        EndDialogue(playerCharacter.cameraSettings.interactionCamera);
+        InteractionEvent.OnDialogueEnd -= InteractExit;
     }
 
-    public void InteractExit()
+    protected void StartDialogue(PlayerController playerCharacter, int dialogueID)
     {
-        _isInteract = false;
-        InteractionEvent.OnDialogueEnd -= InteractExit;
+        Transform playerHead = playerCharacter.cameraSettings.lookAt;
+        FocusOnTarget(playerCharacter.cameraSettings.interactionCamera,  GetHeadTransform(), playerHead);
+
+        //NPC가 대화가 가능할 경우 대화창을 열고 대화를 진행
+        UIManager.Instance.inGameUIController.HideInGameUI();
+        UIManager.Instance.inGameUIController.ShowDialogUI(npcSO.dialogueData[dialogueID]);
+
+        InteractionEvent.OnDialogueEnd += InteractExit;
+        InteractionEvent.DialogueStart();
+    }
+    
+    protected void EndDialogue(CinemachineVirtualCamera interactionCamera)
+    {
+        interactionCamera.Priority = 0;
+        UIManager.Instance.inGameUIController.ShowInGameUI();
+    }
+    
+    protected void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
+    {
+        if(lookFrom == null)
+        {
+            Vector3 offset = target.forward * 1.5f;
+            interactionCamera.transform.position = target.position + offset;
+        }
+        else
+        {
+            Vector3 offset = lookFrom.forward * 0.5f;
+            interactionCamera.transform.position = lookFrom.position + offset;
+        }
+
+        interactionCamera.LookAt = target;
+        interactionCamera.Priority = 20;
+
+        var composer = interactionCamera.GetCinemachineComponent<CinemachineComposer>();
+        if (composer != null)
+        {
+            composer.m_ScreenX = 0.2f;
+            composer.m_ScreenY = 0.55f;
+        }
     }
 
     public void Select()
@@ -123,7 +175,7 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         return gameObject;
     }
 
-    public Transform GetHeadTransform()
+    protected Transform GetHeadTransform()
     {
         return headTransform ? headTransform : transform;
     }

@@ -19,7 +19,7 @@ public class DialogueUIController : MonoBehaviour
     Coroutine _typingCoroutine;
     public bool IsTyping => _typingCoroutine != null;
 
-    NPCSO _currentNPCSO = null;
+    DialogueDataSO _currentDialogueData = null;
 
     int _currentDialogueIndex = 0;
     public int CurrentDialogueIndex => _currentDialogueIndex;
@@ -31,7 +31,7 @@ public class DialogueUIController : MonoBehaviour
 
     void OnDisable()
     {
-        _currentNPCSO = null;
+        _currentDialogueData = null;
         InteractionEvent.OnDialogueEnd -= HideDialogue;
     }
 
@@ -111,19 +111,19 @@ public class DialogueUIController : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void ShowDialogue(NPCSO npcSO)
+    public void ShowDialogue(DialogueDataSO dialogueData)
     {
-        _currentNPCSO = npcSO;
+        _currentDialogueData = dialogueData;
         _currentDialogueIndex = 0;
         gameObject.SetActive(true);
-        SetName(_currentNPCSO.npcName);
-        if (_currentNPCSO.dialogueData.lines.Count == 0)
+        SetName(_currentDialogueData.npcName);
+        if (_currentDialogueData.lines.Count == 0)
         {
             SetText("");            
         }
         else
         {
-            SetText(_currentNPCSO.dialogueData.lines[0].text);
+            SetText(_currentDialogueData.lines[0].text);
         }
         
         _dialogueText.text = string.Empty;
@@ -136,10 +136,10 @@ public class DialogueUIController : MonoBehaviour
             _nextImage.gameObject.SetActive(false);
         }
 
-        if (_currentDialogueIndex < _currentNPCSO.dialogueData.lines.Count - 1)
+        if (_currentDialogueIndex < _currentDialogueData.lines.Count - 1)
         {
             _currentDialogueIndex++;
-            SetText(_currentNPCSO.dialogueData.lines[_currentDialogueIndex].text);
+            SetText(_currentDialogueData.lines[_currentDialogueIndex].text);
         }
         else
         {

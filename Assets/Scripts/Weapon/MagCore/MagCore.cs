@@ -110,7 +110,6 @@ public class MagCore: MonoBehaviour, IInteractable
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
-            //TODO: 무기교체 로직 추가 수행
             transform.SetParent(player.transform);
             gameObject.SetActive(false);
             
