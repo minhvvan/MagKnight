@@ -55,7 +55,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         
         // Step 1: 살짝 뜨기
-        sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.1f)        
+        sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.05f)        
             .SetEase(Ease.OutCubic)
             .OnStart(() => {
                 _electricLine.startPosition = targetCenterPos;
