@@ -2841,6 +2841,7 @@ GameObject:
   - component: {fileID: 7618285741710296628}
   - component: {fileID: 1895797284832264210}
   - component: {fileID: 3871821562387904727}
+  - component: {fileID: 701427713464704324}
   - component: {fileID: 6796001127801567281}
   - component: {fileID: 1744086792932031990}
   - component: {fileID: 8697986797843376553}
@@ -2952,7 +2953,6 @@ MonoBehaviour:
   characterController: {fileID: 0}
   hudPrefab: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
     type: 3}
-  maxForwardSpeed: 8
   gravity: 20
   jumpSpeed: 10
   minTurnSpeed: 400
@@ -2968,7 +2968,18 @@ MonoBehaviour:
       Value: {fileID: 9100000, guid: 7d6522474709f1d48824f1f39f3f89d7, type: 2}
     - Key: 1
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
-  _blinkEffectPrefab: {fileID: 0}
+--- !u!114 &701427713464704324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6999629288266388604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2910d6d590af462e8dd0a1ac94b749a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   _electricLine: {fileID: 2301916739899957595}
 --- !u!114 &6796001127801567281
 MonoBehaviour:
