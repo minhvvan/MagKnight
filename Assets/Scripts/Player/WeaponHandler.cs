@@ -10,8 +10,6 @@ public class WeaponHandler : MonoBehaviour
 {
     [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
     
-    [SerializeField] private Transform weaponSocket;
-    [SerializeField] private Transform weaponSocketLeftHand;
     [SerializeField] private BaseWeapon _currentWeapon;
     private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;

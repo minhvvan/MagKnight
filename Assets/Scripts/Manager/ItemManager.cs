@@ -170,7 +170,7 @@ public class ItemManager : Singleton<ItemManager>
         {
             case ItemCategory.Artifact:
                 if (_artifactPrefab == null) break;
-                if(isRandom) randomIndex = Random.Range(0, artifactList[rarity].Count-1);
+                if(isRandom) randomIndex = Random.Range(0, artifactList[rarity].Count);
                 
                 ArtifactDataSO artifactData;
                 
@@ -213,7 +213,7 @@ public class ItemManager : Singleton<ItemManager>
             
             case ItemCategory.MagCore:
                 if (_magCorePrefab == null) break;
-                if(isRandom) randomIndex = Random.Range(0, magCoreList[rarity].Count-1);
+                if(isRandom) randomIndex = Random.Range(0, magCoreList[rarity].Count);
                 
                 MagCoreSO magCoreData;
                 
@@ -244,7 +244,7 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
-                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                // if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
                 var magCoreObj = Instantiate(_magCorePrefab, position, rotation, parent);
                 var magCore = magCoreObj.GetComponent<MagCore>();
                 magCore.SetMagCoreData(magCoreData);
@@ -256,7 +256,7 @@ public class ItemManager : Singleton<ItemManager>
             
             case ItemCategory.HealthPack:
                 if (_healthPackPrefab == null) break;
-                if(isRandom) randomIndex = Random.Range(0, healthPackList[rarity].Count-1);
+                if(isRandom) randomIndex = Random.Range(0, healthPackList[rarity].Count);
                 
                 HealthPackSO healthPackData;
                 

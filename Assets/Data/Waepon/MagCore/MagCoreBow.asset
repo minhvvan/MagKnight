@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: MagCoreBow
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  itemName: 
+  itemName: Bow
   description: 
   scrapValue: 0
   maxUpgradeLevel: 0
-  weaponType: 0
+  weaponType: 2
   partsType: 0
   descriptionPassiveEffects: 
   passiveEffects:

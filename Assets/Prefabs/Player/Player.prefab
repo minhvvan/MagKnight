@@ -2967,6 +2967,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe7edc1b445d4a51a97bd8bf4e5c8793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weaponSockets:
+    _serializedList:
+    - Key: 1
+      Value: {fileID: 6575478012002503276}
+    - Key: 2
+      Value: {fileID: 5320577145862287676}
   weaponSocket: {fileID: 6575478012002503276}
   weaponSocketLeftHand: {fileID: 5320577145862287676}
   _currentWeapon: {fileID: 0}
@@ -2983,7 +2989,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb2efeeb91ad04e49b57518cd79b9f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterController: {fileID: 0}
   hudPrefab: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
     type: 3}
   gravity: 20
@@ -2992,9 +2997,6 @@ MonoBehaviour:
   maxTurnSpeed: 1200
   idleTimeout: 5
   canAttack: 0
-  cameraSettings: {fileID: 0}
-  isDead: 0
-  isInvisible: 0
   animatorControllers:
     _serializedList:
     - Key: 0
@@ -3003,6 +3005,9 @@ MonoBehaviour:
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
     - Key: 2
       Value: {fileID: 9100000, guid: 0fa7b19c9c9aa164aa68bcd8e2611daa, type: 2}
+  cameraSettings: {fileID: 0}
+  isDead: 0
+  isInvisible: 0
 --- !u!114 &701427713464704324
 MonoBehaviour:
   m_ObjectHideFlags: 0
