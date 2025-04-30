@@ -77,13 +77,18 @@ public class MagneticController : MagneticObject
     
     private void FixedUpdate()
     {
-        //실시간 자기력 범위 내 대상 탐색.
-        ScanNearByMagneticTarget();
+        
         
         //자석 능력 길게 키 입력 시
         if (_isPressMagnetic)
         {
+            //실시간 자기력 범위 내 대상 탐색.
+            ScanNearByMagneticTarget();
             FocusMagneticTarget();
+        }
+        else
+        {
+            AllUnCountVisor();
         }
         
         //자기력 붕괴 스킬 활성화로 주변 탐색
@@ -95,6 +100,12 @@ public class MagneticController : MagneticObject
             //반격
             if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
         }
+    }
+
+    private void AllUnCountVisor()
+    {
+        if (_magneticUIController == null) return;
+        _magneticUIController.AllUnCountTarget();
     }
     
     public override void InitializeMagnetic()
