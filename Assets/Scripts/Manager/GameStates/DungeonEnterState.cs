@@ -10,6 +10,7 @@ public class DungeonEnterState: IGameState
         currentRunData.isDungeonEnter = true;
         await GameManager.Instance.SaveData(Constants.CurrentRun);
         
+        GameManager.Instance.Player.InitializeByCurrentRunData(currentRunData);
         GameManager.Instance.ChangeGameState(GameState.RoomEnter);
     }
 
