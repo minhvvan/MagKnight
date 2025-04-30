@@ -24,7 +24,7 @@ MonoBehaviour:
       Value: 5
     MoveSpeed:
       Key: 6
-      Value: 1
+      Value: 5
     MaxResistance:
       Key: 9
       Value: 20

@@ -47,6 +47,8 @@ public class EnemyBlackboard : MonoBehaviour
     
     public Transform muzzleTransform;
     public Renderer enemyRenderer;
+    [HideInInspector] public Texture baseColorTexture;
+    [HideInInspector] public Texture2D onHitTexture;
     public Transform headTransform;
 
 
@@ -75,6 +77,11 @@ public class EnemyBlackboard : MonoBehaviour
         
         targetLayer = LayerMask.GetMask("Player");
 
+        baseColorTexture = enemyRenderer.material.GetTexture("_BaseColor");
+        onHitTexture = new Texture2D(1, 1);
+        onHitTexture.SetPixel(1, 1, Color.white);
+        onHitTexture.Apply();
+        
         switch (aiType)
         {
             case EnemyAIType.MeleeNormal:
