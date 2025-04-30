@@ -7,6 +7,8 @@ using UnityEngine.Serialization;
 public class CurrentRunData : ISaveData
 {
     public SaveDataType DataType => SaveDataType.Temporary;
+
+    public bool isDungeonEnter = false;
     
     // 현재 게임 실행 정보
     public int currentFloor = 0;

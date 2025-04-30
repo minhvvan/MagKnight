@@ -18,9 +18,15 @@ public class InitGameState: IGameState
 
         if (_currentRunData == null)
         {
+            //currentRunData 생성
+            GameManager.Instance.SetCurrentRunData();
+            _currentRunData = GameManager.Instance.CurrentRunData;
+        }
+
+        if (!_currentRunData.isDungeonEnter)
+        {
             //회차 정보 없음 => BaseCamp로
             SceneController.TransitionToScene(Constants.BaseCamp, true, TransitionToBaseCampCallback);
-            GameManager.Instance.ChangeGameState(GameState.BaseCamp);
         }
         else
         {
@@ -37,11 +43,8 @@ public class InitGameState: IGameState
 
     private IEnumerator TransitionToBaseCampCallback()
     {
-        var getPlayerStatTask = GameManager.Instance.GetPlayerStat();
-        yield return new WaitUntil(() => getPlayerStatTask.Status.IsCompleted());
-    
-        PlayerStat playerStat = getPlayerStatTask.GetAwaiter().GetResult();
-        GameManager.Instance.Player.InitStat(playerStat);
+        GameManager.Instance.ChangeGameState(GameState.BaseCamp);
+        yield break;
     }
 
     private IEnumerator MoveToLastRoom()
