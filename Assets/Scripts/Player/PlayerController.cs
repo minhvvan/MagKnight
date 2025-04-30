@@ -934,8 +934,6 @@ namespace Moon
 
         public void Damaged(Transform sourceTransform)
         {
-            Debug.Log(_isKnockDown);
-            
             if (isDead || _isKnockDown) return;
             
             
@@ -948,8 +946,6 @@ namespace Moon
                 _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
                 _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
                 _animator.SetFloat(_HashImpulse, _abilitySystem.GetValue(AttributeType.Impulse));
-                
-                Debug.Log(_abilitySystem.GetValue(AttributeType.Impulse));
                 
                 _animator.SetTrigger(_HashHurt);
             }
