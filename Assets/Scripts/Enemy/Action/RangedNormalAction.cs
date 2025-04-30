@@ -28,20 +28,20 @@ public class RangedNormalAction : IEnemyAction
 
     public void OnUpdate()
     {
-        if (!_shot && _enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("ActionRunning"))
+        // if (!_shot && _enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("ActionRunning"))
+        // {
+        //
+        // }
+        if (!_shot && _startupDuration > _blackboard.startupTime)
         {
+            _enemy.Anim.SetTrigger("ActionRun");
             _shot = true;
             _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
             ProjectileLaunchData launchData = new ProjectileLaunchData(_blackboard.target.GetComponent<Collider>());
             Projectile projectile = ProjectileFactory.Create(_blackboard.projectilePrefab, _blackboard.muzzleTransform.position, Quaternion.identity, launchData);
             projectile.OnHit += _enemy.GiveDamageEffect;
         }
-        
         _startupDuration += Time.deltaTime;
-        if (!_shot && _startupDuration > _blackboard.startupTime)
-        {
-            _enemy.Anim.SetTrigger("ActionRun");
-        }
     }
 
     public void OnExit()
