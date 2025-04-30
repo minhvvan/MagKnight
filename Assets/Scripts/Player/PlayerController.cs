@@ -19,6 +19,15 @@ namespace Moon
     [RequireComponent(typeof(Animator))]
     public class PlayerController : MonoBehaviour, IInteractor
     {
+        [SerializeField] private GameObject hudPrefab;
+        [SerializeField] public float gravity = 20f;               
+        [SerializeField] public float jumpSpeed = 10f;             
+        [SerializeField] public float minTurnSpeed = 400f;         
+        [SerializeField] public float maxTurnSpeed = 1200f;        
+        [SerializeField] public float idleTimeout = 5f;            
+        [SerializeField] public bool canAttack;
+        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
+        
         #region Conponent
         private CharacterController _characterController;
         private Animator _animator;
@@ -31,22 +40,18 @@ namespace Moon
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
         #endregion
-        
-        [SerializeField] private GameObject hudPrefab;
-        
-        [SerializeField] public float gravity = 20f;               
-        [SerializeField] public float jumpSpeed = 10f;             
-        [SerializeField] public float minTurnSpeed = 400f;         
-        [SerializeField] public float maxTurnSpeed = 1200f;        
-        [SerializeField] public float idleTimeout = 5f;            
-        [SerializeField] public bool canAttack;
-        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
+            
         #region Property
         public WeaponHandler WeaponHandler => _weaponHandler;
         public AbilitySystem AbilitySystem => _abilitySystem;
         public CameraSettings cameraSettings;
         public InputHandler InputHandler => _inputHandler;
         public bool IsInvisible => isInvisible || isDead;
+        
+        protected bool IsMoveInput
+        {
+            get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
+        }
         #endregion
         
         #region Variable
@@ -55,6 +60,7 @@ namespace Moon
         
         private bool _lockOnLastFrame = false;
         private bool _isInputUpdate = true;
+        private bool _isDodging = false;
         #endregion
 
         #region Animation
@@ -79,7 +85,7 @@ namespace Moon
         protected bool _inCombo;                      // Whether Ellen is currently in the middle of her melee combo.        
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
-        private bool _isDodging = false;
+        #endregion
 
         [NonSerialized] public bool inMagnetSkill = false;
 
@@ -95,10 +101,6 @@ namespace Moon
         const float k_MinEnemyDotCoeff = 0.2f;
         const float k_maxForwardSpeed = 8f;
         
-        protected bool IsMoveInput
-        {
-            get { return !Mathf.Approximately(_inputHandler.MoveInput.sqrMagnitude, 0f); }
-        }
 
         void UpdateMoveParameters()
         {
@@ -169,8 +171,7 @@ namespace Moon
         {
             _abilitySystem.InitializeFromPlayerStat(stat);
             
-            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
-            
+            _maxForwardSpeed = k_maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
             if (_abilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
             {
                 attributeSet.OnDead += Death;
