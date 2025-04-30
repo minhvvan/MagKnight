@@ -6,6 +6,7 @@ using UnityEngine;
 public class WeaponHandler : MonoBehaviour
 {
     [SerializeField] private Transform weaponSocket;
+    [SerializeField] private Transform weaponSocketLeftHand;
     [SerializeField] private BaseWeapon _currentWeapon;
     private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;
@@ -46,7 +47,10 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        if(weaponType == WeaponType.SwordKatana)
+            _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        if(weaponType == WeaponType.Bow)
+            _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocketLeftHand).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
 
