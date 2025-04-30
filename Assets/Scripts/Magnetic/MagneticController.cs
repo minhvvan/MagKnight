@@ -151,6 +151,15 @@ public class MagneticController : MagneticObject
         _isShortRelease = false;
     }
     
+    void CommonRelease()
+    {
+        _isPressMagnetic = false;
+        Time.timeScale = 1f;
+        
+        StartCoroutine(_magneticUIController.HideFocusArea());
+        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+    }
+
     //Q 짧게 누르고 뗐을때
     public async UniTask OnShortRelease()
     {
@@ -158,11 +167,7 @@ public class MagneticController : MagneticObject
 
         _isShortRelease = true;
         //짧게 입력시 할 로직
-        _isPressMagnetic = false;
-        Time.timeScale = 1f;
-        
-        StartCoroutine(_magneticUIController.HideFocusArea());
-        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        CommonRelease();
         
         if (!_isActivatedMagnetic) if(!_onGravityBreak && !_onCounterPress && !_onSearchNearMagnetic) await OnCounterPress();
         
@@ -177,11 +182,7 @@ public class MagneticController : MagneticObject
 
         _isLongRelease = true;
         //길게 입력 시 할 로직
-        _isPressMagnetic = false;
-        Time.timeScale = 1f;
-        
-        StartCoroutine(_magneticUIController.HideFocusArea());
-        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        CommonRelease();
         
         if (targetMagneticObject != null)
         {
