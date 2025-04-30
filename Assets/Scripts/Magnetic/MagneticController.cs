@@ -145,7 +145,7 @@ public class MagneticController : MagneticObject
         
         StartCoroutine(_magneticUIController.ShowFocusArea());
         StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
-        //Time.timeScale = 0.15f;
+        Time.timeScale = 0.2f;
         
         //끝
         _isShortRelease = false;
@@ -159,7 +159,7 @@ public class MagneticController : MagneticObject
         _isShortRelease = true;
         //짧게 입력시 할 로직
         _isPressMagnetic = false;
-        //Time.timeScale = 1f;
+        Time.timeScale = 1f;
         
         StartCoroutine(_magneticUIController.HideFocusArea());
         StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
@@ -178,7 +178,7 @@ public class MagneticController : MagneticObject
         _isLongRelease = true;
         //길게 입력 시 할 로직
         _isPressMagnetic = false;
-        //Time.timeScale = 1f;
+        Time.timeScale = 1f;
         
         StartCoroutine(_magneticUIController.HideFocusArea());
         StartCoroutine(_magneticUIController.HideMagneticTypeVisual());

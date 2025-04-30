@@ -444,7 +444,7 @@ namespace Moon
             while (elapsedTime < _magneticInputDuration)
             {
                 if(!_magnetic) yield break;
-                elapsedTime += Time.deltaTime;
+                elapsedTime += Time.unscaledDeltaTime;
                 yield return null;
             }
 
