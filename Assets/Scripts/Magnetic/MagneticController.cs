@@ -73,15 +73,7 @@ public class MagneticController : MagneticObject
     private bool _onCounterPress;
     private float _counterPressTime;
     private float _counterPressRange;
-    private float _counterPressPower;
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            _characterController.Move(Vector3.forward * 15f * Time.deltaTime);
-        }
-    }
+    private float _counterPressPower;    
     
     private void FixedUpdate()
     {

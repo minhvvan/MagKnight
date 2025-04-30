@@ -27,9 +27,10 @@ public class MagCore: MonoBehaviour, IInteractable
     public ItemRarity rarity;
     public Sprite icon;
     public string itemName;
+    public int currentUpgradeValue;
     public int scrapValue;
     
-    private MagCoreSO magCoreSO;
+    private MagCoreSO _magCoreSO;
     [SerializeField] private WeaponType weaponType;
     [SerializeField] private PartsType partsType;
     
@@ -44,7 +45,6 @@ public class MagCore: MonoBehaviour, IInteractable
         _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
-
         category = ItemCategory.MagCore;
     }
 
@@ -57,20 +57,52 @@ public class MagCore: MonoBehaviour, IInteractable
             icon = newMagCore.icon;
             gameObject.name = itemName = newMagCore.itemName;
             scrapValue = newMagCore.scrapValue;
+            currentUpgradeValue = newMagCore.currentUpgradeValue;
             return;
         }
+        
         if (magCoreData == null) return;
-        magCoreSO = magCoreData;
-        weaponType = magCoreSO.weaponType;
-        partsType = magCoreSO.partsType;
-        icon = magCoreSO.icon;
-        gameObject.name = itemName = magCoreSO.itemName;
-        scrapValue = magCoreSO.scrapValue;
+        _magCoreSO = magCoreData;
+        weaponType = _magCoreSO.weaponType;
+        partsType = _magCoreSO.partsType;
+        icon = _magCoreSO.icon;
+        gameObject.name = itemName = _magCoreSO.itemName;
+        scrapValue = _magCoreSO.scrapValue;
     }
 
     public void SetItemClass((ItemCategory, ItemRarity) itemClass)
     {
         (category, rarity) = itemClass;
+    }
+    
+    public void SetPartsEffect(AbilitySystem abilitySystem)
+    {
+        if (abilitySystem == null) return;
+        _magCoreSO.ApplyTo(abilitySystem, currentUpgradeValue);
+    }
+
+    public void RemovePartsEffect(AbilitySystem abilitySystem)
+    {
+        if (abilitySystem == null) return;
+        _magCoreSO.RemoveTo(abilitySystem, currentUpgradeValue);
+    }
+
+    public MagCoreSO GetMagCoreSO()
+    {
+        return _magCoreSO;
+    }
+
+    public void Upgrade(AbilitySystem abilitySystem)
+    {
+        if (currentUpgradeValue == _magCoreSO.maxUpgradeLevel)
+        {
+            Debug.Log("Upgrade Part Max Level");
+            return;
+        }
+        RemovePartsEffect(abilitySystem);
+        currentUpgradeValue += 1;
+        //Debug.Log("LEVEL: " + currentUpgradeValue);
+        SetPartsEffect(abilitySystem);
     }
 
     public void Interact(IInteractor interactor)
@@ -80,7 +112,13 @@ public class MagCore: MonoBehaviour, IInteractable
             //TODO: 무기교체 로직 추가 수행
             transform.SetParent(player.transform);
             gameObject.SetActive(false);
+            
             player.SetCurrentWeapon(weaponType, this);
+            var abilitySystem = player.GetComponent<AbilitySystem>();
+            SetPartsEffect(abilitySystem);
+            GameManager.Instance.CurrentRunData.currentMagCore = this;
+            GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
+            
             onChooseItem?.Invoke();
         }
     }

@@ -8,6 +8,7 @@ using DG.Tweening;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
+using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,8 +26,9 @@ namespace Moon
         private InteractionController _interactionController;
         private WeaponHandler _weaponHandler;
         private AbilitySystem _abilitySystem;
+        private float _maxForwardSpeed;
+        Collider _collider;
         private LockOnSystem _lockOnSystem;
-        private Collider _collider;
         #endregion
         
         [SerializeField] private GameObject hudPrefab;
@@ -55,8 +57,6 @@ namespace Moon
         private bool _isInputUpdate = true;
         #endregion
 
-        #region Animation
-        [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
 
         protected AnimatorStateInfo _currentStateInfo;    // Information about the base layer of the animator cached.
         protected AnimatorStateInfo _nextStateInfo;
@@ -80,8 +80,9 @@ namespace Moon
         protected bool _inCombo;                      // Whether Ellen is currently in the middle of her melee combo.        
         protected float _idleTimer;                   // Used to count up to Ellen considering a random idle.
 
-        private bool _dodgeLastFrame = false;
         private bool _isDodging = false;
+
+        public bool inMagnetSkill = false;
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -117,7 +118,12 @@ namespace Moon
         readonly int _HashSpeed   = Animator.StringToHash("Speed");
         readonly int _HashBigHurt = Animator.StringToHash("BigHurt");
         readonly int _HashDodge = Animator.StringToHash("Dodge");
-
+        readonly int _HashDodgeX = Animator.StringToHash("DodgeX");
+        readonly int _HashDodgeY = Animator.StringToHash("DodgeY");
+        readonly int _HashMoveSpeed = Animator.StringToHash("MoveSpeed");
+        readonly int _HashAttackSpeed = Animator.StringToHash("AttackSpeed");
+        readonly int _HashImpulse = Animator.StringToHash("Impulse");
+        
         // States
         readonly int _HashLocomotion = Animator.StringToHash("Locomotion");
         readonly int _HashLockOnWalk = Animator.StringToHash("LockOnWalk");
@@ -183,7 +189,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            _characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -200,6 +206,8 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+
+            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
         }
         
         //명시적 초기화
@@ -218,7 +226,9 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
-
+                attributeSet.OnMoveSpeedChanged += MoveSpeedChanged;
+                attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
+                
                 // OnHitPassive
                 var ChargeSkillGaugeHit = new PassiveEffectData
                 {
@@ -277,43 +287,12 @@ namespace Moon
             UpdateCameraHandler();
 
             EquipMeleeWeapon(IsInAttackComboState());
-            
-            // Dodge 입력 처리
-            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
 
-            if (dodgeNow && !_dodgeLastFrame && !_isDodging)  // ★ 추가: _isDodging 체크
-            {
-                PerformDodge();
-                _dodgeLastFrame = true;
-                return;
-            }
+            TriggerDodge();
 
-            _dodgeLastFrame = dodgeNow;
+            TriggerAttack();
 
-            // 4) 매 프레임 마지막에 상태 저장
-            _dodgeLastFrame = dodgeNow;
-
-            _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
-            _animator.ResetTrigger(_HashMeleeAttack);
-
-            if (_inputHandler.Attack1 && canAttack)
-            {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 0);
-            }
-
-
-            if (_inputHandler.Attack2 && canAttack)
-            {
-                _animator.SetTrigger(_HashMeleeAttack);
-                _animator.SetInteger(_HashAttackType, 1);
-            }
-
-            if (_inputHandler.InteractInput)
-            {
-                Interact();
-                _inputHandler.InteractInput = false;
-            }
+            TriggerInteract();
 
             //임시지정키 G. 아이템 분해
             if (Input.GetKeyDown(KeyCode.G))
@@ -321,14 +300,13 @@ namespace Moon
                 Dismentle();
             }
 
-            if (_inputHandler.SkillInput)
+            //임의로 무기 강화 강제로 올리기.
+            if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                Debug.Log("SKill");
-                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
-                {
-                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
-                }
+                UpgradeParts();
             }
+
+            TriggerSkill();
 
             UpdateMoveParameters();
 
@@ -348,16 +326,63 @@ namespace Moon
 
             TimeoutToIdle();
         }
-        
+
+        private void TriggerDodge()
+        {
+            bool dodgeNow = _inputHandler.DodgeInput && _isGrounded;
+
+            if (dodgeNow)
+            {
+                PerformDodge();
+            }
+        }
+
+        private void TriggerAttack()
+        {
+            _animator.SetFloat(_HashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
+            _animator.ResetTrigger(_HashMeleeAttack);
+
+            if (_inputHandler.Attack1 && canAttack)
+            {
+                _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 0);
+            }
+
+
+            if (_inputHandler.Attack2 && canAttack)
+            {
+                _animator.SetTrigger(_HashMeleeAttack);
+                _animator.SetInteger(_HashAttackType, 1);
+            }
+        }
+
+        void TriggerInteract()
+        {
+            if (_inputHandler.InteractInput)
+            {
+                Interact();
+            }
+        }
+
+        void TriggerSkill()
+        {
+            if (_inputHandler.SkillInput)
+            {
+                if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
+                {
+                    gameObject.tag = "SuperArmor";
+                    _weaponHandler.ActivateSkill();
+                    _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
+                }
+            }
+        }
+
         void UpdateLockOn()
         {
-            bool lockOnNow = _inputHandler.LockOnInput;
-            
-            if (lockOnNow && !_lockOnLastFrame)
+            if (_inputHandler.LockOnInput)
             {
                 _lockOnSystem.ToggleLockOn();
             }
-            _lockOnLastFrame = lockOnNow;
 
             if (_lockOnSystem.IsLockOn)
             {
@@ -465,7 +490,7 @@ namespace Moon
                 moveInput.Normalize();
 
             // Calculate the speed intended by input.
-            _desiredForwardSpeed = moveInput.magnitude *  (_lockOnSystem.IsLockOn ?  maxForwardSpeed / 2 : maxForwardSpeed);
+            _desiredForwardSpeed = moveInput.magnitude *  (_lockOnSystem.IsLockOn ?  _maxForwardSpeed / 2 : _maxForwardSpeed);
 
             // Determine change to speed based on whether there is currently any move input.
             float acceleration = IsMoveInput ? k_GroundAcceleration : k_GroundDeceleration;
@@ -491,7 +516,7 @@ namespace Moon
                 //땅에 붙도록
                 _verticalSpeed = -gravity * k_StickingGravityProportion;
                 
-                if (_inputHandler.JumpInput && _readyToJump && !_inCombo)
+                if (_inputHandler.JumpInput && _readyToJump && !_inCombo && !_isDodging)
                 {                    
                     _verticalSpeed = jumpSpeed;
                     _isGrounded = false;
@@ -582,7 +607,7 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = _characterController.isGrounded;
+            _isGrounded = characterController.isGrounded;
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(_HashAirborneVerticalSpeed, _verticalSpeed);
@@ -764,8 +789,12 @@ namespace Moon
                 return;
 
             Vector3 movement = Vector3.zero;
-
-            if (_isGrounded)
+  
+            if(_isDodging)
+            {
+                movement = _animator.deltaPosition;
+            }
+            else if (_isGrounded)
             {
                 // 1) 콤보 중엔 항상 루트 모션만 적용
                 if (_inCombo)
@@ -818,15 +847,20 @@ namespace Moon
                 movement = transform.forward * (_forwardSpeed * Time.deltaTime);
             }
 
-            // 5) 회전 보정: 애니메이터 deltaRotation 적용
-            _characterController.transform.rotation *= _animator.deltaRotation;
 
-            // 6) 중력/점프 속도 추가
-            movement += Vector3.up * _verticalSpeed * Time.deltaTime;
-
-
-            // 7) 캐릭터 컨트롤러로 최종 이동
-            _characterController.Move(movement);
+            if(inMagnetSkill)
+            {
+                //마그넷 컨트롤러에서 제어
+            }
+            else
+            {
+                // 5) 회전 보정: 애니메이터 deltaRotation 적용
+                characterController.transform.rotation *= _animator.deltaRotation;
+                // 6) 중력/점프 속도 추가
+                movement += Vector3.up * _verticalSpeed * Time.deltaTime;
+                // 7) 캐릭터 컨트롤러로 최종 이동
+                characterController.Move(movement);
+            }
 
             // 8) 적 충돌 보정
             var hits = Physics.OverlapCapsule(transform.position, transform.position + Vector3.up * 1.8f, 0.4f, LayerMask.GetMask("Enemy"));
@@ -864,6 +898,7 @@ namespace Moon
             if (_magneticController != null)
             {
                 _magneticController.SwitchMagneticType();
+                OnMagneticEffect();
             }
         }
 
@@ -906,6 +941,18 @@ namespace Moon
             
             canAttack = true;
         }
+        
+        public void OnMagneticEffect()
+        {
+            if (_magneticController == null) return;
+            var magneticType = _magneticController.GetMagneticType();
+            _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+        }
+
+        public void UpgradeParts()
+        {
+            _weaponHandler.UpgradeCurrentParts();
+        }
         #endregion
         
         public GameObject GetGameObject()
@@ -927,6 +974,15 @@ namespace Moon
         public void StandFinished()
         {
             _isKnockDown = false;
+        }
+
+        public void StartNormalAttack()
+        {
+            //Force play animation
+            _animator.Play(_HashEllenCombo1, 0, 0f);
+            
+            // _animator.SetTrigger(_HashMeleeAttack);
+            // _animator.SetInteger(_HashAttackType, 0);
         }
 
         public void Death()
@@ -954,21 +1010,29 @@ namespace Moon
                 var hurtFrom = transform.InverseTransformDirection(dir.normalized);
                 _animator.SetFloat(_HashHurtFromX, hurtFrom.x);
                 _animator.SetFloat(_HashHurtFromY, hurtFrom.z);
+                _animator.SetFloat(_HashImpulse, _abilitySystem.GetValue(AttributeType.Impulse));
                 
-                var impulse = _abilitySystem.GetValue(AttributeType.Impulse);
-                // 충격량이 임계값보다 작음 : 그냥 경직
-                if (impulse > 0)
-                {
-                    _animator.SetTrigger(_HashHurt);
-                }
-                // 큰 경직
-                else
-                {
-                    _animator.SetTrigger(_HashBigHurt); 
-                    _isKnockDown = true;
-                }
+                Debug.Log(_abilitySystem.GetValue(AttributeType.Impulse));
+                
+                _animator.SetTrigger(_HashHurt);
             }
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public void OnKnockDown()
+        {
+            _isKnockDown = true;
+        }
+
+        void MoveSpeedChanged()
+        {
+            _animator.SetFloat(_HashMoveSpeed, _abilitySystem.GetValue(AttributeType.MoveSpeed));
+            _maxForwardSpeed = maxForwardSpeed * _abilitySystem.GetValue(AttributeType.MoveSpeed);
+        }
+
+        void AttackSpeedChanged()
+        {
+            _animator.SetFloat(_HashAttackSpeed, _abilitySystem.GetValue(AttributeType.AttackSpeed));
         }
 
         void OnAnimatorIK(int layerIndex)
@@ -983,10 +1047,11 @@ namespace Moon
         
         void PerformDodge()
         {
-            _inCombo = false;
+            //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
-            _inputHandler.playerControllerInputBlocked = true;
-
+            Vector2 moveInput = _inputHandler.MoveInput;
+            _animator.SetFloat(_HashDodgeX, moveInput.x);
+            _animator.SetFloat(_HashDodgeY, moveInput.y);
             _animator.SetTrigger(_HashDodge);
 
             StartCoroutine(UnblockAfterDodge());
@@ -995,8 +1060,9 @@ namespace Moon
         IEnumerator UnblockAfterDodge()
         {
             yield return new WaitForSeconds(0.8f);
-            _inputHandler.playerControllerInputBlocked = false;
             _isDodging = false;   // ★ 회피 끝났으니 다시 허용
+            _animator.SetFloat(_HashDodgeX, 0f);
+            _animator.SetFloat(_HashDodgeY, 0f);
         }
 
         private void OnDrawGizmos()

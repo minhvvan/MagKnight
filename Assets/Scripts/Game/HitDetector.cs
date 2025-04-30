@@ -9,6 +9,7 @@ using UnityEngine.Serialization;
 public class HitInfo
 {
     public RaycastHit hit;
+    public Collider collider;
     public Vector3 previousPoint;
     public Vector3 currentPoint;
     public float time;
@@ -16,6 +17,15 @@ public class HitInfo
     public HitInfo(RaycastHit h, Vector3 prev, Vector3 current)
     {
         hit = h;
+        collider = h.collider;
+        previousPoint = prev;
+        currentPoint = current;
+        time = Time.fixedTime;
+    }
+
+    public HitInfo(Collider c, Vector3 prev, Vector3 current)
+    {
+        collider = c;
         previousPoint = prev;
         currentPoint = current;
         time = Time.fixedTime;
@@ -42,6 +52,7 @@ public class HitboxesGroup
     [FormerlySerializedAs("isSingle")] public bool isSingle; // 단일 공격인지
     [HideInInspector] public bool isActive;
     [FormerlySerializedAs("hitboxes")] public Hitbox[] hitboxes;
+    public float hitInterval;
 }
 
 public class HitDetector: MonoBehaviour, IObservable<HitInfo>
@@ -50,8 +61,9 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     [SerializeField] private LayerMask _layerMask;
     
     private Dictionary<int, Vector3[]> _previousPointsGroups = new Dictionary<int, Vector3[]>();
-    private Dictionary<int, HashSet<Collider>> _hitCollidersGroups = new Dictionary<int, HashSet<Collider>>();
+    private Dictionary<int, Dictionary<Collider, float>> _hitCollidersGroups = new Dictionary<int, Dictionary<Collider, float>>(); // 다음으로 히트될 수 있는 시간을 저장
     private RaycastHit[] _hitResults = new RaycastHit[10];
+    private Collider[] _colResults = new Collider[10];
     private List<HitInfo> _debugHits = new List<HitInfo>();
     private List<IObserver<HitInfo>> _observers = new List<IObserver<HitInfo>>();
 
@@ -72,7 +84,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
             if (group.isAlwaysActive)
             {
                 group.isActive = true;
-                _hitCollidersGroups[group.groupId] = new HashSet<Collider>();
+                _hitCollidersGroups[group.groupId] = new Dictionary<Collider, float>();
             }
 
         }
@@ -88,7 +100,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         }
         
         group.isActive = true;
-        _hitCollidersGroups[group.groupId] = new HashSet<Collider>();
+        _hitCollidersGroups[group.groupId] = new Dictionary<Collider, float>();
 
         for (int i = 0; i < group.hitboxes.Length; i++)
         {
@@ -97,11 +109,11 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         }
     }
 
-    public void StopDetection(int patternId = default)
+    public void StopDetection(int groupId = default)
     {
-        var group = _hitboxesGroups.FirstOrDefault(g => g.groupId == patternId);
+        var group = _hitboxesGroups.FirstOrDefault(g => g.groupId == groupId);
         if (group != null) group.isActive = false;
-        _hitCollidersGroups[patternId].Clear();
+        _hitCollidersGroups.Remove(groupId);
     }
 
     private void FixedUpdate()
@@ -120,7 +132,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                 Vector3 previousPos = _previousPointsGroups[groupId][i];
                 Vector3 direction = currentPos - previousPos;
                 float distance = direction.magnitude;
-
+                
                 if (distance > 0)
                 {
                     direction.Normalize();
@@ -131,6 +143,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         {
                             HandleHit(_hitResults[0], previousPos, currentPos); // 가장 먼저 충돌한 collider에 대해서만 처리
                             group.isActive = false; // 같은 그룹의 나머지 히트박스들도 전부 비활성화
+                            _hitCollidersGroups.Remove(groupId);
                         }
                     }
                     else
@@ -140,19 +153,57 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         {
                             RaycastHit hit = _hitResults[k];
 
-                            if (!_hitCollidersGroups[groupId].Contains(hit.collider))
+                            if (!_hitCollidersGroups[groupId].ContainsKey(hit.collider) || _hitCollidersGroups[groupId][hit.collider] < Time.time)
                             {
-                                _hitCollidersGroups[group.groupId].Add(hit.collider);
+                                if (group.isContinuous)
+                                {
+                                    _hitCollidersGroups[group.groupId][hit.collider] = Time.time + group.hitInterval;
+                                }
+                                else
+                                {
+                                    _hitCollidersGroups[group.groupId][hit.collider] = float.PositiveInfinity;
+                                }
+                                HandleHit(hit, previousPos, currentPos);
+                            }
+                        }
+                    }
+                    _previousPointsGroups[group.groupId][i] = currentPos;
+                }
+                
+                else // 히트박스가 정지해 있는 경우
+                {
+                    if (group.isSingle) // 단일 공격
+                    {
+                        int hitCount = Physics.OverlapSphereNonAlloc(currentPos, hitbox.radius, _colResults, _layerMask);
+                        if (hitCount > 0)
+                        {
+                            HandleHit(_colResults[0], previousPos, currentPos); // 가장 먼저 충돌한 collider에 대해서만 처리
+                            group.isActive = false; // 같은 그룹의 나머지 히트박스들도 전부 비활성화
+                            _hitCollidersGroups.Remove(groupId);
+                        }
+                    }
+                    else
+                    {
+                        int hitCount = Physics.OverlapSphereNonAlloc(currentPos, hitbox.radius, _colResults, _layerMask);
+                        for (int k = 0; k < hitCount; k++)
+                        {
+                            Collider hit = _colResults[k];
+
+                            if (!_hitCollidersGroups[groupId].ContainsKey(hit.GetComponent<Collider>()) || _hitCollidersGroups[groupId][hit.GetComponent<Collider>()] < Time.time)
+                            {
+                                if (group.isContinuous)
+                                {
+                                    _hitCollidersGroups[group.groupId][hit.GetComponent<Collider>()] = Time.time + group.hitInterval;
+                                }
+                                else
+                                {
+                                    _hitCollidersGroups[group.groupId][hit.GetComponent<Collider>()] = float.PositiveInfinity;
+                                }
                                 HandleHit(hit, previousPos, currentPos);
                             }
                         }
                     }
                 }
-                _previousPointsGroups[group.groupId][i] = hitbox.referenceTransform.TransformPoint(hitbox.offset);
-            }
-            if (group.isContinuous) // 다음 프레임에 같은 object를 다시 인식할 수 있도록 한다
-            {
-                _hitCollidersGroups[group.groupId].Clear();
             }
         }
     }
@@ -168,7 +219,21 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
         CameraShake.Shake(0.05f, 0.2f);
         
         //*Temp Debug
-        hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+        // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+    }
+
+    private void HandleHit(Collider col, Vector3 prev, Vector3 current)
+    {
+        HitInfo hitInfo = new HitInfo(col, prev, current);
+        _debugHits.Add(hitInfo);
+        
+        Notify(hitInfo);
+        
+        //Debug.Shaker
+        CameraShake.Shake(0.05f, 0.2f);
+        
+        //*Temp Debug
+        // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
     }
 
     #if UNITY_EDITOR
@@ -187,28 +252,28 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
             }
         }
         
-        // 저장된 히트 정보 시각화
-        foreach (var hitInfo in _debugHits)
-        {
-            // 히트 포인트 (빨간색)
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(hitInfo.hit.point, 0.1f);
-        
-            // 이전 위치 (노란색)
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(hitInfo.previousPoint, 0.08f);
-        
-            // 현재 위치 (녹색)
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(hitInfo.currentPoint, 0.08f);
-        
-            // 선으로 연결
-            Gizmos.color = Color.white;
-            Gizmos.DrawLine(hitInfo.previousPoint, hitInfo.hit.point);
-            Gizmos.DrawLine(hitInfo.hit.point, hitInfo.currentPoint);
-        
-            UnityEditor.Handles.Label(hitInfo.hit.point + Vector3.up * 0.2f, $"Hit at {hitInfo.time:F1}s");
-        }
+        // // 저장된 히트 정보 시각화
+        // foreach (var hitInfo in _debugHits)
+        // {
+        //     // 히트 포인트 (빨간색)
+        //     Gizmos.color = Color.red;
+        //     Gizmos.DrawSphere(hitInfo.hit.point, 0.1f);
+        //
+        //     // 이전 위치 (노란색)
+        //     Gizmos.color = Color.yellow;
+        //     Gizmos.DrawSphere(hitInfo.previousPoint, 0.08f);
+        //
+        //     // 현재 위치 (녹색)
+        //     Gizmos.color = Color.green;
+        //     Gizmos.DrawSphere(hitInfo.currentPoint, 0.08f);
+        //
+        //     // 선으로 연결
+        //     Gizmos.color = Color.white;
+        //     Gizmos.DrawLine(hitInfo.previousPoint, hitInfo.hit.point);
+        //     Gizmos.DrawLine(hitInfo.hit.point, hitInfo.currentPoint);
+        //
+        //     UnityEditor.Handles.Label(hitInfo.hit.point + Vector3.up * 0.2f, $"Hit at {hitInfo.time:F1}s");
+        // }
     }
     #endif
     public void Subscribe(IObserver<HitInfo> observer)

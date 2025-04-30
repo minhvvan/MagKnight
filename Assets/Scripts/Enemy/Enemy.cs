@@ -110,7 +110,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     private void FixedUpdate()
     { 
-        var enemies = Physics.OverlapSphere(transform.position, 0.2f, 1 << LayerMask.NameToLayer("Enemy"));
+        var enemies = Physics.OverlapSphere(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy"));
 
         ApplySoftCollision(enemies);
     }
@@ -189,15 +189,31 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         blackboard.enemyRenderer.material.color = Color.red;
         
         // Enemy 넉백 관련은 이 함수를 사용
-        float desiredDistance = 1.5f;
+        float desiredDistance = 2f;
         float enemyPositionCorrection = 0.5f;
         float pullSpeed = 20f;
         float moveTime = 0.2f;
         float duration = 0f;
-        Vector3 playerFront = playerTransform.position + playerTransform.forward * desiredDistance;
-        Vector3 dir = playerFront - transform.position;
-        Vector3 targetPos = dir.magnitude <= enemyPositionCorrection ? playerFront : transform.position + dir.normalized * enemyPositionCorrection;
         
+        Vector3 forward = playerTransform.forward;
+        Vector3 right = playerTransform.right;
+        Vector3 targetPos = transform.position + forward;
+        if ((targetPos - playerTransform.position).magnitude > desiredDistance)
+        {
+            Vector3 dir = transform.position - playerTransform.position;
+            float rightSize = Vector3.Dot(dir, right);
+            if (Mathf.Abs(rightSize) > desiredDistance)
+            {
+                targetPos = playerTransform.position + dir.normalized * desiredDistance;
+            }
+            else
+            {
+                float delta = Mathf.Sqrt(desiredDistance * desiredDistance - rightSize * rightSize) 
+                              - Vector3.Dot(dir, forward);
+                targetPos = transform.position + forward * delta;
+            }
+        }
+
         try
         {
             while (duration < moveTime)
@@ -229,8 +245,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
         damageEffect.sourceTransform = transform;
         impulseEffect.sourceTransform = transform;
-        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
-        hitInfo.hit.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
+        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
+        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
     }
 
     public void OnError(Exception error)
@@ -266,7 +282,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
         //ex. Enemy에겐 사용 시 무조건 돌진한다.
-        await magnetApproach.Execute(this, target);
+        //await magnetApproach.Execute(this, target);
+        await magnetDashAction.Execute(this, target);
     }
 
     void ApplySoftCollision(Collider[] colliders)
@@ -278,7 +295,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
             Vector3 diff = transform.position - other.transform.position;
             float dist = diff.magnitude;
-            float minDist = 0.2f; // 적당한 간격
+            float minDist = 0.5f; // 적당한 간격
             
             if (dist < 0.001f) // 완벽하게 겹칠 경우에는 diff가 Vector3.zero가 되므로 예외처리
                 correction += new Vector3(1, 0, 0);

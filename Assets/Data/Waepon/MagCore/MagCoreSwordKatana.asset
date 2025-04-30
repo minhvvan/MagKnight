@@ -14,7 +14,114 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
   itemName: Katana_Normal
-  description: "\uCE74\uD0C0\uB098 \uAE30\uBCF8\uD615."
-  weaponType: 1
-  partsType: 0
+  description: "\uCE74\uD0C0\uB098 \uAE30\uBCF8\uD615. - \uC18D\uB3C4 \uCE7C\uB0A0"
   scrapValue: 35
+  maxUpgradeLevel: 3
+  weaponType: 1
+  partsType: 2
+  descriptionPassiveEffects: "\uAE30\uBCF8 \uACF5\uACA9 \uC2DC \uACF5\uACA9\uC18D\uB3C4\uAC00
+    n\uC99D\uAC00\uD569\uB2C8\uB2E4. \uCD5C\uB300 4\uBC88\uAE4C\uC9C0 \uC911\uCCA9\uB429\uB2C8\uB2E4."
+  passiveEffects:
+    _serializedList:
+    - Key: 0
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 8
+          amount: 8
+          duration: 5
+          period: 0
+          tracking: 1
+          maxStack: 4
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+    - Key: 1
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 8
+          amount: 10
+          duration: 5
+          period: 0
+          tracking: 1
+          maxStack: 4
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+    - Key: 2
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 8
+          amount: 12
+          duration: 5
+          period: 0
+          tracking: 1
+          maxStack: 4
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+  descriptionGameplayEffects: 
+  gameplayEffects:
+    _serializedList:
+    - Key: 0
+      Value:
+      - effectType: 0
+        attributeType: 0
+        amount: 0
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+  magnetEffectDuration: 5
+  descriptionMagnetPassiveEffects: 
+  magnetPassiveEffects:
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
+  descriptionMagnetGameplayEffects: "\uADF9\uC131 \uC804\uD658 \uC2DC, 5\uCD08\uB3D9\uC548
+    \uACF5\uACA9\uC18D\uB3C4\uAC00 n\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4."
+  magnetGameplayEffects:
+    _serializedList:
+    - Key: 0
+      Value:
+      - effectType: 2
+        attributeType: 8
+        amount: 50
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
+    - Key: 1
+      Value:
+      - effectType: 2
+        attributeType: 8
+        amount: 55
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
+    - Key: 2
+      Value:
+      - effectType: 2
+        attributeType: 8
+        amount: 60
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
