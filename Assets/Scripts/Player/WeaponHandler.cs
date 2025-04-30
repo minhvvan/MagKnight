@@ -1,7 +1,9 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WeaponHandler : MonoBehaviour
 {
@@ -15,10 +17,23 @@ public class WeaponHandler : MonoBehaviour
     private bool _isActiveMagneticSwitchEffect = false;
     private Animator _animator;
 
+    private GameplayEffect _damageEffect;
+    private GameplayEffect _resistanceEffect;
+    
     private async void Awake()
     {
         _abilitySystem = GetComponent<AbilitySystem>();
         _animator = GetComponent<Animator>();
+        
+        _damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, 0)
+        {
+            sourceTransform = transform
+        };
+        _resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, 10)
+        {
+            sourceTransform = transform
+        };
+        
         try
         {
             _weaponSO =
@@ -155,14 +170,12 @@ public class WeaponHandler : MonoBehaviour
     {
         if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            var damage = _abilitySystem.GetValue(AttributeType.Strength);
             Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
-            GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
-            damageEffect.sourceTransform = transform;
-            GameplayEffect resistanceEffect =
-                new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, damage);
-            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
-            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
+            
+            _damageEffect.amount = GameManager.Instance.Player.GetAttackDamage();
+            
+            enemy.blackboard.abilitySystem.ApplyEffect(_damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(_resistanceEffect);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
