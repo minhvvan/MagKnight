@@ -982,7 +982,7 @@ namespace Moon
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
             if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
             {
-                damage *= (2 + _abilitySystem.GetValue(AttributeType.CriticalDamage));
+                damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
             }
             return damage * damageMultiplier;
         }
