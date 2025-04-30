@@ -12,7 +12,8 @@ namespace Moon
         [SerializeField] public ConfirmPopupUIController confirmPopupUIController;
         [SerializeField] public ArtifactInventoryUIController artifactInventoryUIController;
         [SerializeField] public GameOverUIController gameOverUIController;
-
+        [SerializeField] public PlayerDetailUIController playerDetailUIController;
+        
         void OnEnable()
         {
             UIManager.Instance.SetPopupUIController(this);
