@@ -352,6 +352,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Droid-01_Army
       objectReference: {fileID: 0}
+    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8957364649605768314, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: magneticObjectSO
@@ -1508,6 +1513,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Droid-01_Army (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8957364649605768314, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
       propertyPath: magneticObjectSO
@@ -2345,6 +2355,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Droid-01_Army (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8957364649605768314, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}
@@ -3751,6 +3766,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 190917394504002454, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.2135781
+      objectReference: {fileID: 0}
+    - target: {fileID: 190917394504002454, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.46388942
+      objectReference: {fileID: 0}
+    - target: {fileID: 190917394504002454, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -8.994354
+      objectReference: {fileID: 0}
     - target: {fileID: 1301973410559244839, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_Name
@@ -3805,6 +3835,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.02717325
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.3309712
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.873086
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.022526845
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.007886127
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.9435669
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.33032092
       objectReference: {fileID: 0}
     - target: {fileID: 6446186863117848519, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -4446,6 +4511,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Droid-01_Army (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8437106963035007079, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8957364649605768314, guid: e8f7ca74868c08a46bc7e45fa591c6d3,
         type: 3}

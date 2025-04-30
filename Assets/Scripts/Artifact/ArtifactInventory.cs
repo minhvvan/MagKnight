@@ -57,7 +57,7 @@ public class ArtifactInventory : MonoBehaviour
     }
     
     
-    public async UniTaskVoid SetLeftArtifact(int index, ArtifactDataSO artifact)
+    public async UniTask SetLeftArtifact(int index, ArtifactDataSO artifact)
     {
         // 바뀐 아티팩트가 기존에 있던게 아니라면
         if (artifact != null && !Left_ArtifactGas.Contains(artifact))
@@ -92,7 +92,7 @@ public class ArtifactInventory : MonoBehaviour
         }
     }
 
-    public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact)
+    public async UniTask SetRightArtifact(int index, ArtifactDataSO artifact)
     {
         if (artifact != null && !Right_ArtifactGas.Contains(artifact))
         {
