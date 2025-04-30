@@ -26,7 +26,7 @@ public class PlayerMagnetActionController : MonoBehaviour
 
     public void StartMagnetDash(MagneticObject caster)
     {
-        _animator.Play(PlayerAnimatorConst.hashMagnetSkillDash, 0, 0f);
+        _animator.Play(PlayerAnimatorConst.hashMagnetSkillDash, 0, 0.2f);
 
         var targetPos = transform.position;
         var targetCollider = GetComponent<Collider>();
@@ -55,7 +55,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         Sequence sequence = DOTween.Sequence();
         
         // Step 1: 살짝 뜨기
-        sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.05f)        
+        sequence.Append(transform.DOMove(targetPos + Vector3.up * 0.2f, 0.05f)
             .SetEase(Ease.OutCubic)
             .OnStart(() => {
                 _electricLine.startPosition = targetCenterPos;
@@ -72,16 +72,19 @@ public class PlayerMagnetActionController : MonoBehaviour
                 Time.timeScale = 1f;
                 _electricLine.gameObject.SetActive(false);
             })); 
-        sequence.Join(transform.DOLookAt(casterPos, 0.05f, AxisConstraint.Y)
-                .SetEase(Ease.Linear));
 
+        //회전
+        sequence.Join(transform.DOLookAt(casterPos, 0.05f, AxisConstraint.Y)
+                .SetEase(Ease.OutCubic));
+
+        //딜레이
         sequence.AppendInterval(0.1f);
 
         // Step 2: 대쉬 시작
         sequence.AppendCallback(()=>{                
             if(!isCloseTarget)
             StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
-            StartCoroutine(MagnetDashCoroutine(casterFrontPos, dashDuration, hitTiming, () => {
+            StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration, hitTiming, () => {
                     MotionBlurController.Play(0, 0.1f);
                     Time.timeScale = 1f;
                     _playerController.inMagnetSkill = false;
@@ -89,12 +92,21 @@ public class PlayerMagnetActionController : MonoBehaviour
         });
     }
 
-    IEnumerator MagnetDashCoroutine(Vector3 destination, float duration, float hitTiming, Action onComplete)
+    Vector3 GetTargetFrontPosition(Transform target, Vector3 startPos){
+        var targetCollider = target.GetComponent<Collider>();
+        var targetCenterPos = targetCollider.bounds.center;
+        var targetWidth = targetCollider.bounds.size.x;
+        var toTargetVector = startPos - targetCenterPos;
+        var toTargetVectorRemoveY = new Vector3(toTargetVector.x, 0f, toTargetVector.z);
+        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f;
+
+        return targetFrontPos;
+    }
+
+    IEnumerator MagnetDashCoroutine(Transform destinationTranform, float duration, float hitTiming, Action onComplete)
     {
         float elapsed = 0f;
         Vector3 startPos = transform.position;
-        CharacterController controller = GetComponent<CharacterController>();
-        
 
         bool hasAttacked = false;
 
@@ -102,11 +114,14 @@ public class PlayerMagnetActionController : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
+            
+            Vector3 desFrontPos = GetTargetFrontPosition(destinationTranform, startPos);
 
-            Vector3 nextPos = Vector3.Lerp(startPos, destination, t);
+
+            Vector3 nextPos = Vector3.Lerp(startPos, desFrontPos, t);
             Vector3 delta = nextPos - transform.position;
-
-            controller.Move(delta);
+            _playerController.characterController.Move(delta);
+            
 
             if (!hasAttacked && elapsed >= hitTiming)
             {
@@ -117,12 +132,9 @@ public class PlayerMagnetActionController : MonoBehaviour
             yield return null;
         }
 
-        // 보정
-        Vector3 finalDelta = destination - transform.position;
-        controller.Move(finalDelta);
-
         // 종료 처리
         onComplete?.Invoke();
     }
+    
 #endregion
 }
