@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -7,7 +8,7 @@ public class NPCSO : ScriptableObject
 {
     public string npcName;
     public string npcDescription;
-    public DialogueDataSO dialogueData;
+    public List<DialogueDataSO> dialogueData = new  List<DialogueDataSO>();
     
     //역할을 나는게 좋아보임
     public enum NPCType{

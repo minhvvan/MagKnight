@@ -22,36 +22,39 @@ MonoBehaviour:
     Strength:
       Key: 2
       Value: 20
-    Intelligence:
-      Key: 3
-      Value: 20
     CriticalRate:
-      Key: 5
-      Value: 20
-    Defense:
       Key: 4
-      Value: 20
+      Value: 0.1
+    Defense:
+      Key: 3
+      Value: 0
     CriticalDamage:
-      Key: 6
-      Value: 20
+      Key: 5
+      Value: 0
     Damage:
-      Key: 9
+      Key: 8
       Value: 0
     MoveSpeed:
-      Key: 7
+      Key: 6
       Value: 1
     AttackSpeed:
-      Key: 8
+      Key: 7
       Value: 1
-    Impluse:
+    Impulse:
+      Key: 13
+      Value: 0
+    EndureImpulse:
       Key: 14
       Value: 0
-    ImpulseThreshold:
-      Key: 15
-      Value: 0
     MaxSkillGauge:
-      Key: 16
+      Key: 15
       Value: 100
     SkillGauge:
+      Key: 16
+      Value: 0
+    MagneticRange:
       Key: 17
+      Value: 0
+    MagneticPower:
+      Key: 18
       Value: 0

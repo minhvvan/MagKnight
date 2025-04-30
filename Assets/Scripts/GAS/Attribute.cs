@@ -7,24 +7,25 @@ using UnityEngine.Serialization;
 // Attribute를 Type으로 관리
 public enum AttributeType
 {
-    MaxHP,
-    HP,
-    Strength, // 힘
-    Intelligence, // 지능
-    Defense, // 방어력
-    CriticalRate, // 치명타 확률
-    CriticalDamage, // 치명타 피해량
-    MoveSpeed, // 이동속도
-    AttackSpeed, // 공격속도
-    Damage, // 메타 Attribute, 받은 피해량
-    MaxResistance, // 최대저항력
-    Resistance,
-    ResistanceDamage,
-    Gold, // 드롭 골드량
-    Impulse, // 충격량
-    EndureImpulse, // 충격량 저항값
-    MaxSkillGauge,
-    SkillGauge,
+    MaxHP = 0,
+    HP = 1,
+    Strength = 2, // 힘
+    Defense = 3, // 방어력
+    CriticalRate= 4, // 치명타 확률
+    CriticalDamage = 5, // 치명타 피해량
+    MoveSpeed = 6, // 이동속도
+    AttackSpeed = 7, // 공격속도
+    Damage = 8, // 메타 Attribute, 받은 피해량
+    MaxResistance = 9, // 최대저항력
+    Resistance = 10,
+    ResistanceDamage = 11,
+    Gold = 12, // 드롭 골드량
+    Impulse = 13, // 충격량
+    EndureImpulse = 14, // 충격량 저항값
+    MaxSkillGauge = 15,
+    SkillGauge = 16,
+    MagneticRange = 17, // 마그네틱 범위
+    MagneticPower = 18, // 마그네틱 힘
 }
 
 /// <summary>

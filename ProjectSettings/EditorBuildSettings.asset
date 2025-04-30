@@ -29,6 +29,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LoadSceneTest/treasure.unity
     guid: a98d207719bf860448a8371bba223e04
+  - enabled: 1
+    path: Assets/Scenes/Prototype.unity
+    guid: ac643fa69bcce6a4e8a1b3ffba8e5774
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: c5a98a86e03b2dc4dbaaf10ca6de3a1b,
       type: 2}
