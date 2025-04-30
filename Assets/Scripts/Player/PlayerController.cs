@@ -11,6 +11,7 @@ using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using Random = UnityEngine.Random;
 
 namespace Moon
 {
@@ -898,6 +899,16 @@ namespace Moon
                 _animator.SetTrigger(PlayerAnimatorConst.hashHurt);
             }
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public float GetAttackDamage(float damageMultiplier = 1f)
+        {
+            var damage = _abilitySystem.GetValue(AttributeType.Strength);
+            if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
+            {
+                damage *= (2 + _abilitySystem.GetValue(AttributeType.CriticalDamage));
+            }
+            return damage * damageMultiplier;
         }
 
         public void OnKnockDown()

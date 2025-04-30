@@ -18,7 +18,7 @@ namespace Jun
         private float minAttackSpeed = 0.5f;
         private float maxMoveSpeed = 2f;
         private float minMoveSpeed = 0.8f;
-        
+        private float maxDefense = 100f;
         
         protected override float PreAttributeChange(AttributeType type, float newValue)
         {
@@ -56,6 +56,9 @@ namespace Jun
                 // 무적효과
                 if (GameManager.Instance.Player.gameObject.CompareTag("Invincibility"))
                     returnValue = 0;
+                
+                // Defense% 만큼 데미지 감소
+                returnValue = returnValue * (1 - GetValue(AttributeType.Defense)/ 100f);
             }
 
             if (type == AttributeType.Impulse)
@@ -88,6 +91,12 @@ namespace Jun
                 
             }
 
+            if (effect.attributeType == AttributeType.CriticalRate)
+            {
+                SetValue(AttributeType.CriticalRate, Mathf.Clamp(GetValue(AttributeType.CriticalRate), 0f, 1));
+                
+            }
+            
             if (effect.attributeType == AttributeType.MoveSpeed)
             {
                 OnMoveSpeedChanged?.Invoke();
@@ -97,7 +106,11 @@ namespace Jun
             {
                 OnAttackSpeedChanged?.Invoke();
             }
-            
+
+            if (effect.attributeType == AttributeType.Defense)
+            {
+                SetValue(AttributeType.Defense, Mathf.Clamp(GetValue(AttributeType.Defense), float.NegativeInfinity, maxDefense));
+            }
             
             if (effect.attributeType == AttributeType.Damage)
             {
