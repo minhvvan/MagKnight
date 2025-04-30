@@ -25,7 +25,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public EnemyBlackboard blackboard;
     public PatternController patternController;
     public HpBarController hpBarController;
-    
+
+    private AnimatorStateInfo _currentAnimStateInfo;
 
     public Action<Enemy> OnDead;
     
@@ -110,6 +111,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     private void FixedUpdate()
     { 
+        _currentAnimStateInfo = Anim.GetCurrentAnimatorStateInfo(0);
         var enemies = Physics.OverlapSphere(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy"));
 
         ApplySoftCollision(enemies);
@@ -117,15 +119,22 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     private void OnAnimatorMove()
     {
-        Vector3 rootDelta = Anim.deltaPosition;
-        Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
+        if (_currentAnimStateInfo.IsName("Trace"))
+        {
+            Vector3 velocity = Agent.desiredVelocity.normalized * Time.deltaTime * 
+                               blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
+            
+            Agent.nextPosition += velocity;
+            transform.position += velocity;
+        }
         
-        Vector3 position = transform.position + scaledDelta;
-        // Vector3 position = EnemyAnimator.rootPosition;
-        position.y = Agent.nextPosition.y;
-        
-        Agent.nextPosition = position;
-        transform.position = position;
+        // Vector3 rootDelta = Anim.deltaPosition;
+        // Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
+        //
+        // Vector3 position = transform.position + scaledDelta;
+        // position.y = Agent.nextPosition.y;
+        // Agent.nextPosition = position;
+        // transform.position = position;
         
         Vector3 dir = Agent.desiredVelocity;
         if (dir.sqrMagnitude > 0.1f)
@@ -186,7 +195,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private async UniTask OnHitHelper(Transform playerTransform)
     {
         CancellationToken token = blackboard.onHitCancellation.Token;
-        blackboard.enemyRenderer.material.color = Color.red;
+        
+        blackboard.enemyRenderer.material.SetTexture("_BaseColor", blackboard.onHitTexture);
         
         // Enemy 넉백 관련은 이 함수를 사용
         float desiredDistance = 2f;
@@ -228,7 +238,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         catch (OperationCanceledException){}
         finally
         {
-            blackboard.enemyRenderer.material.color = Color.white;
+            blackboard.enemyRenderer.material.SetTexture("_BaseColor", blackboard.baseColorTexture);
         }
     }
     
