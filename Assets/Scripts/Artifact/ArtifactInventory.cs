@@ -90,6 +90,11 @@ public class ArtifactInventory : MonoBehaviour
                 currentArtifact.S_RemoveTo(abilitySystem);
             }   
         }
+
+        //데이터 저장
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        currentRunData.leftArtifacts.AddUnique(artifact.itemID);
+        await GameManager.Instance.SaveData(Constants.CurrentRun);
     }
 
     public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact)
@@ -124,6 +129,11 @@ public class ArtifactInventory : MonoBehaviour
                 currentArtifact.N_RemoveTo(abilitySystem);
             }   
         }
+        
+        //데이터 저장
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        currentRunData.rightArtifacts.AddUnique(artifact.itemID);
+        await GameManager.Instance.SaveData(Constants.CurrentRun);
     }
 
     

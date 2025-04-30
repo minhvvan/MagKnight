@@ -16,12 +16,9 @@ public class InitGameState: IGameState
 
         _currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
 
-        if (_currentRunData == null)
-        {
-            //currentRunData 생성
-            GameManager.Instance.SetCurrentRunData();
-            _currentRunData = GameManager.Instance.CurrentRunData;
-        }
+        //currentRunData 설정
+        GameManager.Instance.SetCurrentRunData(_currentRunData); //null이면 생성
+        _currentRunData = GameManager.Instance.CurrentRunData;
 
         if (!_currentRunData.isDungeonEnter)
         {

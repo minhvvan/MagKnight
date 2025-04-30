@@ -16,21 +16,21 @@ public class CurrentRunData : ISaveData
     public Vector3 lastPlayerPosition = Vector3.zero;
     public Quaternion lastPlayerRotation = Quaternion.identity;
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
-    
     public List<int> clearedRooms = new List<int>();
+    
+    public bool artifactSupplied = false;
 
-    //TODO
-    /*
-     * 아티팩트
-     */
     public PlayerStat playerStat = new();
     
     //무기
-    // public MagCore currentMagCore;
     public WeaponType currentWeapon;
     public PartsType currentPartsType;
     public int currentPartsUpgradeValue;
     public int scrap;
+    
+    //아티팩트
+    public List<int> leftArtifacts = new List<int>();
+    public List<int> rightArtifacts = new List<int>();
     
     public string GetDataKey()
     {

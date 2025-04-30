@@ -165,6 +165,12 @@ namespace Moon
             InitStat(currentRunData.playerStat);
             
             //무기 지급
+            if (currentRunData.currentWeapon == WeaponType.None)
+            {
+                Debug.Log("CurrentWeapon is None");
+                return;
+            }
+            
             SetCurrentWeapon(currentRunData.currentWeapon);
         }
 
