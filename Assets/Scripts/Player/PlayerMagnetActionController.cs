@@ -45,6 +45,7 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         //제어를 위함 플레이어 공중에 살짝 붕 뜨는 모션
         _playerController.inMagnetSkill = true;
+        _playerController.InputHandler.ReleaseControl();
 
         float distance = Vector3.Distance(targetPos, casterFrontPos);
         float speed = 30f;
@@ -83,15 +84,18 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         // Step 2: 대쉬 시작
         sequence.AppendCallback(()=>{                
-            if(!isCloseTarget) StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+            //너무 가까운 경우 돌진 안함
+            if(!isCloseTarget) 
+            {
+                StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
             
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+            }
 
             StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration, hitTiming, () => {
                     MotionBlurController.Play(0, 0.1f);
                     Time.timeScale = 1f;
-                    _playerController.inMagnetSkill = false;
                 }));
         });
     }
@@ -102,7 +106,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         var targetWidth = targetCollider.bounds.size.x;
         var toTargetVector = startPos - targetCenterPos;
         var toTargetVectorRemoveY = new Vector3(toTargetVector.x, 0f, toTargetVector.z);
-        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f - (targetCollider.bounds.size.y * 0.5f * Vector3.up);
+        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f - (targetCollider.bounds.size.y * 0.55f * Vector3.up);
 
         return targetFrontPos;
     }
@@ -131,6 +135,7 @@ public class PlayerMagnetActionController : MonoBehaviour
             {
                 hasAttacked = true;
                 _playerController.StartNormalAttack();
+                StartCoroutine(DelayedAttackEnd());
             }
 
             yield return null;
@@ -138,6 +143,12 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         // 종료 처리
         onComplete?.Invoke();
+    }
+
+    IEnumerator DelayedAttackEnd(){
+        yield return new WaitForSeconds(0.8f);
+        _playerController.inMagnetSkill = false;
+        _playerController.InputHandler.GainControl();
     }
     
 #endregion
