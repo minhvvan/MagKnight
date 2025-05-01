@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class Katana: BaseWeapon
 {
-    [SerializeField] GameObject _hitEffectPrefab;
     [SerializeField] int skillIndex;
-
     WeaponTrail _weaponTrail;
 
     void Start()
@@ -43,12 +41,8 @@ public class Katana: BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         base.OnNext(hitInfo);
-        //FX
-        GameObject hitEffect = Instantiate(_hitEffectPrefab, hitInfo.hit.point, Quaternion.identity);
-        hitEffect.transform.forward = hitInfo.hit.normal;
-        hitEffect.transform.localScale = Vector3.one * 0.3f;
-        Destroy(hitEffect, 0.2f);
 
+        VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
     }
 
     public override void OnError(Exception error)

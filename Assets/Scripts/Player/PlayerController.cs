@@ -11,7 +11,6 @@ using Jun;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DG.Tweening;
 using Random = UnityEngine.Random;
 
 namespace Moon
@@ -30,7 +29,7 @@ namespace Moon
         [SerializeField] private SerializedDictionary<WeaponType, RuntimeAnimatorController> animatorControllers;
         
         #region Conponent
-        private CharacterController _characterController;
+        [NonSerialized] public CharacterController characterController;
         private Animator _animator;
         private InputHandler _inputHandler;
         private MagneticController _magneticController;
@@ -57,8 +56,8 @@ namespace Moon
         #endregion
         
         #region Variable
-        public bool isDead;
-        public bool isInvisible;
+        bool isDead = false;
+        bool isInvisible = true;
         
         private bool _lockOnLastFrame = false;
         private bool _isInputUpdate = true;
@@ -141,7 +140,7 @@ namespace Moon
             _inputHandler = GetComponent<InputHandler>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider>();
-            _characterController = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
             _magneticController = GetComponent<MagneticController>();
             _lockOnSystem = GetComponent<LockOnSystem>();
             _abilitySystem = GetComponent<AbilitySystem>();
@@ -481,6 +480,7 @@ namespace Moon
                     _verticalSpeed = jumpSpeed;
                     _isGrounded = false;
                     _readyToJump = false;
+                    VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
                 }
             }
             else
@@ -567,7 +567,11 @@ namespace Moon
 
         void SetGrounded()
         {   
-            _isGrounded = _characterController.isGrounded;
+            _isGrounded = characterController.isGrounded;
+
+            if (_isGrounded && !_previouslyGrounded && !IsInvisible)
+                VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+
             
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
@@ -768,6 +772,11 @@ namespace Moon
                 if (_inCombo)
                 {
                     movement = _animator.deltaPosition;
+                    
+                    Vector3 cameraForward = Camera.main.transform.forward;
+                    Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
+                    
+                    transform.rotation = Quaternion.LookRotation(rotation);
                 }
                 else
                 {
@@ -823,11 +832,11 @@ namespace Moon
             else
             {
                 // 5) 회전 보정: 애니메이터 deltaRotation 적용
-                _characterController.transform.rotation *= _animator.deltaRotation;
+                characterController.transform.rotation *= _animator.deltaRotation;
                 // 6) 중력/점프 속도 추가
                 movement += Vector3.up * _verticalSpeed * Time.deltaTime;
                 // 7) 캐릭터 컨트롤러로 최종 이동
-                _characterController.Move(movement);
+                characterController.Move(movement);
             }
 
             // 8) 적 충돌 보정
@@ -1004,7 +1013,7 @@ namespace Moon
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
             if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
             {
-                damage *= (2 + _abilitySystem.GetValue(AttributeType.CriticalDamage));
+                damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
             }
             return damage * damageMultiplier;
         }
@@ -1043,6 +1052,8 @@ namespace Moon
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
+
+            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, transform.rotation);
 
             StartCoroutine(UnblockAfterDodge());
         }

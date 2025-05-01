@@ -156,7 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9442c9e86b448679ce33749eb735ab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _hitEffectPrefab: {fileID: 4503612902121041701, guid: 777aa409d52b2473fa97f4ae322375ee,
+  _hitEffectPrefab: {fileID: 7366701124083779821, guid: f0b173e4cc052d54f90cb79bf5fcd167,
     type: 3}
   skillIndex: 1
 --- !u!114 &1649273249709524683

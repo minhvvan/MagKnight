@@ -37,6 +37,11 @@ public static class Addresses
         {
             public const string ItemListData = "data/itemList";
         }
+
+        public static class FX
+        {
+            public const string VFXLOADER = "data/fx/vfxloader";
+        }
         
         public static class Artifact
         {

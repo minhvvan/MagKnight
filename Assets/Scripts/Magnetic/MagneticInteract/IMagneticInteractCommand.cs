@@ -317,12 +317,14 @@ public class OnSeparation : IMagneticInteractCommand
 
 public class MagnetDashAction : IMagneticInteractCommand
 {
-    public override async UniTask Execute(MagneticObject caster, MagneticObject target)
+    public override UniTask Execute(MagneticObject caster, MagneticObject target)
     {
-        target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController);
-        if(targetPlayerMagnetActionController == null)  return;            
+        if(target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
+        {
+            targetPlayerMagnetActionController.StartMagnetDash(caster);
+        }
 
-        targetPlayerMagnetActionController.StartMagnetDash(caster);
+        return UniTask.CompletedTask;
     }
 }
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Moon;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -141,6 +142,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         int hitCount = Physics.SphereCastNonAlloc(previousPos, hitbox.radius, direction, _hitResults, distance, _layerMask);
                         if (hitCount > 0)
                         {
+                            if (_hitResults[0].point == Vector3.zero)
+                            {
+                                _hitResults[0].point = _hitResults[0].collider.ClosestPoint(previousPos);
+                            }
                             HandleHit(_hitResults[0], previousPos, currentPos); // 가장 먼저 충돌한 collider에 대해서만 처리
                             group.isActive = false; // 같은 그룹의 나머지 히트박스들도 전부 비활성화
                             _hitCollidersGroups.Remove(groupId);
@@ -152,6 +157,10 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                         for (int k = 0; k < hitCount; k++)
                         {
                             RaycastHit hit = _hitResults[k];
+                            if (hit.point == Vector3.zero)
+                            {
+                                hit.point = hit.collider.ClosestPoint(previousPos);
+                            }
 
                             if (!_hitCollidersGroups[groupId].ContainsKey(hit.collider) || _hitCollidersGroups[groupId][hit.collider] < Time.time)
                             {
@@ -211,12 +220,13 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
         HitInfo hitInfo = new HitInfo(hit, prev, current);
-        _debugHits.Add(hitInfo);
+        //_debugHits.Add(hitInfo);
         
         Notify(hitInfo);
         
         //Debug.Shaker
-        CameraShake.Shake(0.05f, 0.2f);
+        HitEffect();
+        
         
         //*Temp Debug
         // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
@@ -225,15 +235,26 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void HandleHit(Collider col, Vector3 prev, Vector3 current)
     {
         HitInfo hitInfo = new HitInfo(col, prev, current);
-        _debugHits.Add(hitInfo);
+        //_debugHits.Add(hitInfo);
         
         Notify(hitInfo);
         
         //Debug.Shaker
-        CameraShake.Shake(0.05f, 0.2f);
+        HitEffect();
         
         //*Temp Debug
         // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+    }
+
+    void HitEffect(){
+        CameraShake.Shake(0.05f, 0.2f);
+
+        //Critical Hit Effect
+        Time.timeScale = 0.1f;
+        UniTask.Delay(TimeSpan.FromMilliseconds(100f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
+        {
+            Time.timeScale = 1;
+        });
     }
 
     #if UNITY_EDITOR

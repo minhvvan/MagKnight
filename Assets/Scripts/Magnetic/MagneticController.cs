@@ -77,13 +77,18 @@ public class MagneticController : MagneticObject
     
     private void FixedUpdate()
     {
-        //실시간 자기력 범위 내 대상 탐색.
-        ScanNearByMagneticTarget();
+        
         
         //자석 능력 길게 키 입력 시
         if (_isPressMagnetic)
         {
+            //실시간 자기력 범위 내 대상 탐색.
+            ScanNearByMagneticTarget();
             FocusMagneticTarget();
+        }
+        else
+        {
+            AllUnCountVisor();
         }
         
         //자기력 붕괴 스킬 활성화로 주변 탐색
@@ -95,6 +100,12 @@ public class MagneticController : MagneticObject
             //반격
             if(_onCounterPress)  OnSearchNearMagnetic(this, _counterPressRange);
         }
+    }
+
+    private void AllUnCountVisor()
+    {
+        if (_magneticUIController == null) return;
+        _magneticUIController.AllUnCountTarget();
     }
     
     public override void InitializeMagnetic()
@@ -145,12 +156,21 @@ public class MagneticController : MagneticObject
         
         StartCoroutine(_magneticUIController.ShowFocusArea());
         StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
-        //Time.timeScale = 0.15f;
+        Time.timeScale = 0.2f;
         
         //끝
         _isShortRelease = false;
     }
     
+    void CommonRelease()
+    {
+        _isPressMagnetic = false;
+        Time.timeScale = 1f;
+        
+        StartCoroutine(_magneticUIController.HideFocusArea());
+        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+    }
+
     //Q 짧게 누르고 뗐을때
     public async UniTask OnShortRelease()
     {
@@ -158,11 +178,7 @@ public class MagneticController : MagneticObject
 
         _isShortRelease = true;
         //짧게 입력시 할 로직
-        _isPressMagnetic = false;
-        //Time.timeScale = 1f;
-        
-        StartCoroutine(_magneticUIController.HideFocusArea());
-        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        CommonRelease();
         
         if (!_isActivatedMagnetic) if(!_onGravityBreak && !_onCounterPress && !_onSearchNearMagnetic) await OnCounterPress();
         
@@ -177,11 +193,7 @@ public class MagneticController : MagneticObject
 
         _isLongRelease = true;
         //길게 입력 시 할 로직
-        _isPressMagnetic = false;
-        //Time.timeScale = 1f;
-        
-        StartCoroutine(_magneticUIController.HideFocusArea());
-        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        CommonRelease();
         
         if (targetMagneticObject != null)
         {

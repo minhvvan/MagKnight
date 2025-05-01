@@ -1,4 +1,5 @@
 ﻿using System;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
@@ -7,7 +8,8 @@ using Random = UnityEngine.Random;
 
 public class WeaponHandler : MonoBehaviour
 {
-    [SerializeField] private Transform weaponSocket;
+    [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
+    
     [SerializeField] private BaseWeapon _currentWeapon;
     private WeaponPrefabSO _weaponSO;
     private AbilitySystem _abilitySystem;
@@ -61,7 +63,7 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], weaponSocket).GetComponent<BaseWeapon>();
+        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
     }
 
@@ -97,16 +99,20 @@ public class WeaponHandler : MonoBehaviour
     //극성 전환 효과 활성화
     public void ActivateMagnetSwitchEffect(AbilitySystem abilitySystem, MagneticType type)
     {
-        var vfxObj = Instantiate(ItemManager.Instance.magnetSwitchVfxPrefab, _currentWeapon.transform);
-        //vfxObj.transform.localScale *= 2f;
-        var vfxs = vfxObj.GetComponentsInChildren<ParticleSystem>();
-        foreach (var vfx in vfxs)
-        {
-            var main = vfx.main;
-            if(type == MagneticType.N) main.startColor = Color.red;
-            else if(type == MagneticType.S) main.startColor = Color.blue;
-        }
-        Destroy(vfxObj, 0.25f);
+        // var vfxObj = Instantiate(ItemManager.Instance.magnetSwitchVfxPrefab, _currentWeapon.transform);
+        // //vfxObj.transform.localScale *= 2f;
+        // var vfxs = vfxObj.GetComponentsInChildren<ParticleSystem>();
+        // foreach (var vfx in vfxs)
+        // {
+        //     var main = vfx.main;
+        //     if(type == MagneticType.N) main.startColor = Color.red;
+        //     else if(type == MagneticType.S) main.startColor = Color.blue;
+        // }
+        // Destroy(vfxObj, 0.25f);
+        
+        VFXType vfxType = type == MagneticType.N ? VFXType.MAGNETIC_SWITCH_N : VFXType.MAGNETIC_SWITCH_S;
+        VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon.transform);
+
         
         switch (_isActiveMagneticSwitchEffect)
         {
@@ -206,6 +212,7 @@ public class WeaponHandler : MonoBehaviour
     public void SpawnSkillEffect(GameObject skillObj)
     {
         Instantiate(skillObj, transform.position, transform.rotation);
+        VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
     }
     
     public void CreateProjectile(GameObject prefab)

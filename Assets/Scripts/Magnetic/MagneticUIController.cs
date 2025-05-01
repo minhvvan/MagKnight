@@ -271,6 +271,15 @@ public class MagneticUIController : MonoBehaviour
         }
     }
     
+    //모든 대상을 타겟대상에서 제외합니다.
+    public void AllUnCountTarget()
+    {
+        foreach (var targetObj in _currentTargetList)
+        {
+            targetObj.LostTarget();
+        }
+    }
+    
     #endregion
 
     private void OnDestroy()
