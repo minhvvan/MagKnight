@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "Smash", menuName = "SO/Enemy/Pattern/Smash")]
+public class SmashPatternSO : PatternDataSO
+{
+    RaycastHit[] hits = new RaycastHit[1];
+    
+    public override bool CanUse(Transform executorTransform, Transform targetTransform)
+    {
+        return TargetInRange(executorTransform, targetTransform);
+    }
+
+    public override void Execute(Animator animator)
+    {
+        animator.SetTrigger("Smash");
+    }
+
+    private bool TargetInRange(Transform executorTransform, Transform targetTransform)
+    {
+        // Melee Enemy를 위한 탐색
+        if ((executorTransform.position - targetTransform.position).magnitude < 1f) return true; // 너무 가까울때
+        LayerMask targetLayer = 1 << targetTransform.gameObject.layer;
+        Vector3 origin = executorTransform.position + Vector3.up * 0.5f;
+        
+        float radius = 1f;
+        int hitCount = Physics.SphereCastNonAlloc(origin,
+            radius,
+            executorTransform.forward,
+            hits,
+            range,
+            targetLayer
+        );
+        return hitCount > 0;
+    }
+}

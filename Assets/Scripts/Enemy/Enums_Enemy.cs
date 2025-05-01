@@ -4,6 +4,7 @@ public enum EnemyAttckType
     Melee,
     Ranged,
     Special,
+    SelfDestruct,
     Max
 }
 
@@ -16,17 +17,12 @@ public enum EnemyType
     Max
 }
 
-public enum EnemyAbilityType
-{
-    None,
-    Max
-}
-
 public enum EnemyAIType
 {
     None,
     MeleeNormal,
     RangedNormal,
     Boss,
+    SelfDestruct,
     Max
 }

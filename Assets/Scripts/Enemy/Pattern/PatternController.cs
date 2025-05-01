@@ -1,23 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 public class PatternController : MonoBehaviour
 {
     public List<PatternDataSO> patterns = new List<PatternDataSO>();
-    private HashSet<PatternDataSO> _activePatterns = new HashSet<PatternDataSO>();
+    private Dictionary<PatternDataSO, float> _activePatterns = new Dictionary<PatternDataSO, float>();
     private int currentPhase;
 
     private PatternDataSO _currentPattern;
     
     private PatternContext patternContext;
-
-    private Dictionary<string, int> patternsDictionary = new Dictionary<string, int>()
-    {
-        { "SwingAttack", 1 },
-        { "Kick", 2}
-    };
 
     void Awake()
     {
@@ -27,9 +22,10 @@ public class PatternController : MonoBehaviour
     
     public PatternDataSO GetAvailablePattern(Transform executorTransform, Transform targetTransform)
     {
-        foreach (PatternDataSO pattern in _activePatterns)
+        foreach (PatternDataSO pattern in _activePatterns.Keys)
         {
-            if (pattern.CanUse(executorTransform, targetTransform))
+            if (_activePatterns[pattern] < Time.time &&
+                pattern.CanUse(executorTransform, targetTransform))
             {
                 if(_currentPattern == null) { _currentPattern = pattern; }
                 else
@@ -48,7 +44,7 @@ public class PatternController : MonoBehaviour
         {
             if (pattern.phase <= phase)
             {
-                _activePatterns.Add(pattern);
+                _activePatterns[pattern] = Time.time;
             }
         }
     }
@@ -56,18 +52,45 @@ public class PatternController : MonoBehaviour
     public void ExecutePattern(Animator anim)
     {
         _currentPattern.Execute(anim);
+        _activePatterns[_currentPattern] = Time.time + _currentPattern.cooldown;
+        _currentPattern = null;
     }
 
-    public void AttackStart()
+    public void AttackStart(int patternId)
     {
-        int patternId = patternsDictionary[_currentPattern.patternName];
+        // animation event
+        // int patternId = patternsDictionary[_currentPattern.patternName];
         gameObject.GetComponent<HitDetector>().StartDetection(patternId);
     }
 
-    public void AttackEnd()
+    public void AttackEnd(int patternId)
     {
-        gameObject.GetComponent<HitDetector>().StopDetection();
-        _currentPattern.OnExecute();
-        _currentPattern = null;
+        // animation event
+        gameObject.GetComponent<HitDetector>().StopDetection(patternId);
+        // _currentPattern = null;
     }
+    
+    
+    
+    #region debugging
+
+    void OnDrawGizmos()
+    {
+        float radius = 0.5f;
+        float range = 2f;
+        
+        Vector3 origin = transform.position + Vector3.up * 0.5f;
+        Vector3 end = origin + transform.forward * range;
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin, radius);
+        Gizmos.DrawWireSphere(end, radius);
+        
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(origin + transform.right * radius, end + transform.right * radius);
+        Gizmos.DrawLine(origin - transform.right * radius, end - transform.right * radius);
+        Gizmos.DrawLine(origin + transform.up * radius, end + transform.up * radius);
+        Gizmos.DrawLine(origin - transform.up * radius, end - transform.up * radius);
+    }
+    #endregion
 }
