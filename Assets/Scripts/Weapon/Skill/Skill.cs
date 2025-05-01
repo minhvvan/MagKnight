@@ -21,11 +21,11 @@ public class Skill : MonoBehaviour, IObserver<HitInfo>
         _hitDetector.Subscribe(this);
         _damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, 0)
         {
-            sourceTransform = transform
+            extraData = new ExtraData(){ sourceTransform = transform }
         };
         _resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, 10)
         {
-            sourceTransform = transform
+            extraData = new ExtraData(){ sourceTransform = transform }
         };
     }
 

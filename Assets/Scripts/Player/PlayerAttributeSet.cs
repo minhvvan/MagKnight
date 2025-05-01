@@ -160,7 +160,7 @@ namespace Jun
                 if(GetValue(AttributeType.Impulse) == 0)
                     return;
                 
-                OnDamaged?.Invoke(effect.sourceTransform);
+                OnDamaged?.Invoke(effect.extraData.sourceTransform);
                 SetValue(AttributeType.Impulse, 0);
             }
 
