@@ -183,4 +183,10 @@ public class LootCrate : MonoBehaviour, IInteractable
         _cts?.Dispose();
         _cts = null;
     }
+
+    public void SetDisable()
+    {
+        _isOpen = true;
+        BaseRenderer.material.color = Color.gray;
+    }
 }

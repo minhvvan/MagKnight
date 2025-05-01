@@ -178,7 +178,10 @@ namespace hvvan
                     _currentRunData.playerStat = attributeSet.GetDataStruct();
                 }
 
-                _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
+                if (_currentRunData.currentWeapon == WeaponType.None)
+                {
+                    _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
+                }
                 await SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }

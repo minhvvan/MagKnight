@@ -112,7 +112,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         SetRoomReady(true);
         gameObject.SetActive(true);
-        if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && GameManager.Instance.CurrentGameState != GameState.RoomClear)
+        if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
         {
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
@@ -158,11 +158,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         _cleared = true;
-        if(hasReward)Reward();
-        cancelTokenSource?.Cancel();
-        cancelTokenSource?.Dispose();
-        cancelTokenSource = null;
-
+        if(hasReward) Reward();
+        
         ClearRoom();
     }
 
@@ -179,6 +176,11 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             clearRoomField.gameObject.SetActive(false);
         }
+        
+        //스킬게이지 중지
+        cancelTokenSource?.Cancel();
+        cancelTokenSource?.Dispose();
+        cancelTokenSource = null;
         
         SetGateOpen(true);
         GameManager.Instance.ChangeGameState(GameState.RoomClear);

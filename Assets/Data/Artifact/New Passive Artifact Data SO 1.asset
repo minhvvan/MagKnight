@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: New Passive Artifact Data SO 1
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
-  name: 
+  itemName: "\uC544\uD2F0\uD329\uD2B8 0"
+  scrapValue: 100
+  itemID: 0
   N_passiveArtifacts:
   - triggerChance: 1
     triggerEvent: 3
@@ -25,6 +27,7 @@ MonoBehaviour:
       period: 0
       tracking: 0
       maxStack: 0
+    isTarget: 0
     hasCount: 1
     triggerCount: 1
   S_passiveArtifacts:
@@ -38,5 +41,6 @@ MonoBehaviour:
       period: 0
       tracking: 0
       maxStack: 0
+    isTarget: 0
     hasCount: 1
     triggerCount: 1
