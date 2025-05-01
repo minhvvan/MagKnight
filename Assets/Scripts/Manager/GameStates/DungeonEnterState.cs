@@ -1,13 +1,19 @@
 ﻿
 using hvvan;
+using UnityEngine;
 
 public class DungeonEnterState: IGameState
 {
-    public void OnEnter()
+    public async void OnEnter()
     {
-        //currentRun Data 초기화
-        GameManager.Instance.SetCurrentRunData();
-        GameManager.Instance.Player.InitStat(GameManager.Instance.GetCurrentStat());
+        //현재 데이터로 spawn된 player stat초기화
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        GameManager.Instance.Player.InitializeByCurrentRunData(currentRunData);
+        
+        //던전 입장 세팅
+        currentRunData.isDungeonEnter = true;
+        await GameManager.Instance.SaveData(Constants.CurrentRun);
+        
         GameManager.Instance.ChangeGameState(GameState.RoomEnter);
     }
 
