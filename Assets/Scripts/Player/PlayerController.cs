@@ -520,6 +520,10 @@ namespace Moon
         public void SetForceRotation()
         {
             var targetRotation = GetTargetRotationToMovement(true);
+            
+            Vector2 moveInput = _inputHandler.ForceMoveInput;
+            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            if (localMovementDirection == Vector3.zero) return;
 
             _targetRotation = targetRotation;
             transform.rotation = targetRotation;
