@@ -283,6 +283,7 @@ namespace Moon
 
             if (dodgeNow)
             {
+                _abilitySystem.SetTag("Invincibility");
                 PerformDodge();
             }
         }
@@ -320,7 +321,7 @@ namespace Moon
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
-                    gameObject.tag = "SuperArmor";
+                    _abilitySystem.SetTag("SuperArmor");
                     _weaponHandler.ActivateSkill();
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
