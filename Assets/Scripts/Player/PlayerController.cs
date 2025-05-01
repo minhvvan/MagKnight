@@ -57,8 +57,6 @@ namespace Moon
         #region Variable
         bool isDead = false;
         bool isInvisible = true;
-        
-        private bool _lockOnLastFrame = false;
         private bool _isInputUpdate = true;
         private bool _isDodging = false;
         #endregion
@@ -269,7 +267,7 @@ namespace Moon
 
             SetTargetRotation();
 
-            if (IsOrientationUpdated() && IsMoveInput)
+            if (IsOrientationUpdated())
                 UpdateOrientation();
 
             //PlayAudio();
@@ -588,7 +586,7 @@ namespace Moon
             // 2) 평소 locomotion / airborne / landing 회전 처리
             _animator.SetFloat(PlayerAnimatorConst.hashAngleDeltaRad, _angleDiff * Mathf.Deg2Rad);
 
-            if (_currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion)
+            //if (_currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion)
             {
                 Vector3 localInput = new Vector3(_inputHandler.MoveInput.x, 0f, _inputHandler.MoveInput.y);
                 float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, _forwardSpeed / _desiredForwardSpeed);
@@ -752,67 +750,41 @@ namespace Moon
                 return;
 
             Vector3 movement = Vector3.zero;
-  
-            if(_isDodging)
+            bool useManualMove = CanUseManualMove();
+            // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
+            if(_lockOnSystem.IsLockOn)
             {
-                movement = _animator.deltaPosition;
-            }
-            else if (_isGrounded)
-            {
-                // 1) 콤보 중엔 항상 루트 모션만 적용
-                if (_inCombo)
+                // 캐릭터 회전: 타겟 바라보기
+                Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                toTarget.y = 0f;
+                if (toTarget.sqrMagnitude > 0.001f)
+                    transform.rotation = Quaternion.LookRotation(toTarget);
+                
+                if (useManualMove)
                 {
-                    movement = _animator.deltaPosition;
-                    
-                    Vector3 cameraForward = Camera.main.transform.forward;
-                    Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
-                    
-                    transform.rotation = Quaternion.LookRotation(rotation);
+                    // 이동 벡터: 입력 기준으로
+                    Vector2 raw = _inputHandler.MoveInput;
+                    Vector3 dir = new Vector3(raw.x, 0f, raw.y);
+                    if (dir.sqrMagnitude > 1f) dir.Normalize();
+
+                    movement = (transform.right * dir.x + transform.forward * dir.z) * (_forwardSpeed * Time.deltaTime);
                 }
                 else
                 {
-                    // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
-                    if(_lockOnSystem.IsLockOn)
-                    {
-                        // 캐릭터 회전: 타겟 바라보기
-                        Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
-                        toTarget.y = 0f;
-                        if (toTarget.sqrMagnitude > 0.001f)
-                            transform.rotation = Quaternion.LookRotation(toTarget);
-
-                        // 이동 벡터: 입력 기준으로
-                        Vector2 raw = _inputHandler.MoveInput;
-                        Vector3 dir = new Vector3(raw.x, 0f, raw.y);
-                        if (dir.sqrMagnitude > 1f) dir.Normalize();
-
-                        movement = (transform.right * dir.x + transform.forward * dir.z) *
-                                (_forwardSpeed * Time.deltaTime);
-                    }
-                    else
-                    {
-                        // 3) 일반 로코모션 
-                        bool useManualMove = _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion;
-                        if (useManualMove)
-                        {
-                            movement = transform.forward * (_forwardSpeed * Time.deltaTime);
-                        }
-                        else
-                        {
-                            // 루트 모션 기반 이동
-                            RaycastHit hit;
-                            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
-                            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                                movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
-                            else
-                                movement = _animator.deltaPosition;
-                        }
-                    }
-                }                
+                    movement = GetRootMotionMovement();
+                }
             }
             else
             {
-                // 4) 공중 이동: 수동 이동
-                movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                // 3) 일반 로코모션 
+                if (useManualMove)
+                {
+                    movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    movement = GetRootMotionMovement();
+                }
             }
 
 
@@ -843,7 +815,29 @@ namespace Moon
                 }
             }
         }
-        
+
+        bool CanUseManualMove()
+        {
+            return _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnWalk 
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashAirborne;
+                   
+        }
+
+        Vector3 GetRootMotionMovement()
+        {
+            Vector3 ret = Vector3.zero;
+
+            RaycastHit hit;
+            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
+            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                ret = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+            else
+                ret = _animator.deltaPosition;
+
+            return ret;
+        }
 
         void Interact()
         {
@@ -1030,8 +1024,18 @@ namespace Moon
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
+            
+            Quaternion dodgeRotation = transform.rotation;
+            if(_lockOnSystem.IsLockOn)
+            {
+                Vector3 dir = new Vector3(moveInput.x, 0f, moveInput.y);
+                if (dir.sqrMagnitude > 0.001f)
+                {
+                    dodgeRotation = Quaternion.LookRotation(dir);
+                }        
+            }
 
-            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, transform.rotation);
+            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, dodgeRotation);
 
             StartCoroutine(UnblockAfterDodge());
         }
