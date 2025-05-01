@@ -44,6 +44,15 @@ namespace Moon
                 return _movement;
             }
         }
+
+        public Vector2 ForceMoveInput
+        {
+            get
+            {
+                return _movement;
+            }
+        }
+
         public Vector2 CameraInput
         {
             get
@@ -53,6 +62,7 @@ namespace Moon
                 return _cameraMovement;
             }
         }
+
         public bool JumpInput
         {
             get { return _jump && !IsControllerInputBlocked(); }

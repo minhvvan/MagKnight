@@ -500,16 +500,35 @@ namespace Moon
 
         void SetTargetRotation()
         {
-            Vector2 moveInput = _inputHandler.MoveInput;
+            var targetRotation = GetTargetRotation();
+
+            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
+            Vector3 resultingForward = targetRotation * Vector3.forward;
+            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
+            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
+            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
+            _targetRotation = targetRotation;
+        }
+
+        void SetForceRotation()
+        {
+            var targetRotation = GetTargetRotation(true);
+
+            _targetRotation = targetRotation;
+            transform.rotation = targetRotation;
+        }
+
+        Quaternion GetTargetRotation(bool isForce = false)
+        {
+            Vector2 moveInput = isForce ? _inputHandler.ForceMoveInput : _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
-            if (localMovementDirection == Vector3.zero) return;
+            if (localMovementDirection == Vector3.zero) return Quaternion.identity;
 
             Quaternion targetRotation;
 
             // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
             if (_lockOnSystem.IsLockOn)
             {
-                // --- 락온 모드 계산 ---
                 // 실제 락온 카메라를 기준으로 forward 추출
                 Transform camT = cameraSettings.lockOnCamera.transform;
                 Vector3 forward = camT.forward;
@@ -538,12 +557,7 @@ namespace Moon
                 }
             }
 
-            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
-            Vector3 resultingForward = targetRotation * Vector3.forward;
-            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
-            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
-            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
-            _targetRotation = targetRotation;
+            return targetRotation;
         }
 
         // Called each physics step to help determine whether Ellen can turn under player input.
@@ -764,10 +778,10 @@ namespace Moon
             if(_lockOnSystem.IsLockOn)
             {
                 // 캐릭터 회전: 타겟 바라보기
-                Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
-                toTarget.y = 0f;
-                if (toTarget.sqrMagnitude > 0.001f)
-                    transform.rotation = Quaternion.LookRotation(toTarget);
+                // Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                // toTarget.y = 0f;
+                // if (toTarget.sqrMagnitude > 0.001f)
+                //     transform.rotation = Quaternion.LookRotation(toTarget);
                 
                 if (useManualMove)
                 {
@@ -1042,10 +1056,12 @@ namespace Moon
         {
             //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
-            Vector2 moveInput = _inputHandler.MoveInput;
+            Vector2 moveInput = _inputHandler.ForceMoveInput;
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
+            
+            SetForceRotation();
             
             Quaternion dodgeRotation = transform.rotation;
             if(_lockOnSystem.IsLockOn)

@@ -15,7 +15,7 @@ public class LockOnSystem : MonoBehaviour
     public float rotationSpeed = 5f;  // 회전 속도 조절
 
     // 대상 후보 목록 및 현재 락온 대상
-    private Transform[] candidates = new Transform[0];
+    //private Transform[] candidates = new Transform[0];
     public Transform currentTarget;
 
     //해당값으로 락온 상태에 들어갈지 말지 결정
@@ -148,7 +148,7 @@ public class LockOnSystem : MonoBehaviour
     private void StartLockOn()
     {
         var cols = Physics.OverlapSphere(transform.position, searchRadius, targetMask);
-        candidates = cols.Select(c => c.transform).ToArray();
+        var candidates = cols.Select(c => c.transform).ToArray();
         if (candidates.Length == 0) return;
 
         // 화면 중앙에 가장 가까운 적 선택
@@ -185,7 +185,6 @@ public class LockOnSystem : MonoBehaviour
 
         // 초기화
         currentTarget = null;
-        candidates = new Transform[0];
     }
 
     private void ApplyLockOn()
@@ -204,11 +203,24 @@ public class LockOnSystem : MonoBehaviour
 
     private void CycleTarget(int dir)
     {
+        var cols = Physics.OverlapSphere(transform.position, searchRadius, targetMask);
+        var candidates = cols.Select(c => c.transform)
+                             .Where(t => t.gameObject.activeInHierarchy)
+                             .ToArray();
+
         if (candidates.Length <= 1) return;
+        
+        candidates = candidates.OrderBy(t =>
+        {
+            var vp = Camera.main.WorldToViewportPoint(t.position);
+            return vp.x;
+        }).ToArray();
+
+
         int idx = System.Array.IndexOf(candidates, currentTarget);
         idx = (idx + dir + candidates.Length) % candidates.Length;
         currentTarget = candidates[idx];
-        _playerController.cameraSettings.lockOnCamera.LookAt = currentTarget;
+        _playerController.cameraSettings.lockOnCamera.LookAt = currentTarget.GetComponent<Enemy>().blackboard.headTransform;;
     }
 
     private void RotateVCamTowardTarget()
