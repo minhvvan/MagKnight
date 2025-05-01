@@ -41,7 +41,7 @@ public static class VolumeController
         if (_colorAdjustments == null) return;
 
         DOTween.Kill(_colorAdjustments.saturation);
-        
+
         _colorAdjustments.saturation.value = startSaturation;
         
         
@@ -51,23 +51,23 @@ public static class VolumeController
 
 
 
-    private static void Initialize()
+    public static void Initialize()
     {
         var volume = GameObject.FindObjectOfType<Volume>();
         if (volume == null || volume.profile == null)
         {
-            Debug.LogWarning("[MotionBlurController] Global Volume이나 Profile이 존재하지 않습니다.");
+            Debug.LogWarning("Global Volume이나 Profile이 존재하지 않습니다.");
             return;
         }
 
         if (!volume.profile.TryGet(out _motionBlur))
         {
-            Debug.LogWarning("[MotionBlurController] Volume Profile에 MotionBlur가 존재하지 않습니다.");
+            Debug.LogWarning("Volume Profile에 MotionBlur가 존재하지 않습니다.");
         }
 
         if (!volume.profile.TryGet(out _colorAdjustments))
         {
-            Debug.LogWarning("[MotionBlurController] Volume Profile에 ColorAdjustments가 존재하지 않습니다.");
+            Debug.LogWarning("Volume Profile에 ColorAdjustments가 존재하지 않습니다.");
         }
 
 
