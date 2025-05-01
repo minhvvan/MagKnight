@@ -16,4 +16,5 @@ public enum VFXType
     MAGNETIC_SWITCH_S,
     DODGE_DUST,
     JUMP_DUST,
+    BOMB_EXPLODE,
 }

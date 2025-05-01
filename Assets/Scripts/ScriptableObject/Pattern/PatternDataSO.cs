@@ -24,24 +24,7 @@ public abstract class PatternDataSO : ScriptableObject
     public float priority;
     public float cooldown;
     public int phase;
-    [HideInInspector] public bool isCooldown;
-    
 
     public abstract bool CanUse(Transform executorTransform, Transform targetTransform);
     public abstract void Execute(Animator animator);
-
-    public void OnExecute()
-    {
-        isCooldown = true;
-        CheckCooldown().Forget();
-    }
-    
-    private async UniTask CheckCooldown()
-    {
-        float end = Time.time + cooldown;
-        while (Time.time < end)
-            await UniTask.Yield();
-        
-        isCooldown = false;
-    }
 }
