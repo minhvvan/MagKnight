@@ -40,6 +40,7 @@ namespace Moon
         void Reset()
         {
             VolumeController.Initialize();
+            CinemachineImpulseController.Initialize();
 
             Transform keyboardAndMouseCameraTransform = transform.Find("KeyboardAndMouseFreeLookRig");
             if (keyboardAndMouseCameraTransform != null)
