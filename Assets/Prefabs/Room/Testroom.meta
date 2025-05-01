@@ -1,6 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Downloads/Piloto Studio Robot/Shaders/Standard_Package.unitypackage.meta
+guid: 98d25261f01210648933d41926dc574e
+========
 guid: f587cfede723a0a4cb2b5942c287aed6
 folderAsset: yes
+>>>>>>>> main:Assets/Prefabs/Room/Testroom.meta
 DefaultImporter:
   externalObjects: {}
   userData: 

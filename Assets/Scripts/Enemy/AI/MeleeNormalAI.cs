@@ -7,25 +7,26 @@ public class MeleeNormalAI : IEnemyAI
     private EnemyBlackboard _blackboard;
     
     private float destinationUpdateInterval = 0.1f;
-    private float _destinationTimer = 0f;
+    private float _destinationTimer;
 
     public MeleeNormalAI(Enemy enemy)
     {
         _enemy = enemy;
         _blackboard = _enemy.blackboard;
+        destinationUpdateInterval = 0.1f;
     }
     
     public void OnEnter()
     {
-         if(_enemy.IsAvailableTarget())
-        {
-            _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        }
-        if (!_enemy.Agent.pathPending && _enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
-        {
-            // 갈 수 있는 경로
-            _enemy.Anim.SetBool("Trace", true);
-        }
+        //  if(_enemy.IsAvailableTarget())
+        // {
+        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        // }
+        // if (!_enemy.Agent.pathPending && _enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+        // {
+        //     // 갈 수 있는 경로
+        //     _enemy.Anim.SetBool("Trace", true);
+        // }
     }
 
     public void OnUpdate()
