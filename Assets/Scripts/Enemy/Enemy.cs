@@ -30,6 +30,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public Action<Enemy> OnDead;
     
+    private RaycastHit[] _hits = new RaycastHit[1];
+    private Collider[] _colliders = new Collider[1];
+    
     // stateMachine
     private StateMachine _stateMachine;
     
@@ -223,7 +226,43 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
                 targetPos = transform.position + forward * delta;
             }
         }
+        
+        var end = transform.position + new Vector3(0, 1, 0);
+        
+        var didHit = Physics.OverlapCapsuleNonAlloc(
+            transform.position + new Vector3(0, .7f, 0), 
+            end, 
+            .5f,
+            _colliders, 
+            (1 << LayerMask.NameToLayer("Environment")));
 
+        if (didHit > 0)
+        {
+            targetPos = transform.position;
+        }
+        else
+        {
+            var knockBackDir = targetPos - transform.position;
+            var distance = knockBackDir.magnitude;
+            knockBackDir.y = 0;
+            knockBackDir.Normalize();
+
+            didHit = Physics.CapsuleCastNonAlloc(
+                transform.position + new Vector3(0, .7f, 0), 
+                end, 
+                .3f, 
+                knockBackDir,
+                _hits,
+                distance,
+                (1 << LayerMask.NameToLayer("Environment"))
+            );
+        
+            if (didHit > 0)
+            {
+                targetPos = _hits[0].point - knockBackDir * .1f;
+            }
+        }
+        
         try
         {
             while (duration < moveTime)
