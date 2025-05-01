@@ -41,6 +41,14 @@ namespace Moon
 
         private IEnumerator SceneLoaded()
         {
+            //트레이닝 룸 예외 처리
+            if (!checkWeapon) 
+            {
+                var currentRunData = GameManager.Instance.CurrentRunData;
+                GameManager.Instance.Player.InitializeByCurrentRunData(currentRunData);
+                yield break;
+            }
+            
             GameManager.Instance.ChangeGameState(GameState.DungeonEnter);
             
             var enterTask = RoomSceneController.Instance.EnterFloor();

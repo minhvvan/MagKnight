@@ -37,6 +37,11 @@ public static class Addresses
         {
             public const string ItemListData = "data/itemList";
         }
+        
+        public static class Artifact
+        {
+            public const string ArtifactMappingData = "data/artifactMapping";
+        }
     }
     
     public static class Prefabs

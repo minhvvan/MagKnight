@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Serialization;
+using VFolders.Libs;
 
 [Serializable]
 public class CurrentRunData : ISaveData
@@ -18,8 +20,6 @@ public class CurrentRunData : ISaveData
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
     public List<int> clearedRooms = new List<int>();
     
-    public bool artifactSupplied = false;
-
     public PlayerStat playerStat = new();
     
     //무기
@@ -29,8 +29,8 @@ public class CurrentRunData : ISaveData
     public int scrap;
     
     //아티팩트
-    public List<int> leftArtifacts = new List<int>();
-    public List<int> rightArtifacts = new List<int>();
+    public SerializedDictionary<int, int> leftArtifacts = new SerializedDictionary<int, int>();
+    public SerializedDictionary<int, int> rightArtifacts = new SerializedDictionary<int, int>();
     
     public string GetDataKey()
     {

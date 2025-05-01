@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using hvvan;
+using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,6 +14,8 @@ public class ArtifactInventory : MonoBehaviour
 
     public AbilitySystem abilitySystem;
     private MagneticController _magneticController;
+    
+    private ArtifactDataMappingSO _artifactDataMappingSO;
     
     void Start()
     {
@@ -57,7 +60,7 @@ public class ArtifactInventory : MonoBehaviour
     }
     
     
-    public async UniTaskVoid SetLeftArtifact(int index, ArtifactDataSO artifact)
+    public async UniTaskVoid SetLeftArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
     {
         // 바뀐 아티팩트가 기존에 있던게 아니라면
         if (artifact != null && !Left_ArtifactGas.Contains(artifact))
@@ -88,16 +91,24 @@ public class ArtifactInventory : MonoBehaviour
             else
             {
                 currentArtifact.S_RemoveTo(abilitySystem);
-            }   
+            }
         }
-
-        //데이터 저장
+        
         var currentRunData = GameManager.Instance.CurrentRunData;
-        currentRunData.leftArtifacts.AddUnique(artifact.itemID);
-        await GameManager.Instance.SaveData(Constants.CurrentRun);
+        if (artifact)
+        {
+            currentRunData.leftArtifacts[index] = artifact.itemID;
+        }
+        else
+        {
+            currentRunData.leftArtifacts.Remove(index);
+        }
+        
+        //데이터 저장
+        if (isSave) await GameManager.Instance.SaveData(Constants.CurrentRun);
     }
 
-    public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact)
+    public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
     {
         if (artifact != null && !Right_ArtifactGas.Contains(artifact))
         {
@@ -130,10 +141,18 @@ public class ArtifactInventory : MonoBehaviour
             }   
         }
         
-        //데이터 저장
         var currentRunData = GameManager.Instance.CurrentRunData;
-        currentRunData.rightArtifacts.AddUnique(artifact.itemID);
-        await GameManager.Instance.SaveData(Constants.CurrentRun);
+        if (artifact)
+        {
+            currentRunData.rightArtifacts[index] = artifact.itemID;
+        }
+        else
+        {
+            currentRunData.rightArtifacts.Remove(index);
+        }
+        
+        //데이터 저장
+        if (isSave) await GameManager.Instance.SaveData(Constants.CurrentRun);
     }
 
     
@@ -155,5 +174,24 @@ public class ArtifactInventory : MonoBehaviour
             S_ApplyAll(Right_ArtifactGas);
         }
     }
+
+    public async UniTaskVoid SetLeftArtifact(int index, int artifactID)
+    {
+        if (!_artifactDataMappingSO)
+        {
+            _artifactDataMappingSO = await DataManager.Instance.LoadScriptableObjectAsync<ArtifactDataMappingSO>(Addresses.Data.Artifact.ArtifactMappingData);
+        }
+
+        SetLeftArtifact(index, _artifactDataMappingSO.artifacts[artifactID], false).Forget();
+    }
     
+    public async UniTaskVoid SetRightArtifact(int index, int artifactID)
+    {
+        if (!_artifactDataMappingSO)
+        {
+            _artifactDataMappingSO = await DataManager.Instance.LoadScriptableObjectAsync<ArtifactDataMappingSO>(Addresses.Data.Artifact.ArtifactMappingData);
+        }
+
+        SetRightArtifact(index, _artifactDataMappingSO.artifacts[artifactID], false).Forget();
+    }
 }

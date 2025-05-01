@@ -7,6 +7,7 @@ public static class Constants
     public const int MaxRooms = 8;
     public const int MinRooms = 3;
     public const int MaxTreasureRoomCount = 2;
+    public const int MaxArtifacts = 9;
 
     #region SaveDataKey
 
@@ -26,4 +27,5 @@ public static class Constants
     public const string CrateClose = "CrateClose";
 
     #endregion
+
 }

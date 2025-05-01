@@ -40,6 +40,7 @@ namespace Moon
         private float _maxForwardSpeed;
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
+        private ArtifactInventory _artifactInventory;
         #endregion
             
         #region Property
@@ -146,6 +147,7 @@ namespace Moon
             _abilitySystem = GetComponent<AbilitySystem>();
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
+            _artifactInventory = GetComponentInChildren<ArtifactInventory>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -168,10 +170,11 @@ namespace Moon
             if (currentRunData.currentWeapon == WeaponType.None)
             {
                 Debug.Log("CurrentWeapon is None");
-                return;
+                //TODO: 무기가 없으면 베이스캠프로 강제 이동(예외 처리)
             }
             
             SetCurrentWeapon(currentRunData.currentWeapon);
+            RecoverArtifact(currentRunData);
         }
 
         public void InitStat(PlayerStat stat)
@@ -919,6 +922,19 @@ namespace Moon
             _weaponHandler.UpgradeCurrentParts();
         }
         #endregion
+        
+        private void RecoverArtifact(CurrentRunData currentRunData)
+        {
+            foreach (var (key, value) in currentRunData.leftArtifacts)
+            {
+                _artifactInventory.SetLeftArtifact(key, value).Forget();
+            }            
+            
+            foreach (var (key, value) in currentRunData.rightArtifacts)
+            {
+                _artifactInventory.SetRightArtifact(key, value).Forget();
+            }
+        }
         
         public GameObject GetGameObject()
         {

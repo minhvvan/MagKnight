@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -8,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(SaveDataManager))]
-public class SimpleSaveDataEditor : Editor
+public class SaveDataManagerEditor : Editor
 {
     private enum DataType
     {
@@ -16,22 +14,28 @@ public class SimpleSaveDataEditor : Editor
         CurrentRunData
     }
 
-    private DataType selectedDataType = DataType.PlayerData;
-    private string rawJsonContent = string.Empty;
-    private bool isEditingEnabled = false;
-    private Vector2 jsonScrollPosition = Vector2.zero;
-    private bool isFormatted = false; // 현재 JSON이 포맷팅되었는지 여부
-    private string unformattedJson = string.Empty; // 포맷팅되지 않은 원본 JSON
+    private DataType _selectedDataType = DataType.PlayerData;
+    private string _rawJsonContent = string.Empty;
+    private bool _isEditingEnabled = false;
+    private Vector2 _jsonScrollPosition = Vector2.zero;
+    private bool _isFormatted = false; // 현재 JSON이 포맷팅되었는지 여부
+    private string _unformattedJson = string.Empty; // 포맷팅되지 않은 원본 JSON
 
     // 씬 변경 이벤트 리스너
-    private static bool isSceneChanging = false;
+    private static bool _isSceneChanging = false;
 
     // 텍스트 영역 스타일을 위한 GUIStyle
-    private GUIStyle jsonTextAreaStyle;
-    private bool stylesInitialized = false;
+    private GUIStyle _jsonTextAreaStyle;
+    private bool _stylesInitialized = false;
+
+    // SaveDataManager 참조
+    private SaveDataManager _saveDataManager;
 
     private void OnEnable()
     {
+        // SaveDataManager 참조 가져오기
+        _saveDataManager = (SaveDataManager)target;
+        
         // 스타일 초기화는 OnInspectorGUI에서 처리
         // 씬 변경 이벤트 등록
         EditorSceneManager.sceneOpening += OnSceneOpening;
@@ -50,35 +54,35 @@ public class SimpleSaveDataEditor : Editor
     // 씬 열기 시작 이벤트 핸들러
     private void OnSceneOpening(string path, OpenSceneMode mode)
     {
-        isSceneChanging = true;
+        _isSceneChanging = true;
     }
 
     // 씬 열기 완료 이벤트 핸들러
     private void OnSceneOpened(Scene scene, OpenSceneMode mode)
     {
-        isSceneChanging = false;
+        _isSceneChanging = false;
     }
 
     // 씬 닫기 이벤트 핸들러
     private void OnSceneClosed(Scene scene)
     {
-        isSceneChanging = true;
+        _isSceneChanging = true;
         // 지연 후 상태 복원
         EditorApplication.delayCall += () => {
-            isSceneChanging = false;
+            _isSceneChanging = false;
         };
     }
 
     // 스타일 초기화 함수
     private void InitializeStyles()
     {
-        if (!stylesInitialized && EditorStyles.textArea != null)
+        if (!_stylesInitialized && EditorStyles.textArea != null)
         {
-            jsonTextAreaStyle = new GUIStyle(EditorStyles.textArea)
+            _jsonTextAreaStyle = new GUIStyle(EditorStyles.textArea)
             {
                 wordWrap = true  // 워드랩 활성화
             };
-            stylesInitialized = true;
+            _stylesInitialized = true;
         }
     }
 
@@ -88,7 +92,7 @@ public class SimpleSaveDataEditor : Editor
         InitializeStyles();
 
         // 씬 전환 중에는 에디터 UI 비활성화
-        if (isSceneChanging)
+        if (_isSceneChanging)
         {
             EditorGUILayout.HelpBox("씬 전환 중에는 Save Data Editor를 사용할 수 없습니다.", MessageType.Info);
             return;
@@ -102,14 +106,14 @@ public class SimpleSaveDataEditor : Editor
         // 데이터 타입 선택
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Data Type:", GUILayout.Width(100));
-        selectedDataType = (DataType)EditorGUILayout.EnumPopup(selectedDataType);
+        _selectedDataType = (DataType)EditorGUILayout.EnumPopup(_selectedDataType);
         EditorGUILayout.EndHorizontal();
         
         // 삭제 버튼
-        if (GUILayout.Button("Delete " + selectedDataType.ToString()))
+        if (GUILayout.Button("Delete " + _selectedDataType.ToString()))
         {
             if (EditorUtility.DisplayDialog("Delete Save Data", 
-                $"정말로 {selectedDataType} 데이터를 삭제하시겠습니까?", 
+                $"정말로 {_selectedDataType} 데이터를 삭제하시겠습니까?", 
                 "예", "아니오"))
             {
                 DeleteSelectedData();
@@ -119,35 +123,35 @@ public class SimpleSaveDataEditor : Editor
         EditorGUILayout.Space();
         
         // 불러오기 버튼
-        if (GUILayout.Button("Load " + selectedDataType.ToString()))
+        if (GUILayout.Button("Load " + _selectedDataType.ToString()))
         {
             LoadSelectedData();
-            isEditingEnabled = true;
-            isFormatted = false; // 로드 시 포맷팅 상태 초기화
+            _isEditingEnabled = true;
+            _isFormatted = false; // 로드 시 포맷팅 상태 초기화
         }
         
         // 데이터가 로드되었을 때만 표시
-        if (!string.IsNullOrEmpty(rawJsonContent))
+        if (!string.IsNullOrEmpty(_rawJsonContent))
         {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("JSON Data:", EditorStyles.boldLabel);
             
             // 스크롤 시작
-            jsonScrollPosition = EditorGUILayout.BeginScrollView(jsonScrollPosition, GUILayout.Height(300));
+            _jsonScrollPosition = EditorGUILayout.BeginScrollView(_jsonScrollPosition, GUILayout.Height(300));
             
             // 스타일이 초기화되었는지 확인
-            GUIStyle textAreaStyle = stylesInitialized ? jsonTextAreaStyle : EditorStyles.textArea;
+            GUIStyle textAreaStyle = _stylesInitialized ? _jsonTextAreaStyle : EditorStyles.textArea;
             
             // 수정 가능한 텍스트 영역 (워드랩 적용)
             EditorGUI.BeginChangeCheck();
-            string newContent = EditorGUILayout.TextArea(rawJsonContent, textAreaStyle, GUILayout.ExpandHeight(true));
+            string newContent = EditorGUILayout.TextArea(_rawJsonContent, textAreaStyle, GUILayout.ExpandHeight(true));
             if (EditorGUI.EndChangeCheck())
             {
-                rawJsonContent = newContent;
-                if (isFormatted)
+                _rawJsonContent = newContent;
+                if (_isFormatted)
                 {
                     // 직접 편집 시 포맷팅 상태 해제
-                    isFormatted = false;
+                    _isFormatted = false;
                 }
             }
             
@@ -157,7 +161,7 @@ public class SimpleSaveDataEditor : Editor
             EditorGUILayout.BeginHorizontal();
             
             // 저장 버튼
-            EditorGUI.BeginDisabledGroup(!isEditingEnabled);
+            EditorGUI.BeginDisabledGroup(!_isEditingEnabled);
             if (GUILayout.Button("Save Changes"))
             {
                 SaveSelectedData();
@@ -166,10 +170,10 @@ public class SimpleSaveDataEditor : Editor
             EditorGUI.EndDisabledGroup();
             
             // 포맷 토글 버튼
-            string formatButtonText = isFormatted ? "Compress JSON" : "Format JSON";
+            string formatButtonText = _isFormatted ? "Compress JSON" : "Format JSON";
             if (GUILayout.Button(formatButtonText))
             {
-                if (isFormatted)
+                if (_isFormatted)
                 {
                     // 압축 모드로 변환
                     CompressJSON();
@@ -187,45 +191,68 @@ public class SimpleSaveDataEditor : Editor
     
     private void LoadSelectedData()
     {
-        string key = selectedDataType.ToString();
-        string filePath = Path.Combine(Application.persistentDataPath, "SaveData", $"{key}.json");
+        string key = _selectedDataType.ToString();
         
-        if (File.Exists(filePath))
+        try
         {
-            try
+            // SaveDataManager를 사용하여 데이터 로드
+            // ISaveData를 직접 가져올 수 없으므로 실제 구현 클래스를 미리 알아야 함
+            // 여기서는 임시로 PlayerData와 CurrentRunData 클래스가 있다고 가정
+            
+            // 키에 따라 다른 타입으로 로드
+            var data = LoadDataByType(key);
+            
+            if (data != null)
             {
-                rawJsonContent = File.ReadAllText(filePath);
-                unformattedJson = rawJsonContent; // 원본 JSON 저장
+                // JsonUtility를 사용하여, ISaveData 인터페이스 구현체를 JSON 문자열로 변환
+                _rawJsonContent = JsonUtility.ToJson(data);
+                _unformattedJson = _rawJsonContent; // 원본 JSON 저장
                 Debug.Log($"{key} 데이터를 성공적으로 불러왔습니다.");
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError($"데이터 로드 중 오류: {e.Message}");
-                rawJsonContent = string.Empty;
-                EditorUtility.DisplayDialog("Error", $"데이터 로드 중 오류가 발생했습니다: {e.Message}", "확인");
+                Debug.LogWarning($"선택한 데이터 파일이 존재하지 않습니다: {key}");
+                _rawJsonContent = string.Empty;
+                EditorUtility.DisplayDialog("Warning", $"{key} 데이터 파일이 존재하지 않습니다.", "확인");
             }
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogWarning($"선택한 데이터 파일이 존재하지 않습니다: {key}");
-            rawJsonContent = string.Empty;
-            EditorUtility.DisplayDialog("Warning", $"{key} 데이터 파일이 존재하지 않습니다.", "확인");
+            Debug.LogError($"데이터 로드 중 오류: {e.Message}");
+            _rawJsonContent = string.Empty;
+            EditorUtility.DisplayDialog("Error", $"데이터 로드 중 오류가 발생했습니다: {e.Message}", "확인");
         }
+    }
+    
+    // 타입에 따라 적절한 데이터를 로드하는 헬퍼 메서드
+    private ISaveData LoadDataByType(string key)
+    {
+        // 여기서는 간단한 예시를 위해 dynamic을 사용
+        // 실제 환경에서는 타입에 따른 분기 처리 필요
+        if (key == "PlayerData")
+        {
+            return _saveDataManager.LoadData<PlayerData>(key);
+        }
+        else if (key == "CurrentRunData")
+        {
+            return _saveDataManager.LoadData<CurrentRunData>(key);
+        }
+        
+        return null;
     }
     
     private void SaveSelectedData()
     {
-        string key = selectedDataType.ToString();
-        string filePath = Path.Combine(Application.persistentDataPath, "SaveData", $"{key}.json");
+        string key = _selectedDataType.ToString();
         
         try
         {
-            string jsonToSave = rawJsonContent;
+            string jsonToSave = _rawJsonContent;
             
             // 포맷팅된 상태라면 압축 JSON으로 변환
-            if (isFormatted)
+            if (_isFormatted)
             {
-                jsonToSave = CompressJsonString(rawJsonContent);
+                jsonToSave = CompressJsonString(_rawJsonContent);
             }
             
             // 저장 전 JSON 유효성 검사 시도
@@ -244,23 +271,21 @@ public class SimpleSaveDataEditor : Editor
                 }
             }
             
-            // 디렉토리 확인 및 생성
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+            // SaveDataManager에 저장하기 위해 적절한 객체로 변환
+            SaveData(key, jsonToSave);
             
-            // 파일 저장
-            File.WriteAllText(filePath, jsonToSave);
             Debug.Log($"{key} 데이터를 성공적으로 저장했습니다.");
             
             // 저장 후 상태 업데이트
-            unformattedJson = jsonToSave;
-            if (isFormatted)
+            _unformattedJson = jsonToSave;
+            if (_isFormatted)
             {
                 // 포맷팅된 상태를 유지하면서 저장한 경우, 내부적으로는 압축된 JSON 저장
-                rawJsonContent = FormatJsonString(jsonToSave); // 다시 포맷팅하여 표시
+                _rawJsonContent = FormatJsonString(jsonToSave); // 다시 포맷팅하여 표시
             }
             else
             {
-                rawJsonContent = jsonToSave;
+                _rawJsonContent = jsonToSave;
             }
         }
         catch (Exception e)
@@ -270,59 +295,67 @@ public class SimpleSaveDataEditor : Editor
         }
     }
     
+    // JSON 문자열을 적절한 객체로 변환하고 SaveDataManager를 통해 저장
+    private async void SaveData(string key, string json)
+    {
+        if (key == "PlayerData")
+        {
+            var data = JsonUtility.FromJson<PlayerData>(json);
+            await _saveDataManager.SaveData(key, data);
+        }
+        else if (key == "CurrentRunData")
+        {
+            var data = JsonUtility.FromJson<CurrentRunData>(json);
+            await _saveDataManager.SaveData(key, data);
+        }
+    }
+    
     private void DeleteSelectedData()
     {
-        string key = selectedDataType.ToString();
-        string filePath = Path.Combine(Application.persistentDataPath, "SaveData", $"{key}.json");
+        string key = _selectedDataType.ToString();
         
-        if (File.Exists(filePath))
+        try
         {
-            try
-            {
-                File.Delete(filePath);
-                Debug.Log($"{key} 데이터를 성공적으로 삭제했습니다.");
-                rawJsonContent = string.Empty;
-                unformattedJson = string.Empty;
-                isFormatted = false;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"데이터 삭제 중 오류: {e.Message}");
-                EditorUtility.DisplayDialog("Error", $"데이터 삭제 중 오류가 발생했습니다: {e.Message}", "확인");
-            }
+            // SaveDataManager를 사용하여 데이터 삭제
+            _saveDataManager.DeleteData(key);
+            
+            Debug.Log($"{key} 데이터를 성공적으로 삭제했습니다.");
+            _rawJsonContent = string.Empty;
+            _unformattedJson = string.Empty;
+            _isFormatted = false;
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogWarning($"삭제할 데이터 파일이 존재하지 않습니다: {key}");
-            EditorUtility.DisplayDialog("Warning", $"{key} 데이터 파일이 존재하지 않습니다.", "확인");
+            Debug.LogError($"데이터 삭제 중 오류: {e.Message}");
+            EditorUtility.DisplayDialog("Error", $"데이터 삭제 중 오류가 발생했습니다: {e.Message}", "확인");
         }
     }
     
     // JSON 포맷팅 함수
     private void FormatJSON()
     {
-        if (string.IsNullOrEmpty(rawJsonContent))
+        if (string.IsNullOrEmpty(_rawJsonContent))
             return;
             
         try
         {
             // 유효한 JSON인지 확인
-            if (!IsValidJson(rawJsonContent))
+            if (!IsValidJson(_rawJsonContent))
             {
                 EditorUtility.DisplayDialog("Error", "유효하지 않은 JSON 형식입니다.", "확인");
                 return;
             }
             
             // 원본 JSON 저장 (압축된 형태)
-            if (!isFormatted)
+            if (!_isFormatted)
             {
-                unformattedJson = rawJsonContent;
+                _unformattedJson = _rawJsonContent;
             }
             
             // 들여쓰기 추가
-            string formattedJson = FormatJsonString(rawJsonContent);
-            rawJsonContent = formattedJson;
-            isFormatted = true;
+            string formattedJson = FormatJsonString(_rawJsonContent);
+            _rawJsonContent = formattedJson;
+            _isFormatted = true;
         }
         catch (Exception e)
         {
@@ -334,24 +367,24 @@ public class SimpleSaveDataEditor : Editor
     // JSON 압축 함수 (포맷팅 제거)
     private void CompressJSON()
     {
-        if (!isFormatted || string.IsNullOrEmpty(rawJsonContent))
+        if (!_isFormatted || string.IsNullOrEmpty(_rawJsonContent))
             return;
             
         try
         {
             // 유효한 JSON인지 확인
-            if (!IsValidJson(rawJsonContent))
+            if (!IsValidJson(_rawJsonContent))
             {
                 EditorUtility.DisplayDialog("Error", "유효하지 않은 JSON 형식입니다.", "확인");
                 return;
             }
             
             // 원본 (압축된) JSON으로 복원하거나 새로 압축
-            rawJsonContent = !string.IsNullOrEmpty(unformattedJson) 
-                ? unformattedJson 
-                : CompressJsonString(rawJsonContent);
+            _rawJsonContent = !string.IsNullOrEmpty(_unformattedJson) 
+                ? _unformattedJson 
+                : CompressJsonString(_rawJsonContent);
                 
-            isFormatted = false;
+            _isFormatted = false;
         }
         catch (Exception e)
         {
