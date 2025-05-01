@@ -23,7 +23,7 @@ public class GameplayEffect
     public int maxStack = 1;
     [NonSerialized] public int currentStack;
     
-    [NonSerialized] public Transform sourceTransform;
+    public ExtraData extraData = new ExtraData();
     
     public GameplayEffect(EffectType effectType, AttributeType attributeType, float amount, float duration = 0f, bool tracking = false)
     {
@@ -39,4 +39,10 @@ public class GameplayEffect
         GameplayEffect copy = (GameplayEffect)MemberwiseClone();
         return copy;
     }
+}
+
+public class ExtraData
+{
+    public Transform sourceTransform;
+    public float weaponRange;
 }

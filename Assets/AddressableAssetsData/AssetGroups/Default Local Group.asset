@@ -27,13 +27,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2a2e23d8cc3329a4198ade210e271835
-    m_Address: data/player/stat
+  - m_GUID: 2899926a7605c424a913e347c0fa6815
+    m_Address: data/weapon/dictionary
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 304dc4d64ff194d4d837d34d7cd22aca
-    m_Address: data/weapon/katana
+  - m_GUID: 2a2e23d8cc3329a4198ade210e271835
+    m_Address: data/player/stat
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
