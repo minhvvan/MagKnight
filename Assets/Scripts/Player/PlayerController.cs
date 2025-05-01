@@ -86,6 +86,8 @@ namespace Moon
         #endregion
 
         [NonSerialized] public bool inMagnetSkill = false;
+        [NonSerialized] public bool inMagnetActionJump = false;
+
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -484,6 +486,10 @@ namespace Moon
                     VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
                 }
             }
+            else if (inMagnetActionJump)
+            {
+                _verticalSpeed = 0f;
+            }
             else
             {
                 // If Ellen is airborne, the jump button is not held and Ellen is currently moving upwards...
@@ -519,11 +525,13 @@ namespace Moon
 
         public void SetForceRotation()
         {
-            var targetRotation = GetTargetRotationToMovement(true);
+            if(inMagnetSkill) return;
             
             Vector2 moveInput = _inputHandler.ForceMoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
             if (localMovementDirection == Vector3.zero) return;
+
+            var targetRotation = GetTargetRotationToMovement(true);
 
             _targetRotation = targetRotation;
             transform.rotation = targetRotation;

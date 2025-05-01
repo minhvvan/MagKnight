@@ -337,7 +337,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         //ex. Enemy에겐 사용 시 무조건 돌진한다.
         //await magnetApproach.Execute(this, target);
-        await magnetDashAction.Execute(this, target);
+        await magnetDashAttackAction.Execute(this, target);
     }
 
     void ApplySoftCollision(Collider[] colliders)
