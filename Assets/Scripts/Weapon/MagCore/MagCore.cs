@@ -106,7 +106,7 @@ public class MagCore: MonoBehaviour, IInteractable
         SetPartsEffect(abilitySystem);
     }
 
-    public void Interact(IInteractor interactor)
+    public async void Interact(IInteractor interactor)
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
@@ -117,7 +117,10 @@ public class MagCore: MonoBehaviour, IInteractable
             var abilitySystem = player.AbilitySystem;
             SetPartsEffect(abilitySystem);
             // GameManager.Instance.CurrentRunData.currentMagCore = this;
-            // GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
+            GameManager.Instance.CurrentRunData.currentWeapon = weaponType;
+            GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
+
+            await GameManager.Instance.SaveData(Constants.CurrentRun);
             
             onChooseItem?.Invoke();
         }

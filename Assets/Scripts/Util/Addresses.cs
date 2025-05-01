@@ -42,6 +42,11 @@ public static class Addresses
         {
             public const string VFXLOADER = "data/fx/vfxloader";
         }
+        
+        public static class Artifact
+        {
+            public const string ArtifactMappingData = "data/artifactMapping";
+        }
     }
     
     public static class Prefabs

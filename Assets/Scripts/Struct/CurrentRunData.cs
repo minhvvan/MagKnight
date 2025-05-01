@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.Serialization;
+using VFolders.Libs;
 
 [Serializable]
 public class CurrentRunData : ISaveData
 {
     public SaveDataType DataType => SaveDataType.Temporary;
+
+    public bool isDungeonEnter = false;
     
     // 현재 게임 실행 정보
     public int currentFloor = 0;
@@ -14,21 +18,19 @@ public class CurrentRunData : ISaveData
     public Vector3 lastPlayerPosition = Vector3.zero;
     public Quaternion lastPlayerRotation = Quaternion.identity;
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
-    
     public List<int> clearedRooms = new List<int>();
-
-    //TODO
-    /*
-     * 현재 스탯, 무기, 아티팩트, 재화(철가루)
-     */
+    
     public PlayerStat playerStat = new();
     
     //무기
-    public MagCore currentMagCore;
     public WeaponType currentWeapon;
     public PartsType currentPartsType;
     public int currentPartsUpgradeValue;
     public int scrap;
+    
+    //아티팩트
+    public SerializedDictionary<int, int> leftArtifacts = new SerializedDictionary<int, int>();
+    public SerializedDictionary<int, int> rightArtifacts = new SerializedDictionary<int, int>();
     
     public string GetDataKey()
     {

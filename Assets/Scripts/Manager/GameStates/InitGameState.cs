@@ -16,11 +16,14 @@ public class InitGameState: IGameState
 
         _currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
 
-        if (_currentRunData == null)
+        //currentRunData 설정
+        GameManager.Instance.SetCurrentRunData(_currentRunData); //null이면 생성
+        _currentRunData = GameManager.Instance.CurrentRunData;
+
+        if (!_currentRunData.isDungeonEnter)
         {
-            //회차 정보 없음 => BaseCamp로
+            //던전 입장 X => BaseCamp로
             SceneController.TransitionToScene(Constants.BaseCamp, true, TransitionToBaseCampCallback);
-            GameManager.Instance.ChangeGameState(GameState.BaseCamp);
         }
         else
         {
@@ -30,18 +33,15 @@ public class InitGameState: IGameState
             var floorList = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
             var currentFloorRooms = floorList.Floor[_currentRunData.currentFloor];
             
-            //시작씬으로 이동
+            //시작씬으로 이동 -> 시작씬 로드 이후 최근 저장 위치로 이동
             SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
         }
     }
 
     private IEnumerator TransitionToBaseCampCallback()
     {
-        var getPlayerStatTask = GameManager.Instance.GetPlayerStat();
-        yield return new WaitUntil(() => getPlayerStatTask.Status.IsCompleted());
-    
-        PlayerStat playerStat = getPlayerStatTask.GetAwaiter().GetResult();
-        GameManager.Instance.Player.InitStat(playerStat);
+        GameManager.Instance.ChangeGameState(GameState.BaseCamp);
+        yield break;
     }
 
     private IEnumerator MoveToLastRoom()
