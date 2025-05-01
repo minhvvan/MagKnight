@@ -9,6 +9,8 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: PBR_Gradient_Character
   m_Shader: {fileID: 4800000, guid: cda243e0bc6ebe54b862d28e5eeed200, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords:
   - _ADD_PRECOMPUTED_VELOCITY
@@ -23,6 +25,7 @@ Material:
   disabledShaderPasses:
   - TransparentBackface
   - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -92,7 +95,7 @@ Material:
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
     - _ExposureWeight: 0
-    - _Intensity: 0.15
+    - _Intensity: 0.25
     - _MetallicScale: 0
     - _NormalScale: 0
     - _OcclusionScale: 1

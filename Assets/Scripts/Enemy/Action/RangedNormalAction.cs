@@ -28,10 +28,6 @@ public class RangedNormalAction : IEnemyAction
 
     public void OnUpdate()
     {
-        // if (!_shot && _enemy.Anim.GetCurrentAnimatorStateInfo(0).IsName("ActionRunning"))
-        // {
-        //
-        // }
         if (!_shot && _startupDuration > _blackboard.startupTime)
         {
             _enemy.Anim.SetTrigger("ActionRun");
