@@ -14,6 +14,7 @@ public static class Addresses
         public static class Weapon
         {
             public const string Katana = "data/weapon/katana";
+            public const string Dictionary = "data/weapon/dictionary";
         }
 
         public static class Room
@@ -41,6 +42,11 @@ public static class Addresses
         public static class FX
         {
             public const string VFXLOADER = "data/fx/vfxloader";
+        }
+        
+        public static class Artifact
+        {
+            public const string ArtifactMappingData = "data/artifactMapping";
         }
     }
     

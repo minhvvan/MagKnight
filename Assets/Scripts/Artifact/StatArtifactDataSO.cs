@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Artifact/StatArtifactDataSO")]
+[CreateAssetMenu(menuName = "SO/Artifact/StatArtifactDataSO")]
 public class StatArtifactDataSO : ArtifactDataSO
 {
     [SerializeField] List<GameplayEffect> N_ArtifactEffect;

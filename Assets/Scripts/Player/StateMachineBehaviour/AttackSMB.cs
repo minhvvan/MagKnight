@@ -8,6 +8,19 @@ namespace Moon
     {
         private bool _hasBlendOutStarted = false;
 
+        public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+        {
+            PlayerController controller = animator.GetComponent<PlayerController>();
+            if(controller.WeaponHandler.CurrentWeaponType == WeaponType.Bow)
+            {
+                controller.SetForceRotationToAim();
+            }
+            else
+            {
+                controller.SetForceRotation();
+            }
+        }
+
         public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             if (_hasBlendOutStarted) return;

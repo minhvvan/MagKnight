@@ -8,7 +8,6 @@ using DG.Tweening;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
@@ -39,6 +38,7 @@ namespace Moon
         private float _maxForwardSpeed;
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
+        private ArtifactInventory _artifactInventory;
         #endregion
             
         #region Property
@@ -57,8 +57,6 @@ namespace Moon
         #region Variable
         bool isDead = false;
         bool isInvisible = true;
-        
-        private bool _lockOnLastFrame = false;
         private bool _isInputUpdate = true;
         private bool _isDodging = false;
         #endregion
@@ -88,6 +86,8 @@ namespace Moon
         #endregion
 
         [NonSerialized] public bool inMagnetSkill = false;
+        [NonSerialized] public bool inMagnetActionJump = false;
+
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -145,6 +145,7 @@ namespace Moon
             _abilitySystem = GetComponent<AbilitySystem>();
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
+            _artifactInventory = GetComponentInChildren<ArtifactInventory>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -164,7 +165,14 @@ namespace Moon
             InitStat(currentRunData.playerStat);
             
             //무기 지급
+            if (currentRunData.currentWeapon == WeaponType.None)
+            {
+                Debug.Log("CurrentWeapon is None");
+                //TODO: 무기가 없으면 베이스캠프로 강제 이동(예외 처리)
+            }
+            
             SetCurrentWeapon(currentRunData.currentWeapon);
+            RecoverArtifact(currentRunData);
         }
 
         public void InitStat(PlayerStat stat)
@@ -267,9 +275,12 @@ namespace Moon
             CalculateForwardMovement();
             CalculateVerticalMovement();
 
-            SetTargetRotation();
+            if(!_inCombo)
+            {
+                SetTargetRotation();
+            }
 
-            if (IsOrientationUpdated() && IsMoveInput)
+            if (IsOrientationUpdated())
                 UpdateOrientation();
 
             //PlayAudio();
@@ -283,6 +294,7 @@ namespace Moon
 
             if (dodgeNow)
             {
+                _abilitySystem.SetTag("Invincibility");
                 PerformDodge();
             }
         }
@@ -320,7 +332,7 @@ namespace Moon
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
-                    gameObject.tag = "SuperArmor";
+                    _abilitySystem.SetTag("SuperArmor");
                     _weaponHandler.ActivateSkill();
                     _abilitySystem.TriggerEvent(TriggerEventType.OnSkill, _abilitySystem);
                 }
@@ -474,6 +486,10 @@ namespace Moon
                     VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
                 }
             }
+            else if (inMagnetActionJump)
+            {
+                _verticalSpeed = 0f;
+            }
             else
             {
                 // If Ellen is airborne, the jump button is not held and Ellen is currently moving upwards...
@@ -493,16 +509,46 @@ namespace Moon
 
         void SetTargetRotation()
         {
+            var targetRotation = GetTargetRotationToMovement();
+
             Vector2 moveInput = _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
             if (localMovementDirection == Vector3.zero) return;
+
+            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
+            Vector3 resultingForward = targetRotation * Vector3.forward;
+            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
+            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
+            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
+            _targetRotation = targetRotation;
+        }
+
+        public void SetForceRotation()
+        {
+            if(inMagnetSkill) return;
+            
+            Vector2 moveInput = _inputHandler.ForceMoveInput;
+            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            if (localMovementDirection == Vector3.zero) return;
+
+            var targetRotation = GetTargetRotationToMovement(true);
+
+            _targetRotation = targetRotation;
+            transform.rotation = targetRotation;
+        }
+        
+
+        Quaternion GetTargetRotationToMovement(bool isForce = false)
+        {
+            Vector2 moveInput = isForce ? _inputHandler.ForceMoveInput : _inputHandler.MoveInput;
+            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            if (localMovementDirection == Vector3.zero) return Quaternion.identity;
 
             Quaternion targetRotation;
 
             // 락온 중이면 새로운 계산, 그렇지 않으면 기존 FreeLook 계산
             if (_lockOnSystem.IsLockOn)
             {
-                // --- 락온 모드 계산 ---
                 // 실제 락온 카메라를 기준으로 forward 추출
                 Transform camT = cameraSettings.lockOnCamera.transform;
                 Vector3 forward = camT.forward;
@@ -531,13 +577,21 @@ namespace Moon
                 }
             }
 
-            // 공통: 최종 forward, 애니메이션용 angleDiff 계산
-            Vector3 resultingForward = targetRotation * Vector3.forward;
-            float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
-            float targetAngle  = Mathf.Atan2(resultingForward.x, resultingForward.z) * Mathf.Rad2Deg;
-            _angleDiff      = Mathf.DeltaAngle(angleCurrent, targetAngle);
-            _targetRotation = targetRotation;
+            return targetRotation;
         }
+
+        public void SetForceRotationToAim()
+        {
+            if (!_lockOnSystem.IsLockOn)
+            {
+                Vector3 cameraForward = Camera.main.transform.forward;
+                Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
+                
+                transform.rotation = Quaternion.LookRotation(rotation);
+                _targetRotation = transform.rotation;
+            }
+        }
+
 
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()
@@ -553,7 +607,7 @@ namespace Moon
                 (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog) 
                 || (_nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog);
 
-            return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
+            return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || (_inCombo && !_inAttack && !inMagnetSkill);
         }
 
         void SetGrounded()
@@ -588,7 +642,7 @@ namespace Moon
             // 2) 평소 locomotion / airborne / landing 회전 처리
             _animator.SetFloat(PlayerAnimatorConst.hashAngleDeltaRad, _angleDiff * Mathf.Deg2Rad);
 
-            if (_currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion)
+            //if (_currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion)
             {
                 Vector3 localInput = new Vector3(_inputHandler.MoveInput.x, 0f, _inputHandler.MoveInput.y);
                 float groundedTurnSpeed = Mathf.Lerp(maxTurnSpeed, minTurnSpeed, _forwardSpeed / _desiredForwardSpeed);
@@ -752,67 +806,41 @@ namespace Moon
                 return;
 
             Vector3 movement = Vector3.zero;
-  
-            if(_isDodging)
+            bool useManualMove = CanUseManualMove();
+            // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
+            if(_lockOnSystem.IsLockOn)
             {
-                movement = _animator.deltaPosition;
-            }
-            else if (_isGrounded)
-            {
-                // 1) 콤보 중엔 항상 루트 모션만 적용
-                if (_inCombo)
+                // 캐릭터 회전: 타겟 바라보기
+                // Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
+                // toTarget.y = 0f;
+                // if (toTarget.sqrMagnitude > 0.001f)
+                //     transform.rotation = Quaternion.LookRotation(toTarget);
+                
+                if (useManualMove)
                 {
-                    movement = _animator.deltaPosition;
-                    
-                    Vector3 cameraForward = Camera.main.transform.forward;
-                    Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
-                    
-                    transform.rotation = Quaternion.LookRotation(rotation);
+                    // 이동 벡터: 입력 기준으로
+                    Vector2 raw = _inputHandler.MoveInput;
+                    Vector3 dir = new Vector3(raw.x, 0f, raw.y);
+                    if (dir.sqrMagnitude > 1f) dir.Normalize();
+
+                    movement = (transform.right * dir.x + transform.forward * dir.z) * (_forwardSpeed * Time.deltaTime);
                 }
                 else
                 {
-                    // 2) 락온 중, 콤보 아님 -> 입력 기반 이동
-                    if(_lockOnSystem.IsLockOn)
-                    {
-                        // 캐릭터 회전: 타겟 바라보기
-                        Vector3 toTarget = _lockOnSystem.currentTarget.position - transform.position;
-                        toTarget.y = 0f;
-                        if (toTarget.sqrMagnitude > 0.001f)
-                            transform.rotation = Quaternion.LookRotation(toTarget);
-
-                        // 이동 벡터: 입력 기준으로
-                        Vector2 raw = _inputHandler.MoveInput;
-                        Vector3 dir = new Vector3(raw.x, 0f, raw.y);
-                        if (dir.sqrMagnitude > 1f) dir.Normalize();
-
-                        movement = (transform.right * dir.x + transform.forward * dir.z) *
-                                (_forwardSpeed * Time.deltaTime);
-                    }
-                    else
-                    {
-                        // 3) 일반 로코모션 
-                        bool useManualMove = _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion;
-                        if (useManualMove)
-                        {
-                            movement = transform.forward * (_forwardSpeed * Time.deltaTime);
-                        }
-                        else
-                        {
-                            // 루트 모션 기반 이동
-                            RaycastHit hit;
-                            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
-                            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
-                                movement = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
-                            else
-                                movement = _animator.deltaPosition;
-                        }
-                    }
-                }                
+                    movement = GetRootMotionMovement();
+                }
             }
             else
             {
-                // 4) 공중 이동: 수동 이동
-                movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                // 3) 일반 로코모션 
+                if (useManualMove)
+                {
+                    movement = transform.forward * (_forwardSpeed * Time.deltaTime);
+                }
+                else
+                {
+                    movement = GetRootMotionMovement();
+                }
             }
 
 
@@ -843,7 +871,29 @@ namespace Moon
                 }
             }
         }
-        
+
+        bool CanUseManualMove()
+        {
+            return _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLocomotion
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnWalk 
+                || _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashAirborne;
+                   
+        }
+
+        Vector3 GetRootMotionMovement()
+        {
+            Vector3 ret = Vector3.zero;
+
+            RaycastHit hit;
+            Ray down = new Ray(transform.position + Vector3.up * k_GroundedRayDistance * 0.5f, Vector3.down);
+            if (Physics.Raycast(down, out hit, k_GroundedRayDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+                ret = Vector3.ProjectOnPlane(_animator.deltaPosition, hit.normal);
+            else
+                ret = _animator.deltaPosition;
+
+            return ret;
+        }
 
         void Interact()
         {
@@ -922,6 +972,19 @@ namespace Moon
             _weaponHandler.UpgradeCurrentParts();
         }
         #endregion
+        
+        private void RecoverArtifact(CurrentRunData currentRunData)
+        {
+            foreach (var (key, value) in currentRunData.leftArtifacts)
+            {
+                _artifactInventory.SetLeftArtifact(key, value).Forget();
+            }            
+            
+            foreach (var (key, value) in currentRunData.rightArtifacts)
+            {
+                _artifactInventory.SetRightArtifact(key, value).Forget();
+            }
+        }
         
         public GameObject GetGameObject()
         {
@@ -1026,12 +1089,24 @@ namespace Moon
         {
             //_inCombo = false;
             _isDodging = true;  // ★ 회피 시작 플래그 켜기
-            Vector2 moveInput = _inputHandler.MoveInput;
+            Vector2 moveInput = _inputHandler.ForceMoveInput;
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeX, moveInput.x);
             _animator.SetFloat(PlayerAnimatorConst.hashDodgeY, moveInput.y);
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
+            
+            SetForceRotation();
 
-            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, transform.rotation);
+            Quaternion dodgeRotation = transform.rotation;
+            if(_lockOnSystem.IsLockOn)
+            {
+                Vector3 dir = new Vector3(moveInput.x, 0f, moveInput.y);
+                if (dir.sqrMagnitude > 0.001f)
+                {
+                    dodgeRotation = Quaternion.LookRotation(dir);
+                }        
+            }
+
+            VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, dodgeRotation);
 
             StartCoroutine(UnblockAfterDodge());
         }

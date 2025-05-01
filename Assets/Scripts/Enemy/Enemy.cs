@@ -30,6 +30,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public Action<Enemy> OnDead;
     
+    private RaycastHit[] _hits = new RaycastHit[1];
+    private Collider[] _colliders = new Collider[1];
+    
     // stateMachine
     private StateMachine _stateMachine;
     
@@ -194,7 +197,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
     }
 
-    public void OnHit(Transform playerTransform)
+    public void OnHit(ExtraData extraData)
     {
         // 붉은색으로 변환, enemy 위치 보정
         
@@ -207,32 +210,32 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
         blackboard.onHitCancellation = new CancellationTokenSource();
         
-        OnHitHelper(playerTransform).Forget();
+        OnHitHelper(extraData).Forget();
     }
 
-    private async UniTask OnHitHelper(Transform playerTransform)
+    private async UniTask OnHitHelper(ExtraData extraData)
     {
         CancellationToken token = blackboard.onHitCancellation.Token;
         
         blackboard.enemyRenderer.material.SetTexture("_BaseColor", blackboard.onHitTexture);
         
         // Enemy 넉백 관련은 이 함수를 사용
-        float desiredDistance = 2f;
+        float desiredDistance = extraData.weaponRange;
         float enemyPositionCorrection = 0.5f;
         float pullSpeed = 20f;
         float moveTime = 0.2f;
         float duration = 0f;
         
-        Vector3 forward = playerTransform.forward;
-        Vector3 right = playerTransform.right;
+        Vector3 forward = extraData.sourceTransform.forward;
+        Vector3 right = extraData.sourceTransform.right;
         Vector3 targetPos = transform.position + forward;
-        if ((targetPos - playerTransform.position).magnitude > desiredDistance)
+        if ((targetPos - extraData.sourceTransform.position).magnitude > desiredDistance)
         {
-            Vector3 dir = transform.position - playerTransform.position;
+            Vector3 dir = transform.position - extraData.sourceTransform.position;
             float rightSize = Vector3.Dot(dir, right);
             if (Mathf.Abs(rightSize) > desiredDistance)
             {
-                targetPos = playerTransform.position + dir.normalized * desiredDistance;
+                targetPos = extraData.sourceTransform.position + dir.normalized * desiredDistance;
             }
             else
             {
@@ -241,7 +244,43 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
                 targetPos = transform.position + forward * delta;
             }
         }
+        
+        var end = transform.position + new Vector3(0, 1, 0);
+        
+        var didHit = Physics.OverlapCapsuleNonAlloc(
+            transform.position + new Vector3(0, .7f, 0), 
+            end, 
+            .5f,
+            _colliders, 
+            (1 << LayerMask.NameToLayer("Environment")));
 
+        if (didHit > 0)
+        {
+            targetPos = transform.position;
+        }
+        else
+        {
+            var knockBackDir = targetPos - transform.position;
+            var distance = knockBackDir.magnitude;
+            knockBackDir.y = 0;
+            knockBackDir.Normalize();
+
+            didHit = Physics.CapsuleCastNonAlloc(
+                transform.position + new Vector3(0, .7f, 0), 
+                end, 
+                .3f, 
+                knockBackDir,
+                _hits,
+                distance,
+                (1 << LayerMask.NameToLayer("Environment"))
+            );
+        
+            if (didHit > 0)
+            {
+                targetPos = _hits[0].point - knockBackDir * .1f;
+            }
+        }
+        
         try
         {
             while (duration < moveTime)
@@ -276,8 +315,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
-        damageEffect.sourceTransform = transform;
-        impulseEffect.sourceTransform = transform;
+        damageEffect.extraData.sourceTransform = transform;
+        impulseEffect.extraData.sourceTransform = transform;
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
     }
@@ -316,7 +355,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         //ex. Enemy에겐 사용 시 무조건 돌진한다.
         //await magnetApproach.Execute(this, target);
-        await magnetDashAction.Execute(this, target);
+        await magnetDashAttackAction.Execute(this, target);
     }
 
     void ApplySoftCollision(Collider[] colliders)

@@ -24,7 +24,15 @@ public class PlayerMagnetActionController : MonoBehaviour
         _electricLine.gameObject.SetActive(false);
     }
 
-    public void StartMagnetDash(MagneticObject caster)
+    Vector3 GetTargetCenterPosition()
+    {
+        var targetCollider = GetComponent<Collider>();
+        var targetCenterPos = targetCollider.bounds.center;
+        return targetCenterPos; 
+    }
+
+
+    public void StartMagnetDash(MagneticObject caster, bool isAttack, bool isJump)
     {
         _animator.Play(PlayerAnimatorConst.hashMagnetSkillDash, 0, 0.2f);
 
@@ -45,6 +53,8 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         //제어를 위함 플레이어 공중에 살짝 붕 뜨는 모션
         _playerController.inMagnetSkill = true;
+        _playerController.inMagnetActionJump = true;
+        _playerController.InputHandler.ReleaseControl();
 
         float distance = Vector3.Distance(targetPos, casterFrontPos);
         float speed = 30f;
@@ -58,7 +68,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         sequence.Append(transform.DOMove(targetPos, 0.05f)
             .SetEase(Ease.OutCubic)
             .OnStart(() => {
-                VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, targetCenterPos, Quaternion.identity);
+                VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, targetCenterPos);
                 _electricLine.startPosition = targetCenterPos;
                 _electricLine.endPosition = casterCenterPos;
                 _electricLine.gameObject.SetActive(true);
@@ -83,16 +93,30 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         // Step 2: 대쉬 시작
         sequence.AppendCallback(()=>{                
-            if(!isCloseTarget) StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
-            
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+            //너무 가까운 경우 돌진 효과 없음
+            if(!isCloseTarget) 
+            {
+                Quaternion rotation = Quaternion.LookRotation(casterPos - targetPos);
+                StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, rotation);
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, rotation);
+            }
 
-            StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration, hitTiming, () => {
+            StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration,() => {
                     MotionBlurController.Play(0, 0.1f);
                     Time.timeScale = 1f;
-                    _playerController.inMagnetSkill = false;
                 }));
+            
+            if(isAttack)
+            {
+                StartCoroutine(MagnetDashAttack(hitTiming));
+            }
+
+            if(isJump)
+            {
+                StartCoroutine(MagnetDashJump(hitTiming, 50f, 0.2f));
+            }
+            
         });
     }
 
@@ -102,17 +126,15 @@ public class PlayerMagnetActionController : MonoBehaviour
         var targetWidth = targetCollider.bounds.size.x;
         var toTargetVector = startPos - targetCenterPos;
         var toTargetVectorRemoveY = new Vector3(toTargetVector.x, 0f, toTargetVector.z);
-        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f - (targetCollider.bounds.size.y * 0.5f * Vector3.up);
+        Vector3 targetFrontPos = targetCenterPos + toTargetVectorRemoveY.normalized * targetWidth * 1.5f - (targetCollider.bounds.size.y * 0.55f * Vector3.up);
 
         return targetFrontPos;
     }
 
-    IEnumerator MagnetDashCoroutine(Transform destinationTranform, float duration, float hitTiming, Action onComplete)
+    IEnumerator MagnetDashCoroutine(Transform destinationTranform, float duration, Action onComplete)
     {
         float elapsed = 0f;
         Vector3 startPos = transform.position;
-
-        bool hasAttacked = false;
 
         while (elapsed < duration)
         {
@@ -121,17 +143,9 @@ public class PlayerMagnetActionController : MonoBehaviour
             
             Vector3 desFrontPos = GetTargetFrontPosition(destinationTranform, startPos);
 
-
             Vector3 nextPos = Vector3.Lerp(startPos, desFrontPos, t);
             Vector3 delta = nextPos - transform.position;
             _playerController.characterController.Move(delta);
-            
-
-            if (!hasAttacked && elapsed >= hitTiming)
-            {
-                hasAttacked = true;
-                _playerController.StartNormalAttack();
-            }
 
             yield return null;
         }
@@ -139,6 +153,41 @@ public class PlayerMagnetActionController : MonoBehaviour
         // 종료 처리
         onComplete?.Invoke();
     }
+
+
+    IEnumerator MagnetDashAttack(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, GetTargetCenterPosition(), Quaternion.identity);
+        _playerController.StartNormalAttack();
+        
+        yield return new WaitForSeconds(0.8f);
+        
+        _playerController.inMagnetSkill = false;
+        _playerController.inMagnetActionJump = false;
+        _playerController.InputHandler.GainControl();
+    }
+
+    IEnumerator MagnetDashJump(float delay, float jumpPower, float duration)
+    {
+        yield return new WaitForSeconds(delay);
+        VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, GetTargetCenterPosition(), Quaternion.identity);
+        VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position, Quaternion.identity);
+        _playerController.inMagnetSkill = false;
+        _playerController.InputHandler.GainControl();
+        _animator.Play(PlayerAnimatorConst.hashAirborne, 0, 0.2f);
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            _playerController.characterController.Move(Vector3.up * jumpPower * Time.deltaTime);
+            yield return null;
+        }
+
+        _playerController.inMagnetActionJump = false;
+    }
+
     
 #endregion
 }

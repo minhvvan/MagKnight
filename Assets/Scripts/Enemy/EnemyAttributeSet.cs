@@ -8,7 +8,7 @@ public class EnemyAttributeSet : AttributeSet
     public Action<int> OnPhaseChange;
     public Action OnDeath;
     public Action OnStagger;
-    public Action<Transform> OnHit;
+    public Action<ExtraData> OnHit;
     public Action OnDamage;
     
     private bool _phase70Triggered = false;
@@ -56,8 +56,8 @@ public class EnemyAttributeSet : AttributeSet
             // 체력은 항상 데미지를 통해서만 접근
             // 현재 체력에서 데미지를 뺀 값을 적용해서 Hp업데이트, 단 0보다 작거나, MaxHp보다 크지 않게
             SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
-            if(effect.sourceTransform != null)
-                OnHit?.Invoke(effect.sourceTransform);
+            if(effect.extraData.sourceTransform != null)
+                OnHit?.Invoke(effect.extraData);
             // 예시 실드가 있다면?
             // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
             OnDamage?.Invoke();

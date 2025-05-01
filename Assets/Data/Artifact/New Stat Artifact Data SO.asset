@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: New Stat Artifact Data SO
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: da7129ed6a246f048a49d8d97de2d2d4, type: 3}
-  name: 
+  itemName: "\uC544\uD2F0\uD329\uD2B8 4"
+  scrapValue: 500
+  itemID: 4
   N_ArtifactEffect:
   - effectType: 2
     attributeType: 0
