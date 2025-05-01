@@ -60,7 +60,7 @@ public class ArtifactInventory : MonoBehaviour
     }
     
     
-    public async UniTaskVoid SetLeftArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
+    public async UniTask SetLeftArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
     {
         // 바뀐 아티팩트가 기존에 있던게 아니라면
         if (artifact != null && !Left_ArtifactGas.Contains(artifact))
@@ -108,7 +108,7 @@ public class ArtifactInventory : MonoBehaviour
         if (isSave) await GameManager.Instance.SaveData(Constants.CurrentRun);
     }
 
-    public async UniTaskVoid SetRightArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
+    public async UniTask SetRightArtifact(int index, ArtifactDataSO artifact, bool isSave = true)
     {
         if (artifact != null && !Right_ArtifactGas.Contains(artifact))
         {
