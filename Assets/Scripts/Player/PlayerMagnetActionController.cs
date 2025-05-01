@@ -84,10 +84,14 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         // Step 2: 대쉬 시작
         sequence.AppendCallback(()=>{                
-            if(!isCloseTarget) StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
+            //너무 가까운 경우 돌진 안함
+            if(!isCloseTarget) 
+            {
+                StartCoroutine(_playerController.cameraSettings.AdjustFOV(80f, 50f, 0.2f));
             
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_RED, transform.position, transform.rotation);
+                VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, transform.rotation);
+            }
 
             StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration, hitTiming, () => {
                     MotionBlurController.Play(0, 0.1f);

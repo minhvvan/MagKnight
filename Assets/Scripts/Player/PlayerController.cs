@@ -574,7 +574,7 @@ namespace Moon
                 (!_isAnimatorTransitioning && _currentStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog) 
                 || (_nextStateInfo.shortNameHash == PlayerAnimatorConst.hashLockOnJog);
 
-            return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || _inCombo && !_inAttack;
+            return updateForLockOnWalk || updateForLockOnJog || updateOrientationForLocomotion || updateOrientationForAirborne || updateOrientationForLanding || (_inCombo && !_inAttack && !inMagnetSkill);
         }
 
         void SetGrounded()
@@ -1062,7 +1062,7 @@ namespace Moon
             _animator.SetTrigger(PlayerAnimatorConst.hashDodge);
             
             SetForceRotation();
-            
+
             Quaternion dodgeRotation = transform.rotation;
             if(_lockOnSystem.IsLockOn)
             {
