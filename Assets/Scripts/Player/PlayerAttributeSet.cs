@@ -13,7 +13,9 @@ namespace Jun
         public Action<Transform> OnDamaged;
         public Action OnMoveSpeedChanged;
         public Action OnAttackSpeedChanged;
-
+        
+        private string superArmor = "SuperArmor";
+        private string invisibility = "Invincibility";
         private float maxAttackSpeed = 2f;
         private float minAttackSpeed = 0.5f;
         private float maxMoveSpeed = 2f;
@@ -54,8 +56,11 @@ namespace Jun
                 returnValue = newValue < 0 ? 0 : newValue;
                 
                 // 무적효과
-                if (GameManager.Instance.Player.gameObject.CompareTag("Invincibility"))
-                    returnValue = 0;
+                if (tag != null)
+                {
+                    if (tag.Contains(invisibility))
+                        returnValue = 0;
+                }
                 
                 // Defense% 만큼 데미지 감소
                 returnValue = returnValue * (1 - GetValue(AttributeType.Defense)/ 100f);
@@ -66,12 +71,15 @@ namespace Jun
                 returnValue = newValue < 0 ? 0 : newValue;
 
                 // SuperArmor 상태
-                if (GameManager.Instance.Player.gameObject.CompareTag("SuperArmor"))
+                if (tag != null)
                 {
-                    returnValue = 0;   
+                    if (tag.Contains(superArmor) || tag.Contains(invisibility))
+                    {
+                        returnValue = 0;
+                    }
                 }
             }
-            
+
             return returnValue;
         }
 
@@ -114,6 +122,10 @@ namespace Jun
             
             if (effect.attributeType == AttributeType.Damage)
             {
+                if (GetValue(AttributeType.Damage) == 0)
+                {
+                    return;
+                }
                 // 체력은 항상 데미지를 통해서만 접근
                 // 현재 체력에서 데미지를 뺀 값을 적용해서 Hp업데이트, 단 0보다 작거나, MaxHp보다 크지 않게
                 SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));

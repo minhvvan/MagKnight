@@ -7,11 +7,12 @@ public static class Constants
     public const int MaxRooms = 8;
     public const int MinRooms = 3;
     public const int MaxTreasureRoomCount = 2;
+    public const int MaxArtifacts = 9;
 
     #region SaveDataKey
 
     public const string PlayerData = "PlayerData";
-    public const string CurrentRun = "CurrentRun";
+    public const string CurrentRun = "CurrentRunData";
 
     #endregion
     
@@ -26,4 +27,5 @@ public static class Constants
     public const string CrateClose = "CrateClose";
 
     #endregion
+
 }
