@@ -8,7 +8,6 @@ using DG.Tweening;
 using hvvan;
 using JetBrains.Annotations;
 using Jun;
-using UnityEditor.U2D.Aseprite;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;

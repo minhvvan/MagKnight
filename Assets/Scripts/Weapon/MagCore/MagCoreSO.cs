@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
 [Serializable]
 [CreateAssetMenu(fileName = "MagCoreSO", menuName = "SO/MagCore/MagCoreSO")]
 public class MagCoreSO : ScriptableObject
@@ -223,9 +224,9 @@ public class MagCoreSO : ScriptableObject
                 magnetGameplayEffects.Add(i, new List<GameplayEffect>());
             }
         }
-
+#if UNITY_EDITOR
         // OnValidate에서 Dictionary 수정 후 ScriptableObject 저장 표시
         UnityEditor.EditorUtility.SetDirty(this);
+#endif
     }
- 
 }
