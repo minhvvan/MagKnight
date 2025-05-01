@@ -315,13 +315,26 @@ public class OnSeparation : IMagneticInteractCommand
     }
 }
 
-public class MagnetDashAction : IMagneticInteractCommand
+public class MagnetDashAttackAction : IMagneticInteractCommand
 {
     public override UniTask Execute(MagneticObject caster, MagneticObject target)
     {
         if(target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
         {
-            targetPlayerMagnetActionController.StartMagnetDash(caster);
+            targetPlayerMagnetActionController.StartMagnetDash(caster, true, false);
+        }
+
+        return UniTask.CompletedTask;
+    }
+}
+
+public class MagnetDashJumpAction : IMagneticInteractCommand
+{
+    public override UniTask Execute(MagneticObject caster, MagneticObject target)
+    {
+        if(target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
+        {
+            targetPlayerMagnetActionController.StartMagnetDash(caster, false, true);
         }
 
         return UniTask.CompletedTask;
