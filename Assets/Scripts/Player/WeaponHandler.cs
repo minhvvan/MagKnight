@@ -11,7 +11,7 @@ public class WeaponHandler : MonoBehaviour
     [SerializeField] private SerializedDictionary<WeaponType, Transform> _weaponSockets;
     
     [SerializeField] private BaseWeapon _currentWeapon;
-    private WeaponPrefabSO _weaponSO;
+    private WeaponDataDictSO _weaponDataDictionary;
     private AbilitySystem _abilitySystem;
     
     public MagCore currentMagCore;
@@ -29,17 +29,17 @@ public class WeaponHandler : MonoBehaviour
         
         _damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, 0)
         {
-            sourceTransform = transform
+            extraData = new ExtraData(){ sourceTransform = transform }
         };
         _resistanceEffect = new GameplayEffect(EffectType.Instant, AttributeType.ResistanceDamage, 10)
         {
-            sourceTransform = transform
+            extraData = new ExtraData(){ sourceTransform = transform }
         };
         
         try
         {
-            _weaponSO =
-                await DataManager.Instance.LoadScriptableObjectAsync<WeaponPrefabSO>(Addresses.Data.Weapon.Katana);
+            _weaponDataDictionary =
+                await DataManager.Instance.LoadScriptableObjectAsync<WeaponDataDictSO>(Addresses.Data.Weapon.Dictionary);
         }
         catch (Exception e)
         {
@@ -49,7 +49,7 @@ public class WeaponHandler : MonoBehaviour
 
     public void SetCurrentWeapon(WeaponType weaponType)
     {
-        if (_weaponSO == null)
+        if (_weaponDataDictionary == null)
         {
             Debug.Log("WeaponData is null");
             return;
@@ -63,8 +63,11 @@ public class WeaponHandler : MonoBehaviour
         }
 
         if (_currentWeapon != null) Destroy(_currentWeapon.gameObject);
-        _currentWeapon = Instantiate(_weaponSO.weapons[weaponType], _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
+        _currentWeapon = Instantiate(_weaponDataDictionary.weapons[weaponType].prefab, _weaponSockets[weaponType]).GetComponent<BaseWeapon>();
         _currentWeapon.OnHit += OnHitAction;
+
+        //사거리 설정
+        _damageEffect.extraData.weaponRange = _weaponDataDictionary.weapons[weaponType].range;
     }
 
     public void DropPrevWeapon(Transform newCorePos)
