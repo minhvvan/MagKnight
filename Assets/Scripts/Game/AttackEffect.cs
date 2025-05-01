@@ -55,8 +55,8 @@ public class AttackEffect : MonoBehaviour, IObserver<HitInfo>
         float damage = _abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
-        damageEffect.sourceTransform = transform;
-        impulseEffect.sourceTransform = transform;
+        damageEffect.extraData.sourceTransform = transform;
+        impulseEffect.extraData.sourceTransform = transform;
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
     }
