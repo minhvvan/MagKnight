@@ -76,7 +76,7 @@ public class PlayerMagnetActionController : MonoBehaviour
                 Time.timeScale = 0.2f;
                 if(!isCloseTarget){
                     StartCoroutine(_playerController.cameraSettings.AdjustFOV(50f, 80f, 0.2f));
-                    MotionBlurController.Play(0.8f, 0.1f);
+                    VolumeController.MotionBlurPlay(0.8f, 0.1f);
                 } 
             })
             .OnComplete(() => {
@@ -103,7 +103,7 @@ public class PlayerMagnetActionController : MonoBehaviour
             }
 
             StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration,() => {
-                    MotionBlurController.Play(0, 0.1f);
+                    VolumeController.MotionBlurPlay(0, 0.1f);
                     Time.timeScale = 1f;
                 }));
             

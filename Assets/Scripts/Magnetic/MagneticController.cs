@@ -169,6 +169,7 @@ public class MagneticController : MagneticObject
     IEnumerator TimeScaleCoroutine(float time)
     {
         Time.timeScale = 0.2f;
+        VolumeController.SetSaturation(-100, 0, time);
         yield return new WaitForSecondsRealtime(time);
         Time.timeScale = 1f;
 
@@ -185,6 +186,7 @@ public class MagneticController : MagneticObject
 
         _isPressMagnetic = false;
         Time.timeScale = 1f;
+        VolumeController.SetSaturation(0, 0, 0);
         
         StartCoroutine(_magneticUIController.HideFocusArea());
         StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
