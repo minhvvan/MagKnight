@@ -5978,6 +5978,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7861641286881190585}
     m_Modifications:
+    - target: {fileID: 719476053607112345, guid: c63d884c24ff7c043b6e43661bd6cdcf,
+        type: 3}
+      propertyPath: m_StartCorner
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2291002308004508361, guid: c63d884c24ff7c043b6e43661bd6cdcf,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -6123,6 +6128,11 @@ PrefabInstance:
       propertyPath: HideButton
       value: 
       objectReference: {fileID: 9118096037296755493}
+    - target: {fileID: 5002755377592689170, guid: c63d884c24ff7c043b6e43661bd6cdcf,
+        type: 3}
+      propertyPath: m_StartCorner
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7065528833940278321, guid: c63d884c24ff7c043b6e43661bd6cdcf,
         type: 3}
       propertyPath: m_Name
