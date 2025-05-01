@@ -502,6 +502,10 @@ namespace Moon
         {
             var targetRotation = GetTargetRotation();
 
+            Vector2 moveInput = _inputHandler.MoveInput;
+            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            if (localMovementDirection == Vector3.zero) return;
+
             // 공통: 최종 forward, 애니메이션용 angleDiff 계산
             Vector3 resultingForward = targetRotation * Vector3.forward;
             float angleCurrent = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
