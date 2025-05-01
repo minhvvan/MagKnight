@@ -12,6 +12,6 @@ public class Anchor : MagneticObject
     
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
-        await magnetApproach.Execute(this, target);
+        await magnetDashJumpAction.Execute(this, target);
     }
 }
