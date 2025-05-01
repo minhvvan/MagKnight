@@ -15,7 +15,8 @@ using UnityEngine.Serialization;
 public abstract class AttributeSet
 {
     protected Dictionary<AttributeType, Attribute> _attributeDictionary = new Dictionary<AttributeType, Attribute>();
-
+    protected HashSet<string> tag = new HashSet<string>();
+    
     public void AddAttribute(AttributeType type , float value)
     {
         if (_attributeDictionary.ContainsKey(type))
@@ -116,6 +117,21 @@ public abstract class AttributeSet
     public void ClearAllAttributes()
     {
         _attributeDictionary.Clear();
+    }
+
+    public void AddTag(string tag)
+    {
+        this.tag.Add(tag);
+    }
+
+    public void DeleteTag(string tag)
+    {
+        this.tag.Remove(tag);
+    }
+    
+    public void ClearTag()
+    {
+        tag = null;
     }
 }
 

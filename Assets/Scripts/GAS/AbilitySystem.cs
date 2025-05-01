@@ -269,6 +269,20 @@ public class AbilitySystem : MonoBehaviour
     }
     
     #endregion
+
+    public void SetTag(string tag)
+    {
+        Attributes.AddTag(tag);
+    }
+
+    public void DeleteTag(string tag)
+    {
+        Attributes.DeleteTag(tag);
+    }
     
+    public void ClearTag()
+    {
+        Attributes.ClearTag();
+    }
 }
 
