@@ -5,11 +5,13 @@ using UnityEngine.Serialization;
 
 public abstract class ArtifactDataSO : ScriptableObject
 {
+   [Header("Artifact Info")]
    public Sprite icon;
    public string itemName;
    public int scrapValue;
    public int itemID;
-
+   public ItemRarity rarity;
+   
    public virtual void N_ApplyTo(AbilitySystem target) {}
    
    public virtual void S_ApplyTo(AbilitySystem target) {}

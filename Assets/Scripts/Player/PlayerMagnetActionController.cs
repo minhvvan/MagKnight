@@ -76,7 +76,7 @@ public class PlayerMagnetActionController : MonoBehaviour
                 Time.timeScale = 0.2f;
                 if(!isCloseTarget){
                     StartCoroutine(_playerController.cameraSettings.AdjustFOV(50f, 80f, 0.2f));
-                    MotionBlurController.Play(0.8f, 0.1f);
+                    VolumeController.MotionBlurPlay(0.8f, 0.1f);
                 } 
             })
             .OnComplete(() => {
@@ -103,7 +103,7 @@ public class PlayerMagnetActionController : MonoBehaviour
             }
 
             StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration,() => {
-                    MotionBlurController.Play(0, 0.1f);
+                    VolumeController.MotionBlurPlay(0, 0.1f);
                     Time.timeScale = 1f;
                 }));
             
@@ -114,7 +114,7 @@ public class PlayerMagnetActionController : MonoBehaviour
 
             if(isJump)
             {
-                StartCoroutine(MagnetDashJump(hitTiming, 50f, 0.2f));
+                StartCoroutine(MagnetDashJump(dashDuration, 3f, 0.2f));
             }
             
         });
@@ -150,6 +150,14 @@ public class PlayerMagnetActionController : MonoBehaviour
             yield return null;
         }
 
+        // 마지막 위치로 이동
+        Vector3 finalPos = GetTargetFrontPosition(destinationTranform, startPos);
+        Vector3 finalDelta = finalPos - transform.position;
+        if (finalDelta.magnitude > 0f)
+        {
+            _playerController.characterController.Move(finalDelta);
+        }
+
         // 종료 처리
         onComplete?.Invoke();
     }
@@ -168,7 +176,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         _playerController.InputHandler.GainControl();
     }
 
-    IEnumerator MagnetDashJump(float delay, float jumpPower, float duration)
+    IEnumerator MagnetDashJump(float delay, float jumpHeight, float duration)
     {
         yield return new WaitForSeconds(delay);
         VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, GetTargetCenterPosition(), Quaternion.identity);
@@ -177,12 +185,26 @@ public class PlayerMagnetActionController : MonoBehaviour
         _playerController.InputHandler.GainControl();
         _animator.Play(PlayerAnimatorConst.hashAirborne, 0, 0.2f);
         float elapsed = 0f;
+        float startY = 0f;
 
         while (elapsed < duration)
         {
+            float t = elapsed / duration;
+            float currentHeight = Mathf.Lerp(0f, jumpHeight, t);
+            float deltaY = currentHeight - startY;
+
+            Vector3 move = Vector3.up * deltaY;
+            _playerController.characterController.Move(move);
+
+            startY = currentHeight;
             elapsed += Time.deltaTime;
-            _playerController.characterController.Move(Vector3.up * jumpPower * Time.deltaTime);
             yield return null;
+        }
+
+        float finalDelta = jumpHeight - startY;
+        if (finalDelta > 0f)
+        {
+            _playerController.characterController.Move(Vector3.up * finalDelta);
         }
 
         _playerController.inMagnetActionJump = false;

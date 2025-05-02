@@ -328,7 +328,7 @@ namespace Moon
 
         void TriggerSkill()
         {
-            if (_inputHandler.SkillInput)
+            if (_inputHandler.SkillInput && _isGrounded)
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
