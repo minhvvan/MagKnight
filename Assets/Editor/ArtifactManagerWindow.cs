@@ -41,6 +41,16 @@ public class ArtifactManagerWindow : EditorWindow
     private GUIStyle wrapTextStyle;
     private GUIStyle warningBoxStyle;
     private bool stylesInitialized = false;
+    
+    // 희귀도별 색상 정의
+    private Dictionary<ItemRarity, Color> rarityColors = new Dictionary<ItemRarity, Color>()
+    {
+        { ItemRarity.Common, Color.white },
+        { ItemRarity.Uncommon, new Color(0.2f, 1f, 0.2f) },         
+        { ItemRarity.Rare, new Color(0.4f, 0.7f, 1f) },
+        { ItemRarity.Epic, new Color(0.9f, 0.4f, 1f) },
+        { ItemRarity.Legendary, new Color(1f, 0.9f, 0.2f) }
+    };
 
     [MenuItem("Tools/ArtifactManager")]
     public static void ShowWindow()
@@ -207,7 +217,8 @@ public class ArtifactManagerWindow : EditorWindow
         EditorGUILayout.LabelField("", GUILayout.Width(60)); // 아이콘 영역
         EditorGUILayout.LabelField("이름", headerStyle, GUILayout.Width(200));
         EditorGUILayout.LabelField("스크랩 가치", headerStyle, GUILayout.Width(100));
-        EditorGUILayout.LabelField("에셋 경로", headerStyle, GUILayout.Width(300));
+        EditorGUILayout.LabelField("희귀도",  headerStyle, GUILayout.Width(100));
+        EditorGUILayout.LabelField("에셋 경로", headerStyle, GUILayout.Width(200));
         EditorGUILayout.LabelField("작업", headerStyle, GUILayout.Width(150));
         EditorGUILayout.EndHorizontal();
 
@@ -281,9 +292,13 @@ public class ArtifactManagerWindow : EditorWindow
                 isDirty = true;
             }
 
+            // 아이템 희귀도
+            Rect rarityRect = EditorGUILayout.GetControlRect(GUILayout.Width(100));
+            DrawColoredRarityPopup(rarityRect, artifact, artifact.rarity);
+            
             // 애셋 경로
             string assetPath = AssetDatabase.GetAssetPath(artifact);
-            EditorGUILayout.LabelField(assetPath, GUILayout.Width(300));
+            EditorGUILayout.LabelField(assetPath, GUILayout.Width(200));
 
             // 액션 버튼들
             EditorGUILayout.BeginHorizontal(GUILayout.Width(150));
@@ -418,6 +433,35 @@ public class ArtifactManagerWindow : EditorWindow
         // 생성된 에셋 선택
         Selection.activeObject = currentMappingSO;
         EditorGUIUtility.PingObject(currentMappingSO);
+    }
+    
+    // 희귀도 표시를 위한 커스텀 메서드 추가
+    private void DrawColoredRarityPopup(Rect position, ArtifactDataSO artifact, ItemRarity currentRarity)
+    {
+        // 원래 GUI 색상 저장
+        Color originalColor = GUI.color;
+        
+        // 희귀도에 따라 GUI 색상 변경
+        if (rarityColors.ContainsKey(currentRarity))
+        {
+            GUI.color = rarityColors[currentRarity];
+        }
+        
+        // 팝업 표시
+        EditorGUI.BeginChangeCheck();
+        ItemRarity newRarity = (ItemRarity)EditorGUI.EnumPopup(position, currentRarity);
+        
+        // GUI 색상 복원
+        GUI.color = originalColor;
+        
+        // 값이 변경되었는지 확인
+        if (EditorGUI.EndChangeCheck() && newRarity != currentRarity)
+        {
+            Undo.RecordObject(artifact, "Change Artifact Rarity");
+            artifact.rarity = newRarity;
+            EditorUtility.SetDirty(artifact);
+            isDirty = true;
+        }
     }
 
     private void FindAllArtifacts()

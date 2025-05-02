@@ -20,6 +20,8 @@ public class InitGameState: IGameState
         GameManager.Instance.SetCurrentRunData(_currentRunData); //null이면 생성
         _currentRunData = GameManager.Instance.CurrentRunData;
 
+        await ItemManager.Instance.SetAllItemUpdate(_currentRunData);
+        
         if (!_currentRunData.isDungeonEnter)
         {
             //던전 입장 X => BaseCamp로
@@ -28,7 +30,6 @@ public class InitGameState: IGameState
         else
         {
             //회차 정보대로 씬 이동 및 설정
-            GameManager.Instance.SetCurrentRunData(_currentRunData);
 
             var floorList = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
             var currentFloorRooms = floorList.Floor[_currentRunData.currentFloor];
@@ -36,6 +37,7 @@ public class InitGameState: IGameState
             //시작씬으로 이동 -> 시작씬 로드 이후 최근 저장 위치로 이동
             SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
         }
+        
     }
 
     private IEnumerator TransitionToBaseCampCallback()
