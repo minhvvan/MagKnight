@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patternName: Smash
   damageMultiplier: 1
-  range: 2
-  priority: 1
-  cooldown: 100
+  range: 3
+  priority: 15
+  cooldown: 10
   phase: 1

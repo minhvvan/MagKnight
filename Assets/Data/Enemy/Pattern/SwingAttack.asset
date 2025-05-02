@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patternName: SwingAttack
   damageMultiplier: 1
-  range: 1.5
+  range: 2.5
   priority: 1
   cooldown: 1
   phase: 1
