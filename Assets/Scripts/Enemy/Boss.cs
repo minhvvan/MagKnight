@@ -30,6 +30,7 @@ public class Boss : Enemy
                 bossBlackboard.abilitySystem.ApplyEffect(gameplayEffect);
                 Anim.SetFloat("phase", phase);
                 bossBlackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
+                Anim.SetFloat("AttackSpeed", 1.5f);
             }
             else if (phase == 3)
             {
@@ -38,6 +39,7 @@ public class Boss : Enemy
                 Anim.SetFloat("phase", phase);
                 blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
                 blackboard.enemyRenderer.material.SetFloat("_Intensity", 1);
+                Anim.SetFloat("AttackSpeed", 2f);
             }
         }
     }
@@ -45,6 +47,11 @@ public class Boss : Enemy
     public void PatternAttackStart(int patternIndex)
     {
         patternController.AttackStart(patternIndex);
+        if (patternIndex == 0)
+        {
+            // Quaternion rotation = Quaternion.LookRotation(casterPos - targetPos);
+            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, bossBlackboard.rightHandTransform.position, Quaternion.identity, size: new Vector3(3,3,3));
+        }
     }
 
     public void PatternAttackEnd(int patternIndex)
@@ -68,8 +75,6 @@ public class Boss : Enemy
         transform.position = pos;
         bombAgent.nextPosition = pos;
     }
-    
-
 
     public void MagneticBarrier()
     {

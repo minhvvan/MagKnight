@@ -50,6 +50,7 @@ public class EnemyBlackboard : MonoBehaviour
 
     public Transform headTransform;
     public Transform leftHandTransform;
+    public Transform rightHandTransform;
 
 
     private void Awake()

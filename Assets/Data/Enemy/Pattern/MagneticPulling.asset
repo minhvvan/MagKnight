@@ -16,5 +16,5 @@ MonoBehaviour:
   damageMultiplier: 0
   range: 0
   priority: 1
-  cooldown: 100
-  phase: 1
+  cooldown: 40
+  phase: 3

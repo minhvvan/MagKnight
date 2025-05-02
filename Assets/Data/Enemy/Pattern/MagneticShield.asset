@@ -17,4 +17,4 @@ MonoBehaviour:
   range: 0
   priority: 10
   cooldown: 100
-  phase: 1
+  phase: 2
