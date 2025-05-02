@@ -1470,10 +1470,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656f5e89cf1ecad4f988055634d7504c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  magneticType: 0
+  magneticType: 1
   isStructure: 0
   objectMass: 0
-  magneticObjectSO: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4, type: 2}
+  magneticObjectSO: {fileID: 11400000, guid: f12c550ac1edc27418bb08a36e919585, type: 2}
   rb: {fileID: 0}
   blackboard: {fileID: 3918791580375778709}
   patternController: {fileID: 0}
@@ -1552,6 +1552,12 @@ MonoBehaviour:
       Value: {fileID: 677656760846191394}
     - Key: 2
       Value: {fileID: 6718952400264532470}
+  colors:
+    _serializedList:
+    - Key: 0
+      Value: {r: 0.93333334, g: 0.03137255, b: 0.03137255, a: 0.9490196}
+    - Key: 1
+      Value: {r: 0.043137256, g: 0, b: 1, a: 1}
 --- !u!114 &677656760846191394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1643,11 +1649,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlighterSettings:
-    depthMask: 3
+    depthMask: 2
     infoRenderScale: 1
-    useOuterGlow: 0
+    useOuterGlow: 1
     useSingleOuterGlow: 1
-    outerGlowColorFront: {r: 0, g: 0, b: 0, a: 1}
+    outerGlowColorFront: {r: 0.043137256, g: 0, b: 1, a: 1}
     outerGlowColorBack: {r: 0, g: 0, b: 0, a: 1}
     outlineVisibleBeforeObject: 1
     blurType: 1
@@ -1662,11 +1668,11 @@ MonoBehaviour:
     useMeshOutline: 1
     useSingleMeshOutline: 1
     meshOutlineFront:
-      color: {r: 0.93333334, g: 0.12941177, b: 0.12941177, a: 1}
+      color: {r: 0.043137256, g: 0, b: 1, a: 1}
     meshOutlineBack:
       color: {r: 1, g: 1, b: 1, a: 1}
-    meshOutlineThickness: 0.1
-    meshOutlineAdaptiveThickness: 0
+    meshOutlineThickness: 0.0112
+    meshOutlineAdaptiveThickness: 0.173
     useInnerGlow: 1
     useSingleInnerGlow: 1
     innerGlowFront:
@@ -1678,11 +1684,11 @@ MonoBehaviour:
     useOverlay: 1
     useSingleOverlay: 1
     overlayFront:
-      color: {r: 0.93333334, g: 0.12941177, b: 0.12941177, a: 1}
+      color: {r: 0.043137256, g: 0, b: 1, a: 1}
       useTexture: 1
       texture: {fileID: 2800000, guid: 06e36ffc6fbd4eb448377775e81f99ae, type: 3}
       background: 0.341
-      tilling: 60
+      tilling: 100
       rotation: 45
     overlayBack:
       color: {r: 0, g: 1, b: 1, a: 1}
@@ -1704,7 +1710,7 @@ MonoBehaviour:
     clipTexture: {fileID: 0}
     submeshIndexes: 00000000
     cullMode: 2
-  id: -1
+  id: 6
   showRenderBounds: 0
   showScreenAdjustedRenderBounds: 0
   highlighterName: 

@@ -31,6 +31,8 @@ public class Effector : MonoBehaviour
     [SerializeField] private SerializedDictionary<VisualEffectType, Material> _visualEffects = new SerializedDictionary<VisualEffectType, Material>();
     [SerializeField] private SerializedDictionary<HighlightType, Highlighter> _highlighters = new SerializedDictionary<HighlightType, Highlighter>();
     
+    [SerializeField] private SerializedDictionary<MagneticType, Color> colors = new SerializedDictionary<MagneticType, Color>();
+    
     private static readonly int SplitValue = Shader.PropertyToID("_SplitValue");
     private Renderer _renderer;
 
@@ -98,19 +100,26 @@ public class Effector : MonoBehaviour
             });
     }
 
-    public void OnMagneticPressed()
+    public void OnMagneticPressed(MagneticType magneticType)
     {
         if (!_highlighters.ContainsKey(HighlightType.Magnetic)) return;
         
+        var highlighter = _highlighters[HighlightType.Magnetic];
+        
+        //color setting
+        highlighter.Settings.OverlayFront.Color = colors[magneticType];
+        highlighter.Settings.OverlayBack.Color = colors[magneticType];
+        highlighter.Settings.MeshOutlineFront.Color = colors[magneticType];
+        highlighter.Settings.MeshOutlineBack.Color = colors[magneticType];
+        highlighter.Settings.OuterGlowColorFront = colors[magneticType];
+        highlighter.Settings.OuterGlowColorBack = colors[magneticType];
+        
         _highlighters[HighlightType.Magnetic].enabled = true;
-        Highlighter.HighlightersNeedReset();
     }
 
     public void OnMagneticReleased()
     {
         if (!_highlighters.ContainsKey(HighlightType.Magnetic)) return;
-
         _highlighters[HighlightType.Magnetic].enabled = false;
-        Highlighter.HighlightersNeedReset();
     }
 }

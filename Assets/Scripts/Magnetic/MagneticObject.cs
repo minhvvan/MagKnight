@@ -7,6 +7,7 @@ using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
 [RequireComponent(typeof(Effector))]
 public class MagneticObject : MonoBehaviour, IMagnetic
 {
@@ -30,7 +31,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         GameManager.Instance.OnMagneticReleased += OnMagneticReleased;
     }
 
-    private void OnMagneticReleased()
+    protected void OnMagneticReleased()
     {
         if (!Effector) return;
         Effector.OnMagneticReleased();
@@ -39,7 +40,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     protected void OnMagneticPressed()
     {
         if (!Effector) return;
-        Effector.OnMagneticPressed();
+        Effector.OnMagneticPressed(magneticType);
     }
 
     public virtual void InitializeMagnetic()
