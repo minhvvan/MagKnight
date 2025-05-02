@@ -14,18 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Boss01
   description: "1\uBC88\uBCF4\uC2A4"
-  health: 10
-  atk: 10
   attckType: 1
   aiType: 3
-  moveSpeed: 1
-  startupTime: 1
+  startupTime: 0.1
   recoveryTime: 1
-  staggerResistance: 1
   staggerRecoveryTime: 2
-  abilities: 
-  item: 10
-  appearanceFloor: 1
-  projectileSpeed: 10
   attackRange: 10
   projectilePrefab: {fileID: 0}

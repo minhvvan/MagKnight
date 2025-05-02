@@ -8,7 +8,7 @@ public class EnemyBlackboard : MonoBehaviour
 {
     [SerializeField] private EnemyDataSO _enemyDataSO;
     [SerializeField] private EnemyStatSO _enemyStatSO;
-    [SerializeField] private Enemy _enemy;
+    [SerializeField] protected Enemy _enemy;
     public AbilitySystem abilitySystem;
     
     // attribute로 관리되지 않는 데이터
@@ -32,7 +32,7 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public IEnemyAI ai;
     [HideInInspector] public IEnemyAction action;
     [HideInInspector] public bool isDead;
-    [HideInInspector] public int phase;
+
     #endregion
     
     #region CancellationToken
@@ -46,10 +46,11 @@ public class EnemyBlackboard : MonoBehaviour
     public Renderer enemyRenderer;
     [HideInInspector] public Texture baseColorTexture;
     [HideInInspector] public Texture2D onHitTexture;
-    [HideInInspector] public Texture2D phase2Texture;
-    [HideInInspector] public Texture2D phase3Texture;
+
+
     public Transform headTransform;
     public Transform leftHandTransform;
+    public Transform rightHandTransform;
 
 
     private void Awake()
@@ -57,7 +58,7 @@ public class EnemyBlackboard : MonoBehaviour
         Initialize();
     }
     
-    public void Initialize()
+    public virtual void Initialize()
     {
         InitializeAttributes();
         
@@ -70,7 +71,6 @@ public class EnemyBlackboard : MonoBehaviour
         staggerRecoveryTime = _enemyDataSO.staggerRecoveryTime;
         attackRange = _enemyDataSO.attackRange;
         projectilePrefab = _enemyDataSO.projectilePrefab;
-        phase = 1;
         
         targetLayer = LayerMask.GetMask("Player");
 
@@ -78,9 +78,6 @@ public class EnemyBlackboard : MonoBehaviour
         onHitTexture = new Texture2D(1, 1);
         onHitTexture.SetPixel(1, 1, Color.white);
         onHitTexture.Apply();
-        phase2Texture = new Texture2D(1, 1);
-        phase2Texture.SetPixel(1, 1, Color.red);
-        phase2Texture.Apply();
         
         switch (aiType)
         {
@@ -91,10 +88,6 @@ public class EnemyBlackboard : MonoBehaviour
             case EnemyAIType.RangedNormal:
                 ai = new RangedNormalAI(_enemy);
                 action = new RangedNormalAction(_enemy);
-                break;
-            case EnemyAIType.Boss:
-                ai = new BossAI(_enemy);
-                action = new BossAction(_enemy);
                 break;
         }
 

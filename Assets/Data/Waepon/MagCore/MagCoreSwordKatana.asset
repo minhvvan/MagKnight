@@ -29,7 +29,7 @@ MonoBehaviour:
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 8
+          attributeType: 7
           amount: 8
           duration: 5
           period: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 8
+          attributeType: 7
           amount: 10
           duration: 5
           period: 0
@@ -59,7 +59,7 @@ MonoBehaviour:
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 8
+          attributeType: 7
           amount: 12
           duration: 5
           period: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
     - Key: 0
       Value:
       - effectType: 2
-        attributeType: 8
+        attributeType: 7
         amount: 50
         duration: 0
         period: 0
@@ -110,7 +110,7 @@ MonoBehaviour:
     - Key: 1
       Value:
       - effectType: 2
-        attributeType: 8
+        attributeType: 7
         amount: 55
         duration: 0
         period: 0
@@ -119,7 +119,7 @@ MonoBehaviour:
     - Key: 2
       Value:
       - effectType: 2
-        attributeType: 8
+        attributeType: 7
         amount: 60
         duration: 0
         period: 0
