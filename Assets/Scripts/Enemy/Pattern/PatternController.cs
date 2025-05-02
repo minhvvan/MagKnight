@@ -59,7 +59,6 @@ public class PatternController : MonoBehaviour
     public void AttackStart(int patternId)
     {
         // animation event
-        // int patternId = patternsDictionary[_currentPattern.patternName];
         gameObject.GetComponent<HitDetector>().StartDetection(patternId);
     }
 
@@ -67,7 +66,6 @@ public class PatternController : MonoBehaviour
     {
         // animation event
         gameObject.GetComponent<HitDetector>().StopDetection(patternId);
-        // _currentPattern = null;
     }
     
     
