@@ -15,6 +15,6 @@ MonoBehaviour:
   patternName: SpawnBomb
   damageMultiplier: 1
   range: 20
-  priority: 2
-  cooldown: 30
-  phase: 2
+  priority: 1
+  cooldown: 1
+  phase: 1

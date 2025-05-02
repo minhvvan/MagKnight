@@ -544,8 +544,8 @@ ModelImporter:
       name: SK_Robot_Boss|DyingRotation
       takeName: SK_Robot_Boss|DyingRotation
       internalID: -1715544941936570086
-      firstFrame: 0
-      lastFrame: 92
+      firstFrame: 35
+      lastFrame: 60
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

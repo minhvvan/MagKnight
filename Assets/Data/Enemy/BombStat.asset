@@ -40,3 +40,6 @@ MonoBehaviour:
     ResistanceDamage:
       Key: 11
       Value: 0
+    Defense:
+      Key: 0
+      Value: 0
