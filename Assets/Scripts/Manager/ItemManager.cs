@@ -306,7 +306,8 @@ public class ItemManager : Singleton<ItemManager>
     {
         var currentRoom = RoomSceneController.Instance.CurrentRoomController;
         
-        var obj = Instantiate(_lootCratePrefab, position, rotation, currentRoom.transform);
+        var obj = Instantiate(_lootCratePrefab, position, rotation, 
+            currentRoom != null ? currentRoom.transform : null);
         var lootCrate = obj.GetComponent<LootCrate>();
         lootCrate.SetLootCrate(category, rarity);
         lootCrate.rarityVfxObjects = _lootVfxPrefabs;

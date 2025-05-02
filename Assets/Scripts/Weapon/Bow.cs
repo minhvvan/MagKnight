@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Bow : BaseWeapon
 {
@@ -23,8 +24,6 @@ public class Bow : BaseWeapon
 
     public override void AttackStart(int hitboxGroupId)
     {
-
-        
         
     }
 
@@ -44,6 +43,13 @@ public class Bow : BaseWeapon
         
         Quaternion rotation = Quaternion.LookRotation(transform.forward, transform.up);
         Projectile projectile = ProjectileFactory.Create(projectilePrefab, transform.position, Quaternion.identity, projectileLaunchData);
+        
+        //SFX 재생
+        var bowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Bow);
+        var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Arrow);
+        AudioManager.Instance.PlaySFX(bowSfxRandomClip);
+        AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        
         return projectile;
     }
 
@@ -59,6 +65,10 @@ public class Bow : BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         base.OnNext(hitInfo);
+        
+        //SFX
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
+       
         //FX
         GameObject hitEffect = Instantiate(_hitEffectPrefab, hitInfo.hit.point, Quaternion.identity);
         hitEffect.transform.forward = hitInfo.hit.normal;
