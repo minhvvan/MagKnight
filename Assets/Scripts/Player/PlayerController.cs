@@ -923,12 +923,14 @@ namespace Moon
             }
             if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
             _parryWindowActive = true;
+            _abilitySystem.SetTag("Parry");
             _parryWindowCoroutine = StartCoroutine(CloseParryWindow());
         }
         
         IEnumerator CloseParryWindow()
         {
             yield return new WaitForSeconds(parryWindow);
+            _abilitySystem.DeleteTag("Parry");
             _parryWindowActive = false;
             _parryWindowCoroutine = null;
         }
@@ -1054,9 +1056,13 @@ namespace Moon
                 // 1-a) 패링 성공 애니 실행
                 _animator.SetTrigger(PlayerAnimatorConst.hashParry);
                 Debug.Log("parry success");
+                
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
                 if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
-                    //enemy.Blackboard.isStunned = true;
+                {
+                    //넉백?
+                    enemy.OnStagger();
+                }
 
                 // (피해는 받지 않음)
                 return;
