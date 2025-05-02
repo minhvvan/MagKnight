@@ -247,7 +247,8 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     }
 
     void HitEffect(){
-        CameraShake.Shake(0.05f, 0.2f);
+        //CameraShake.Shake(0.05f, 0.2f);
+        CinemachineImpulseController.GenerateImpulse();
 
         //Critical Hit Effect
         Time.timeScale = 0.1f;

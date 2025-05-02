@@ -30,6 +30,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     public Action<Enemy> OnDead;
     
+    private RaycastHit[] _hits = new RaycastHit[1];
+    private Collider[] _colliders = new Collider[1];
+    
     // stateMachine
     private StateMachine _stateMachine;
     
@@ -38,6 +41,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     [NonSerialized] public EnemyStateAction actionState;
     [NonSerialized] public EnemyStateStagger staggerState;
     [NonSerialized] public EnemyStateDead deadState;
+
+    private GameObject _bomb;
 
     void Awake()
     {
@@ -120,7 +125,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private void OnAnimatorMove()
     {
         if (_currentAnimStateInfo.IsName("Trace"))
-        {
+        {   
             Vector3 velocity = Agent.desiredVelocity.normalized * Time.deltaTime * 
                                blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
             
@@ -173,10 +178,26 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             Anim.SetTrigger("PhaseChange");
             blackboard.phase = phase;
             patternController.PhaseChange(phase);
+            if (phase == 2)
+            {
+                // blackboard.abilitySystem.
+                GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 2);
+                blackboard.abilitySystem.ApplyEffect(gameplayEffect);
+                Anim.SetFloat("phase", phase);
+                blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
+            }
+            else if (phase == 3)
+            {
+                GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 3);
+                blackboard.abilitySystem.ApplyEffect(gameplayEffect);
+                Anim.SetFloat("phase", phase);
+                blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
+                blackboard.enemyRenderer.material.SetFloat("_Intensity", 1);
+            }
         }
     }
 
-    public void OnHit(Transform playerTransform)
+    public void OnHit(ExtraData extraData)
     {
         // 붉은색으로 변환, enemy 위치 보정
         
@@ -189,32 +210,32 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
         blackboard.onHitCancellation = new CancellationTokenSource();
         
-        OnHitHelper(playerTransform).Forget();
+        OnHitHelper(extraData).Forget();
     }
 
-    private async UniTask OnHitHelper(Transform playerTransform)
+    private async UniTask OnHitHelper(ExtraData extraData)
     {
         CancellationToken token = blackboard.onHitCancellation.Token;
         
         blackboard.enemyRenderer.material.SetTexture("_BaseColor", blackboard.onHitTexture);
         
         // Enemy 넉백 관련은 이 함수를 사용
-        float desiredDistance = 2f;
+        float desiredDistance = extraData.weaponRange;
         float enemyPositionCorrection = 0.5f;
         float pullSpeed = 20f;
         float moveTime = 0.2f;
         float duration = 0f;
         
-        Vector3 forward = playerTransform.forward;
-        Vector3 right = playerTransform.right;
+        Vector3 forward = extraData.sourceTransform.forward;
+        Vector3 right = extraData.sourceTransform.right;
         Vector3 targetPos = transform.position + forward;
-        if ((targetPos - playerTransform.position).magnitude > desiredDistance)
+        if ((targetPos - extraData.sourceTransform.position).magnitude > desiredDistance)
         {
-            Vector3 dir = transform.position - playerTransform.position;
+            Vector3 dir = transform.position - extraData.sourceTransform.position;
             float rightSize = Vector3.Dot(dir, right);
             if (Mathf.Abs(rightSize) > desiredDistance)
             {
-                targetPos = playerTransform.position + dir.normalized * desiredDistance;
+                targetPos = extraData.sourceTransform.position + dir.normalized * desiredDistance;
             }
             else
             {
@@ -223,7 +244,43 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
                 targetPos = transform.position + forward * delta;
             }
         }
+        
+        var end = transform.position + new Vector3(0, 1, 0);
+        
+        var didHit = Physics.OverlapCapsuleNonAlloc(
+            transform.position + new Vector3(0, .7f, 0), 
+            end, 
+            .5f,
+            _colliders, 
+            (1 << LayerMask.NameToLayer("Environment")));
 
+        if (didHit > 0)
+        {
+            targetPos = transform.position;
+        }
+        else
+        {
+            var knockBackDir = targetPos - transform.position;
+            var distance = knockBackDir.magnitude;
+            knockBackDir.y = 0;
+            knockBackDir.Normalize();
+
+            didHit = Physics.CapsuleCastNonAlloc(
+                transform.position + new Vector3(0, .7f, 0), 
+                end, 
+                .3f, 
+                knockBackDir,
+                _hits,
+                distance,
+                (1 << LayerMask.NameToLayer("Environment"))
+            );
+        
+            if (didHit > 0)
+            {
+                targetPos = _hits[0].point - knockBackDir * .1f;
+            }
+        }
+        
         try
         {
             while (duration < moveTime)
@@ -258,8 +315,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
-        damageEffect.sourceTransform = transform;
-        impulseEffect.sourceTransform = transform;
+        damageEffect.extraData.sourceTransform = transform;
+        impulseEffect.extraData.sourceTransform = transform;
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
     }
@@ -283,22 +340,22 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         HitHandler.StopDetection();
     }
 
-    public void PatternAttackStart()
+    public void PatternAttackStart(int patternIndex)
     {
-        patternController.AttackStart();
+        patternController.AttackStart(patternIndex);
     }
 
-    public void PatternAttackEnd()
+    public void PatternAttackEnd(int patternIndex)
     {
-        patternController.AttackEnd();
+        patternController.AttackEnd(patternIndex);
     }
-
+    
     //특정 대상에게 극성 상관없이 정해진 동작만을 수행하게도 가능.
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
         //ex. Enemy에겐 사용 시 무조건 돌진한다.
         //await magnetApproach.Execute(this, target);
-        await magnetDashAction.Execute(this, target);
+        await magnetDashAttackAction.Execute(this, target);
     }
 
     void ApplySoftCollision(Collider[] colliders)
@@ -356,5 +413,34 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             return !player.IsInvisible;
         }
         return false;
+    }
+
+    public void SpawnBomb(GameObject prefab)
+    {
+        _bomb = Instantiate(prefab, blackboard.leftHandTransform.position, blackboard.leftHandTransform.rotation, blackboard.leftHandTransform);
+    }
+
+    public void ActivateBomb()
+    {
+        _bomb.transform.SetParent(null);
+        NavMeshAgent bombAgent = _bomb.GetComponent<NavMeshAgent>();
+        bombAgent.enabled = true;
+        _bomb.GetComponent<Enemy>().enabled = true;
+        Vector3 pos = transform.position;
+        pos.y = 0;
+        transform.position = pos;
+        bombAgent.nextPosition = pos;
+    }
+    
+    public void CreateAttackEffect(GameObject effectPrefab)
+    {
+        GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
+    }
+
+    public void CreateAttackEffectAtTarget(GameObject effectPrefab)
+    {
+        GameObject effect = Instantiate(effectPrefab, blackboard.target.transform.position, Quaternion.identity);
+        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
     }
 }

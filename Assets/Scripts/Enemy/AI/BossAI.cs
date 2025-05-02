@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 /// <summary>
 /// 1. 매 프레임 시전 조건을 만족하는 패턴이 있는지 체크
@@ -13,22 +14,23 @@ public class BossAI : IEnemyAI
     private PatternController _patternController;
     
     private float destinationUpdateInterval = 0.1f;
-    private float _destinationTimer = 0f;
+    private float _destinationTimer;
 
     public BossAI(Enemy enemy)
     {
         _enemy = enemy;
         _blackboard = _enemy.blackboard;
+        _destinationTimer = destinationUpdateInterval;
         _patternController = _enemy.GetComponent<PatternController>();
     }
     
     public void OnEnter()
     {
-        _enemy.Anim.SetBool("Trace", true);
-        if(_enemy.IsAvailableTarget())
-        {
-            _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        }
+        // _enemy.Anim.SetBool("Trace", true);
+        // if(_enemy.IsAvailableTarget())
+        // {
+        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        // }
     }
 
     public void OnUpdate()
@@ -37,20 +39,31 @@ public class BossAI : IEnemyAI
         if(patternDataSO != null)
         {
             _enemy.SetState(_enemy.actionState);
+            return;
         }
-        else
+        
+        _destinationTimer += Time.deltaTime;
+        if (_destinationTimer >= destinationUpdateInterval)
         {
-            _destinationTimer += Time.deltaTime;
-            if (_destinationTimer >= destinationUpdateInterval)
+            if(_enemy.IsAvailableTarget())
             {
-                if(_enemy.IsAvailableTarget())
-                {
-                    _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-                }
-
-                _destinationTimer = 0f;
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
             }
+
+            _destinationTimer = 0f;
         }
+        
+        if (!_enemy.Agent.pathPending)
+        {
+            if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+            {
+                _enemy.Anim.SetBool("Trace", true);
+            }
+            else
+            {
+                _enemy.Anim.SetBool("Trace", false);
+            }
+        } 
     }
 
     public void OnExit()

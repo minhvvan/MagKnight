@@ -22,9 +22,6 @@ public class EnemyBlackboard : MonoBehaviour
     [HideInInspector] public float startupTime;
     [HideInInspector] public float recoveryTime;
     [HideInInspector] public float staggerRecoveryTime;
-    [HideInInspector] public List<EnemyAbilityType> abilities;
-    [HideInInspector] public int appearanceFloor; // todo: 몹을 미리 배치하기 때문에 제거 가능성 높음
-    [HideInInspector] public float projectileSpeed;
     [HideInInspector] public float attackRange;
     [HideInInspector] public GameObject projectilePrefab;
     #endregion
@@ -49,7 +46,10 @@ public class EnemyBlackboard : MonoBehaviour
     public Renderer enemyRenderer;
     [HideInInspector] public Texture baseColorTexture;
     [HideInInspector] public Texture2D onHitTexture;
+    [HideInInspector] public Texture2D phase2Texture;
+    [HideInInspector] public Texture2D phase3Texture;
     public Transform headTransform;
+    public Transform leftHandTransform;
 
 
     private void Awake()
@@ -68,9 +68,6 @@ public class EnemyBlackboard : MonoBehaviour
         startupTime = _enemyDataSO.startupTime;
         recoveryTime = _enemyDataSO.recoveryTime;
         staggerRecoveryTime = _enemyDataSO.staggerRecoveryTime;
-        abilities = _enemyDataSO.abilities;
-        appearanceFloor = _enemyDataSO.appearanceFloor;
-        projectileSpeed = _enemyDataSO.projectileSpeed;
         attackRange = _enemyDataSO.attackRange;
         projectilePrefab = _enemyDataSO.projectilePrefab;
         phase = 1;
@@ -81,6 +78,9 @@ public class EnemyBlackboard : MonoBehaviour
         onHitTexture = new Texture2D(1, 1);
         onHitTexture.SetPixel(1, 1, Color.white);
         onHitTexture.Apply();
+        phase2Texture = new Texture2D(1, 1);
+        phase2Texture.SetPixel(1, 1, Color.red);
+        phase2Texture.Apply();
         
         switch (aiType)
         {

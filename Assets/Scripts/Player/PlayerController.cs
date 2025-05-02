@@ -86,6 +86,8 @@ namespace Moon
         #endregion
 
         [NonSerialized] public bool inMagnetSkill = false;
+        [NonSerialized] public bool inMagnetActionJump = false;
+
 
         // These constants are used to ensure Ellen moves and behaves properly.
         // It is advised you don't change them without fully understanding what they do in code.
@@ -273,7 +275,10 @@ namespace Moon
             CalculateForwardMovement();
             CalculateVerticalMovement();
 
-            SetTargetRotation();
+            if(!_inCombo)
+            {
+                SetTargetRotation();
+            }
 
             if (IsOrientationUpdated())
                 UpdateOrientation();
@@ -481,6 +486,10 @@ namespace Moon
                     VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
                 }
             }
+            else if (inMagnetActionJump)
+            {
+                _verticalSpeed = 0f;
+            }
             else
             {
                 // If Ellen is airborne, the jump button is not held and Ellen is currently moving upwards...
@@ -500,7 +509,7 @@ namespace Moon
 
         void SetTargetRotation()
         {
-            var targetRotation = GetTargetRotation();
+            var targetRotation = GetTargetRotationToMovement();
 
             Vector2 moveInput = _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
@@ -514,15 +523,22 @@ namespace Moon
             _targetRotation = targetRotation;
         }
 
-        void SetForceRotation()
+        public void SetForceRotation()
         {
-            var targetRotation = GetTargetRotation(true);
+            if(inMagnetSkill) return;
+            
+            Vector2 moveInput = _inputHandler.ForceMoveInput;
+            Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+            if (localMovementDirection == Vector3.zero) return;
+
+            var targetRotation = GetTargetRotationToMovement(true);
 
             _targetRotation = targetRotation;
             transform.rotation = targetRotation;
         }
+        
 
-        Quaternion GetTargetRotation(bool isForce = false)
+        Quaternion GetTargetRotationToMovement(bool isForce = false)
         {
             Vector2 moveInput = isForce ? _inputHandler.ForceMoveInput : _inputHandler.MoveInput;
             Vector3 localMovementDirection = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
@@ -563,6 +579,19 @@ namespace Moon
 
             return targetRotation;
         }
+
+        public void SetForceRotationToAim()
+        {
+            if (!_lockOnSystem.IsLockOn)
+            {
+                Vector3 cameraForward = Camera.main.transform.forward;
+                Vector3 rotation = new Vector3(cameraForward.x, 0f, cameraForward.z).normalized;
+                
+                transform.rotation = Quaternion.LookRotation(rotation);
+                _targetRotation = transform.rotation;
+            }
+        }
+
 
         // Called each physics step to help determine whether Ellen can turn under player input.
         bool IsOrientationUpdated()

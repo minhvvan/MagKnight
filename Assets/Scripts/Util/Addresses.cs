@@ -14,6 +14,7 @@ public static class Addresses
         public static class Weapon
         {
             public const string Katana = "data/weapon/katana";
+            public const string Dictionary = "data/weapon/dictionary";
         }
 
         public static class Room

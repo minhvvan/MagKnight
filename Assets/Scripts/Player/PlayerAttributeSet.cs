@@ -133,7 +133,8 @@ namespace Jun
                 // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
 
 #if true //공격 효과
-                CameraShake.Shake(0.2f, 0.1f);
+                //CameraShake.Shake(0.2f, 0.1f);
+                CinemachineImpulseController.GenerateImpulse();
                 Time.timeScale = 0.1f;
                 UniTask.Delay(TimeSpan.FromMilliseconds(200f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
                 {
@@ -160,7 +161,7 @@ namespace Jun
                 if(GetValue(AttributeType.Impulse) == 0)
                     return;
                 
-                OnDamaged?.Invoke(effect.sourceTransform);
+                OnDamaged?.Invoke(effect.extraData.sourceTransform);
                 SetValue(AttributeType.Impulse, 0);
             }
 

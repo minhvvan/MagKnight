@@ -75,6 +75,8 @@ public class MagneticController : MagneticObject
     private float _counterPressRange;
     private float _counterPressPower;    
     
+    Coroutine _timeScaleCoroutine;
+
     private void FixedUpdate()
     {
         
@@ -157,15 +159,36 @@ public class MagneticController : MagneticObject
         StartCoroutine(_magneticUIController.ShowFocusArea());
         StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
         Time.timeScale = 0.2f;
-        
+        _timeScaleCoroutine = StartCoroutine(TimeScaleCoroutine(1f));
+
+    
         //끝
         _isShortRelease = false;
+    }
+
+    IEnumerator TimeScaleCoroutine(float time)
+    {
+        Time.timeScale = 0.2f;
+        //VolumeController.SetSaturation(-100, 0, time);
+        VolumeController.SetChromaticAberration(0f, 0.8f, 0.5f);
+        yield return new WaitForSecondsRealtime(time);
+        Time.timeScale = 1f;
+
+        _timeScaleCoroutine = null;
     }
     
     void CommonRelease()
     {
+        if(_timeScaleCoroutine != null)
+        {
+            StopCoroutine(_timeScaleCoroutine);
+            _timeScaleCoroutine = null;
+        }
+
         _isPressMagnetic = false;
         Time.timeScale = 1f;
+        //VolumeController.SetSaturation(0, 0, 0);
+        VolumeController.SetChromaticAberration(0, 0, 0.1f);
         
         StartCoroutine(_magneticUIController.HideFocusArea());
         StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
