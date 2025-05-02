@@ -98,6 +98,9 @@ public class ArtifactInventory : MonoBehaviour
         if (artifact)
         {
             currentRunData.leftArtifacts[index] = artifact.itemID;
+            currentRunData.artifactsId.Add(artifact.itemID);
+            ItemManager.Instance.RemoveArtifactList(artifact);
+            
         }
         else
         {
@@ -145,6 +148,8 @@ public class ArtifactInventory : MonoBehaviour
         if (artifact)
         {
             currentRunData.rightArtifacts[index] = artifact.itemID;
+            currentRunData.artifactsId.Add(artifact.itemID);
+            ItemManager.Instance.RemoveArtifactList(artifact);
         }
         else
         {

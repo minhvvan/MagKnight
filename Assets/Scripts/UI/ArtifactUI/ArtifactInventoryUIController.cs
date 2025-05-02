@@ -31,6 +31,30 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
             var artifactUI = Instantiate(ArtifactUIPrefab, artifactSlot.transform).GetComponent<ArtifactUI>();
             artifactUI.Initialized(artifactDataSO, transform);
         }
+
+        for (int i = 0; i < inventory.Left_ArtifactGas.Length; i++)
+        {
+            if (inventory.Left_ArtifactGas[i] != null)
+            {
+                if (Left_ArtifactSlots[i].GetChild() == null)
+                {
+                    var artifactUI = Instantiate(ArtifactUIPrefab, Left_ArtifactSlots[i].transform).GetComponent<ArtifactUI>();
+                    artifactUI.Initialized(inventory.Left_ArtifactGas[i], transform);
+                }
+            }
+        }
+        
+        for (int i = 0; i < inventory.Right_ArtifactGas.Length; i++)
+        {
+            if (inventory.Right_ArtifactGas[i] != null)
+            {
+                if (Right_ArtifactSlots[i].GetChild() == null)
+                {
+                    var artifactUI = Instantiate(ArtifactUIPrefab, Right_ArtifactSlots[i].transform).GetComponent<ArtifactUI>();
+                    artifactUI.Initialized(inventory.Right_ArtifactGas[i], transform);
+                }
+            }
+        }
         
         ShowUI();
     }
