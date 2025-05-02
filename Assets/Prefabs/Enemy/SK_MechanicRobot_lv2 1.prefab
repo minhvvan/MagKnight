@@ -9845,6 +9845,7 @@ GameObject:
   - component: {fileID: -872914568088025068}
   - component: {fileID: -4095897190841493199}
   - component: {fileID: 4511695910495048505}
+  - component: {fileID: 3715275542171690792}
   m_Layer: 7
   m_Name: SK_MechanicRobot_lv2 1
   m_TagString: Enemy
@@ -9962,9 +9963,6 @@ MonoBehaviour:
   startupTime: 0
   recoveryTime: 0
   staggerRecoveryTime: 0
-  abilities: 
-  appearanceFloor: 0
-  projectileSpeed: 0
   attackRange: 0
   projectilePrefab: {fileID: 0}
   target: {fileID: 0}
@@ -9977,7 +9975,10 @@ MonoBehaviour:
   enemyRenderer: {fileID: 9198767429708749648}
   baseColorTexture: {fileID: 0}
   onHitTexture: {fileID: 0}
+  phase2Texture: {fileID: 0}
+  phase3Texture: {fileID: 0}
   headTransform: {fileID: 0}
+  leftHandTransform: {fileID: 0}
 --- !u!114 &3938603169503671290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10075,6 +10076,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3715275542171690792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152928721955278981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd37000e7b70df8498283b91eb71b4e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _visualEffects:
+    _serializedList:
+    - Key: 1
+      Value: {fileID: 2100000, guid: 834a4713f8c31124f97b5755f9b521a1, type: 2}
+    - Key: 2
+      Value: {fileID: 2100000, guid: 2bad226bbbf27d14fb462c00163e77b5, type: 2}
 --- !u!1 &228331634181066847
 GameObject:
   m_ObjectHideFlags: 0
@@ -11083,7 +11102,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 02588c979fdff5f4cb1f8961227e91a3, type: 2}
+  - {fileID: 2100000, guid: 2bad226bbbf27d14fb462c00163e77b5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

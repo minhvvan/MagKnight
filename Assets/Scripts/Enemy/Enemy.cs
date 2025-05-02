@@ -25,6 +25,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public EnemyBlackboard blackboard;
     public PatternController patternController;
     public HpBarController hpBarController;
+    public Effector Effector { get; private set; }
 
     private AnimatorStateInfo _currentAnimStateInfo;
 
@@ -55,6 +56,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         _stateMachine.ChangeState(spawnState);
     }
+    
     private void Initialize()
     {
         Anim = GetComponent<Animator>();
@@ -62,6 +64,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         MainCollider = GetComponent<Collider>();
         Rb = GetComponent<Rigidbody>();
         EnemyAbilitySystem = GetComponent<AbilitySystem>();
+        Effector = GetComponent<Effector>();
 
         Agent.updatePosition = false;
         Agent.updateRotation = false;
