@@ -79,8 +79,6 @@ public class MagneticController : MagneticObject
 
     private void FixedUpdate()
     {
-        
-        
         //자석 능력 길게 키 입력 시
         if (_isPressMagnetic)
         {
@@ -149,7 +147,7 @@ public class MagneticController : MagneticObject
     public void OnPressEnter()
     {
         if(_magneticUIController == null) return;
-
+        
         _isShortRelease = true;
         //입력 유지 시 할 로직
         

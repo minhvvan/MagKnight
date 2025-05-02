@@ -1214,6 +1214,8 @@ namespace Highlighters
         }
 
         #endregion
+        
+        public string highlighterName;
 
         public void OnDrawGizmos()
         {

@@ -59,7 +59,7 @@ namespace Highlighters
             fontStyle = FontStyle.Bold,
             fontSize = 12,
         };
-
+        
         public override void OnGUI(Rect pos, SerializedProperty property, GUIContent label)
         {
             centeredBoldLabel.normal.textColor = Color.white;
@@ -471,7 +471,7 @@ namespace Highlighters
 
         const int XSpacing = 10;
         const int YSpacing = 10;
-
+        
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             int height = 0;
@@ -591,6 +591,8 @@ namespace Highlighters
         SerializedProperty RenderingBoundsMaxDistanceFix;
         SerializedProperty RenderingBoundsMinDistanceFix;
 
+        private string highlighterName = "";
+
         void OnEnable()
         {
             highlighterSettings = serializedObject.FindProperty("highlighterSettings");
@@ -624,6 +626,9 @@ namespace Highlighters
             using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
             {
                 //EditorGUILayout.LabelField("Refresh ", EditorStyles.boldLabel);
+
+                EditorGUILayout.LabelField("Highlighter Name", EditorStyles.boldLabel);
+                highlighterName = EditorGUILayout.TextField(highlighterName, GUILayout.Height(25));
 
                 if (GUILayout.Button(new GUIContent("Refresh highlighters", "Use when not all highlighters are visible in the editor scene.")))
                 {

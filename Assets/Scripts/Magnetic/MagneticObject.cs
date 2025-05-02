@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+[RequireComponent(typeof(Effector))]
 public class MagneticObject : MonoBehaviour, IMagnetic
 {
     public MagneticType magneticType; //오브젝트의 극 (N,S)
@@ -19,6 +21,27 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public IMagneticInteractCommand magnetDashAttackAction;
     public IMagneticInteractCommand magnetDashJumpAction;
     
+    public Effector Effector { get; protected set; }
+
+    protected virtual void Awake()
+    {
+        Effector = GetComponent<Effector>();
+        GameManager.Instance.OnMagneticPressed += OnMagneticPressed;
+        GameManager.Instance.OnMagneticReleased += OnMagneticReleased;
+    }
+
+    private void OnMagneticReleased()
+    {
+        if (!Effector) return;
+        Effector.OnMagneticReleased();
+    }
+
+    protected void OnMagneticPressed()
+    {
+        if (!Effector) return;
+        Effector.OnMagneticPressed();
+    }
+
     public virtual void InitializeMagnetic()
     {
         //기본 데이터 세팅

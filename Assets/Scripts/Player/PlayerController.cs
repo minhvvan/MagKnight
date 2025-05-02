@@ -924,12 +924,18 @@ namespace Moon
         {
             if (_magneticController != null)
             {
+                //*임시 -> 변경 필요
+                GameManager.Instance.OnMagneticPressed?.Invoke();
+                
                 _magneticController.OnPressEnter();
             }
         }
         void MagneticRelease(bool inputValue)
         {
             if (_magneticController == null) return;
+            //*임시 -> 변경 필요
+            GameManager.Instance.OnMagneticReleased?.Invoke();
+            
             if(inputValue) _magneticController.OnLongRelease().Forget(); 
             else _magneticController.OnShortRelease().Forget();
         }

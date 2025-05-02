@@ -25,7 +25,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public EnemyBlackboard blackboard;
     public PatternController patternController;
     public HpBarController hpBarController;
-    public Effector Effector { get; private set; }
 
     private AnimatorStateInfo _currentAnimStateInfo;
 
@@ -45,8 +44,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     private GameObject _bomb;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         Initialize();
         InitializeMagnetic();
         // TestCode();
