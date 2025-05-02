@@ -31,7 +31,7 @@ public class MagCore: MonoBehaviour, IInteractable
     public int currentUpgradeValue;
     public int scrapValue;
     
-    private MagCoreSO _magCoreSO;
+    [SerializeField] private MagCoreSO _magCoreSO; //필드 배치시 여기에 임의로 SO할당 해주시면 됩니다.
     [SerializeField] private WeaponType weaponType;
     [SerializeField] private PartsType partsType;
     
@@ -47,6 +47,8 @@ public class MagCore: MonoBehaviour, IInteractable
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         category = ItemCategory.MagCore;
+        
+        if(_magCoreSO != null) SetMagCoreData(_magCoreSO);
     }
 
     public void SetMagCoreData(MagCoreSO magCoreData = null, [CanBeNull] MagCore newMagCore = null)
