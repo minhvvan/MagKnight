@@ -29,6 +29,7 @@ public static class PlayerAnimatorConst
     public readonly static int hashMoveSpeed = Animator.StringToHash("MoveSpeed");
     public readonly static int hashAttackSpeed = Animator.StringToHash("AttackSpeed");
     public readonly static int hashImpulse = Animator.StringToHash("Impulse");
+    public readonly static int hashParry = Animator.StringToHash("Parry");
         
     // States
     public readonly static int hashLocomotion = Animator.StringToHash("Locomotion");
@@ -49,6 +50,7 @@ public static class PlayerAnimatorConst
     public readonly static int hashEllenCombo5_Charge = Animator.StringToHash("EllenCombo5 Charge");
     public readonly static int hashEllenCombo6_Charge = Animator.StringToHash("EllenCombo6 Charge");
     public readonly static int hashMagnetSkillDash = Animator.StringToHash("MagnetSkillDash");
+    
     
     // Tags
     public readonly static int hashBlockInput = Animator.StringToHash("BlockInput");
