@@ -24,11 +24,7 @@ public class Bow : BaseWeapon
 
     public override void AttackStart(int hitboxGroupId)
     {
-        //SFX 재생
-        var bowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Bow);
-        var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Arrow);
-        AudioManager.Instance.PlaySFX(bowSfxRandomClip);
-        AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        
     }
 
     public override Projectile CreateProjectile(GameObject projectilePrefab)
@@ -47,6 +43,13 @@ public class Bow : BaseWeapon
         
         Quaternion rotation = Quaternion.LookRotation(transform.forward, transform.up);
         Projectile projectile = ProjectileFactory.Create(projectilePrefab, transform.position, Quaternion.identity, projectileLaunchData);
+        
+        //SFX 재생
+        var bowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Bow);
+        var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Arrow);
+        AudioManager.Instance.PlaySFX(bowSfxRandomClip);
+        AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        
         return projectile;
     }
 
