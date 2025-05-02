@@ -206,6 +206,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         
         if(blackboard.isDead) return;
         
+        Effector.OnHit(1f);
+        
         if (blackboard.onHitCancellation != null)
         {
             blackboard.onHitCancellation.Cancel();

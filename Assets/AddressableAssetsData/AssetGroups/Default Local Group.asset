@@ -42,11 +42,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 47cf932e83d924248b7108acf24466a4
-    m_Address: data/artifactMapping
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a7568d78c25968d448c61cd790daaf5a
     m_Address: data/itemList
     m_ReadOnly: 0
