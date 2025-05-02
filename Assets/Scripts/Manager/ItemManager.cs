@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using JetBrains.Annotations;
 using Managers;
@@ -22,7 +23,7 @@ public enum ItemCategory
 
 public class ItemManager : Singleton<ItemManager>
 {
-    public Dictionary<ItemRarity, List<ArtifactDataSO>> artifactList = new Dictionary<ItemRarity, List<ArtifactDataSO>>();
+    public SerializedDictionary<ItemRarity, List<ArtifactDataSO>> artifactList = new  SerializedDictionary<ItemRarity, List<ArtifactDataSO>>();
     public Dictionary<ItemRarity, List<MagCoreSO>> magCoreList = new Dictionary<ItemRarity, List<MagCoreSO>>();
     public Dictionary<ItemRarity, List<HealthPackSO>> healthPackList = new Dictionary<ItemRarity, List<HealthPackSO>>();
     
@@ -68,14 +69,13 @@ public class ItemManager : Singleton<ItemManager>
 
     protected override async void Initialize()
     {
-        await SetAllItemUpdate();
         IsInitialized = true;
     }
     
     /// <summary>
     /// 모든 아이템 리스트를 갱신, 로드 합니다.
     /// </summary>
-    public async UniTask SetAllItemUpdate()
+    public async UniTask SetAllItemUpdate(CurrentRunData currentRunData)
     {
         var datas = await DataManager.Instance.LoadData<ItemListSO>(Addresses.Data.Item.ItemListData);
 
@@ -90,9 +90,15 @@ public class ItemManager : Singleton<ItemManager>
         
         _artifactPrefab = datas.artifactPrefab;
         artifactList?.Clear();
+
+        foreach (var rarity in Enum.GetValues(typeof(ItemRarity)))
+        {
+            artifactList?.Add((ItemRarity)rarity, new List<ArtifactDataSO>());
+        }
+        
         foreach (var data in datas.artifactList)
         {
-            artifactList?.Add(data.Key, data.Value);
+            if (artifactList != null) artifactList[data.rarity].Add(data);
         }
 
         _magCorePrefab = datas.magCorePrefab;
@@ -109,6 +115,35 @@ public class ItemManager : Singleton<ItemManager>
         {
             healthPackList?.Add(data.Key, data.Value);
         }
+
+        foreach (var artifactId in currentRunData.artifactsId)
+        {
+            foreach (var artifactListValue in artifactList.Values)
+            {
+                if (artifactListValue.FirstOrDefault(data => data.itemID == artifactId)
+                        is var containData && containData != null)
+                {
+                    artifactListValue.Remove(containData);
+                }
+            }
+        }
+    }
+
+    public void RemoveArtifactList(ArtifactDataSO artifactData)
+    {
+        foreach (var artifactListValue in artifactList.Values)
+        {
+            if (artifactListValue.FirstOrDefault(data => data == artifactData)
+                    is var containData && containData != null)
+            {
+                artifactListValue.Remove(containData);
+            }
+        }
+    }
+
+    public void AddArtifact(ArtifactDataSO artifactData)
+    {
+        artifactList[artifactData.rarity]?.Add(artifactData);
     }
 
     /// <summary>
