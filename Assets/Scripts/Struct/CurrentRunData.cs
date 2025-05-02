@@ -29,7 +29,7 @@ public class CurrentRunData : ISaveData
     //아티팩트
     public SerializedDictionary<int, int> leftArtifacts = new SerializedDictionary<int, int>();
     public SerializedDictionary<int, int> rightArtifacts = new SerializedDictionary<int, int>();
-    public HashSet<int> artifactsId = new HashSet<int>();
+    public List<int> artifactsId = new List<int>();
     
     public string GetDataKey()
     {
