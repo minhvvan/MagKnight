@@ -9,12 +9,10 @@ public class MagnetActionIdleState : BaseMagnetActionState
     public override void Enter(IStateData stateData = null)
     {
         controller.ResetPlayerState();
-        Debug.Log("Idle State Enter");
     }
 
     public override void Exit()
     {
-        Debug.Log("Idle State Exit");
     }
 
     public override void UpdateState()
