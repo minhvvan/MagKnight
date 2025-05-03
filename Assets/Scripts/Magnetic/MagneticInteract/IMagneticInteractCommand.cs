@@ -341,6 +341,19 @@ public class MagnetDashJumpAction : IMagneticInteractCommand
     }
 }
 
+public class MagnetSwingAction : IMagneticInteractCommand
+{
+    public override UniTask Execute(MagneticObject caster, MagneticObject target)
+    {
+        if(target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
+        {
+            targetPlayerMagnetActionController.StartMagnetSwing(caster);
+        }
+
+        return UniTask.CompletedTask;
+    }
+}
+
 public static class MagneticInteractFactory
 {
     public static IMagneticInteractCommand GetInteract<T>() where T : IMagneticInteractCommand, new()
