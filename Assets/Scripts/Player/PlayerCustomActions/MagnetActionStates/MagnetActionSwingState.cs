@@ -49,13 +49,10 @@ public class MagnetActionSwingState : BaseMagnetActionState
         _currentAngle = Vector3.SignedAngle(projectedRopeDir, reference, swingAxis);
 
         _maxAngularVelocity = maxTangentialSpeed / _ropeLength;
-
-        Debug.Log("Swing State Enter");
     }
 
     public override void Exit()
     {
-        Debug.Log("Swing State Exit");    
     }
 
     public override void UpdateState()
