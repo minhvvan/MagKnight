@@ -584,6 +584,17 @@
                 },
                 {
                     "name": "",
+                    "id": "3128da9f-8b77-447a-862b-3de9621116c2",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchMagnetic",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3a5b7c17-a405-4a09-98c6-ef7528d3dadc",
                     "path": "<Keyboard>/backquote",
                     "interactions": "",

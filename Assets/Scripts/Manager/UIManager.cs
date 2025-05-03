@@ -14,6 +14,15 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] public InGameUIController inGameUIController;
     [SerializeField] public PopupUIController popupUIController;
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShowArtifactInventoryUI(null);
+            ShowPlayerDetailUI();
+        }
+    }
+
     public void SetInGameUIController(InGameUIController inGameUIController)
     {
         this.inGameUIController = inGameUIController;

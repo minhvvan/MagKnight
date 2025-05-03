@@ -68,22 +68,11 @@ MonoBehaviour:
   artifactPrefab: {fileID: 5023272368703363778, guid: 1976de0664897a34bb6080b27334ac7e,
     type: 3}
   artifactList:
-    _serializedList:
-    - Key: 0
-      Value:
-      - {fileID: 11400000, guid: 87a9d54d59da9254eaf5627ade703d7c, type: 2}
-      - {fileID: 11400000, guid: 2f1a565ffc578da44a73cb9bed2ae569, type: 2}
-      - {fileID: 11400000, guid: 3d0ecfc76240b54428a3ea7c76947eee, type: 2}
-      - {fileID: 11400000, guid: 681aee9bdbbe8e644b99fb432cbb0671, type: 2}
-      - {fileID: 11400000, guid: f0ecc1c378b326f4b9ac83e1c5aa7705, type: 2}
-    - Key: 1
-      Value: []
-    - Key: 2
-      Value: []
-    - Key: 3
-      Value: []
-    - Key: 4
-      Value: []
+  - {fileID: 11400000, guid: 2f1a565ffc578da44a73cb9bed2ae569, type: 2}
+  - {fileID: 11400000, guid: 87a9d54d59da9254eaf5627ade703d7c, type: 2}
+  - {fileID: 11400000, guid: f0ecc1c378b326f4b9ac83e1c5aa7705, type: 2}
+  - {fileID: 11400000, guid: 3d0ecfc76240b54428a3ea7c76947eee, type: 2}
+  - {fileID: 11400000, guid: 681aee9bdbbe8e644b99fb432cbb0671, type: 2}
   magCorePrefab: {fileID: 3542380653265055556, guid: 7d8c26c8fc32d01409d0cd9a938af646,
     type: 3}
   magCoreList:

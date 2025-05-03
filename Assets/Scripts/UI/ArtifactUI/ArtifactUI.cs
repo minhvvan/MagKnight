@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using hvvan;
 using Moon;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -77,7 +78,10 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
         instanceArtifact.SetArtifactData(artifact);
         instanceArtifact.transform.position = player.transform.position + new Vector3(0, 0, 3);
-        
+        ItemManager.Instance.AddArtifact(artifact);
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        currentRunData.artifactsId.Remove(artifact.itemID);
+        _ = GameManager.Instance.SaveData(Constants.CurrentRun);
         Destroy(gameObject);
     }
 }

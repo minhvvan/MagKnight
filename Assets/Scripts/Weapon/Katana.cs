@@ -1,6 +1,7 @@
 ﻿
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Katana: BaseWeapon
 {
@@ -21,6 +22,10 @@ public class Katana: BaseWeapon
         {
             _weaponTrail.EnableTrail(true);
         }
+        
+        //SFX 재생
+        var sfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Swing);
+        AudioManager.Instance.PlaySFX(sfxRandomClip);
     }
 
     public override void AttackEnd(int hitboxGroupId)
@@ -41,7 +46,10 @@ public class Katana: BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         base.OnNext(hitInfo);
-
+        //SFX
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
+        
+        //FX
         VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
     }
 

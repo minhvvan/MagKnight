@@ -34,7 +34,7 @@ public class ItemListSO : ScriptableObject
     
     [Header("Artifact")] 
     public GameObject artifactPrefab;
-    public SerializedDictionary<ItemRarity, List<ArtifactDataSO>> artifactList;
+    public List<ArtifactDataSO> artifactList;
     
     [Header("MagCore")]
     public GameObject magCorePrefab;
