@@ -111,5 +111,12 @@ public class MagnetActionSwingState : BaseMagnetActionState
             controller.SetMagnetActionState(controller.magnetActionInertiaState, stateData);
             return;
         }
+
+        if(controller.PlayerController.IsGrounded)
+        {
+            MagnetActionInertiaStateData stateData = new MagnetActionInertiaStateData(controller.CurrentVelocity);
+            controller.SetMagnetActionState(controller.magnetActionInertiaState, stateData);
+            return;
+        }
     }
 }
