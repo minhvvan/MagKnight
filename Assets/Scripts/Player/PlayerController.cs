@@ -39,6 +39,7 @@ namespace Moon
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
         private ArtifactInventory _artifactInventory;
+        private PlayerMagnetActionController _playerMagnetActionController;
         #endregion
             
         #region Property
@@ -47,6 +48,7 @@ namespace Moon
         public CameraSettings cameraSettings;
         public InputHandler InputHandler => _inputHandler;
         public bool IsInvisible => isInvisible || isDead;
+        public bool IsGrounded => _isGrounded;
         
         protected bool IsMoveInput
         {
@@ -149,6 +151,7 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
             _artifactInventory = GetComponentInChildren<ArtifactInventory>();
+            _playerMagnetActionController = GetComponent<PlayerMagnetActionController>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -491,6 +494,12 @@ namespace Moon
             }
             else if (inMagnetActionJump)
             {
+                //스윙 중에 점프키를 눌렀을때 연결을 끊고 관성 적용을 위함
+                if(_inputHandler.JumpInput)
+                {
+                    _playerMagnetActionController.EndSwingWithInertia();
+                }
+
                 _verticalSpeed = 0f;
             }
             else
@@ -710,6 +719,7 @@ namespace Moon
             var dir = targetTransform.transform.position - transform.position;
             dir.y = 0;
             var targetRotation = Quaternion.LookRotation(dir);
+            _targetRotation = targetRotation;
             
             if(runImmediately)
             {
