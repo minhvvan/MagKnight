@@ -52,4 +52,17 @@ public class ElectricLine : MonoBehaviour
             lineIndex++;
         }
     }
+
+    public void ShowEffect(Vector3 start, Vector3 end)
+    {
+        startPosition = start;
+        endPosition = end;
+
+        gameObject.SetActive(true);
+    }
+
+    public void HideEffect()
+    {
+        gameObject.SetActive(false);
+    }
 }
