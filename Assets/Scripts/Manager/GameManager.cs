@@ -175,7 +175,7 @@ namespace hvvan
                 
                 if (Player.AbilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
                 {
-                    _currentRunData.playerStat = attributeSet.GetDataStruct();
+                    _currentRunData.playerStat = await attributeSet.GetDataStruct();
                 }
 
                 if (_currentRunData.currentWeapon == WeaponType.None)
