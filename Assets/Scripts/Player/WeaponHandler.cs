@@ -114,7 +114,7 @@ public class WeaponHandler : MonoBehaviour
         // Destroy(vfxObj, 0.25f);
         
         VFXType vfxType = type == MagneticType.N ? VFXType.MAGNETIC_SWITCH_N : VFXType.MAGNETIC_SWITCH_S;
-        VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon.transform);
+        VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon ? _currentWeapon.transform : transform);
 
         
         switch (_isActiveMagneticSwitchEffect)
