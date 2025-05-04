@@ -19,8 +19,6 @@ MonoBehaviour:
   maxUpgradeLevel: 3
   weaponType: 1
   partsType: 2
-  descriptionPassiveEffects: "\uAE30\uBCF8 \uACF5\uACA9 \uC2DC \uACF5\uACA9\uC18D\uB3C4\uAC00
-    n\uC99D\uAC00\uD569\uB2C8\uB2E4. \uCD5C\uB300 4\uBC88\uAE4C\uC9C0 \uC911\uCCA9\uB429\uB2C8\uB2E4."
   passiveEffects:
     _serializedList:
     - Key: 0
@@ -30,7 +28,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 8
+          amount: 0.08
           duration: 5
           period: 0
           tracking: 1
@@ -45,7 +43,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 10
+          amount: 0.1
           duration: 5
           period: 0
           tracking: 1
@@ -60,7 +58,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 12
+          amount: 0.12
           duration: 5
           period: 0
           tracking: 1
@@ -68,24 +66,15 @@ MonoBehaviour:
         isTarget: 0
         hasCount: 0
         triggerCount: 0
-  descriptionGameplayEffects: 
   gameplayEffects:
     _serializedList:
     - Key: 0
-      Value:
-      - effectType: 0
-        attributeType: 0
-        amount: 0
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
     - Key: 1
       Value: []
     - Key: 2
       Value: []
   magnetEffectDuration: 5
-  descriptionMagnetPassiveEffects: 
   magnetPassiveEffects:
     _serializedList:
     - Key: 0
@@ -94,15 +83,13 @@ MonoBehaviour:
       Value: []
     - Key: 2
       Value: []
-  descriptionMagnetGameplayEffects: "\uADF9\uC131 \uC804\uD658 \uC2DC, 5\uCD08\uB3D9\uC548
-    \uACF5\uACA9\uC18D\uB3C4\uAC00 n\uB9CC\uD07C \uC99D\uAC00\uD569\uB2C8\uB2E4."
   magnetGameplayEffects:
     _serializedList:
     - Key: 0
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 50
+        amount: 0.5
         duration: 0
         period: 0
         tracking: 0
@@ -111,7 +98,7 @@ MonoBehaviour:
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 55
+        amount: 0.55
         duration: 0
         period: 0
         tracking: 0
@@ -120,7 +107,7 @@ MonoBehaviour:
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 60
+        amount: 0.6
         duration: 0
         period: 0
         tracking: 0
