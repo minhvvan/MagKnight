@@ -5,8 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "SO/Artifact/PassiveArtifactDataSO")]
 public class PassiveArtifactDataSO : ArtifactDataSO
 {
-    [SerializeField] List<PassiveEffectData> N_passiveArtifacts = new List<PassiveEffectData>();
-    [SerializeField] List<PassiveEffectData> S_passiveArtifacts = new List<PassiveEffectData>();
+    public List<PassiveEffectData> N_passiveArtifacts = new List<PassiveEffectData>();
+    public List<PassiveEffectData> S_passiveArtifacts = new List<PassiveEffectData>();
     
     public override void N_ApplyTo(AbilitySystem target)
     {

@@ -25,16 +25,16 @@ public class MagCoreSO : ScriptableObject
     //Key는 파츠의 강화 레벨 단위입니다. 0 이면 강화되지 않은 순정 상태입니다.
     
     [Header("Parts Buff"), Tooltip("파츠 장착 시 고유적으로 증가하는 능력치/효과 입니다.")]
-    public string descriptionPassiveEffects;
+    //public string descriptionPassiveEffects;
     public SerializedDictionary<int,List<PassiveEffectData>> passiveEffects = new SerializedDictionary<int,List<PassiveEffectData>>();
-    public string descriptionGameplayEffects;
+    //public string descriptionGameplayEffects;
     public SerializedDictionary<int,List<GameplayEffect>> gameplayEffects = new SerializedDictionary<int,List<GameplayEffect>>();
 
     [Header("Magnet Switch Effect"), Tooltip("극성 전환 시 일시적으로 적용되는 능력치/효과 입니다.")]
     public float magnetEffectDuration; //극성 전환 효과 지속시간
-    public string descriptionMagnetPassiveEffects;
+    //public string descriptionMagnetPassiveEffects;
     public SerializedDictionary<int,List<PassiveEffectData>> magnetPassiveEffects = new SerializedDictionary<int,List<PassiveEffectData>>();
-    public string descriptionMagnetGameplayEffects;
+    //public string descriptionMagnetGameplayEffects;
     public SerializedDictionary<int,List<GameplayEffect>> magnetGameplayEffects = new SerializedDictionary<int,List<GameplayEffect>>();
     
     //파츠를 장착하는 동안 영구적으로 적용되는 효과를 적용합니다.
