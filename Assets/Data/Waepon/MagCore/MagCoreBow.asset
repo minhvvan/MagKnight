@@ -19,16 +19,12 @@ MonoBehaviour:
   maxUpgradeLevel: 0
   weaponType: 2
   partsType: 0
-  descriptionPassiveEffects: 
   passiveEffects:
     _serializedList: []
-  descriptionGameplayEffects: 
   gameplayEffects:
     _serializedList: []
   magnetEffectDuration: 0
-  descriptionMagnetPassiveEffects: 
   magnetPassiveEffects:
     _serializedList: []
-  descriptionMagnetGameplayEffects: 
   magnetGameplayEffects:
     _serializedList: []
