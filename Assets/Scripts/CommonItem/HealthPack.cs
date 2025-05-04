@@ -53,6 +53,15 @@ public class HealthPack : MonoBehaviour, IInteractable
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
             //TODO: 플레이어 체력 회복
+            
+            var abilitySystem = player.AbilitySystem;
+            var healEffect = new GameplayEffect(
+                EffectType.Instant,
+                AttributeType.HP,
+                healValue
+            );
+            abilitySystem.ApplyEffect(healEffect);
+            
             onChooseItem?.Invoke();
             Destroy(gameObject);
         }
