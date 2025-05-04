@@ -235,8 +235,11 @@ public class ItemManager : Singleton<ItemManager>
                         break;
                     }
                 }
-
-                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                
+                if (!parent && RoomSceneController.Instance.CurrentRoomController != null)
+                {
+                    parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                }
                 var artifactObj = Instantiate(_artifactPrefab, position, rotation, parent);
                 var artifact = artifactObj.GetComponent<ArtifactObject>();
                 artifact.SetArtifactData(artifactData);
@@ -279,7 +282,10 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
-                // if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                if (!parent && RoomSceneController.Instance.CurrentRoomController != null)
+                {
+                    parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                }
                 var magCoreObj = Instantiate(_magCorePrefab, position, rotation, parent);
                 var magCore = magCoreObj.GetComponent<MagCore>();
                 magCore.SetMagCoreData(magCoreData);
@@ -322,7 +328,10 @@ public class ItemManager : Singleton<ItemManager>
                     }
                 }
                 
-                if(!parent) parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                if (!parent && RoomSceneController.Instance.CurrentRoomController != null)
+                {
+                    parent = RoomSceneController.Instance.CurrentRoomController.transform;
+                }
                 var healthPackObj = Instantiate(_healthPackPrefab, position, rotation, parent);
                 var healthPack = healthPackObj.GetComponent<HealthPack>();
                 healthPack.SetHealthPotionData(healthPackData);

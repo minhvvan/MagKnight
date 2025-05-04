@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HealthPackS
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 117b17facff65dc42b1b57deb7c21551, type: 3}
-  prefab: {fileID: 28437076465678510, guid: 4e4fd0d115c4a2d4bbbda966c0edb68e, type: 3}
-  name: HealthPotionSmall
+  itemName: "\uCCB4\uB825\uD68C\uBCF5(\uC18C)"
   description: "\uCCB4\uB825\uC744 20 \uD68C\uBCF5 \uD569\uB2C8\uB2E4."
-  value: 20
+  healValue: 20
+  scrapValue: 10

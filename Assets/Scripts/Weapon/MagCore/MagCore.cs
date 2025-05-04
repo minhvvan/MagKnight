@@ -28,8 +28,10 @@ public class MagCore: MonoBehaviour, IInteractable
     public ItemRarity rarity;
     public Sprite icon;
     public string itemName;
+    public string itemDescription;
     public int currentUpgradeValue;
     public int scrapValue;
+    public bool IsProduct { get; set; }
     
     [SerializeField] private MagCoreSO _magCoreSO; //필드 배치시 여기에 임의로 SO할당 해주시면 됩니다.
     [SerializeField] private WeaponType weaponType;
@@ -59,6 +61,7 @@ public class MagCore: MonoBehaviour, IInteractable
             partsType = newMagCore.partsType;
             icon = newMagCore.icon;
             gameObject.name = itemName = newMagCore.itemName;
+            itemDescription = newMagCore.itemDescription;
             scrapValue = newMagCore.scrapValue;
             currentUpgradeValue = newMagCore.currentUpgradeValue;
             return;
@@ -70,6 +73,7 @@ public class MagCore: MonoBehaviour, IInteractable
         partsType = _magCoreSO.partsType;
         icon = _magCoreSO.icon;
         gameObject.name = itemName = _magCoreSO.itemName;
+        itemDescription = _magCoreSO.description;
         scrapValue = _magCoreSO.scrapValue;
     }
 
@@ -118,11 +122,16 @@ public class MagCore: MonoBehaviour, IInteractable
             player.SetCurrentWeapon(weaponType, this);
             var abilitySystem = player.AbilitySystem;
             SetPartsEffect(abilitySystem);
-            // GameManager.Instance.CurrentRunData.currentMagCore = this;
-            GameManager.Instance.CurrentRunData.currentWeapon = weaponType;
-            GameManager.Instance.CurrentRunData.currentPartsUpgradeValue = currentUpgradeValue;
+            if (GameManager.Instance.CurrentRunData != null)
+            {
+                var currentRunData = GameManager.Instance.CurrentRunData;
+                // GameManager.Instance.CurrentRunData.currentMagCore = this;
+                currentRunData.currentWeapon = weaponType;
+                currentRunData.currentPartsUpgradeValue = currentUpgradeValue;
 
-            await GameManager.Instance.SaveData(Constants.CurrentRun);
+                await GameManager.Instance.SaveData(Constants.CurrentRun);
+            }
+            
             
             onChooseItem?.Invoke();
         }
@@ -152,12 +161,19 @@ public class MagCore: MonoBehaviour, IInteractable
     {
         //TODO: outline
         _renderers.ForEach(render => render.material.color = Color.green);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.SetItemText(gameObject);
+        uiController.ShowUI();
     }
 
     public void UnSelect()
     {
         //TODO: outline 제거
         _renderers.ForEach(render => render.material.color = Color.gray);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.HideUI();
     }
 
     public GameObject GetGameObject()
@@ -176,7 +192,7 @@ public class MagCore: MonoBehaviour, IInteractable
     public void OnStakeMode()
     {
         _isStake = true;
-        rb.isKinematic = true;
-        col.isTrigger = true;
+        if(rb != null)  rb.isKinematic = true;
+        if(col != null) col.isTrigger = true;
     }
 }
