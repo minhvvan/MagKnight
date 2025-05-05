@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 아티팩트 정보를 담고 있는 UI, 드래그 앤 드롭 기능만 가지고 있음, 파괴 시 아티팩트 GameObject로 반환
-public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private ArtifactDataSO artifact;
     [SerializeField] private Image icon;
@@ -83,5 +83,15 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         currentRunData.artifactsId.Remove(artifact.itemID);
         _ = GameManager.Instance.SaveData(Constants.CurrentRun);
         Destroy(gameObject);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        UIManager.Instance.popupUIController.productUIController.ShowArtifactUI(artifact, GetComponent<RectTransform>());
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        UIManager.Instance.popupUIController.productUIController.HideUI();
     }
 }

@@ -2,28 +2,40 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ProductUIController : MonoBehaviour, IBasePopupUIController
 {
-   public Image   itemImage;
-   public TMP_Text itemCategory;
-   public TMP_Text itemRarity;
-   public TMP_Text itemNameAndUpgrade;
-   public TMP_Text itemEffect;
-   public TMP_Text itemDescription;
-   public TMP_Text itemPrice;
-   public TMP_Text inputInteract;
-   public TMP_Text inputCancel;
-
-   public RectTransform contentRectTr;
-   public RectTransform itemEffectRectTr;
+    public Image   itemImage;
+    public TMP_Text itemCategory;
+    public TMP_Text itemRarity;
+    public TMP_Text itemNameAndUpgrade;
+    public TMP_Text itemEffect;
+    public TMP_Text itemDescription;
+    public TMP_Text itemPrice;
+    public TMP_Text inputInteract;
+    public TMP_Text inputCancel;
+    
+    public RectTransform contentRectTr;
+    public RectTransform itemEffectRectTr;
+    public GameObject inputGuidePanel;
    
-   public Color32[] textColors;
+    public Color32[] textColors;
 
     private GameObject _uiItem;
-
+    private Vector2 _startPosition;
+    private RectTransform _rectTransform;
+    private CanvasScaler _canvasScaler;
+    
+    public void Initialized()
+    {
+        _rectTransform = GetComponent<RectTransform>();
+        _startPosition = _rectTransform.anchoredPosition;
+        _canvasScaler = GetComponentInParent<CanvasScaler>();
+    }
+    
     public void ShowUI()
     {
         gameObject.SetActive(true);
@@ -31,6 +43,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
 
     public void HideUI()
     {
+        _rectTransform.anchoredPosition = _startPosition;
+        inputGuidePanel.SetActive(true);
         gameObject.SetActive(false);
     }
     
@@ -87,6 +101,38 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         }
     }
 
+    public void ShowArtifactUI(ArtifactDataSO artifactData, RectTransform artifactRect)
+    {
+        float wRatio = Screen.width / _canvasScaler.referenceResolution.x;
+        float hRatio = Screen.height / _canvasScaler.referenceResolution.y;
+        float ratio =
+            wRatio * (1f - _canvasScaler.matchWidthOrHeight) +
+            hRatio * (_canvasScaler.matchWidthOrHeight);
+
+        float slotWidth = artifactRect.rect.width * ratio;
+        float slotHeight = artifactRect.rect.height * ratio;
+        // 툴팁의 크기
+        float width = _rectTransform.rect.width * ratio;
+        float height = _rectTransform.rect.height * ratio;
+        
+        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width / 2, -slotHeight);
+        Vector2 pos = _rectTransform.position;
+        bool rightTruncated = pos.x + width > Screen.width;
+        
+        if(rightTruncated)
+            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth - width / 2, -slotHeight);
+        
+        inputGuidePanel.SetActive(false);
+        itemImage.sprite = artifactData.icon;
+        ConvertSortText(ItemCategory.Artifact);
+        ConvertSortText(artifactData.rarity);
+        itemNameAndUpgrade.text = $"{artifactData.itemName}";
+        itemEffect.text = ConvertArtifactEffectToText(artifactData);
+        itemDescription.text = artifactData.description;
+        itemPrice.text = artifactData.scrapValue.ToString();
+        ShowUI();
+    }
+    
     private void ConvertSortText(Enum text)
     {
         if (text.GetType() == typeof(ItemCategory))
