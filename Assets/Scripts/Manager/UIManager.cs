@@ -95,6 +95,18 @@ public class UIManager : Singleton<UIManager>
         popupUIController.playerDetailUIController.HideUI();
         DisableCursor();
     }
+
+    public void ShowUpgradeStatUI()
+    {
+        popupUIController.upgradeStatUIController.ShowUI();
+        EnableCursor();
+    }
+
+    public void HideUpgradeStatUI()
+    {
+        popupUIController.upgradeStatUIController.HideUI();
+        DisableCursor();
+    }
     
     public void EnableCursor()
     {
