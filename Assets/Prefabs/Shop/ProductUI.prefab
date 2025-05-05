@@ -1492,6 +1492,7 @@ MonoBehaviour:
   inputCancel: {fileID: 4029392750816557382}
   contentRectTr: {fileID: 1539830970255485815}
   itemEffectRectTr: {fileID: 1399321503365675172}
+  inputGuidePanel: {fileID: 8509897803584816473}
   textColors:
   - serializedVersion: 2
     rgba: 4278190080
