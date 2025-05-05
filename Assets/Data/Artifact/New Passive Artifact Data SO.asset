@@ -16,12 +16,13 @@ MonoBehaviour:
   itemName: "\uC544\uD2F0\uD329\uD2B8 1"
   scrapValue: 200
   itemID: 2
+  rarity: 0
   N_passiveArtifacts:
   - triggerChance: 0.5
     triggerEvent: 0
     effect:
       effectType: 1
-      attributeType: 9
+      attributeType: 8
       amount: 2
       duration: 2
       period: 0.25
