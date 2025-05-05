@@ -77,7 +77,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         
         var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
         instanceArtifact.SetArtifactData(artifact);
-        instanceArtifact.transform.position = player.transform.position + new Vector3(0, 0, 3);
+        instanceArtifact.transform.position = player.transform.position + player.transform.forward.normalized;
         ItemManager.Instance.AddArtifact(artifact);
         var currentRunData = GameManager.Instance.CurrentRunData;
         currentRunData.artifactsId.Remove(artifact.itemID);
