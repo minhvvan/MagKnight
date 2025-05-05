@@ -50,43 +50,43 @@ public class UpgradeStatPanelController : MonoBehaviour
             case AttributeType.MaxHP:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.MaxHP, 10f);
                 statText.SetText($"{playerStat.MaxHP.Value}");
-                return (int)((playerStat.MaxHP.Value - _baseMaxHp) / 10f);
+                return Mathf.RoundToInt((playerStat.MaxHP.Value - _baseMaxHp) / 10f);
             case AttributeType.Strength:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.Strength, 10f);
                 statText.SetText($"{playerStat.Strength.Value}");
-                return (int)((playerStat.Strength.Value - _baseStrength) / 10f);
+                return Mathf.RoundToInt((playerStat.Strength.Value - _baseStrength) / 10f);
             case AttributeType.Defense:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.Defense, 5f);
                 statText.SetText($"{playerStat.Defense.Value}");
-                return (int)((playerStat.Defense.Value - _baseDefense) / 5f);
+                return Mathf.RoundToInt((playerStat.Defense.Value - _baseDefense) / 5f);
             case AttributeType.EndureImpulse:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.EndureImpulse, 10f);
                 statText.SetText($"{playerStat.EndureImpulse.Value}");
-                return (int)((playerStat.EndureImpulse.Value - _baseEndureImpulse) / 10f);
+                return Mathf.RoundToInt((playerStat.EndureImpulse.Value - _baseEndureImpulse) / 10f);
             case AttributeType.CriticalRate:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.CriticalRate, 0.05f);
                 statText.text = playerStat.CriticalRate.Value * 100 + "%";
-                return (int)((playerStat.CriticalRate.Value - _baseCriticalRate) / 0.05f);
+                return Mathf.RoundToInt((playerStat.CriticalRate.Value - _baseCriticalRate) / 0.05f);
             case AttributeType.CriticalDamage:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.CriticalDamage, 0.1f);
                 statText.text = playerStat.CriticalDamage.Value * 100 + "%";
-                return (int)((playerStat.CriticalDamage.Value - _baseCriticalDamage) / 0.1f);
+                return Mathf.RoundToInt( (playerStat.CriticalDamage.Value - _baseCriticalDamage) / 0.1f);
             case AttributeType.AttackSpeed:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.AttackSpeed, 0.05f);
                 statText.text = playerStat.AttackSpeed.Value * 100 + "%";
-                return (int)((playerStat.AttackSpeed.Value - _baseAttackSpeed) / 0.05f );
+                return Mathf.RoundToInt((playerStat.AttackSpeed.Value - _baseAttackSpeed) / 0.05f );
             case AttributeType.MoveSpeed:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 0.05f);
                 statText.text = playerStat.MoveSpeed.Value * 100 + "%";
-                return (int)((playerStat.MoveSpeed.Value - _baseMoveSpeed) / 0.05f);
+                return Mathf.RoundToInt((playerStat.MoveSpeed.Value - _baseMoveSpeed) / 0.05f);
             case AttributeType.MagneticPower:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.MagneticPower, 10f);
                 statText.SetText($"{playerStat.MagneticPower.Value}");
-                return (int)((playerStat.MagneticPower.Value - _baseMagneticPower) / 10f);
+                return Mathf.RoundToInt((playerStat.MagneticPower.Value - _baseMagneticPower) / 10f);
             case AttributeType.MagneticRange:
                 upgradeEffect = new GameplayEffect(EffectType.Instant, AttributeType.MagneticRange, 5f);
                 statText.SetText($"{playerStat.MagneticRange.Value}");
-                return (int)((playerStat.MagneticRange.Value - _baseMagneticRange) / 10f);
+                return Mathf.RoundToInt((playerStat.MagneticRange.Value - _baseMagneticRange) / 10f);
         }
         return 0;
     }
