@@ -15,6 +15,7 @@ public class EnemyStat
     public AttributePair Resistance;
     public AttributePair Damage;
     public AttributePair ResistanceDamage;
+    public AttributePair Defense;
     
     public static EnemyStat FromDictionary(Dictionary<AttributeType, Attribute> attributeDictionary)
     {
@@ -51,6 +52,9 @@ public class EnemyStat
                     break;
                 case AttributeType.ResistanceDamage:
                     stat.ResistanceDamage = new AttributePair(AttributeType.ResistanceDamage, entry.Value.GetValue());
+                    break;
+                case AttributeType.Defense:
+                    stat.Defense = new AttributePair(AttributeType.Defense, entry.Value.GetValue());
                     break;
             }
         }

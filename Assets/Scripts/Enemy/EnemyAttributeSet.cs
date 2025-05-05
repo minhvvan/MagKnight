@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using hvvan;
 using UnityEngine;
 
 public class EnemyAttributeSet : AttributeSet
@@ -14,6 +15,9 @@ public class EnemyAttributeSet : AttributeSet
     private bool _phase70Triggered = false;
     private bool _phase30Triggered = false;
     
+    private string BarrierN = "BarrierN";
+    private string BarrierS = "BarrierS";
+    
     protected override float PreAttributeChange(AttributeType type, float newValue)
     {
         float returnValue = newValue;
@@ -23,9 +27,15 @@ public class EnemyAttributeSet : AttributeSet
             // 데미지가 음수면 0으로 처리
             returnValue = newValue < 0 ? 0 : newValue;
             
-            // ex) 무적효과
-            // if(무적효과 적용시)
-            // returnValue = 0  -> 데미지를 0으로 초기화
+            if(newValue < 0) returnValue = 0;
+            else
+            {
+                if ((tag.Contains(BarrierN) &&
+                     GameManager.Instance.Player.GetComponent<MagneticController>().magneticType == MagneticType.N) ||
+                    (tag.Contains(BarrierS) &&
+                     GameManager.Instance.Player.GetComponent<MagneticController>().magneticType == MagneticType.S))
+                    returnValue = 1f;
+            }
         }
         
         if (type == AttributeType.ResistanceDamage)
@@ -55,6 +65,7 @@ public class EnemyAttributeSet : AttributeSet
         {
             // 체력은 항상 데미지를 통해서만 접근
             // 현재 체력에서 데미지를 뺀 값을 적용해서 Hp업데이트, 단 0보다 작거나, MaxHp보다 크지 않게
+
             SetValue(AttributeType.HP, Mathf.Clamp(GetValue(AttributeType.HP) - effect.amount, 0f, GetValue(AttributeType.MaxHP)));
             if(effect.extraData.sourceTransform != null)
                 OnHit?.Invoke(effect.extraData);

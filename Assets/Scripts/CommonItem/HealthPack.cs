@@ -12,8 +12,9 @@ public class HealthPack : MonoBehaviour, IInteractable
     public ItemRarity rarity;
     
     private HealthPackSO healthPackSo;
+    public Sprite icon;
     public string itemName;
-    public string description;
+    public string itemDescription;
     public float healValue;
     public int scrapValue;
     
@@ -35,8 +36,9 @@ public class HealthPack : MonoBehaviour, IInteractable
     public void SetHealthPotionData(HealthPackSO healthPackData)
     {
         healthPackSo = healthPackData;
+        icon = healthPackSo.icon;
         gameObject.name = itemName = healthPackSo.itemName;
-        description = healthPackSo.description;
+        itemDescription = healthPackSo.description;
         healValue = healthPackSo.healValue;
         scrapValue = healthPackSo.scrapValue;
     }
@@ -51,6 +53,15 @@ public class HealthPack : MonoBehaviour, IInteractable
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
             //TODO: 플레이어 체력 회복
+            
+            var abilitySystem = player.AbilitySystem;
+            var healEffect = new GameplayEffect(
+                EffectType.Instant,
+                AttributeType.HP,
+                healValue
+            );
+            abilitySystem.ApplyEffect(healEffect);
+            
             onChooseItem?.Invoke();
             Destroy(gameObject);
         }
@@ -60,12 +71,19 @@ public class HealthPack : MonoBehaviour, IInteractable
     {
         //TODO: outline
         _renderers.ForEach(render => render.material.color = Color.green);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.SetItemText(gameObject);
+        uiController.ShowUI();
     }
 
     public void UnSelect()
     {
         //TODO: outline 제거
         _renderers.ForEach(render => render.material.color = Color.gray);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.HideUI();
     }
 
     public GameObject GetGameObject()
@@ -84,7 +102,7 @@ public class HealthPack : MonoBehaviour, IInteractable
     public void OnStakeMode()
     {
         _isStake = true;
-        rb.isKinematic = true;
-        col.isTrigger = true;
+        if(rb != null)  rb.isKinematic = true;
+        if(col != null) col.isTrigger = true;
     }
 }

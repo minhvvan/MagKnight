@@ -16,6 +16,7 @@ namespace Jun
         
         private string superArmor = "SuperArmor";
         private string invisibility = "Invincibility";
+        private string parry = "Parry";
         private float maxAttackSpeed = 2f;
         private float minAttackSpeed = 0.5f;
         private float maxMoveSpeed = 2f;
@@ -58,7 +59,7 @@ namespace Jun
                 // 무적효과
                 if (tag != null)
                 {
-                    if (tag.Contains(invisibility))
+                    if (tag.Contains(invisibility) || tag.Contains(parry))
                         returnValue = 0;
                 }
                 

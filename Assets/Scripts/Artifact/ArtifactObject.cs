@@ -14,6 +14,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     public ItemRarity rarity;
     public Sprite icon;
     public string itemName;
+    public string itemDescription;
     public int scrapValue;
     
     public Action onChooseItem;
@@ -30,6 +31,8 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         col = GetComponent<Collider>();
 
         category = ItemCategory.Artifact;
+        
+        if(artifactDataSO != null) SetArtifactData(artifactDataSO);
     }
 
     public void SetArtifactData(ArtifactDataSO artifactDataSO)
@@ -37,6 +40,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         this.artifactDataSO = artifactDataSO;
         icon = artifactDataSO.icon;
         gameObject.name = itemName = artifactDataSO.itemName;
+        itemDescription = artifactDataSO.description;
         scrapValue = artifactDataSO.scrapValue;
     }
     
@@ -77,17 +81,29 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     {
         //TODO: outline
         _renderers.ForEach(render => render.material.color = Color.blue);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.SetItemText(gameObject);
+        uiController.ShowUI();
     }
 
     public void UnSelect()
     {
         //TODO: outline 제거
         _renderers.ForEach(render => render.material.color = Color.gray);
+        
+        var uiController =  UIManager.Instance.popupUIController.productUIController;
+        uiController.HideUI();
     }
 
     public GameObject GetGameObject()
     {
         return gameObject != null ? gameObject : null;
+    }
+
+    public ArtifactDataSO GetArtifactData()
+    {
+        return artifactDataSO;
     }
 
     public void OnCollisionEnter(Collision other)
@@ -101,8 +117,8 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     public void OnStakeMode()
     {
         _isStake = true;
-        rb.isKinematic = true;
-        col.isTrigger = true;
+        if(rb != null)  rb.isKinematic = true;
+        if(col != null) col.isTrigger = true;
     }
 }
     
