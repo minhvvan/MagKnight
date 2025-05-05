@@ -39,6 +39,7 @@ namespace Moon
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
         private ArtifactInventory _artifactInventory;
+        private Effector _effect;
         #endregion
             
         #region Property
@@ -146,6 +147,7 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
             _artifactInventory = GetComponentInChildren<ArtifactInventory>();
+            _effect = GetComponentInChildren<Effector>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -156,7 +158,7 @@ namespace Moon
                 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
-            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+            _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
         }
         
         //명시적 초기화
@@ -971,6 +973,9 @@ namespace Moon
             if (_magneticController == null) return;
             var magneticType = _magneticController.GetMagneticType();
             _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+
+            var newMagneticType = magneticType == MagneticType.N ? MagneticType.S : MagneticType.N;
+            _effect.SwitchPolarity(newMagneticType, .5f);
         }
 
         public void UpgradeParts()
