@@ -20,6 +20,7 @@ namespace Moon
         {
             UIManager.Instance.SetPopupUIController(this);
             artifactInventoryUIController.Initialized();
+            productUIController.Initialized();
         }
     }
 }
