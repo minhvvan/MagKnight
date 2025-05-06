@@ -14,6 +14,13 @@ public class Anchor : MagneticObject
     
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
-        await magnetDashJumpAction.Execute(this, target);
+        if (target.magneticType != magneticType)
+        {
+            await magnetDashJumpAction.Execute(this, target);
+        }
+        else if (target.magneticType == magneticType)
+        {
+            await magnetSwingAction.Execute(this, target);
+        }
     }
 }

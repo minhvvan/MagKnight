@@ -39,6 +39,7 @@ namespace Moon
         private Collider _collider;
         private LockOnSystem _lockOnSystem;
         private ArtifactInventory _artifactInventory;
+        private PlayerMagnetActionController _playerMagnetActionController;
         private Effector _effect;
         #endregion
             
@@ -48,6 +49,7 @@ namespace Moon
         public CameraSettings cameraSettings;
         public InputHandler InputHandler => _inputHandler;
         public bool IsInvisible => isInvisible || isDead;
+        public bool IsGrounded => _isGrounded;
         
         protected bool IsMoveInput
         {
@@ -60,6 +62,9 @@ namespace Moon
         bool isInvisible = true;
         private bool _isInputUpdate = true;
         private bool _isDodging = false;
+        [SerializeField] private float parryWindow = 0.2f;
+        private bool _parryWindowActive = false;
+        Coroutine _parryWindowCoroutine;
         #endregion
 
         #region Animation
@@ -147,6 +152,7 @@ namespace Moon
             _weaponHandler = GetComponent<WeaponHandler>();
             _interactionController = GetComponentInChildren<InteractionController>();
             _artifactInventory = GetComponentInChildren<ArtifactInventory>();
+            _playerMagnetActionController = GetComponent<PlayerMagnetActionController>();
             _effect = GetComponentInChildren<Effector>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
@@ -330,7 +336,7 @@ namespace Moon
 
         void TriggerSkill()
         {
-            if (_inputHandler.SkillInput)
+            if (_inputHandler.SkillInput && _isGrounded)
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
                 {
@@ -490,6 +496,12 @@ namespace Moon
             }
             else if (inMagnetActionJump)
             {
+                //스윙 중에 점프키를 눌렀을때 연결을 끊고 관성 적용을 위함
+                if(_inputHandler.JumpInput)
+                {
+                    _playerMagnetActionController.EndSwingWithInertia();
+                }
+
                 _verticalSpeed = 0f;
             }
             else
@@ -709,6 +721,7 @@ namespace Moon
             var dir = targetTransform.transform.position - transform.position;
             dir.y = 0;
             var targetRotation = Quaternion.LookRotation(dir);
+            _targetRotation = targetRotation;
             
             if(runImmediately)
             {
@@ -920,6 +933,18 @@ namespace Moon
                 _magneticController.SwitchMagneticType();
                 OnMagneticEffect();
             }
+            if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
+            _parryWindowActive = true;
+            _abilitySystem.SetTag("Parry");
+            _parryWindowCoroutine = StartCoroutine(CloseParryWindow());
+        }
+        
+        IEnumerator CloseParryWindow()
+        {
+            yield return new WaitForSeconds(parryWindow);
+            _abilitySystem.DeleteTag("Parry");
+            _parryWindowActive = false;
+            _parryWindowCoroutine = null;
         }
 
         void MagneticPress()
@@ -1042,9 +1067,30 @@ namespace Moon
 
         public void Damaged(Transform sourceTransform)
         {
+            // 1) 패링 창이 열려 있으면 ─────────
+            if (_parryWindowActive)
+            {
+                _parryWindowActive = false;
+                if (_parryWindowCoroutine != null)
+                    StopCoroutine(_parryWindowCoroutine);
+
+                // 1-a) 패링 성공 애니 실행
+                _animator.SetTrigger(PlayerAnimatorConst.hashParry);
+                Debug.Log("parry success");
+                
+                // 1-b) 적을 스턴시키거나 반격 로직 호출
+                if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
+                {
+                    //넉백?
+                    enemy.OnStagger();
+                }
+
+                // (피해는 받지 않음)
+                return;
+            }
+
+            // 2) 패링 실패 or 타이밍 아웃 시 기존 데미지 처리
             if (isDead || _isKnockDown) return;
-            
-            
             if(sourceTransform != null)
             {
                 // 공격이 들어온 방향

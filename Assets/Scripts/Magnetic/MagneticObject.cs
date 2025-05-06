@@ -21,6 +21,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public IMagneticInteractCommand magnetSeparation;
     public IMagneticInteractCommand magnetDashAttackAction;
     public IMagneticInteractCommand magnetDashJumpAction;
+    public IMagneticInteractCommand magnetSwingAction;
     
     public Effector Effector { get; protected set; }
 
@@ -73,6 +74,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         magnetSeparation = MagneticInteractFactory.GetInteract<OnSeparation>();
         magnetDashAttackAction = MagneticInteractFactory.GetInteract<MagnetDashAttackAction>();
         magnetDashJumpAction = MagneticInteractFactory.GetInteract<MagnetDashJumpAction>();
+        magnetSwingAction = MagneticInteractFactory.GetInteract<MagnetSwingAction>();
     }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)

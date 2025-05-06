@@ -16,6 +16,7 @@ namespace Jun
         
         private string superArmor = "SuperArmor";
         private string invisibility = "Invincibility";
+        private string parry = "Parry";
         private float maxAttackSpeed = 2f;
         private float minAttackSpeed = 0.5f;
         private float maxMoveSpeed = 2f;
@@ -58,7 +59,7 @@ namespace Jun
                 // 무적효과
                 if (tag != null)
                 {
-                    if (tag.Contains(invisibility))
+                    if (tag.Contains(invisibility) || tag.Contains(parry))
                         returnValue = 0;
                 }
                 
@@ -88,14 +89,13 @@ namespace Jun
             // 최대체력 증가시 그만큼 HP도 증가
             if (effect.attributeType == AttributeType.MaxHP)
             {
-                SetValue(AttributeType.HP, GetValue(AttributeType.MaxHP));
+                //SetValue(AttributeType.HP, GetValue(AttributeType.MaxHP));
             }
 
             // 체력 변경시 Clamp값으로
             if (effect.attributeType == AttributeType.HP)
             {
                 SetValue(AttributeType.HP,Mathf.Clamp(GetValue(AttributeType.HP), 0f, GetValue(AttributeType.MaxHP)));
-                
                 
             }
 
@@ -177,9 +177,10 @@ namespace Jun
             }
         }
 
-        public PlayerStat GetDataStruct()
+        public async UniTask<PlayerStat> GetDataStruct()
         {
-            return PlayerStat.FromDictionary(_attributeDictionary);
+            PlayerStat playerDataStat = await GameManager.Instance.GetPlayerStat();
+            return PlayerStat.FromDictionary(playerDataStat, _attributeDictionary);
         }
     }
 }

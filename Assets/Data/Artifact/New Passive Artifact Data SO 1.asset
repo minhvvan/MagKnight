@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb36e9c0bc715d6479f02981a9b08ff3, type: 3}
   m_Name: New Passive Artifact Data SO 1
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 70e92df91699f664ab5bad7bf4723022, type: 3}
   itemName: "\uC544\uD2F0\uD329\uD2B8 0"
   scrapValue: 100
   itemID: 0

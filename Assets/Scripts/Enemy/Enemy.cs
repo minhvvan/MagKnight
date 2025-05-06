@@ -23,7 +23,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public AbilitySystem EnemyAbilitySystem { get; private set; }
     public HitDetector HitHandler { get; private set; } // Melee type enemy만 enemy한테 붙어있음
     public EnemyBlackboard blackboard;
-    public PatternController patternController;
+
     public HpBarController hpBarController;
 
     private AnimatorStateInfo _currentAnimStateInfo;
@@ -42,9 +42,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     [NonSerialized] public EnemyStateStagger staggerState;
     [NonSerialized] public EnemyStateDead deadState;
 
-    private GameObject _bomb;
-
-    protected override void Awake()
+    void Awake()
     {
         base.Awake();
         
@@ -112,12 +110,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         return info.IsName(animName) && info.normalizedTime >= 1f;
     }
 
-    public bool IsCurrentAnim(string animName)
-    {
-        AnimatorStateInfo info = Anim.GetCurrentAnimatorStateInfo(0);
-        return info.IsName(animName);
-    }
-
     private void FixedUpdate()
     { 
         _currentAnimStateInfo = Anim.GetCurrentAnimatorStateInfo(0);
@@ -173,32 +165,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         if (blackboard.isDead) return;
         SetState(staggerState);
-    }
-    
-    public void OnPhaseChange(int phase)
-    {
-        if (blackboard.aiType == EnemyAIType.Boss)
-        {
-            Anim.SetTrigger("PhaseChange");
-            blackboard.phase = phase;
-            patternController.PhaseChange(phase);
-            if (phase == 2)
-            {
-                // blackboard.abilitySystem.
-                GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 2);
-                blackboard.abilitySystem.ApplyEffect(gameplayEffect);
-                Anim.SetFloat("phase", phase);
-                blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
-            }
-            else if (phase == 3)
-            {
-                GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 3);
-                blackboard.abilitySystem.ApplyEffect(gameplayEffect);
-                Anim.SetFloat("phase", phase);
-                blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
-                blackboard.enemyRenderer.material.SetFloat("_Intensity", 1);
-            }
-        }
     }
 
     public void OnHit(ExtraData extraData)
@@ -336,6 +302,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
     }
     
+    public virtual void OnPhaseChange(int phase){}
+    
     public void MeleeAttackStart(int throwing = 0)
     {
         HitHandler.StartDetection();
@@ -346,15 +314,18 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         HitHandler.StopDetection();
     }
 
-    public void PatternAttackStart(int patternIndex)
+    public void CreateAttackEffect(GameObject effectPrefab)
     {
-        patternController.AttackStart(patternIndex);
+        GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
     }
 
-    public void PatternAttackEnd(int patternIndex)
+    public void CreateAttackEffectAtTarget(GameObject effectPrefab)
     {
-        patternController.AttackEnd(patternIndex);
+        GameObject effect = Instantiate(effectPrefab, blackboard.target.transform.position, Quaternion.identity);
+        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
     }
+
     
     //특정 대상에게 극성 상관없이 정해진 동작만을 수행하게도 가능.
     public override async UniTask OnMagneticInteract(MagneticObject target)
@@ -419,34 +390,5 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             return !player.IsInvisible;
         }
         return false;
-    }
-
-    public void SpawnBomb(GameObject prefab)
-    {
-        _bomb = Instantiate(prefab, blackboard.leftHandTransform.position, blackboard.leftHandTransform.rotation, blackboard.leftHandTransform);
-    }
-
-    public void ActivateBomb()
-    {
-        _bomb.transform.SetParent(null);
-        NavMeshAgent bombAgent = _bomb.GetComponent<NavMeshAgent>();
-        bombAgent.enabled = true;
-        _bomb.GetComponent<Enemy>().enabled = true;
-        Vector3 pos = transform.position;
-        pos.y = 0;
-        transform.position = pos;
-        bombAgent.nextPosition = pos;
-    }
-    
-    public void CreateAttackEffect(GameObject effectPrefab)
-    {
-        GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.identity);
-        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
-    }
-
-    public void CreateAttackEffectAtTarget(GameObject effectPrefab)
-    {
-        GameObject effect = Instantiate(effectPrefab, blackboard.target.transform.position, Quaternion.identity);
-        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
     }
 }

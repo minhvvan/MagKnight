@@ -179,7 +179,7 @@ namespace hvvan
                 
                 if (Player.AbilitySystem.TryGetAttributeSet<PlayerAttributeSet>(out var attributeSet))
                 {
-                    _currentRunData.playerStat = attributeSet.GetDataStruct();
+                    _currentRunData.playerStat = await attributeSet.GetDataStruct();
                 }
 
                 if (_currentRunData.currentWeapon == WeaponType.None)
@@ -232,6 +232,36 @@ namespace hvvan
             
             await SetPlayerData(_playerData);
             return _playerData.PlayerStat;
+        }
+        
+        public async UniTask<PlayerData> GetPlayerData()
+        {
+            //이미 존재하면서 유효하면 반환
+            if (_playerData != null && _playerData.PlayerStat.IsValid()) return _playerData;
+            
+            //데이터 로드 시도
+            _playerData = SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
+            
+            if (_playerData == null)
+            {
+                //로드 실패 -> 생성 및 저장
+                _playerData = await CreatePlayerData();
+                await SaveData(Constants.PlayerData);
+            }
+            else
+            {
+                //로드 성공 -> 유효성 검증
+                if (!_playerData.PlayerStat.IsValid())
+                {
+                    //유효성 검증 실패 -> 삭제 및 재생성 
+                    SaveDataManager.Instance.DeleteData(Constants.PlayerData);
+                    _playerData = await CreatePlayerData();
+                    await SaveData(Constants.PlayerData);
+                }
+            }
+            
+            await SetPlayerData(_playerData);
+            return _playerData;
         }
 
         public PlayerStat GetCurrentStat()

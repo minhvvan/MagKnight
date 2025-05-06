@@ -83,6 +83,11 @@ public class Attribute
         return CurrentValue;
     }
 
+    public float GetBaseValue()
+    {
+        return BaseValue;
+    }
+
     // Delegate 구독 함수
     public void DelegateChangeAction(Action<float> action)
     {

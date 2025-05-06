@@ -22,62 +22,11 @@ public class PlayerStat
     public AttributePair MagneticPower;
     
     // Dictionary에서 PlayerStat으로 변환하는 정적 메서드
-    public static PlayerStat FromDictionary(Dictionary<AttributeType, Attribute> attributeDictionary)
+    public static PlayerStat FromDictionary(PlayerStat playerDataStat, Dictionary<AttributeType, Attribute> attributeDictionary)
     {
-        PlayerStat stat = new PlayerStat();
-        
-        // 각 속성 매핑
-        foreach (var entry in attributeDictionary)
-        {
-            switch (entry.Key)
-            {
-                case AttributeType.MaxHP:
-                    stat.MaxHP = new AttributePair(AttributeType.MaxHP, entry.Value.GetValue());
-                    break;
-                case AttributeType.HP:
-                    stat.HP = new AttributePair(AttributeType.HP, entry.Value.GetValue());
-                    break;
-                case AttributeType.Strength:
-                    stat.Strength = new AttributePair(AttributeType.Strength, entry.Value.GetValue());
-                    break;
-                case AttributeType.CriticalRate:
-                    stat.CriticalRate = new AttributePair(AttributeType.CriticalRate, entry.Value.GetValue());
-                    break;
-                case AttributeType.Defense:
-                    stat.Defense = new AttributePair(AttributeType.Defense, entry.Value.GetValue());
-                    break;
-                case AttributeType.CriticalDamage:
-                    stat.CriticalDamage = new AttributePair(AttributeType.CriticalDamage, entry.Value.GetValue());
-                    break;
-                case AttributeType.Damage:
-                    stat.Damage = new AttributePair(AttributeType.Damage, entry.Value.GetValue());
-                    break;
-                case AttributeType.MoveSpeed:
-                    stat.MoveSpeed = new AttributePair(AttributeType.MoveSpeed, entry.Value.GetValue());
-                    break;
-                case AttributeType.AttackSpeed:
-                    stat.AttackSpeed = new AttributePair(AttributeType.AttackSpeed, entry.Value.GetValue());
-                    break;
-                case AttributeType.Impulse:
-                    stat.Impulse = new AttributePair(AttributeType.Impulse, entry.Value.GetValue());
-                    break;
-                case AttributeType.EndureImpulse:
-                    stat.EndureImpulse = new AttributePair(AttributeType.EndureImpulse, entry.Value.GetValue());
-                    break;
-                case AttributeType.MaxSkillGauge:
-                    stat.MaxSkillGauge = new AttributePair(AttributeType.MaxSkillGauge, entry.Value.GetValue());
-                    break;
-                case AttributeType.SkillGauge:
-                    stat.SkillGauge = new AttributePair(AttributeType.SkillGauge, entry.Value.GetValue());
-                    break;
-                case AttributeType.MagneticRange:
-                    stat.MagneticRange = new AttributePair(AttributeType.MagneticRange, entry.Value.GetValue());
-                    break;
-                case AttributeType.MagneticPower:
-                    stat.MagneticPower = new AttributePair(AttributeType.MagneticPower, entry.Value.GetValue());
-                    break;
-            }
-        }
+        PlayerStat stat = (PlayerStat)playerDataStat.MemberwiseClone();
+        stat.HP = new AttributePair(AttributeType.HP, attributeDictionary[AttributeType.HP].GetValue());
+        stat.SkillGauge = new AttributePair(AttributeType.SkillGauge, attributeDictionary[AttributeType.SkillGauge].GetValue());
         
         return stat;
     }

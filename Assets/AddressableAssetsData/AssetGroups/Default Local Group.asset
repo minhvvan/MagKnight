@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7835a5b9eb7ec14ba1dec879eeeabd4
+    m_Address: data/artifactMapping
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a7e305ff1914347ff8e4d28f1e6ff4b4
     m_Address: data/fx/vfxloader
     m_ReadOnly: 0
