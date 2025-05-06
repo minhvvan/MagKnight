@@ -999,8 +999,7 @@ namespace Moon
             var magneticType = _magneticController.GetMagneticType();
             _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
 
-            var newMagneticType = magneticType == MagneticType.N ? MagneticType.S : MagneticType.N;
-            _effect.SwitchPolarity(newMagneticType, .5f);
+            _effect.SwitchPolarity(magneticType, .5f);
         }
 
         public void UpgradeParts()
