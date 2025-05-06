@@ -82,6 +82,7 @@ public class Boss : Enemy
         if (magneticType == MagneticType.N)
         {
             bossBlackboard.abilitySystem.SetTag("BarrierN");
+            // VFXManager.Instance.TriggerVFX(VFXType.MAGNET_SHIELD, transform.position)
             CheckBuffEndTime("BarrierN");
             Debug.Log("N activated");
         }

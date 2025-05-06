@@ -15,10 +15,10 @@ MonoBehaviour:
   Stat:
     MaxHP:
       Key: 0
-      Value: 1500
+      Value: 100
     HP:
       Key: 1
-      Value: 1500
+      Value: 100
     Strength:
       Key: 2
       Value: 5
