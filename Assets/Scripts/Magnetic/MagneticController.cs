@@ -35,6 +35,7 @@ public class MagneticController : MagneticObject
     
     //--자기력--//
     private CharacterController _characterController;
+    private PlayerMagnetActionController _playerMagnetActionController;
     private Vector3 _currentVelocity; // 현재 가속도
     private Vector3 playerPosOffset; // player position을 center정도 위치로 임시보정 해주는 값
     private float _dragValue; //가속 후 감속값
@@ -126,6 +127,7 @@ public class MagneticController : MagneticObject
         environmentLayer = LayerMask.NameToLayer("Environment");
         
         _characterController = GetComponent<CharacterController>();
+        _playerMagnetActionController = GetComponent<PlayerMagnetActionController>();
         playerPosOffset = new Vector3(0,1f,0);
         
         _minDistance = 1f;
@@ -158,8 +160,10 @@ public class MagneticController : MagneticObject
         
         StartCoroutine(_magneticUIController.ShowFocusArea());
         StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
-        Time.timeScale = 0.2f;
+        
+        _playerMagnetActionController.EndSwingWithInertia();
         _timeScaleCoroutine = StartCoroutine(TimeScaleCoroutine(1f));
+        
 
     
         //끝

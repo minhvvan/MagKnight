@@ -5,8 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "SO/Artifact/StatArtifactDataSO")]
 public class StatArtifactDataSO : ArtifactDataSO
 {
-    [SerializeField] List<GameplayEffect> N_ArtifactEffect;
-    [SerializeField] List<GameplayEffect> S_ArtifactEffect;
+    public List<GameplayEffect> N_ArtifactEffect;
+    public List<GameplayEffect> S_ArtifactEffect;
    
     public override void N_ApplyTo(AbilitySystem target)
     {

@@ -35,15 +35,7 @@ public static class VolumeController
         _motionBlurTween = DOTween.To(() => _motionBlur.intensity.value, 
                                       x => _motionBlur.intensity.value = x, 
                                       intensity, duration)
-            .SetUpdate(true)
-            .OnComplete(() =>
-            {
-                
-                DOVirtual.DelayedCall(0.1f, () =>
-                {
-                    _motionBlur.active = false;
-                }).SetUpdate(true);
-            });
+            .SetUpdate(true);
     }
 
     public static void SetSaturation(float startSaturation, float targetSaturation, float duration, Ease ease = Ease.InQuint)

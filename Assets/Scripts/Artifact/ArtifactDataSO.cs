@@ -8,6 +8,7 @@ public abstract class ArtifactDataSO : ScriptableObject
    [Header("Artifact Info")]
    public Sprite icon;
    public string itemName;
+   public string description;
    public int scrapValue;
    public int itemID;
    public ItemRarity rarity;

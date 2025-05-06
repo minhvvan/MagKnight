@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346f720e7f5994b87a1229dcc02f12c3, type: 3}
+  m_Name: ShopNPCData
+  m_EditorClassIdentifier: 
+  npcName: "\uD14C\uD06C\uB8E9"
+  npcDescription: "\uB358\uC804 \uB0B4 \uC0C1\uC810\uBC29\uC5D0\uC11C \uC544\uC774\uD15C
+    \uD310\uB9E4"
+  dialogueData:
+  - {fileID: 11400000, guid: 216798b066bc7ce448e3ea9b899e5925, type: 2}
+  npcType: 0
