@@ -269,6 +269,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
+        
+        // 피격 효과
+        VFXManager.Instance.TriggerDamageNumber(transform.position, UnityEngine.Random.Range(10, 40));
     }
 
     public void OnNext(HitInfo hitInfo)
