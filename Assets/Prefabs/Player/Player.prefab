@@ -3176,6 +3176,7 @@ MonoBehaviour:
     - Key: 2
       Value: {fileID: 9100000, guid: 0fa7b19c9c9aa164aa68bcd8e2611daa, type: 2}
   cameraSettings: {fileID: 0}
+  parryWindow: 0.2
 --- !u!114 &701427713464704324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3206,6 +3207,7 @@ MonoBehaviour:
   objectMass: 0
   magneticObjectSO: {fileID: 11400000, guid: 2286fa9972cd7be4288e8f6e71a19e42, type: 2}
   rb: {fileID: 0}
+  isMagneticHighlight: 0
   targetMagneticObject: {fileID: 0}
   mainCamera: {fileID: 0}
   targetHit: {x: 0, y: 0, z: 0}
