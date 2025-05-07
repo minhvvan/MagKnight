@@ -25,6 +25,9 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
         spriteColor.a = 60f/255f;
         backgroundSprite.color = spriteColor;
         glowSprite.color = color;
+        spriteColor = glowSprite.color;
+        spriteColor.a = 230f/255f;
+        glowSprite.color = spriteColor;
     }
 
     public ArtifactDataSO GetArtifact()

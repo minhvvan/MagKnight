@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -21,6 +22,9 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     private ArtifactInventory inventory;
     private MagneticController magneticController;
     private PlayerDetailUIController playerDetailUIController;
+    
+    private Color red = new Color(230/255f, 0f, 0f);
+    private Color blue = new Color(0f, 90/255f, 230/255f, 0f);
     
     public void ShowUI(ArtifactDataSO artifactDataSO)
     {
@@ -61,6 +65,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
 
     public void ShowUI()
     {
+        GameManager.Instance.Player.InputHandler.ReleaseControl();
         gameObject.SetActive(true);
     }
     
@@ -74,6 +79,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
             artifact.GetComponent<ArtifactUI>().DumpArtifact();
         }
         gameObject.SetActive(false);
+        GameManager.Instance.Player.InputHandler.GainControl();
     }
 
     public void SetSlotColor(MagneticType magneticType)
@@ -82,24 +88,24 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         {
             foreach (var nArtifactSlot in Left_ArtifactSlots)
             {
-                nArtifactSlot.SetBackgroundColor(Color.red);
+                nArtifactSlot.SetBackgroundColor(red);
             }
 
             foreach (var sArtifactSlot in Right_ArtifactSlots)
             {
-                sArtifactSlot.SetBackgroundColor(Color.blue);
+                sArtifactSlot.SetBackgroundColor(blue);
             }
         }
         else
         {
             foreach (var nArtifactSlot in Left_ArtifactSlots)
             {
-                nArtifactSlot.SetBackgroundColor(Color.blue);
+                nArtifactSlot.SetBackgroundColor(blue);
             }
 
             foreach (var sArtifactSlot in Right_ArtifactSlots)
             {
-                sArtifactSlot.SetBackgroundColor(Color.red);
+                sArtifactSlot.SetBackgroundColor(red);
             }
         }
     }
@@ -109,13 +115,13 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         for (int i = 0; i < 9; i++)
         {
             var instance1 = Instantiate(SlotPrefab, Left_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
-            instance1.SetBackgroundColor(Color.red);
+            instance1.SetBackgroundColor(red);
             instance1.SetSlotIndex(i);
             instance1.OnArtifactModified = UpdateArtifact_Left;
             Left_ArtifactSlots.Add(instance1);
             
             var instance2 = Instantiate(SlotPrefab, Right_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
-            instance2.SetBackgroundColor(Color.blue);
+            instance2.SetBackgroundColor(blue);
             instance2.SetSlotIndex(i);
             instance2.OnArtifactModified = UpdateArtifact_Right;
             Right_ArtifactSlots.Add(instance2);
