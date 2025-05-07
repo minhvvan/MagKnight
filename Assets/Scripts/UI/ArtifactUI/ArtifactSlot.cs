@@ -9,7 +9,8 @@ using UnityEngine.UI;
 public class ArtifactSlot : MonoBehaviour, IDropHandler
 {
     [SerializeField] private Image backgroundSprite;
-
+    [SerializeField] private Image glowSprite;
+    
     public ArtifactDataSO artifact;
 
     private int Index;
@@ -17,8 +18,15 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
 
     public void SetSlotIndex(int index) => Index = index;
 
-    public void SetBackgroundColor(Color color) => backgroundSprite.color = color;
-    
+    public void SetBackgroundColor(Color color)
+    {
+        backgroundSprite.color = color;
+        var spriteColor = backgroundSprite.color;
+        spriteColor.a = 60f/255f;
+        backgroundSprite.color = spriteColor;
+        glowSprite.color = color;
+    }
+
     public ArtifactDataSO GetArtifact()
     {
         return artifact;
@@ -41,8 +49,8 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
 
     public GameObject GetChild()
     {
-        if(transform.childCount > 0)
-            return transform.GetChild(0).gameObject;
+        if(transform.childCount > 1)
+            return transform.GetChild(1).gameObject;
         return null;
     }
 

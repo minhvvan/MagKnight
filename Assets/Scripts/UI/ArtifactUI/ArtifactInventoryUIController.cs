@@ -22,7 +22,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     private MagneticController magneticController;
     private PlayerDetailUIController playerDetailUIController;
     
-    public void ShowUI(ArtifactDataSO artifactDataSO = null)
+    public void ShowUI(ArtifactDataSO artifactDataSO)
     {
         SetSlotColor(magneticController.GetMagneticType());
         
@@ -76,7 +76,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         gameObject.SetActive(false);
     }
 
-    private void SetSlotColor(MagneticType magneticType)
+    public void SetSlotColor(MagneticType magneticType)
     {
         if (magneticType == MagneticType.N)
         {
@@ -106,7 +106,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     
     public void Initialized()
     {
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 9; i++)
         {
             var instance1 = Instantiate(SlotPrefab, Left_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
             instance1.SetBackgroundColor(Color.red);
