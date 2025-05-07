@@ -47,6 +47,7 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
     [SerializeField] private float _projectileSpeed;
     [SerializeField] private TrajectoryType _trajectoryType;
     [SerializeField] private float _lifeTime;
+    [SerializeField] private ParticleSystem projectileParticleSystem;
     
     // private AbilitySystem _shooterAbilitySystem; // 발사하는 주체의 ability system
     private Transform _targetTransform;
@@ -168,7 +169,19 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
         launchVelocity = Quaternion.AngleAxis(Mathf.Rad2Deg * angle, Vector3.Cross(dir, Vector3.up)) * dir * _projectileSpeed;
         return true;
     }
+
+    public void SetProjectileVFXColor(Color color)
+    {
+        if (!projectileParticleSystem) return;
     
+        // 파티클 시스템의 렌더러를 통해 머티리얼에 접근
+        ParticleSystemRenderer particleRenderer = projectileParticleSystem.GetComponent<ParticleSystemRenderer>();
+    
+        if (particleRenderer && particleRenderer.material)
+        {
+            particleRenderer.material.SetColor("_BaseColor", color);
+        }
+    }
     
     public void OnNext(HitInfo hitInfo)
     {
