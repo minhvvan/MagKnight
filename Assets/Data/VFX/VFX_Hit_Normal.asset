@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VFX_Hit_Normal
   m_EditorClassIdentifier: 
   vfxType: 0
-  vfxPrefab: {fileID: 7366701124083779821, guid: f0b173e4cc052d54f90cb79bf5fcd167,
+  vfxPrefab: {fileID: 5685990813927353456, guid: ae5b18ebfccb9424d9fcffb2afb90282,
     type: 3}
   poolSize: 10
   duration: 0.2

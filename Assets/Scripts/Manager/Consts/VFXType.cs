@@ -18,3 +18,12 @@ public enum VFXType
     JUMP_DUST,
     BOMB_EXPLODE,
 }
+
+public enum DAMAGEType
+{
+    NONE,
+    NORMAL,
+    CRITICAL,
+    POISON,
+    MAGNETIC,
+}
