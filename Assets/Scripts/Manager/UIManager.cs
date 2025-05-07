@@ -21,6 +21,11 @@ public class UIManager : Singleton<UIManager>
             ShowArtifactInventoryUI();
             ShowPlayerDetailUI();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            popupUIController.HideAllPopupAvailableUI();
+        }
     }
 
     public void SetInGameUIController(InGameUIController inGameUIController)
@@ -81,6 +86,12 @@ public class UIManager : Singleton<UIManager>
     public void ShowGameOverUI()
     {
         popupUIController.gameOverUIController.ShowUI();
+        EnableCursor();
+    }
+
+    public void ShowClearUI()
+    {
+        popupUIController.clearUIController.ShowUI();
         EnableCursor();
     }
 
