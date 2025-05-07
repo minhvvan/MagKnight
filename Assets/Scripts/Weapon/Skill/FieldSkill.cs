@@ -17,11 +17,15 @@ public class FieldSkill : Skill
     {
         if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            var damage = GameManager.Instance.Player.GetAttackDamage(0.5f);
-            _damageEffect.amount = damage;
+            GameplayEffect damageEffect = _damageEffect.DeepCopy();
+            GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
+            
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage(0.5f);
+            damageEffect.extraData.hitInfo = hitInfo;
+            
             var enemyASC = hitInfo.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
-            enemyASC.ApplyEffect(_damageEffect);
-            enemyASC.ApplyEffect(_resistanceEffect);
+            enemyASC.ApplyEffect(damageEffect);
+            enemyASC.ApplyEffect(resistanceEffect);
         }
     }
 }

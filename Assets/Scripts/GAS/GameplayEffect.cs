@@ -45,4 +45,8 @@ public class ExtraData
 {
     public Transform sourceTransform;
     public float weaponRange;
+    public bool isCritical = false;
+    public bool isPoison = false;
+    public HitInfo hitInfo;
+    public float finalAmount = 0;
 }

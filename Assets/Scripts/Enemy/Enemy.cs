@@ -271,10 +271,33 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
     }
     
-    public void OnDamaged()
+    public void OnDamaged(ExtraData extraData)
     {
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
+        
+        DAMAGEType damageType = extraData.isCritical ? DAMAGEType.CRITICAL : DAMAGEType.NORMAL;
+        damageType = extraData.isPoison ? DAMAGEType.POISON : damageType;
+        
+        // 피격 효과
+        VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType);
+
+        if(extraData.isCritical)
+        {
+            CinemachineImpulseController.GenerateImpulse();
+            Time.timeScale = 0.1f;
+            UniTask.Delay(TimeSpan.FromMilliseconds(100f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
+            {
+                Time.timeScale = 1;
+            });
+            VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+        }
+        else
+        {
+            VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+        }
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
     }
 
     public void OnNext(HitInfo hitInfo)
