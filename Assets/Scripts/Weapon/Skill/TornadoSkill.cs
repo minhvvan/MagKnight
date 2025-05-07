@@ -23,11 +23,15 @@ public class TornadoSkill : Skill
     {
         if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            var damage = GameManager.Instance.Player.GetAttackDamage(3f);
-            _damageEffect.amount = damage;
+            GameplayEffect damageEffect = _damageEffect.DeepCopy();
+            GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
+            
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage(3f);
+            damageEffect.extraData.hitInfo = hitInfo;
+
             var enemyASC = hitInfo.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
-            enemyASC.ApplyEffect(_damageEffect);
-            enemyASC.ApplyEffect(_resistanceEffect);
+            enemyASC.ApplyEffect(damageEffect);
+            enemyASC.ApplyEffect(resistanceEffect);
         }
     }
 }
