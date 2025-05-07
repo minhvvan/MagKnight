@@ -65,6 +65,10 @@ namespace Moon
         [SerializeField] private float parryWindow = 0.2f;
         private bool _parryWindowActive = false;
         Coroutine _parryWindowCoroutine;
+        private bool _canSwitchMagnetic = true;
+        private Coroutine _switchCooldownCoroutine;
+        [NonSerialized] public float switchMagneticCooldown = 5f;
+
         #endregion
 
         #region Animation
@@ -928,15 +932,38 @@ namespace Moon
 
         void SwitchMagneticInput()
         {
+            // 쿨다운 중이면 무시
+            if (! _canSwitchMagnetic)
+                return;
+
+            // 즉시 쿨타임 잠금
+            _canSwitchMagnetic = false;
+
+            // 기존 동작
             if (_magneticController != null)
             {
                 _magneticController.SwitchMagneticType();
                 OnMagneticEffect();
             }
+
+            // 패링 윈도우 열기
             if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
             _parryWindowActive = true;
             _abilitySystem.SetTag("Parry");
             _parryWindowCoroutine = StartCoroutine(CloseParryWindow());
+
+            // 쿨타임 시작
+            if (_switchCooldownCoroutine != null)
+                StopCoroutine(_switchCooldownCoroutine);
+            _switchCooldownCoroutine = StartCoroutine(SwitchMagneticCooldown());
+        }
+
+        // 5초 뒤에 다시 사용 가능하도록 해제
+        private IEnumerator SwitchMagneticCooldown()
+        {
+            yield return new WaitForSeconds(switchMagneticCooldown);
+            _canSwitchMagnetic = true;
+            _switchCooldownCoroutine = null;
         }
         
         IEnumerator CloseParryWindow()
