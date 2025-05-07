@@ -44,6 +44,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     void Awake()
     {
+        base.Awake();
+        
         Initialize();
         InitializeMagnetic();
         // TestCode();
@@ -53,6 +55,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         _stateMachine.ChangeState(spawnState);
     }
+    
     private void Initialize()
     {
         Anim = GetComponent<Animator>();
@@ -60,6 +63,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         MainCollider = GetComponent<Collider>();
         Rb = GetComponent<Rigidbody>();
         EnemyAbilitySystem = GetComponent<AbilitySystem>();
+        Effector = GetComponent<Effector>();
 
         Agent.updatePosition = false;
         Agent.updateRotation = false;
@@ -168,6 +172,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // 붉은색으로 변환, enemy 위치 보정
         
         if(blackboard.isDead) return;
+        
+        Effector.OnHit(1f);
         
         if (blackboard.onHitCancellation != null)
         {

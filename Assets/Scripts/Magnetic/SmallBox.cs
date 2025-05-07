@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class SmallBox : MagneticObject
 {
-    private void Awake()
+    protected void Awake()
     {
+        base.Awake();
         InitializeMagnetic();
     }
     
