@@ -402,15 +402,19 @@ namespace Moon
 
         private void PressPauseInput(InputAction.CallbackContext ctx)
         {
-            var currentGameState = GameManager.Instance.CurrentGameState;
-            if (currentGameState != GameState.Pause)
-            {
-                GameManager.Instance.ChangeGameState(GameState.Pause);
-            }
-            else
-            {
-                GameManager.Instance.RecoverPreviousState();
-            }
+            //GameManager.Instance.ChangeGameState(GameState.Pause);
+
+            // var currentGameState = GameManager.Instance.CurrentGameState;
+            // if (currentGameState != GameState.Pause)
+            // {
+            //     GameManager.Instance.ChangeGameState(GameState.Pause);
+            // }
+            // else
+            // {
+            //     GameManager.Instance.RecoverPreviousState();
+            // }
+
+            UIManager.Instance.ShowPauseMenuUI();
         }
 
         void PressSkillInput(InputAction.CallbackContext ctx)
