@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using hvvan;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PauseMenuUIController : MonoBehaviour
@@ -23,7 +24,8 @@ public class PauseMenuUIController : MonoBehaviour
     void OnEnable()
     {
         UIManager.Instance.ShowBackgroundImage(true);
-        
+        //Select reset
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     void OnDisable()
@@ -34,21 +36,25 @@ public class PauseMenuUIController : MonoBehaviour
     public void ShowUI()
     {
         gameObject.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void HideUI()
     {
         gameObject.SetActive(false);
+        Time.timeScale = 1f;
     }
 
 
     void OnClickResume()
     {
-        GameManager.Instance.RecoverPreviousState();
+        //GameManager.Instance.RecoverPreviousState();
+        HideUI();
     }
 
     void OnClickGiveUp()
     {
+        Time.timeScale = 1f;
         UIManager.Instance.ShowConfirmPopup("포기", "베이스캠프로 돌아가시겠습니까?", () =>
         {
             GameManager.Instance.ChangeGameState(GameState.InitGame);
@@ -62,6 +68,7 @@ public class PauseMenuUIController : MonoBehaviour
 
     void OnClickExit()
     {
+        Time.timeScale = 1f;
         UIManager.Instance.ShowConfirmPopup("나가기", "정말로 나가시겠습니까?", () =>
         {
             
