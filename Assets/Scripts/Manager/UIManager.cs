@@ -18,7 +18,7 @@ public class UIManager : Singleton<UIManager>
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            ShowArtifactInventoryUI(null);
+            ShowArtifactInventoryUI();
             ShowPlayerDetailUI();
         }
     }
@@ -71,9 +71,9 @@ public class UIManager : Singleton<UIManager>
         popupUIController.optionUIController.ShowUI();
     }
 
-    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO)
+    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO = null)
     {
-        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
+        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO ? artifactDataSO : null);
         ShowPlayerDetailUI();
         EnableCursor();
     }

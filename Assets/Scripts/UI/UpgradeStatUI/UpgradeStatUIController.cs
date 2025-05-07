@@ -74,11 +74,13 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
     public void ShowUI()
     {
         gameObject.SetActive(true);
+        GameManager.Instance.Player.InputHandler.ReleaseControl();
     }
 
     public void HideUI()
     {
         gameObject.SetActive(false);
+        GameManager.Instance.Player.InputHandler.GainControl();
     }
     
 }

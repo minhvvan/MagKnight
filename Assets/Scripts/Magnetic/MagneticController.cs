@@ -267,7 +267,11 @@ public class MagneticController : MagneticObject
 
         ArtifactInventory inventory = GetComponent<ArtifactInventory>();
         if (inventory != null)
+        {   
             inventory.ConvertArtifact();
+            UIManager.Instance.popupUIController.artifactInventoryUIController.SetSlotColor(magneticType);
+            UIManager.Instance.popupUIController.playerDetailUIController.UpdateUI();
+        }
     }
 
     #endregion

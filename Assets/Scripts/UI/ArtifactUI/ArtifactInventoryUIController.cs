@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -13,7 +14,6 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     [SerializeField] private GameObject Right_ArtifactInventory;
     [SerializeField] private GameObject SlotPrefab;
     [SerializeField] private GameObject ArtifactUIPrefab;
-    [SerializeField] private Button HideButton;
     
     private List<ArtifactSlot> Left_ArtifactSlots = new List<ArtifactSlot>();
     private List<ArtifactSlot> Right_ArtifactSlots = new List<ArtifactSlot>();
@@ -22,7 +22,10 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     private MagneticController magneticController;
     private PlayerDetailUIController playerDetailUIController;
     
-    public void ShowUI(ArtifactDataSO artifactDataSO = null)
+    private Color red = new Color(230/255f, 0f, 0f);
+    private Color blue = new Color(0f, 90/255f, 230/255f, 0f);
+    
+    public void ShowUI(ArtifactDataSO artifactDataSO)
     {
         SetSlotColor(magneticController.GetMagneticType());
         
@@ -61,11 +64,17 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
 
     public void ShowUI()
     {
+        GameManager.Instance.Player.InputHandler.ReleaseControl();
         gameObject.SetActive(true);
     }
     
     public void HideUI()
     {
+        if (gameObject.activeSelf == false)
+        {
+            return;
+        }
+        
         UIManager.Instance.DisableCursor();
 
         var artifact = artifactSlot.GetChild();
@@ -74,48 +83,49 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
             artifact.GetComponent<ArtifactUI>().DumpArtifact();
         }
         gameObject.SetActive(false);
+        GameManager.Instance.Player.InputHandler.GainControl();
     }
 
-    private void SetSlotColor(MagneticType magneticType)
+    public void SetSlotColor(MagneticType magneticType)
     {
         if (magneticType == MagneticType.N)
         {
             foreach (var nArtifactSlot in Left_ArtifactSlots)
             {
-                nArtifactSlot.SetBackgroundColor(Color.red);
+                nArtifactSlot.SetBackgroundColor(red);
             }
 
             foreach (var sArtifactSlot in Right_ArtifactSlots)
             {
-                sArtifactSlot.SetBackgroundColor(Color.blue);
+                sArtifactSlot.SetBackgroundColor(blue);
             }
         }
         else
         {
             foreach (var nArtifactSlot in Left_ArtifactSlots)
             {
-                nArtifactSlot.SetBackgroundColor(Color.blue);
+                nArtifactSlot.SetBackgroundColor(blue);
             }
 
             foreach (var sArtifactSlot in Right_ArtifactSlots)
             {
-                sArtifactSlot.SetBackgroundColor(Color.red);
+                sArtifactSlot.SetBackgroundColor(red);
             }
         }
     }
     
     public void Initialized()
     {
-        for (int i = 0; i < 15; i++)
+        for (int i = 0; i < 9; i++)
         {
             var instance1 = Instantiate(SlotPrefab, Left_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
-            instance1.SetBackgroundColor(Color.red);
+            instance1.SetBackgroundColor(red);
             instance1.SetSlotIndex(i);
             instance1.OnArtifactModified = UpdateArtifact_Left;
             Left_ArtifactSlots.Add(instance1);
             
             var instance2 = Instantiate(SlotPrefab, Right_ArtifactInventory.transform).GetComponent<ArtifactSlot>();
-            instance2.SetBackgroundColor(Color.blue);
+            instance2.SetBackgroundColor(blue);
             instance2.SetSlotIndex(i);
             instance2.OnArtifactModified = UpdateArtifact_Right;
             Right_ArtifactSlots.Add(instance2);
@@ -124,7 +134,6 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         inventory = FindObjectOfType<ArtifactInventory>();
         magneticController = FindObjectOfType<MagneticController>();
         playerDetailUIController = UIManager.Instance.popupUIController.playerDetailUIController;
-        HideButton.onClick.AddListener(HideUI);
     }
 
     async void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
