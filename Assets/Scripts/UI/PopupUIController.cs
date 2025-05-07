@@ -23,6 +23,17 @@ namespace Moon
             artifactInventoryUIController.Initialized();
             productUIController.Initialized();
         }
+
+        public void HideAllPopupAvailableUI()
+        {
+            pauseMenuUIController.HideUI();
+            optionUIController.HideUI();
+            confirmPopupUIController.HideUI();
+            artifactInventoryUIController.HideUI();
+            playerDetailUIController.HideUI();
+            upgradeStatUIController.HideUI();
+            productUIController.HideUI();
+        }
     }
 }
 

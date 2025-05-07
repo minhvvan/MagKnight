@@ -21,6 +21,11 @@ public class UIManager : Singleton<UIManager>
             ShowArtifactInventoryUI(null);
             ShowPlayerDetailUI();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            popupUIController.HideAllPopupAvailableUI();
+        }
     }
 
     public void SetInGameUIController(InGameUIController inGameUIController)
