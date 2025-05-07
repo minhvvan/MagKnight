@@ -17,4 +17,5 @@ public enum VFXType
     DODGE_DUST,
     JUMP_DUST,
     BOMB_EXPLODE,
+    ENEMY_MUZZLE_BURST,
 }
