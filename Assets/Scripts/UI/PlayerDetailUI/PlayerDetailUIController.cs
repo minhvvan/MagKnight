@@ -24,15 +24,15 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
     [SerializeField] private TMP_Text MagneticPowerText;
     [SerializeField] private TMP_Text MagneticRangeText;
     
-    private readonly float _baseStrength = 20;
-    private readonly float _baseDefense = 0;
-    private readonly float _baseEndureImpulse = 0;
-    private readonly float _baseCriticalRate = 0.1f;
-    private readonly float _baseCriticalDamage = 2;
-    private readonly float _baseAttackSpeed = 1;
-    private readonly float _baseMoveSpeed = 1;
-    private readonly float _baseMagneticPower = 0;
-    private readonly float _baseMagneticRange = 0;
+    private float _baseStrength;
+    private float _baseDefense;
+    private float _baseEndureImpulse;
+    private float _baseCriticalRate;
+    private float _baseCriticalDamage;
+    private float _baseAttackSpeed;
+    private float _baseMoveSpeed;
+    private float _baseMagneticPower;
+    private float _baseMagneticRange;
 
     public void ShowUI()
     {
@@ -45,8 +45,20 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         gameObject.SetActive(false);
     }
 
-    public void UpdateUI()
+    public async void UpdateUI()
     {
+        PlayerStat playerBaseStat = await GameManager.Instance.GetPlayerStat();
+        
+        _baseStrength = playerBaseStat.Strength.Value;
+        _baseDefense = playerBaseStat.Defense.Value;
+        _baseEndureImpulse = playerBaseStat.EndureImpulse.Value;
+        _baseCriticalRate = playerBaseStat.CriticalRate.Value;
+        _baseCriticalDamage = playerBaseStat.CriticalDamage.Value;
+        _baseAttackSpeed = playerBaseStat.AttackSpeed.Value;
+        _baseMoveSpeed = playerBaseStat.MoveSpeed.Value;
+        _baseMagneticPower = playerBaseStat.MagneticPower.Value;
+        _baseMagneticRange = playerBaseStat.MagneticRange.Value;
+        
         var playerASC = GameManager.Instance.Player.AbilitySystem;
         // TODO : WeaponImage 연결
         
