@@ -28,20 +28,6 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     protected virtual void Awake()
     {
         Effector = GetComponent<Effector>();
-        GameManager.Instance.OnMagneticPressed += OnMagneticPressed;
-        GameManager.Instance.OnMagneticReleased += OnMagneticReleased;
-    }
-
-    protected void OnMagneticReleased()
-    {
-        if (!Effector) return;
-        Effector.OnMagneticReleased();
-    }
-
-    protected void OnMagneticPressed()
-    {
-        if (!Effector) return;
-        Effector.OnMagneticPressed(magneticType);
     }
 
     public virtual void InitializeMagnetic()
@@ -52,8 +38,11 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         //자기력 상호작용
         SetMagneticInteract();
+        
+        //Highlight Binding
+        BindMagneticHighlight();
     }
-    
+
     public virtual void SetPhysic()
     {
         magneticType = magneticObjectSO.magneticType = magneticObjectSO != null ? magneticObjectSO.magneticType : MagneticType.N;
@@ -75,6 +64,13 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         magnetDashAttackAction = MagneticInteractFactory.GetInteract<MagnetDashAttackAction>();
         magnetDashJumpAction = MagneticInteractFactory.GetInteract<MagnetDashJumpAction>();
         magnetSwingAction = MagneticInteractFactory.GetInteract<MagnetSwingAction>();
+    }
+    
+    private void BindMagneticHighlight()
+    {
+        //MagneticHighlightController 찾아서 renderer묶어주기
+        var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
+        magneticHighlighter.BindRenderer(gameObject, magneticType);
     }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)
