@@ -9,8 +9,8 @@ using UnityEngine.Serialization;
 
 public class ArtifactInventory : MonoBehaviour
 {
-    public ArtifactDataSO[] Left_ArtifactGas = new ArtifactDataSO[15];
-    public ArtifactDataSO[] Right_ArtifactGas = new ArtifactDataSO[15];
+    public ArtifactDataSO[] Left_ArtifactGas = new ArtifactDataSO[9];
+    public ArtifactDataSO[] Right_ArtifactGas = new ArtifactDataSO[9];
 
     public AbilitySystem abilitySystem;
     private MagneticController _magneticController;
