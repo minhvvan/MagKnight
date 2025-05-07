@@ -181,10 +181,14 @@ public class WeaponHandler : MonoBehaviour
         {
             Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
             
-            _damageEffect.amount = GameManager.Instance.Player.GetAttackDamage();
+            GameplayEffect damageEffect = _damageEffect.DeepCopy();
+            GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
             
-            enemy.blackboard.abilitySystem.ApplyEffect(_damageEffect);
-            enemy.blackboard.abilitySystem.ApplyEffect(_resistanceEffect);
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage();
+            damageEffect.extraData.hitInfo = hitInfo;
+
+            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
