@@ -48,6 +48,7 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
     [SerializeField] private TrajectoryType _trajectoryType;
     [SerializeField] private float _lifeTime;
     [SerializeField] private ParticleSystem projectileParticleSystem;
+    [SerializeField] private GameObject hitParticlePrefab;
     
     // private AbilitySystem _shooterAbilitySystem; // 발사하는 주체의 ability system
     private Transform _targetTransform;
@@ -186,6 +187,11 @@ public class Projectile : MonoBehaviour, IObserver<HitInfo>
     public void OnNext(HitInfo hitInfo)
     {
         OnHit?.Invoke(hitInfo);
+
+        if (hitParticlePrefab)
+        {
+            VFXManager.Instance.TriggerVFX(hitParticlePrefab, hitInfo.currentPoint);
+        }
         Destroy(gameObject);
     }
     
