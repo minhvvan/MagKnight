@@ -14,7 +14,6 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     [SerializeField] private GameObject Right_ArtifactInventory;
     [SerializeField] private GameObject SlotPrefab;
     [SerializeField] private GameObject ArtifactUIPrefab;
-    [SerializeField] private Button HideButton;
     
     private List<ArtifactSlot> Left_ArtifactSlots = new List<ArtifactSlot>();
     private List<ArtifactSlot> Right_ArtifactSlots = new List<ArtifactSlot>();
@@ -71,6 +70,11 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     
     public void HideUI()
     {
+        if (gameObject.activeSelf == false)
+        {
+            return;
+        }
+        
         UIManager.Instance.DisableCursor();
 
         var artifact = artifactSlot.GetChild();
@@ -130,7 +134,6 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         inventory = FindObjectOfType<ArtifactInventory>();
         magneticController = FindObjectOfType<MagneticController>();
         playerDetailUIController = UIManager.Instance.popupUIController.playerDetailUIController;
-        HideButton.onClick.AddListener(HideUI);
     }
 
     async void UpdateArtifact_Left(int index, ArtifactDataSO artifact)
