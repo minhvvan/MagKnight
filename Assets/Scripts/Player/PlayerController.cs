@@ -40,6 +40,7 @@ namespace Moon
         private LockOnSystem _lockOnSystem;
         private ArtifactInventory _artifactInventory;
         private PlayerMagnetActionController _playerMagnetActionController;
+        private Effector _effect;
         #endregion
             
         #region Property
@@ -152,6 +153,7 @@ namespace Moon
             _interactionController = GetComponentInChildren<InteractionController>();
             _artifactInventory = GetComponentInChildren<ArtifactInventory>();
             _playerMagnetActionController = GetComponent<PlayerMagnetActionController>();
+            _effect = GetComponentInChildren<Effector>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -162,7 +164,7 @@ namespace Moon
                 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
-            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+            _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
         }
         
         //명시적 초기화
@@ -949,12 +951,18 @@ namespace Moon
         {
             if (_magneticController != null)
             {
+                //*임시 -> 변경 필요
+                GameManager.Instance.OnMagneticPressed?.Invoke();
+                
                 _magneticController.OnPressEnter();
             }
         }
         void MagneticRelease(bool inputValue)
         {
             if (_magneticController == null) return;
+            //*임시 -> 변경 필요
+            GameManager.Instance.OnMagneticReleased?.Invoke();
+            
             if(inputValue) _magneticController.OnLongRelease().Forget(); 
             else _magneticController.OnShortRelease().Forget();
         }
@@ -990,6 +998,8 @@ namespace Moon
             if (_magneticController == null) return;
             var magneticType = _magneticController.GetMagneticType();
             _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+
+            _effect.SwitchPolarity(magneticType, .5f);
         }
 
         public void UpgradeParts()

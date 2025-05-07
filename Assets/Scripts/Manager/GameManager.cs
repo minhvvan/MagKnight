@@ -42,6 +42,10 @@ namespace hvvan
         private Dictionary<GameState, IGameState> _states = new Dictionary<GameState, IGameState>();
         public Action<GameState> GameStateChanged;
         
+        //*임시 -> 변경 필요
+        public Action OnMagneticPressed;
+        public Action OnMagneticReleased;
+        
         protected override void Initialize()
         {
             //State 생성
