@@ -16,6 +16,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public float objectMass; //오브젝트 중량
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
+    public bool isMagneticHighlight = true;
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
@@ -40,7 +41,10 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         SetMagneticInteract();
         
         //Highlight Binding
-        BindMagneticHighlight();
+        if (isMagneticHighlight)
+        {
+            BindMagneticHighlight();
+        }
     }
 
     public virtual void SetPhysic()
