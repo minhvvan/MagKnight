@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Bow : BaseWeapon
@@ -10,6 +11,8 @@ public class Bow : BaseWeapon
     [SerializeField] int skillIndex;
     [SerializeField] LayerMask _layerMask;
     [SerializeField] GameObject _arrowPrefab;
+    [SerializeField] GameObject muzzleVFXPrefab;
+    [SerializeField] GameObject vfxMuzzle;
 
     private Camera _mainCamera;
     private float _rayDistance = 100f;
@@ -49,6 +52,12 @@ public class Bow : BaseWeapon
         var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Arrow);
         AudioManager.Instance.PlaySFX(bowSfxRandomClip);
         AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        
+        //VFX 재생
+        if (muzzleVFXPrefab)
+        {
+            VFXManager.Instance.TriggerVFX(muzzleVFXPrefab, vfxMuzzle.transform.position);
+        }
         
         return projectile;
     }
