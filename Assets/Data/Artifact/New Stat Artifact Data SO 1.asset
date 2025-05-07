@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 59c8cd2a91ad7f846b9efd79b945c356, type: 3}
   itemName: "\uC544\uD2F0\uD329\uD2B8 2"
+  description: "\uB0A0\uCE74\uB85C\uC6B4 \uD654\uC0B4 (\uC544\uD504\uB2E4)"
   scrapValue: 300
   itemID: 3
+  rarity: 0
   N_ArtifactEffect:
   - effectType: 2
     attributeType: 2
