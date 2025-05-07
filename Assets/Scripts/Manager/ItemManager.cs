@@ -59,7 +59,7 @@ public class ItemManager : Singleton<ItemManager>
             //         transform.position + Vector3.up, Quaternion.identity);
             // }
             //CreateItem(ItemCategory.Artifact, ItemRarity.Common, transform.position, Quaternion.identity);
-            CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position + Vector3.left*2f, Quaternion.identity);
+            CreateItem(ItemCategory.MagCore, ItemRarity.Epic, transform.position + Vector3.left*2f, Quaternion.identity);
             // CreateItem(ItemCategory.MagCore, ItemRarity.Common, transform.position + Vector3.left*2f, Quaternion.identity, itemName:"Bow");
             //CreateItem(ItemCategory.HealthPack, ItemRarity.Common, transform.position += Vector3.right*2f, Quaternion.identity);
             
