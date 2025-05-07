@@ -116,7 +116,7 @@ namespace Moon
             }
         }
         
-        public Action SwitchMangeticInput;
+        public Action SwitchMagneticInput;
         public Action magneticInput;
         public Action<bool> magneticOutput;
 
@@ -386,7 +386,7 @@ namespace Moon
         void PressSwitchMagneticInput(InputAction.CallbackContext context)
         {
             _switchMangetic = true;
-            SwitchMangeticInput?.Invoke();
+            SwitchMagneticInput?.Invoke();
         }
 
         void ReleaseSwitchMagneticInput(InputAction.CallbackContext context)

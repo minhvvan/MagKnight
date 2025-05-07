@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Downloads/Tvtig/Weapon Crate Animated/Scenes/DemoScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/GameFlow/StartUpScene.unity
+    guid: a36392ef3eec84819b1b0c9ec008ab32
   - enabled: 1
     path: Assets/Scenes/GameFlow/BaseCampScene.unity
-    guid: f507e53f69c064f6aaf205b093cd10db
+    guid: c55ccd0b3f158d64badf24d7c27d6af4
   - enabled: 1
     path: Assets/Scenes/LoadSceneTest/start.unity
     guid: e184e0d6fbb4a5442b06fbba7c53cbd3
