@@ -84,6 +84,12 @@ public class UIManager : Singleton<UIManager>
         EnableCursor();
     }
 
+    public void ShowClearUI()
+    {
+        popupUIController.clearUIController.ShowUI();
+        EnableCursor();
+    }
+
     public void ShowPlayerDetailUI()
     {
         popupUIController.playerDetailUIController.ShowUI();

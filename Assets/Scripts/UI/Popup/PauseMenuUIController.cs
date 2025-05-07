@@ -7,12 +7,15 @@ using UnityEngine.UI;
 public class PauseMenuUIController : MonoBehaviour
 {
     [SerializeField] Button _resumeButton;
+    [SerializeField] Button _giveUpButton;
     [SerializeField] Button _optionButton;
     [SerializeField] Button _exitButton;
+    
 
     void Awake()
     {
         _resumeButton.onClick.AddListener(OnClickResume);
+        _giveUpButton.onClick.AddListener(OnClickGiveUp);
         _optionButton.onClick.AddListener(OnClickOption);
         _exitButton.onClick.AddListener(OnClickExit);  
     }
@@ -42,6 +45,14 @@ public class PauseMenuUIController : MonoBehaviour
     void OnClickResume()
     {
         GameManager.Instance.RecoverPreviousState();
+    }
+
+    void OnClickGiveUp()
+    {
+        UIManager.Instance.ShowConfirmPopup("포기", "베이스캠프로 돌아가시겠습니까?", () =>
+        {
+            GameManager.Instance.ChangeGameState(GameState.InitGame);
+        }, null, true);
     }
 
     void OnClickOption()

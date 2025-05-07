@@ -26,8 +26,10 @@ public class AudioManager : Singleton<AudioManager>
     private bool sfxMuted = false;
     
     // 현재 볼륨 값 (0.0 ~ 1.0)
-    private float bgmVolume = 1.0f;
-    private float sfxVolume = 1.0f;
+    private float masterVolume = 0.0f;
+    private float bgmVolume = 0.0f;
+    private float sfxVolume = 0.0f;
+    
     
     private void Start()
     {
@@ -41,12 +43,12 @@ public class AudioManager : Singleton<AudioManager>
 
     private void LoadSettings()
     {
-        // bgmVolume = PlayerPrefs.GetFloat(Constants.BGMVolume, 1.0f);
-        // sfxVolume = PlayerPrefs.GetFloat(Constants.SFXVolume, 1.0f);
-        // bgmMuted = PlayerPrefs.GetInt(Constants.BGMMute, 0) == 1;
-        // sfxMuted = PlayerPrefs.GetInt(Constants.SFXMute, 0) == 1;
+        bgmVolume = PlayerPrefs.GetFloat(Constants.BGMVolume, 0.5f);
+        sfxVolume = PlayerPrefs.GetFloat(Constants.SFXVolume, 0.5f);
+        masterVolume = PlayerPrefs.GetFloat(Constants.MasterVolume, 0.5f);
         
         // 볼륨 적용
+        SetMasterVolume(masterVolume);
         SetBGMVolume(bgmVolume);
         SetSFXVolume(sfxVolume);
         
@@ -95,7 +97,36 @@ public class AudioManager : Singleton<AudioManager>
     }
     #endregion
     
+
+    public float GetMasterVolume()
+    {
+        return PlayerPrefs.GetFloat(Constants.MasterVolume, 0.5f);
+    }
+
+    public float GetBGMVolume()
+    {
+        return PlayerPrefs.GetFloat(Constants.BGMVolume, 0.5f);
+    }
+
+    public float GetSFXVolume()
+    {
+        return PlayerPrefs.GetFloat(Constants.SFXVolume, 0.5f);
+    }
+
     #region SoundSetting
+
+    public void SetMasterVolume(float volume)
+    {
+        masterVolume = volume;
+        
+        // 0 = -80
+        float dbValue = volume > 0.0001f ? Mathf.Log10(volume) * 20 : -80f;
+        audioMixer.SetFloat(Constants.MasterVolume, dbValue);
+        
+        PlayerPrefs.SetFloat(Constants.MasterVolume, volume);
+        PlayerPrefs.Save();
+    }
+
     // 배경음 볼륨 설정 (0.0 ~ 1.0)
     public void SetBGMVolume(float volume)
     {
@@ -108,8 +139,8 @@ public class AudioManager : Singleton<AudioManager>
         MuteBGM(volume == 0);
 
         // // 설정 저장
-        // PlayerPrefs.SetFloat(Constants.BGMVolume, volume);
-        // PlayerPrefs.Save();
+        PlayerPrefs.SetFloat(Constants.BGMVolume, volume);
+        PlayerPrefs.Save();
     }
     
     // 효과음 볼륨 설정 (0.0 ~ 1.0)
@@ -122,8 +153,8 @@ public class AudioManager : Singleton<AudioManager>
 
         MuteSFX(volume == 0);
         
-        // PlayerPrefs.SetFloat(Constants.SFXVolume, volume);
-        // PlayerPrefs.Save();
+        PlayerPrefs.SetFloat(Constants.SFXVolume, volume);
+        PlayerPrefs.Save();
     }
     
     public void MuteBGM(bool mute)

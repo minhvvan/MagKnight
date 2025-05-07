@@ -15,6 +15,7 @@ namespace Moon
         [SerializeField] public PlayerDetailUIController playerDetailUIController;
         [SerializeField] public UpgradeStatUIController upgradeStatUIController;
         [SerializeField] public ProductUIController productUIController;
+        [SerializeField] public ClearUIController clearUIController;
         
         void OnEnable()
         {
