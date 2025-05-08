@@ -6,21 +6,23 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class InGameUIController : MonoBehaviour
+public class InGameUIController : Singleton<InGameUIController>
 {
     [SerializeField] FadeText _entranceText;
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
     [SerializeField] private StatusUIController statusUIController;
 
-    void Awake()
+
+    protected override void Initialize()
     {
         SceneTransitionEvent.OnSceneTransitionComplete += OnSceneTransitionComplete;
-
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void OnEnable()
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         UIManager.Instance.SetInGameUIController(this);
     }
 
@@ -49,5 +51,12 @@ public class InGameUIController : MonoBehaviour
     {
         //attributeSet에 묶인 UI 변경 추가
         statusUIController.BindAttributeChanges(abilitySystem);
+        ShowInGameUI();
+    }
+
+    public void UnbindAttributeChanges()
+    {
+        //attributeSet에 묶인 UI 변경 해제
+        statusUIController.UnbindAttributeChanges();
     }
 }

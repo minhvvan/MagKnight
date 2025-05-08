@@ -28,6 +28,17 @@ public class StatusUIController : MonoBehaviour
         UpdateUI();
     }
 
+    public void UnbindAttributeChanges()
+    {
+        if (_attributeSet == null) return;
+        
+        _attributeSet.UnsubscribeAttributeChanged(AttributeType.HP, ChangedCurrentHealth);
+        _attributeSet.UnsubscribeAttributeChanged(AttributeType.MaxHP, ChangedMaxHealth);
+        
+        _attributeSet.UnsubscribeAttributeChanged(AttributeType.SkillGauge, ChangedCurrentSkillGauge);
+        _attributeSet.UnsubscribeAttributeChanged(AttributeType.MaxSkillGauge, ChangedMaxSkillGauge);
+    }
+
     private void UpdateUI()
     {
         if(_attributeSet == null) return;

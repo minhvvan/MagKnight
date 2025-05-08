@@ -14,6 +14,10 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] public InGameUIController inGameUIController;
     [SerializeField] public PopupUIController popupUIController;
 
+    protected override void Initialize()
+    {
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
@@ -24,7 +28,10 @@ public class UIManager : Singleton<UIManager>
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            popupUIController.HideAllPopupAvailableUI();
+            if(popupUIController != null)
+            {
+                popupUIController.HideAllPopupAvailableUI();
+            }
         }
     }
 
@@ -33,10 +40,10 @@ public class UIManager : Singleton<UIManager>
         this.inGameUIController = inGameUIController;
     }
 
-    public void ReleaseInGameUIController()
-    {
-        inGameUIController = null;
-    }
+    // public void ReleaseInGameUIController()
+    // {
+    //     inGameUIController = null;
+    // }
 
     public void SetPopupUIController(PopupUIController popupUIController)
     {
