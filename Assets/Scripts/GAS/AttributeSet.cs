@@ -133,5 +133,10 @@ public abstract class AttributeSet
     {
         tag = null;
     }
+
+    public bool HasTag(string tag)
+    {
+        return this.tag.Contains(tag);
+    }
 }
 

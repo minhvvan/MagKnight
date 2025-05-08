@@ -27,4 +27,5 @@ public abstract class PatternDataSO : ScriptableObject
 
     public abstract bool CanUse(Transform executorTransform, Transform targetTransform);
     public abstract void Execute(Animator animator);
+    public abstract void UpdatePriority(Transform executorTransform, Transform targetTransform);
 }

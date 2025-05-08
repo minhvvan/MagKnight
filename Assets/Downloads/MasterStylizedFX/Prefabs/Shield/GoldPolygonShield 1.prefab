@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3093376378992080999}
   - component: {fileID: 4842960438121682786}
   m_Layer: 0
-  m_Name: GoldPolygonShield
+  m_Name: GoldPolygonShield 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4909,7 +4909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7987159147665452371
 Transform:
   m_ObjectHideFlags: 0
@@ -9806,7 +9806,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8424670706796071318
 Transform:
   m_ObjectHideFlags: 0
@@ -19533,7 +19533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2360136905108136119
 Transform:
   m_ObjectHideFlags: 0

@@ -14,6 +14,12 @@ public class SwingAttackPatternSO : PatternDataSO
     public override void Execute(Animator animator)
     {
         animator.SetTrigger("SwingAttack");
+        priority = 0;
+    }
+
+    public override void UpdatePriority(Transform executorTransform, Transform targetTransform)
+    {
+        priority += 1;
     }
 
     private bool TargetInRange(Transform executorTransform, Transform targetTransform)
