@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class Anchor : MagneticObject
 {
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         InitializeMagnetic();
     }
     

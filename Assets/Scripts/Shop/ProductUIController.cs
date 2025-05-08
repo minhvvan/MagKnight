@@ -4,36 +4,80 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class ProductUIController : MonoBehaviour, IBasePopupUIController
 {
+    [Header("Item Profile")]
     public Image   itemImage;
-    public TMP_Text itemCategory;
-    public TMP_Text itemRarity;
+    
+    [Header("UI Texts")]
+    //public TMP_Text itemCategory;
+    //public TMP_Text itemRarity;
     public TMP_Text itemNameAndUpgrade;
+    public TMP_Text itemSpec;
     public TMP_Text itemEffect;
-    public TMP_Text itemDescription;
+    public TMP_Text itemEffectSub;
+    //public TMP_Text itemDescription;
     public TMP_Text itemPrice;
     public TMP_Text inputInteract;
     public TMP_Text inputCancel;
     
+    [Header("UI HeadPanels")]
     public RectTransform contentRectTr;
+    public RectTransform itemFrameRectTr;
+    public float itemFrameHeightOrigin;
+    public float contentHeightOrigin;
+    public float itemFrameHeightOffset;
+    public float contentHeightOffset;
+    
+    [Header("UI ElementPanels")]
     public RectTransform itemEffectRectTr;
-    public GameObject inputGuidePanel;
-   
-    public Color32[] textColors;
+    public RectTransform itemEffectSubRectTr;
+    public RectTransform inputGuidePanel;
+    public RectTransform inputCancelPanel;
+    public float guidePanelWidthOrigin;
+    public float guidePanelWidthOffset;
 
+    [Header("UI Frame Inner Icon")]
+    public Image itemCategoryIcon;
+    public Sprite[] itemCategoryIcons;
+    
+    [Header("UI Frame")]
+    public Image itemFrameImage;
+    public Image backMenuImage;
+    public Image itemEffectBg;
+    public Image itemEffectBgSub;
+    public Image itemSpecBg;
+    public Image inputInteractBg;
+    public Image inputCancelBg;
+    
+    
+    [Header("UI Colors")]
+    public byte backColorAlpha;
+    public Color32[] textColors;
+    public Color32[] backColors;
+    public Color32[] panelColors;
+    
     private GameObject _uiItem;
     private Vector2 _startPosition;
     private RectTransform _rectTransform;
-    private CanvasScaler _canvasScaler;
+    private CanvasScaler  _canvasScaler;
     
     public void Initialized()
     {
         _rectTransform = GetComponent<RectTransform>();
         _startPosition = _rectTransform.anchoredPosition;
         _canvasScaler = GetComponentInParent<CanvasScaler>();
+        
+        contentHeightOrigin = contentRectTr.rect.height;
+        itemFrameHeightOrigin = itemFrameRectTr.rect.height;
+        guidePanelWidthOrigin = inputGuidePanel.rect.width;
+        
+        itemSpecBg.color = panelColors[4];
+        inputInteractBg.color = panelColors[3];
+        inputCancelBg.color = panelColors[4];
     }
     
     public void ShowUI()
@@ -44,7 +88,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     public void HideUI()
     {
         _rectTransform.anchoredPosition = _startPosition;
-        inputGuidePanel.SetActive(true);
+        inputGuidePanel.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
     
@@ -55,43 +99,61 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
 
         if (isProduct)
         {
-            inputInteract.text = "구매";
+            inputInteract.text = "구매(E)";
             inputCancel.text = "";
+            inputCancelPanel.gameObject.SetActive(false);
+            inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin - guidePanelWidthOffset, inputGuidePanel.rect.height);
         }
         else
         {
-            inputInteract.text = "습득";
-            inputCancel.text = "분해";
+            inputInteract.text = "습득(E)";
+            inputCancel.text = "분해(G)";
+            inputCancelPanel.gameObject.SetActive(true);
+            inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin, inputGuidePanel.rect.height);
         }
+        
+        //Effect 패널 배경색 초기화
+        itemEffectBg.color = panelColors[0];
+        itemEffectBgSub.color = panelColors[0];
         
         if (_uiItem.TryGetComponent(out ArtifactObject artifactObject))
         {
+            //아티팩트일 경우 극성 표시로 보이게 변경
+            itemEffectBg.color = panelColors[1];
+            itemEffectBgSub.color = panelColors[2];
+            
             itemImage.sprite = artifactObject.icon;
-            ConvertSortText(artifactObject.category);
-            ConvertSortText(artifactObject.rarity);
             itemNameAndUpgrade.text = $"{artifactObject.itemName}";
-            itemEffect.text = ConvertArtifactEffectToText(artifactObject.GetArtifactData());
-            itemDescription.text = artifactObject.itemDescription;
+            
+            ConvertSort(artifactObject.category);
+            ConvertSort(artifactObject.rarity);
+            itemSpec.text += artifactObject.itemDescription;
+            
+            (itemEffect.text, itemEffectSub.text) = ConvertArtifactEffectToText(artifactObject.GetArtifactData());
             itemPrice.text = artifactObject.scrapValue.ToString();
         }
         else if (_uiItem.TryGetComponent(out MagCore magCore))
         {
             itemImage.sprite = magCore.icon;
-            ConvertSortText(magCore.category);
-            ConvertSortText(magCore.rarity);
             itemNameAndUpgrade.text = $"+{magCore.currentUpgradeValue} {magCore.itemName}";
-            itemEffect.text = ConvertMagCoreEffectToText(magCore.GetMagCoreSO(), magCore.currentUpgradeValue);
-            itemDescription.text = magCore.itemDescription;
+            
+            ConvertSort(magCore.category);
+            ConvertSort(magCore.rarity);
+            itemSpec.text += magCore.itemDescription;
+            
+            (itemEffect.text, itemEffectSub.text) = ConvertMagCoreEffectToText(magCore.GetMagCoreSO(), magCore.currentUpgradeValue);
             itemPrice.text = magCore.scrapValue.ToString();
         }
         else if (_uiItem.TryGetComponent(out HealthPack healthPack))
         {
             itemImage.sprite = healthPack.icon;
-            ConvertSortText(healthPack.category);
-            ConvertSortText(healthPack.rarity);
             itemNameAndUpgrade.text = $"{healthPack.itemName}";
+            
+            ConvertSort(healthPack.category);
+            ConvertSort(healthPack.rarity);
+            itemSpec.text += healthPack.itemDescription;
+            
             itemEffect.text = $"체력을 {healthPack.healValue}회복합니다.";
-            itemDescription.text = healthPack.itemDescription;
             itemPrice.text = healthPack.scrapValue.ToString();
         }
         else
@@ -115,38 +177,46 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         float width = _rectTransform.rect.width * ratio;
         float height = _rectTransform.rect.height * ratio;
         
-        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width / 2, -slotHeight);
+        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width, -slotHeight/2);
         Vector2 pos = _rectTransform.position;
-        bool rightTruncated = pos.x + width > Screen.width;
+        bool rightTruncated = pos.x > Screen.width;
         
         if(rightTruncated)
-            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth - width / 2, -slotHeight);
+            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
         
-        inputGuidePanel.SetActive(false);
+        inputGuidePanel.gameObject.SetActive(false);
+        
         itemImage.sprite = artifactData.icon;
-        ConvertSortText(ItemCategory.Artifact);
-        ConvertSortText(artifactData.rarity);
         itemNameAndUpgrade.text = $"{artifactData.itemName}";
-        itemEffect.text = ConvertArtifactEffectToText(artifactData);
-        itemDescription.text = artifactData.description;
+        
+        ConvertSort(ItemCategory.Artifact);
+        ConvertSort(artifactData.rarity);
+        itemSpec.text += artifactData.description;
+        
+        (itemEffect.text, itemEffectSub.text) = ConvertArtifactEffectToText(artifactData);
         itemPrice.text = artifactData.scrapValue.ToString();
         ShowUI();
     }
     
-    private void ConvertSortText(Enum text)
+    private void ConvertSort(Enum text)
     {
+        //TODO: 텍스트 변환을 프레임 컬러 변환, 아이콘 변환으로 리팩토링 할 것.
+        
         if (text.GetType() == typeof(ItemCategory))
         {
             switch (text)
             {
                 case ItemCategory.Artifact:
-                    itemCategory.text = "[아티팩트]";
+                    itemSpec.text = "[아티팩트]";
+                    itemCategoryIcon.sprite = itemCategoryIcons[0];
                     return;
                 case ItemCategory.MagCore:
-                    itemCategory.text  = "[파츠]";
+                    itemSpec.text  = "[파츠]";
+                    itemCategoryIcon.sprite = itemCategoryIcons[1];
                     return;
                 case ItemCategory.HealthPack:
-                    itemCategory.text = "[회복]";
+                    itemSpec.text = "[회복]";
+                    itemCategoryIcon.sprite = itemCategoryIcons[2];
                     return;
             }
         }
@@ -155,24 +225,34 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             switch (text)
             {
                 case ItemRarity.Common:
-                    itemRarity.text = "[일반]";
-                    itemRarity.color = textColors[1];
+                    itemSpec.text += "[일반]\n";
+                    itemFrameImage.color = textColors[1];
+                    backColors[1].a = backColorAlpha;
+                    backMenuImage.color = backColors[1];
                     return;
                 case ItemRarity.Uncommon:
-                    itemRarity.text = "[특별]";
-                    itemRarity.color = textColors[2];
+                    itemSpec.text += "[특별]\n";
+                    itemFrameImage.color = textColors[2];
+                    backColors[2].a = backColorAlpha;
+                    backMenuImage.color = backColors[2];
                     return;
                 case ItemRarity.Rare:
-                    itemRarity.text = "[희귀]";
-                    itemRarity.color = textColors[3];
+                    itemSpec.text += "[희귀]\n";
+                    itemFrameImage.color = textColors[3];
+                    backColors[3].a = backColorAlpha;
+                    backMenuImage.color = backColors[3];
                     return;
                 case ItemRarity.Epic:
-                    itemRarity.text = "[서사]";
-                    itemRarity.color = textColors[4];
+                    itemSpec.text += "[서사]\n";
+                    itemFrameImage.color = textColors[4];
+                    backColors[4].a = backColorAlpha;
+                    backMenuImage.color = backColors[4];
                     return;
                 case ItemRarity.Legendary:
-                    itemRarity.text = "[전설]";
-                    itemRarity.color = textColors[5];
+                    itemSpec.text += "[전설]\n";
+                    itemFrameImage.color = textColors[5];
+                    backColors[5].a = backColorAlpha;
+                    backMenuImage.color = backColors[5];
                     return;
             }
         }
@@ -180,91 +260,100 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         Debug.Log("알맞는 변환 타입이 없습니다.");
     }
 
-    private string ConvertArtifactEffectToText(ArtifactDataSO artifactData)
+    private (string, string) ConvertArtifactEffectToText(ArtifactDataSO artifactData)
     {
-        string completeText = "";
+        //string completeText = "";
+        var dataNText = string.Empty;
+        var dataSText = string.Empty;
+        itemEffectSubRectTr.gameObject.SetActive(true);
+        
+        //프레임 크기 초기화.
+        itemFrameRectTr.sizeDelta = new Vector2(
+            itemFrameRectTr.rect.width, 
+            itemFrameHeightOrigin);
+        contentRectTr.sizeDelta = new Vector2(
+            contentRectTr.rect.width,
+            contentHeightOrigin);
+        
         switch (artifactData)
         {
             case PassiveArtifactDataSO passiveArtifactData:
-                var passiveDataNText = string.Empty;
-                var passiveDataSText = string.Empty;
                 
                 var passiveDataN = passiveArtifactData.N_passiveArtifacts;
                 foreach (var data in passiveDataN)
                 {
-                    passiveDataNText += ParsePassiveEffectData(data);
+                    dataNText += ParsePassiveEffectData(data);
                 }
                 var passiveDataS = passiveArtifactData.S_passiveArtifacts;
                 foreach (var data in passiveDataS)
                 {
-                    passiveDataSText += ParsePassiveEffectData(data);
+                    dataSText += ParsePassiveEffectData(data);
                 }
 
-                if (passiveDataNText == passiveDataSText)
+                if (dataNText == dataSText)
                 {
-                    completeText += "[단극 효과]\n";
-                    completeText += passiveDataNText;
+                    dataNText = $"[단극 효과]\n{dataNText}";
+                    dataSText = "";
+                    itemEffectSubRectTr.gameObject.SetActive(false);
+                    itemFrameRectTr.sizeDelta = new Vector2(
+                        itemFrameRectTr.rect.width, 
+                        itemFrameHeightOrigin - itemFrameHeightOffset);
+                    contentRectTr.sizeDelta = new Vector2(
+                        contentRectTr.rect.width,
+                        contentHeightOrigin - contentHeightOffset);
                 }
                 else
                 {
-                    completeText += "[N극 효과]\n";
-                    completeText += passiveDataNText;
-                    completeText += "\n[S극 효과]\n";
-                    completeText += passiveDataSText;
+                    dataNText = $"[N극 효과]\n{dataNText}";
+                    dataSText = $"[S극 효과]\n{dataSText}";
                 }
                 
-                return completeText;
+                return (dataNText, dataSText);
             case StatArtifactDataSO statArtifactData:
-                var statDataNText = string.Empty;
-                var statDataSText = string.Empty;
                 
                 var statDataN = statArtifactData.N_ArtifactEffect;
                 foreach (var data in statDataN)
                 {
-                    statDataNText += ParseGameplayEffect(data);
+                    dataNText += ParseGameplayEffect(data);
                 }
                 var statDataS = statArtifactData.S_ArtifactEffect;
                 foreach (var data in statDataS)
                 {
-                    statDataSText += ParseGameplayEffect(data);
+                    dataSText += ParseGameplayEffect(data);
                 }
                 
-                if (statDataNText == statDataSText)
+                if (dataNText == dataSText)
                 {
-                    completeText += "[단극 효과]\n";
-                    completeText += statDataNText;
+                    dataNText = $"[단극 효과]\n{dataNText}";
+                    dataSText = "";
+                    itemEffectSubRectTr.gameObject.SetActive(false);
+                    itemFrameRectTr.sizeDelta = new Vector2(
+                        itemFrameRectTr.rect.width, 
+                        itemFrameHeightOrigin - itemFrameHeightOffset);
+                    contentRectTr.sizeDelta = new Vector2(
+                        contentRectTr.rect.width,
+                        contentHeightOrigin - contentHeightOffset);
                 }
                 else
                 {
-                    completeText += "[N극 효과]\n";
-                    completeText += statDataNText;
-                    completeText += "\n[S극 효과]\n";
-                    completeText += statDataSText;
+                    dataNText = $"[N극 효과]\n{dataNText}";
+                    dataSText = $"[S극 효과]\n{dataSText}";
                 }
                 
-                return completeText;
+                return (dataNText, dataSText);
         }
 
-        return null;
+        return (null,null);
     }
     
-    private string ConvertMagCoreEffectToText(MagCoreSO magCoreData, int upgradeValue)
+    private (string, string) ConvertMagCoreEffectToText(MagCoreSO magCoreData, int upgradeValue)
     {
         var completeText = string.Empty;
-
-        completeText += "[파츠 고유 효과]\n";
-        var magCorePassiveEffects = magCoreData.passiveEffects;
-        foreach (var keyPair in magCorePassiveEffects)
-        {
-            if (keyPair.Key == upgradeValue)
-            {
-                foreach (var data in keyPair.Value)
-                {
-                    if (data == null) break;
-                    completeText += ParsePassiveEffectData(data);
-                }
-            }
-        }
+        var partsEffectText = string.Empty;
+        var magnetEffectText = string.Empty;
+        //itemSpec.text = "개별 능력치 없음.";
+        
+        partsEffectText += "[파츠 고유 효과]\n";
         var magCoreGameEffects = magCoreData.gameplayEffects;
         foreach (var keyPair in magCoreGameEffects)
         {
@@ -273,24 +362,25 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 foreach (var data in keyPair.Value)
                 {
                     if (data == null) break;
-                    completeText += ParseGameplayEffect(data);
+                    partsEffectText +=$"{ParseGameplayEffect(data)}\n";
                 }
             }
         }
-        
-        completeText += "\n[극성 전환 효과]\n";
-        var magnetPassiveEffects = magCoreData.magnetPassiveEffects;
-        foreach (var keyPair in magnetPassiveEffects)
+        var magCorePassiveEffects = magCoreData.passiveEffects;
+        foreach (var keyPair in magCorePassiveEffects)
         {
             if (keyPair.Key == upgradeValue)
             {
                 foreach (var data in keyPair.Value)
                 {
                     if (data == null) break;
-                    completeText += ParsePassiveEffectData(data);
+                    partsEffectText += ParsePassiveEffectData(data);
                 }
             }
         }
+        
+        
+        magnetEffectText += "[극성 전환 효과]\n";
         var magnetGameEffects = magCoreData.magnetGameplayEffects;
         foreach (var keyPair in magnetGameEffects)
         {
@@ -299,12 +389,25 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 foreach (var data in keyPair.Value)
                 {
                     if (data == null) break;
-                    completeText += ParseGameplayEffect(data);
+                    magnetEffectText += ParseGameplayEffect(data);
                 }
             }
         }
+        var magnetPassiveEffects = magCoreData.magnetPassiveEffects;
+        foreach (var keyPair in magnetPassiveEffects)
+        {
+            if (keyPair.Key == upgradeValue)
+            {
+                foreach (var data in keyPair.Value)
+                {
+                    if (data == null) break;
+                    magnetEffectText += ParsePassiveEffectData(data);
+                }
+            }
+        }
+       
         
-        return completeText;
+        return (partsEffectText, magnetEffectText);
     }
 
     private string ParsePassiveEffectData(PassiveEffectData data)
@@ -343,7 +446,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 completeText += $"공격 시 ";
                 break;
             case TriggerEventType.OnDeath:
-                completeText += $"사망 시 ";
+                completeText += $"죽음에 이르는 피해를 받으면 ";
                 break;
             case TriggerEventType.OnMagnetic:
                 completeText += $"자석능력 사용 시 ";
@@ -416,6 +519,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     private string ParseGameplayEffect(GameplayEffect data)
     {
         var completeText = string.Empty;
+        
         var effectType = data.effectType;
         var attributeType = data.attributeType;
         var amount = data.amount;
@@ -441,12 +545,15 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             if (duration > 0) completeText += $"{duration}초 동안 ";
         }
 
-        completeText += "라이언의 ";
+        //completeText += "라이언의 ";
 
         bool isPercent = false;
 
         completeText += AttributeTypeToText(attributeType).Item1;
         isPercent = AttributeTypeToText(attributeType).Item2;
+        
+        //끝에서 두글자 제거.
+        completeText = completeText.Substring(0, completeText.Length - 2);
 
         if (effectType == EffectType.Duration)
         {
@@ -454,11 +561,22 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         }
 
         string addText = string.Empty;
-        if (amount > 0) addText += "증가";
-        else if (amount < 0) addText += "감소";
+        if (effectType != EffectType.Duration)
+        {
+            if (amount > 0) addText += "+";
+            else if (amount < 0) addText += "-";
 
-        if(!isPercent) completeText += $"{amount} {addText}시킵니다.";
-        else if(isPercent) completeText += $"{amount*100f}% {addText}시킵니다.";
+            if(!isPercent) completeText += $" {addText}{amount}";
+            else if(isPercent) completeText += $" {addText}{amount*100f}%";
+        }
+        else
+        {
+            if (amount > 0) addText += "증가";
+            else if (amount < 0) addText += "감소";
+        
+            if(!isPercent) completeText += $"{amount} {addText}시킵니다.";
+            else if(isPercent) completeText += $"{amount*100f}% {addText}시킵니다.";
+        }
 
         return completeText;
     }

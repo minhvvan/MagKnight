@@ -220,43 +220,15 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
     private void HandleHit(RaycastHit hit, Vector3 prev, Vector3 current)
     {
         HitInfo hitInfo = new HitInfo(hit, prev, current);
-        //_debugHits.Add(hitInfo);
-        
-        Notify(hitInfo);
-        
-        //Debug.Shaker
-        HitEffect();
-        
-        
-        //*Temp Debug
-        // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+        Notify(hitInfo);        
     }
 
     private void HandleHit(Collider col, Vector3 prev, Vector3 current)
     {
-        HitInfo hitInfo = new HitInfo(col, prev, current);
-        //_debugHits.Add(hitInfo);
-        
-        Notify(hitInfo);
-        
-        //Debug.Shaker
-        HitEffect();
-        
-        //*Temp Debug
-        // hit.collider.GetComponentsInChildren<MeshRenderer>().ForEach(mr => mr.material.color = Color.red);
+        HitInfo hitInfo = new HitInfo(col, prev, current);          
+        Notify(hitInfo);      
     }
 
-    void HitEffect(){
-        //CameraShake.Shake(0.05f, 0.2f);
-        CinemachineImpulseController.GenerateImpulse();
-
-        //Critical Hit Effect
-        Time.timeScale = 0.1f;
-        UniTask.Delay(TimeSpan.FromMilliseconds(100f), DelayType.UnscaledDeltaTime).ContinueWith(() =>
-        {
-            Time.timeScale = 1;
-        });
-    }
 
     #if UNITY_EDITOR
     private void OnDrawGizmos()

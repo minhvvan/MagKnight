@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Managers;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
+[RequireComponent(typeof(Effector))]
 public class MagneticObject : MonoBehaviour, IMagnetic
 {
     public MagneticType magneticType; //오브젝트의 극 (N,S)
@@ -13,6 +16,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public float objectMass; //오브젝트 중량
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
+    public bool isMagneticHighlight = true;
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
@@ -20,6 +24,13 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public IMagneticInteractCommand magnetDashJumpAction;
     public IMagneticInteractCommand magnetSwingAction;
     
+    public Effector Effector { get; protected set; }
+
+    protected virtual void Awake()
+    {
+        Effector = GetComponent<Effector>();
+    }
+
     public virtual void InitializeMagnetic()
     {
         //기본 데이터 세팅
@@ -28,8 +39,14 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         //자기력 상호작용
         SetMagneticInteract();
+        
+        //Highlight Binding
+        if (isMagneticHighlight)
+        {
+            BindMagneticHighlight();
+        }
     }
-    
+
     public virtual void SetPhysic()
     {
         magneticType = magneticObjectSO.magneticType = magneticObjectSO != null ? magneticObjectSO.magneticType : MagneticType.N;
@@ -51,6 +68,19 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         magnetDashAttackAction = MagneticInteractFactory.GetInteract<MagnetDashAttackAction>();
         magnetDashJumpAction = MagneticInteractFactory.GetInteract<MagnetDashJumpAction>();
         magnetSwingAction = MagneticInteractFactory.GetInteract<MagnetSwingAction>();
+    }
+    
+    private void BindMagneticHighlight()
+    {
+        //MagneticHighlightController 찾아서 renderer묶어주기
+        var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
+        magneticHighlighter.BindRenderer(gameObject, magneticType);
+    }
+
+    private void UnbindMagneticHighlight()
+    {
+        var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
+        magneticHighlighter.UnbindRenderer(gameObject, magneticType);
     }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)

@@ -40,6 +40,7 @@ namespace Moon
         private LockOnSystem _lockOnSystem;
         private ArtifactInventory _artifactInventory;
         private PlayerMagnetActionController _playerMagnetActionController;
+        private Effector _effect;
         #endregion
             
         #region Property
@@ -152,6 +153,7 @@ namespace Moon
             _interactionController = GetComponentInChildren<InteractionController>();
             _artifactInventory = GetComponentInChildren<ArtifactInventory>();
             _playerMagnetActionController = GetComponent<PlayerMagnetActionController>();
+            _effect = GetComponentInChildren<Effector>();
 
             if(SceneManager.GetActiveScene().name.StartsWith("Prototype"))
             {
@@ -162,7 +164,7 @@ namespace Moon
                 
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
-            _inputHandler.SwitchMangeticInput = SwitchMagneticInput;
+            _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
         }
         
         //명시적 초기화
@@ -233,11 +235,13 @@ namespace Moon
             }
             
             //HUD 생성 및 바인딩
-            var hud = Instantiate(hudPrefab);
-            if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
-            {
-                inGameUIController.BindAttributeChanges(_abilitySystem);
-            }
+            // var hud = Instantiate(hudPrefab);
+            // if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
+            // {
+            //     inGameUIController.BindAttributeChanges(_abilitySystem);
+            // }
+            UIManager.Instance.inGameUIController.UnbindAttributeChanges();
+            UIManager.Instance.inGameUIController.BindAttributeChanges(_abilitySystem);
             _magneticController.InitializeMagnetic();
         }
         
@@ -949,12 +953,18 @@ namespace Moon
         {
             if (_magneticController != null)
             {
+                //*임시 -> 변경 필요
+                GameManager.Instance.OnMagneticPressed?.Invoke();
+                
                 _magneticController.OnPressEnter();
             }
         }
         void MagneticRelease(bool inputValue)
         {
             if (_magneticController == null) return;
+            //*임시 -> 변경 필요
+            GameManager.Instance.OnMagneticReleased?.Invoke();
+            
             if(inputValue) _magneticController.OnLongRelease().Forget(); 
             else _magneticController.OnShortRelease().Forget();
         }
@@ -990,6 +1000,8 @@ namespace Moon
             if (_magneticController == null) return;
             var magneticType = _magneticController.GetMagneticType();
             _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
+
+            _effect.SwitchPolarity(magneticType, .5f);
         }
 
         public void UpgradeParts()
@@ -1095,14 +1107,16 @@ namespace Moon
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
-        public float GetAttackDamage(float damageMultiplier = 1f)
+        public (float, bool) GetAttackDamage(float damageMultiplier = 1f)
         {
+            bool isCritical = false;
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
             if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
             {
                 damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
+                isCritical = true;
             }
-            return damage * damageMultiplier;
+            return (damage * damageMultiplier, isCritical);
         }
 
         public void OnKnockDown()

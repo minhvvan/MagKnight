@@ -10,20 +10,29 @@ public class EnemyStateSpawn : BaseState<Enemy>
     // target 확정
     
     private EnemyBlackboard _blackboard;
+    private Effector _effector;
+    
+    private bool _isSpawnEffectEnded = false;
     
     public EnemyStateSpawn(Enemy controller) : base(controller)
     {
         _blackboard = controller.blackboard;
+        _effector = controller.Effector;
     }
 
     public override void Enter()
     {
         _controller.Anim.SetBool("Spawn", true);
+        
+        _effector.Phase(2f, ()=>
+        {
+            _isSpawnEffectEnded = true;
+        });
     }
 
     public override void UpdateState()
     {
-        if (_controller.IsCurrentAnimFinished("Spawn"))
+        if (_controller.IsCurrentAnimFinished("Spawn") && _isSpawnEffectEnded)
         {
             _controller.SetState(_controller.aiState);
         }

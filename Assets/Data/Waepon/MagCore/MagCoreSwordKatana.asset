@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
   itemName: Katana_Normal
-  description: "\uCE74\uD0C0\uB098 \uAE30\uBCF8\uD615. - \uC18D\uB3C4 \uCE7C\uB0A0"
+  description: "\uBBFC\uC218\uC6A9\uC73C\uB85C \uD754\uD558\uAC8C \uD314\uB9AC\uB294
+    \uCE74\uD0C0\uB098\uB2E4. \uAC00\uC18D\uACC4 \uCF54\uC5B4\uAC00 \uD29C\uB2DD\uB418\uC5B4
+    \uC788\uB2E4."
   scrapValue: 35
   maxUpgradeLevel: 3
   weaponType: 1
@@ -69,11 +71,32 @@ MonoBehaviour:
   gameplayEffects:
     _serializedList:
     - Key: 0
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 20
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
     - Key: 1
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 30
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
     - Key: 2
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 45
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
   magnetEffectDuration: 5
   magnetPassiveEffects:
     _serializedList:

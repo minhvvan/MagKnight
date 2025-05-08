@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 70e92df91699f664ab5bad7bf4723022, type: 3}
   itemName: "\uC544\uD2F0\uD329\uD2B8 0"
+  description: "\uBCF4\uC11D\uC774 \uBE5B\uB098\uB294 \uC21C\uAC04 \uADF8 \uC601\uB871\uD568\uC774
+    \uC0DD\uBA85\uACFC \uB9DE\uBC14\uAFB8\uC5B4\uC9C8\uC9C0\uB2C8."
   scrapValue: 100
   itemID: 0
+  rarity: 0
   N_passiveArtifacts:
   - triggerChance: 1
     triggerEvent: 3

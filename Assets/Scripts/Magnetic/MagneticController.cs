@@ -80,8 +80,6 @@ public class MagneticController : MagneticObject
 
     private void FixedUpdate()
     {
-        
-        
         //자석 능력 길게 키 입력 시
         if (_isPressMagnetic)
         {
@@ -151,7 +149,7 @@ public class MagneticController : MagneticObject
     public void OnPressEnter()
     {
         if(_magneticUIController == null) return;
-
+        
         _isShortRelease = true;
         //입력 유지 시 할 로직
         
@@ -269,7 +267,11 @@ public class MagneticController : MagneticObject
 
         ArtifactInventory inventory = GetComponent<ArtifactInventory>();
         if (inventory != null)
+        {   
             inventory.ConvertArtifact();
+            UIManager.Instance.popupUIController.artifactInventoryUIController.SetSlotColor(magneticType);
+            UIManager.Instance.popupUIController.playerDetailUIController.UpdateUI();
+        }
     }
 
     #endregion

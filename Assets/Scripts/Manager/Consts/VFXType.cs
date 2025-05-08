@@ -17,7 +17,13 @@ public enum VFXType
     DODGE_DUST,
     JUMP_DUST,
     BOMB_EXPLODE,
-    MAGNETIC_SHIELD_N,
-    MAGNETIC_SHIELD_S,
-    MAGNETIC_PULLING
+}
+
+public enum DAMAGEType
+{
+    NONE,
+    NORMAL,
+    CRITICAL,
+    POISON,
+    MAGNETIC,
 }

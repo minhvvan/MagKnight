@@ -116,7 +116,7 @@ namespace Moon
             }
         }
         
-        public Action SwitchMangeticInput;
+        public Action SwitchMagneticInput;
         public Action magneticInput;
         public Action<bool> magneticOutput;
 
@@ -386,7 +386,7 @@ namespace Moon
         void PressSwitchMagneticInput(InputAction.CallbackContext context)
         {
             _switchMangetic = true;
-            SwitchMangeticInput?.Invoke();
+            SwitchMagneticInput?.Invoke();
         }
 
         void ReleaseSwitchMagneticInput(InputAction.CallbackContext context)
@@ -402,15 +402,19 @@ namespace Moon
 
         private void PressPauseInput(InputAction.CallbackContext ctx)
         {
-            var currentGameState = GameManager.Instance.CurrentGameState;
-            if (currentGameState != GameState.Pause)
-            {
-                GameManager.Instance.ChangeGameState(GameState.Pause);
-            }
-            else
-            {
-                GameManager.Instance.RecoverPreviousState();
-            }
+            //GameManager.Instance.ChangeGameState(GameState.Pause);
+
+            // var currentGameState = GameManager.Instance.CurrentGameState;
+            // if (currentGameState != GameState.Pause)
+            // {
+            //     GameManager.Instance.ChangeGameState(GameState.Pause);
+            // }
+            // else
+            // {
+            //     GameManager.Instance.RecoverPreviousState();
+            // }
+
+            UIManager.Instance.ShowPauseMenuUI();
         }
 
         void PressSkillInput(InputAction.CallbackContext ctx)

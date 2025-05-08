@@ -15,12 +15,24 @@ namespace Moon
         [SerializeField] public PlayerDetailUIController playerDetailUIController;
         [SerializeField] public UpgradeStatUIController upgradeStatUIController;
         [SerializeField] public ProductUIController productUIController;
+        [SerializeField] public ClearUIController clearUIController;
         
         void OnEnable()
         {
             UIManager.Instance.SetPopupUIController(this);
             artifactInventoryUIController.Initialized();
             productUIController.Initialized();
+        }
+
+        public void HideAllPopupAvailableUI()
+        {
+            pauseMenuUIController.HideUI();
+            optionUIController.HideUI();
+            confirmPopupUIController.HideUI();
+            artifactInventoryUIController.HideUI();
+            playerDetailUIController.HideUI();
+            upgradeStatUIController.HideUI();
+            productUIController.HideUI();
         }
     }
 }
