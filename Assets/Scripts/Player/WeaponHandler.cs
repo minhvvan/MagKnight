@@ -217,10 +217,10 @@ public class WeaponHandler : MonoBehaviour
         Instantiate(skillObj, transform.position, transform.rotation);
         VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
     }
-    
-    public void CreateProjectile(GameObject prefab)
+
+    public void CreateProjectile(int projectileLaunchMode)
     {
-        Projectile projectile = _currentWeapon.CreateProjectile(prefab);
+        Projectile projectile = _currentWeapon.CreateProjectile(projectileLaunchMode);
         projectile.OnHit += OnHitAction;
     }
 }

@@ -1049,7 +1049,7 @@ ModelImporter:
       events:
       - time: 0.073989466
         functionName: AttackStart
-        data: 
+        data: repeat
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1

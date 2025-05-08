@@ -5,6 +5,8 @@ using Random = UnityEngine.Random;
 
 public class Katana: BaseWeapon
 {
+    [SerializeField] private GameObject slashVFXPrefab;
+    [SerializeField] private GameObject vfxSocket;
     [SerializeField] int skillIndex;
     WeaponTrail _weaponTrail;
 
@@ -17,11 +19,12 @@ public class Katana: BaseWeapon
     public override void AttackStart(int hitboxGroupId)
     {
         base.AttackStart(hitboxGroupId);
-        //TODO: FX
-        if(_weaponTrail != null)
-        {
-            _weaponTrail.EnableTrail(true);
-        }
+        // if(_weaponTrail != null)
+        // {
+        //     _weaponTrail.EnableTrail(true);
+        // }
+
+        VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
         
         //SFX 재생
         var sfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Swing);
@@ -32,10 +35,10 @@ public class Katana: BaseWeapon
     {
         base.AttackEnd(hitboxGroupId);
         
-        if(_weaponTrail != null)
-        {
-            _weaponTrail.EnableTrail(false);
-        }
+        // if(_weaponTrail != null)
+        // {
+        //     _weaponTrail.EnableTrail(false);
+        // }
     }
 
     public override int OnSkill()
