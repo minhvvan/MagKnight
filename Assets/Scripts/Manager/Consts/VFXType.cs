@@ -23,6 +23,7 @@ public enum VFXType
     MAGNETIC_SHIELD_S,
     MAGNETIC_PULLING,
     PARRY,
+    CHARGING_ARCHER_SKILL,
 }
 
 public enum DAMAGEType

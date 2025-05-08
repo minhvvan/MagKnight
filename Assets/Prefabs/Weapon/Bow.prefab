@@ -148,11 +148,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _hitEffectPrefab: {fileID: 1148662896666887476, guid: 7a8f196261a8d544f8777e57dcd829de,
     type: 3}
-  skillIndex: 0
+  skillIndex: 1
   _layerMask:
     serializedVersion: 2
     m_Bits: 3200
-  _arrowPrefab: {fileID: 0}
   muzzleVFXPrefab: {fileID: 7108894507963267686}
   vfxMuzzle: {fileID: 228232140373070545}
   projectilePrefab: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,

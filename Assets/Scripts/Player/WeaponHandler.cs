@@ -3,6 +3,7 @@ using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
+using Moon;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -171,6 +172,13 @@ public class WeaponHandler : MonoBehaviour
 		    Debug.Log("CurrentWeapon is null");
             return;
         }
+
+        if (CurrentWeaponType == WeaponType.Bow)
+        {
+            var controller = GetComponent<PlayerController>();
+            controller.SetForceRotationToAim();
+        }
+
         UseSkill(_currentWeapon.OnSkill());
     }
 
@@ -222,13 +230,28 @@ public class WeaponHandler : MonoBehaviour
     
     public void SpawnSkillEffect(GameObject skillObj)
     {
-        Instantiate(skillObj, transform.position, transform.rotation);
-        VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
+        if(CurrentWeaponType == WeaponType.Bow)
+        {
+            Instantiate(skillObj, _currentWeapon.transform.position, transform.rotation);
+            var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.ArrowE);
+            AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        }
+        else
+        {
+            Instantiate(skillObj, transform.position, transform.rotation);
+        }
     }
 
     public void CreateProjectile(int projectileLaunchMode)
     {
         Projectile projectile = _currentWeapon.CreateProjectile(projectileLaunchMode);
         projectile.OnHit += OnHitAction;
+    }
+
+    public void StartCharging()
+    {
+        VFXManager.Instance.TriggerVFX(VFXType.CHARGING_ARCHER_SKILL, _currentWeapon.transform.position, _currentWeapon.transform.rotation);
+        var bowStretchSFX = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.BowStretch);
+        AudioManager.Instance.PlaySFX(bowStretchSFX);
     }
 }
