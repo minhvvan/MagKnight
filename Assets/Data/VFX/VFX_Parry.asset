@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7a670993fd74c9ea5efd930c3aba27, type: 3}
   m_Name: VFX_Parry
   m_EditorClassIdentifier: 
-  vfxType: 13
-  vfxPrefab: {fileID: 4186470608034871016, guid: ab5b12de25fdd46419063ddb789569d3,
+  vfxType: 18
+  vfxPrefab: {fileID: 5488793821149183516, guid: dbf3f6d46cd12584e9b77d878e982179,
     type: 3}
   poolSize: 1
   duration: 1
-  size: {x: 1, y: 1, z: 1}
+  size: {x: 15, y: 15, z: 15}
