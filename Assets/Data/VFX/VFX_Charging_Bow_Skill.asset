@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7a670993fd74c9ea5efd930c3aba27, type: 3}
   m_Name: VFX_Charging_Bow_Skill
   m_EditorClassIdentifier: 
-  vfxType: 18
+  vfxType: 19
   vfxPrefab: {fileID: 5732568103209889489, guid: ca4f8a030f56aef4bb98c3d4dae13117,
     type: 3}
   poolSize: 1
