@@ -5,8 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MagneticShield", menuName = "SO/Enemy/Pattern/MagneticShield")]
 public class MagneticShieldPatternSO : PatternDataSO
 {
-    RaycastHit[] hits = new RaycastHit[1];
-    
     public override bool CanUse(Transform executorTransform, Transform targetTransform)
     {
         return true;
@@ -15,5 +13,11 @@ public class MagneticShieldPatternSO : PatternDataSO
     public override void Execute(Animator animator)
     {
         animator.SetTrigger("MagneticShield");
+        priority = 0;
+    }
+
+    public override void UpdatePriority(Transform executorTransform, Transform targetTransform)
+    {
+        priority += 1;
     }
 }

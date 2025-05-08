@@ -55,7 +55,9 @@ namespace Moon
         void AttackEnd(Animator animator)
         {
             PlayerController controller = animator.GetComponent<PlayerController>();
-            controller?.MeleeAttackEnd();
+            //controller?.MeleeAttackEnd();
+            controller?.WeaponHandler.AttackEnd(0);
+            controller?.WeaponHandler.AttackEnd(1);
         }
     } 
 }

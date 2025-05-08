@@ -9,7 +9,7 @@ using UnityEngine;
 public enum WeaponType
 {
     None = 0,
-    SwordKatana = 1,
+    GreatSword = 1,
     Bow = 2,
 }
 

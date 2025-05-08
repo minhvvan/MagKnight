@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 346f720e7f5994b87a1229dcc02f12c3, type: 3}
+  m_Name: UpgradeStatNPCData
+  m_EditorClassIdentifier: 
+  npcName: "\uC2A4\uD0EFU.P.T"
+  npcDescription: "\uBCA0\uC774\uC2A4 \uCEA0\uD504\uC5D0\uC11C \uC2A4\uD0EF \uAC15\uD654"
+  dialogueData:
+  - {fileID: 11400000, guid: cfcb4243038e7034fbaf081f0b8c1519, type: 2}
+  npcType: 0

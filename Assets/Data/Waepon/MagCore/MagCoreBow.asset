@@ -14,17 +14,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 0}
   itemName: Bow
-  description: 
-  scrapValue: 0
-  maxUpgradeLevel: 0
+  description: "\uAD6C\uC2DC\uB300\uC758 \uC0B0\uBB3C\uC774\uC9C0\uB9CC \uC5EC\uC804\uD788
+    \uC704\uD611\uC801\uC778 \uC7A5\uBE44\uB2E4."
+  scrapValue: 25
+  maxUpgradeLevel: 3
   weaponType: 2
-  partsType: 0
+  partsType: 1
   passiveEffects:
-    _serializedList: []
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
   gameplayEffects:
-    _serializedList: []
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
   magnetEffectDuration: 0
   magnetPassiveEffects:
-    _serializedList: []
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []
   magnetGameplayEffects:
-    _serializedList: []
+    _serializedList:
+    - Key: 0
+      Value: []
+    - Key: 1
+      Value: []
+    - Key: 2
+      Value: []

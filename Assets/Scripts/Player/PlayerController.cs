@@ -256,11 +256,13 @@ namespace Moon
             }
             
             //HUD 생성 및 바인딩
-            var hud = Instantiate(hudPrefab);
-            if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
-            {
-                inGameUIController.BindAttributeChanges(_abilitySystem);
-            }
+            // var hud = Instantiate(hudPrefab);
+            // if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
+            // {
+            //     inGameUIController.BindAttributeChanges(_abilitySystem);
+            // }
+            UIManager.Instance.inGameUIController.UnbindAttributeChanges();
+            UIManager.Instance.inGameUIController.BindAttributeChanges(_abilitySystem);
             _magneticController.InitializeMagnetic();
         }
         
@@ -1152,14 +1154,16 @@ namespace Moon
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
-        public float GetAttackDamage(float damageMultiplier = 1f)
+        public (float, bool) GetAttackDamage(float damageMultiplier = 1f)
         {
+            bool isCritical = false;
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
             if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
             {
                 damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
+                isCritical = true;
             }
-            return damage * damageMultiplier;
+            return (damage * damageMultiplier, isCritical);
         }
 
         IEnumerator CloseParryWindow()

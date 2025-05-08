@@ -93,6 +93,11 @@ public class Attribute
     {
         ChangeAction += action;
     }
+
+    public void UnsubscribeChangeAction(Action<float> action)
+    {
+        ChangeAction -= action;
+    }
 }
 
 

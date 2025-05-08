@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using hvvan;
+using Jun;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,7 +16,8 @@ public class Boss : Enemy
     public PatternController patternController;
     
     private GameObject _bomb;
-    private CancellationTokenSource buffCancellationToken;
+    private CancellationTokenSource _buffCancellationToken;
+    private CancellationTokenSource _missileCancellationToken;
     
     public override void OnPhaseChange(int phase)
     {
@@ -47,11 +50,6 @@ public class Boss : Enemy
     public void PatternAttackStart(int patternIndex)
     {
         patternController.AttackStart(patternIndex);
-        if (patternIndex == 0)
-        {
-            // Quaternion rotation = Quaternion.LookRotation(casterPos - targetPos);
-            VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, bossBlackboard.rightHandTransform.position, Quaternion.identity, size: new Vector3(3,3,3));
-        }
     }
 
     public void PatternAttackEnd(int patternIndex)
@@ -79,32 +77,34 @@ public class Boss : Enemy
     public void MagneticBarrier()
     {
         SwitchMagneticType();
+        Vector3 barrierPos = new Vector3(0,1.8f,0);
         if (magneticType == MagneticType.N)
         {
             bossBlackboard.abilitySystem.SetTag("BarrierN");
-            CheckBuffEndTime("BarrierN");
-            Debug.Log("N activated");
+            GameObject vfxObject = VFXManager.Instance.TriggerVFX(VFXType.MAGNETIC_SHIELD_N, transform, barrierPos, Quaternion.identity, returnAutomatically:false);
+            CheckBuffEndTime("BarrierN", VFXType.MAGNETIC_SHIELD_N, vfxObject).Forget();
         }
         else if (magneticType == MagneticType.S)
         {
             bossBlackboard.abilitySystem.SetTag("BarrierS");
-            CheckBuffEndTime("BarrierS");
-            Debug.Log("S activated");
+            GameObject vfxObject = VFXManager.Instance.TriggerVFX(VFXType.MAGNETIC_SHIELD_S, transform, barrierPos, Quaternion.identity, returnAutomatically:false);
+            CheckBuffEndTime("BarrierS", VFXType.MAGNETIC_SHIELD_S, vfxObject).Forget();
         }
     }
 
-    private async UniTask CheckBuffEndTime(string tag)
+    private async UniTask CheckBuffEndTime(string tag, VFXType type, GameObject vfxObject)
     {
-        buffCancellationToken = new CancellationTokenSource();
-        float remainingTime = 20f;
+        _buffCancellationToken = new CancellationTokenSource();
+        float remainingTime = 10f;
 
         try
         {
             while (remainingTime > 0f)
             {
-                await UniTask.Yield(buffCancellationToken.Token);
+                await UniTask.Yield(_buffCancellationToken.Token);
                 remainingTime -= Time.deltaTime;
             }
+            VFXManager.Instance.ReturnVFX(type, vfxObject);
             bossBlackboard.abilitySystem.DeleteTag(tag);
         }
         catch(OperationCanceledException){}
@@ -112,8 +112,56 @@ public class Boss : Enemy
 
     public void MagneticPulling()
     {
+        VFXManager.Instance.TriggerVFX(VFXType.MAGNETIC_PULLING, transform.position, Quaternion.identity, returnAutomatically:true);
+        if (GameManager.Instance.Player.AbilitySystem.HasTag("SuperArmor") ||
+            GameManager.Instance.Player.AbilitySystem.HasTag("Invincibility"))
+        {
+            return;
+        }
         MagneticController targetMC = bossBlackboard.target.GetComponent<MagneticController>();
-        IMagneticInteractCommand magnetPullAction = MagneticInteractFactory.GetInteract<MagnetDashAttackAction>();
-        magnetPullAction.Execute(this, targetMC);
+        gameObject.GetComponent<EnemyMagnetActionController>().StartMagneticPull(targetMC);
+        Anim.SetTrigger("PullSucceed");
+    }
+
+    public void Missile(GameObject missileEffect)
+    {
+        float duration = 1.5f;
+        
+        _missileCancellationToken = new CancellationTokenSource();
+        GameObject effect = Instantiate(missileEffect, blackboard.target.transform.position, Quaternion.identity);
+        AttackEffect attackEffect = effect.GetComponent<AttackEffect>();
+        attackEffect.GetAbilitySystem(blackboard.abilitySystem);
+        
+        ParticleSystem warningParticleSystem = effect.GetComponent<ParticleSystem>();
+        var main = warningParticleSystem.main;
+        main.startLifetime = 6f;
+
+        
+        MissileHelper(effect, duration).Forget();
+    }
+
+    public async UniTask MissileHelper(GameObject effect, float duration)
+    {
+        GameObject fallingMissileEffect = effect.transform.GetChild(0).gameObject;
+        try
+        {
+            while (duration > 0)
+            {
+                await UniTask.Yield(_missileCancellationToken.Token);
+                duration -= Time.deltaTime;
+            }
+
+            fallingMissileEffect.SetActive(true);
+        }
+        catch (OperationCanceledException){ }
+    }
+
+    protected void OnDestroy()
+    {
+        base.OnDestroy();
+        _buffCancellationToken?.Cancel();
+        _buffCancellationToken?.Dispose();
+        _missileCancellationToken?.Cancel();
+        _missileCancellationToken?.Dispose();
     }
 }

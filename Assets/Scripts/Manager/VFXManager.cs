@@ -1,7 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using DamageNumbersPro;
 using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class VFXManager : Singleton<VFXManager>
     Dictionary<VFXType, Queue<GameObject>> vfxPools = new Dictionary<VFXType, Queue<GameObject>>();
     Dictionary<VFXType, VFXDataSO> vfxDataSOs = new Dictionary<VFXType, VFXDataSO>();
     
+    [SerializeField] SerializedDictionary<DAMAGEType, DamageNumber> damageNumberPrefabs;
+
     public bool IsInitialized { get; private set; }
     
     private async void Start()
@@ -111,7 +114,22 @@ public class VFXManager : Singleton<VFXManager>
         return vfxObject;
     }
     
+    public void TriggerVFX(GameObject particlePrefab, Vector3 position, Quaternion rotation = default, Vector3 size = default, bool returnAutomatically = true)
+    {
+        GameObject particleInstance = Instantiate(particlePrefab);
+        particleInstance.transform.SetPositionAndRotation(position, rotation);
+    
+        if (size != default)
+        {
+            particleInstance.transform.localScale = size;
+        }
 
+        if (returnAutomatically)
+        {
+            UniTask.Void(async () => await WaitUntilParticleEnd(particleInstance));
+        }
+    }
+    
     private GameObject DequeueVFX(VFXType vfxType)
     {
         if (!vfxPools.ContainsKey(vfxType))
@@ -143,5 +161,32 @@ public class VFXManager : Singleton<VFXManager>
         vfxObject.transform.SetParent(Instance.transform);
         vfxObject.SetActive(false);
         vfxPools[vfxType].Enqueue(vfxObject);
+    }
+
+    public void TriggerDamageNumber(Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.NORMAL)
+    {
+        DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
+
+        damageNumberPrefab.Spawn(position, damage);
+    }
+
+    private async UniTask WaitUntilParticleEnd(GameObject vfxObject)
+    {
+        var particle = vfxObject.GetComponent<ParticleSystem>();
+        particle.Play();
+        
+        while (particle != null && vfxObject != null && particle.isPlaying)
+        {
+            await UniTask.Yield();
+        }
+        
+        // 게임 플레이 모드인지 에디터 모드인지에 따라 Destroy
+        if (vfxObject != null)
+        {
+            if (Application.isPlaying)
+                Destroy(vfxObject);
+            else
+                DestroyImmediate(vfxObject);
+        }
     }
 }

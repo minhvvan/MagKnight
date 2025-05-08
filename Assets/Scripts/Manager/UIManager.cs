@@ -14,12 +14,24 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] public InGameUIController inGameUIController;
     [SerializeField] public PopupUIController popupUIController;
 
+    protected override void Initialize()
+    {
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            ShowArtifactInventoryUI(null);
+            ShowArtifactInventoryUI();
             ShowPlayerDetailUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(popupUIController != null)
+            {
+                popupUIController.HideAllPopupAvailableUI();
+            }
         }
     }
 
@@ -28,10 +40,10 @@ public class UIManager : Singleton<UIManager>
         this.inGameUIController = inGameUIController;
     }
 
-    public void ReleaseInGameUIController()
-    {
-        inGameUIController = null;
-    }
+    // public void ReleaseInGameUIController()
+    // {
+    //     inGameUIController = null;
+    // }
 
     public void SetPopupUIController(PopupUIController popupUIController)
     {
@@ -71,9 +83,9 @@ public class UIManager : Singleton<UIManager>
         popupUIController.optionUIController.ShowUI();
     }
 
-    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO)
+    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO = null)
     {
-        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
+        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO ? artifactDataSO : null);
         ShowPlayerDetailUI();
         EnableCursor();
     }
@@ -81,6 +93,12 @@ public class UIManager : Singleton<UIManager>
     public void ShowGameOverUI()
     {
         popupUIController.gameOverUIController.ShowUI();
+        EnableCursor();
+    }
+
+    public void ShowClearUI()
+    {
+        popupUIController.clearUIController.ShowUI();
         EnableCursor();
     }
 

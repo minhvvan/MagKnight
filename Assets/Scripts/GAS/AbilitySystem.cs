@@ -284,5 +284,10 @@ public class AbilitySystem : MonoBehaviour
     {
         Attributes.ClearTag();
     }
+
+    public bool HasTag(string tag)
+    {
+        return Attributes.HasTag(tag);
+    }
 }
 

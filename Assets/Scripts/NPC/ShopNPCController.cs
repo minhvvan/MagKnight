@@ -31,6 +31,11 @@ public class ShopNPCController : BaseNPCController
                 Quaternion.identity, createPoints[i]);
             caseObj.transform.forward = transform.forward;
             var productCase = caseObj.GetComponent<ProductCase>();
+            if(productCase == null)
+            {
+                Debug.LogError("ProductCase component not found on the prefab.");
+                continue;
+            }
             //아티팩트
             if (i >= 0 && i <= 2)
             {

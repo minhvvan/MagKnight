@@ -14,8 +14,10 @@ public static class Constants
     public const string PlayerData = "PlayerData";
     public const string CurrentRun = "CurrentRunData";
     
-    public const string BGMVolume = "BGMVolume";
-    public const string SFXVolume = "SFXVolume";
+
+    public const string MasterVolume = "Master";
+    public const string BGMVolume = "BGM";
+    public const string SFXVolume = "SFX";
     public const string BGMMute = "BGMMute";
     public const string SFXMute = "SFXMute";
 

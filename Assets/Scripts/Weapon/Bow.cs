@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public class Bow : BaseWeapon
@@ -9,7 +10,9 @@ public class Bow : BaseWeapon
     [SerializeField] GameObject _hitEffectPrefab;
     [SerializeField] int skillIndex;
     [SerializeField] LayerMask _layerMask;
-    [SerializeField] GameObject _arrowPrefab;
+    [SerializeField] GameObject muzzleVFXPrefab;
+    [SerializeField] GameObject vfxMuzzle;
+    [SerializeField] GameObject projectilePrefab;
 
     private Camera _mainCamera;
     private float _rayDistance = 100f;
@@ -27,18 +30,28 @@ public class Bow : BaseWeapon
         
     }
 
-    public override Projectile CreateProjectile(GameObject projectilePrefab)
+    public override Projectile CreateProjectile(int projectileLaunchMode = 0)
     {
-        Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
-
         ProjectileLaunchData projectileLaunchData;
-        if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask))
+        
+        if (projectileLaunchMode == 1)
         {
-            projectileLaunchData = new ProjectileLaunchData(hit.point, true);
+            var launchDirection = transform.forward - transform.up;
+            
+            projectileLaunchData = new ProjectileLaunchData(launchDirection);
         }
         else
         {
-            projectileLaunchData = new ProjectileLaunchData(ray.direction);
+            Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _rayDistance, _layerMask))
+            {
+                projectileLaunchData = new ProjectileLaunchData(hit.point, true);
+            }
+            else
+            {
+                projectileLaunchData = new ProjectileLaunchData(ray.direction);
+            }
         }
         
         Quaternion rotation = Quaternion.LookRotation(transform.forward, transform.up);
@@ -49,6 +62,12 @@ public class Bow : BaseWeapon
         var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Arrow);
         AudioManager.Instance.PlaySFX(bowSfxRandomClip);
         AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        
+        //VFX 재생
+        if (muzzleVFXPrefab)
+        {
+            VFXManager.Instance.TriggerVFX(muzzleVFXPrefab, vfxMuzzle.transform.position);
+        }
         
         return projectile;
     }

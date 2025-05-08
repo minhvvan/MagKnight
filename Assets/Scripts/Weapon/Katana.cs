@@ -1,12 +1,17 @@
 ﻿
 using System;
+using hvvan;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Katana: BaseWeapon
 {
+    [SerializeField] private GameObject slashVFXPrefab;
+    [SerializeField] private GameObject vfxSocket;
     [SerializeField] int skillIndex;
     WeaponTrail _weaponTrail;
+
+    private GameObject _whirlwindVFX;
 
     void Start()
     {
@@ -17,10 +22,16 @@ public class Katana: BaseWeapon
     public override void AttackStart(int hitboxGroupId)
     {
         base.AttackStart(hitboxGroupId);
-        //TODO: FX
-        if(_weaponTrail != null)
+
+        //VFX 재생
+        if (hitboxGroupId == 1)
         {
-            _weaponTrail.EnableTrail(true);
+            var player = GameManager.Instance.Player;
+            _whirlwindVFX = VFXManager.Instance.TriggerVFX(VFXType.WHIRLWIND_KATANA, player.transform.position);
+        }
+        else
+        {
+            VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
         }
         
         //SFX 재생
@@ -31,10 +42,13 @@ public class Katana: BaseWeapon
     public override void AttackEnd(int hitboxGroupId)
     {
         base.AttackEnd(hitboxGroupId);
-        
-        if(_weaponTrail != null)
+        if (hitboxGroupId == 1)
         {
-            _weaponTrail.EnableTrail(false);
+            if (_whirlwindVFX)
+            {
+                VFXManager.Instance.ReturnVFX(VFXType.WHIRLWIND_KATANA, _whirlwindVFX);
+                _whirlwindVFX = null;
+            }
         }
     }
 
@@ -46,11 +60,6 @@ public class Katana: BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         base.OnNext(hitInfo);
-        //SFX
-        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
-        
-        //FX
-        VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
     }
 
     public override void OnError(Exception error)

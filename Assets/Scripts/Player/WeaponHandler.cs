@@ -117,14 +117,18 @@ public class WeaponHandler : MonoBehaviour
         VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon ? _currentWeapon.transform : transform);
 
         
-        switch (_isActiveMagneticSwitchEffect)
-        {
-            case true:
-                return;
-            case false:
-                _isActiveMagneticSwitchEffect = true;
-                break;
-        }
+        // switch (_isActiveMagneticSwitchEffect)
+        // {
+        //     case true:
+        //         return;
+        //     case false:
+        //         _isActiveMagneticSwitchEffect = true;
+        //         break;
+        // }
+
+        if(_isActiveMagneticSwitchEffect) return;
+
+        _isActiveMagneticSwitchEffect = true;
         
         var magCoreSO = currentMagCore.GetMagCoreSO();
         var currentUpgradeValue = currentMagCore.currentUpgradeValue;
@@ -181,10 +185,14 @@ public class WeaponHandler : MonoBehaviour
         {
             Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
             
-            _damageEffect.amount = GameManager.Instance.Player.GetAttackDamage();
+            GameplayEffect damageEffect = _damageEffect.DeepCopy();
+            GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
             
-            enemy.blackboard.abilitySystem.ApplyEffect(_damageEffect);
-            enemy.blackboard.abilitySystem.ApplyEffect(_resistanceEffect);
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage();
+            damageEffect.extraData.hitInfo = hitInfo;
+
+            enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
+            enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
             _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
@@ -217,10 +225,10 @@ public class WeaponHandler : MonoBehaviour
         Instantiate(skillObj, transform.position, transform.rotation);
         VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
     }
-    
-    public void CreateProjectile(GameObject prefab)
+
+    public void CreateProjectile(int projectileLaunchMode)
     {
-        Projectile projectile = _currentWeapon.CreateProjectile(prefab);
+        Projectile projectile = _currentWeapon.CreateProjectile(projectileLaunchMode);
         projectile.OnHit += OnHitAction;
     }
 }

@@ -33,7 +33,7 @@ public class ProductCase : MonoBehaviour, IInteractable
     {
         inItem = item;
         inItem.transform.SetParent(transform);
-        inItem.GetComponent<Collider>().enabled = false;
+        var col = inItem.GetComponent<Collider>();
         
         if (inItem.TryGetComponent(out ArtifactObject artifactObject))
         {
@@ -62,6 +62,8 @@ public class ProductCase : MonoBehaviour, IInteractable
             itemRarity = healthPack.rarity;
             itemCategory = healthPack.category;
         }
+        
+        col.enabled = false;
     }
 
     //아이템 구매가 가능한지 체크.

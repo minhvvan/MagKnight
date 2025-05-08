@@ -77,6 +77,12 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         magneticHighlighter.BindRenderer(gameObject, magneticType);
     }
 
+    private void UnbindMagneticHighlight()
+    {
+        var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
+        magneticHighlighter.UnbindRenderer(gameObject, magneticType);
+    }
+
     public virtual async UniTask OnMagneticInteract(MagneticObject target)
     {
         //끌려오기 날아가기 등 다양한 액션을 override하여 사용.
