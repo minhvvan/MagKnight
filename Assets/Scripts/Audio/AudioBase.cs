@@ -109,6 +109,11 @@ public static class AudioBase
                     "bow_crossbow_arrow_shoot_type1_06",
                     "bow_crossbow_arrow_shoot_type1_07",
                     "bow_crossbow_arrow_shoot_type1_08"
+                };                
+                
+                public static readonly List<string> BowStretch =new List<string>()
+                {
+                    "bow_crossbow_arrow_draw_stretch1_04"
                 };
                 
                 public static readonly List<string> Arrow =new List<string>()
