@@ -68,6 +68,13 @@ namespace Moon
         private bool _canSwitchMagnetic = true;
         private Coroutine _switchCooldownCoroutine;
         [NonSerialized] public float switchMagneticCooldown = 5f;
+        
+        [Header("Parry Slow Motion")]
+        [SerializeField] private float parrySlowAmount   = 0.2f;   // 슬로우모션 배율
+        [SerializeField] private float parrySlowDuration = 1f;   // 슬로우모션 실제 지속시간
+        private float _originalFixedDeltaTime;
+        private Coroutine _parrySlowCoroutine;
+
 
         #endregion
 
@@ -169,6 +176,8 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
+            
+            _originalFixedDeltaTime = Time.fixedDeltaTime; // 패링 슬로우모션 용
         }
         
         //명시적 초기화
@@ -227,6 +236,14 @@ namespace Moon
                 };
                 
                 _abilitySystem.RegisterPassiveEffect(chargeSkillGauageMagnetic);
+                
+                var chargeSkillGauageParry = new PassiveEffectData {
+                    effect        = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 10),
+                    triggerChance = 1,
+                    triggerEvent  = TriggerEventType.OnParry
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageParry);
                 
                 var onSkill = new PassiveEffectData
                 {
@@ -966,13 +983,8 @@ namespace Moon
             _switchCooldownCoroutine = null;
         }
         
-        IEnumerator CloseParryWindow()
-        {
-            yield return new WaitForSeconds(parryWindow);
-            _abilitySystem.DeleteTag("Parry");
-            _parryWindowActive = false;
-            _parryWindowCoroutine = null;
-        }
+        
+
 
         void MagneticPress()
         {
@@ -1096,13 +1108,14 @@ namespace Moon
             // 1) 패링 창이 열려 있으면 ─────────
             if (_parryWindowActive)
             {
-                _parryWindowActive = false;
                 if (_parryWindowCoroutine != null)
                     StopCoroutine(_parryWindowCoroutine);
+                _abilitySystem.DeleteTag("Parry");
+                _parryWindowActive = false;
 
                 // 1-a) 패링 성공 애니 실행
                 _animator.SetTrigger(PlayerAnimatorConst.hashParry);
-                Debug.Log("parry success");
+                VFXManager.Instance.TriggerVFX(VFXType.PARRY, transform.position + 0.5f * Vector3.up);
                 
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
                 if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
@@ -1110,6 +1123,13 @@ namespace Moon
                     //넉백?
                     enemy.OnStagger();
                 }
+
+                _abilitySystem.TriggerEvent(TriggerEventType.OnParry, _abilitySystem);
+                
+                if (_parrySlowCoroutine != null)
+                    StopCoroutine(_parrySlowCoroutine);
+                _parrySlowCoroutine = StartCoroutine(DoParrySlowMotion());
+
 
                 // (피해는 받지 않음)
                 return;
@@ -1140,6 +1160,33 @@ namespace Moon
                 damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
             }
             return damage * damageMultiplier;
+        }
+
+        IEnumerator CloseParryWindow()
+        {
+            yield return new WaitForSecondsRealtime(parryWindow);
+            _abilitySystem.DeleteTag("Parry");
+            _parryWindowActive = false;
+            _parryWindowCoroutine = null;
+        }
+        
+        IEnumerator DoParrySlowMotion()
+        {
+            Debug.Log("start"); 
+            // (1) 슬로우 시작
+            Time.timeScale = 0.2f;
+            //Time.fixedDeltaTime = _originalFixedDeltaTime * parrySlowAmount;
+            
+            // (2) real-time 대기
+            yield return new WaitForSecondsRealtime(2f);
+            
+            Debug.Log("slow");
+
+            // (3) 복원
+            Time.timeScale = 1f;
+            //Time.fixedDeltaTime = _originalFixedDeltaTime;
+
+            _parrySlowCoroutine = null;
         }
 
         public void OnKnockDown()

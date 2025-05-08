@@ -28,4 +28,5 @@ public enum TriggerEventType
     OnDeath,
     OnMagnetic,
     OnSkill,
+    OnParry,
 }
