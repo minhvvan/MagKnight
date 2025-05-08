@@ -54,10 +54,13 @@ public class PauseMenuUIController : MonoBehaviour
 
     void OnClickGiveUp()
     {
-        Time.timeScale = 1f;
         UIManager.Instance.ShowConfirmPopup("포기", "베이스캠프로 돌아가시겠습니까?", () =>
         {
+            Time.timeScale = 1f;
+            GameManager.Instance.DeleteData(Constants.CurrentRun);
+            GameManager.Instance.SaveData(Constants.PlayerData);
             GameManager.Instance.ChangeGameState(GameState.InitGame);
+            HideUI();
         }, null, true);
     }
 
@@ -68,16 +71,16 @@ public class PauseMenuUIController : MonoBehaviour
 
     void OnClickExit()
     {
-        Time.timeScale = 1f;
         UIManager.Instance.ShowConfirmPopup("나가기", "정말로 나가시겠습니까?", () =>
         {
-            
+            Time.timeScale = 1f;
             //Play Mode exit
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #endif
             Application.Quit();
             //나중에 GameManager에서 베이스 캠프 나가는것 처럼 해도 괜찮을듯?
+            HideUI();
         }, null, true);
     }
 }
