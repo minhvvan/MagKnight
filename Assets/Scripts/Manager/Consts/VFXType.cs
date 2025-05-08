@@ -18,6 +18,7 @@ public enum VFXType
     JUMP_DUST,
     BOMB_EXPLODE,
     ENEMY_MUZZLE_BURST,
+    WHIRLWIND_KATANA,
 }
 
 public enum DAMAGEType

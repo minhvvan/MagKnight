@@ -130,7 +130,6 @@ public class VFXManager : Singleton<VFXManager>
         }
     }
     
-
     private GameObject DequeueVFX(VFXType vfxType)
     {
         if (!vfxPools.ContainsKey(vfxType))

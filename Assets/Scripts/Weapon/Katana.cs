@@ -1,5 +1,6 @@
 ﻿
 using System;
+using hvvan;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,6 +11,8 @@ public class Katana: BaseWeapon
     [SerializeField] int skillIndex;
     WeaponTrail _weaponTrail;
 
+    private GameObject _whirlwindVFX;
+
     void Start()
     {
         _weaponTrail = GetComponent<WeaponTrail>();
@@ -19,12 +22,17 @@ public class Katana: BaseWeapon
     public override void AttackStart(int hitboxGroupId)
     {
         base.AttackStart(hitboxGroupId);
-        // if(_weaponTrail != null)
-        // {
-        //     _weaponTrail.EnableTrail(true);
-        // }
 
-        VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
+        //VFX 재생
+        if (hitboxGroupId == 1)
+        {
+            var player = GameManager.Instance.Player;
+            _whirlwindVFX = VFXManager.Instance.TriggerVFX(VFXType.WHIRLWIND_KATANA, player.transform.position);
+        }
+        else
+        {
+            VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
+        }
         
         //SFX 재생
         var sfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Swing);
@@ -34,11 +42,14 @@ public class Katana: BaseWeapon
     public override void AttackEnd(int hitboxGroupId)
     {
         base.AttackEnd(hitboxGroupId);
-        
-        // if(_weaponTrail != null)
-        // {
-        //     _weaponTrail.EnableTrail(false);
-        // }
+        if (hitboxGroupId == 1)
+        {
+            if (_whirlwindVFX)
+            {
+                VFXManager.Instance.ReturnVFX(VFXType.WHIRLWIND_KATANA, _whirlwindVFX);
+                _whirlwindVFX = null;
+            }
+        }
     }
 
     public override int OnSkill()
