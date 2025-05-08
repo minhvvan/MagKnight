@@ -19,3 +19,12 @@ public enum VFXType
     BOMB_EXPLODE,
     ENEMY_MUZZLE_BURST,
 }
+
+public enum DAMAGEType
+{
+    NONE,
+    NORMAL,
+    CRITICAL,
+    POISON,
+    MAGNETIC,
+}

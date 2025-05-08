@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using DamageNumbersPro;
 using Managers;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -10,6 +12,8 @@ public class VFXManager : Singleton<VFXManager>
     Dictionary<VFXType, Queue<GameObject>> vfxPools = new Dictionary<VFXType, Queue<GameObject>>();
     Dictionary<VFXType, VFXDataSO> vfxDataSOs = new Dictionary<VFXType, VFXDataSO>();
     
+    [SerializeField] SerializedDictionary<DAMAGEType, DamageNumber> damageNumberPrefabs;
+
     public bool IsInitialized { get; private set; }
     
     private async void Start()
@@ -159,6 +163,12 @@ public class VFXManager : Singleton<VFXManager>
         vfxObject.SetActive(false);
         vfxPools[vfxType].Enqueue(vfxObject);
     }
+
+    public void TriggerDamageNumber(Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.NORMAL)
+    {
+        DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
+
+        damageNumberPrefab.Spawn(position, damage);
     
     private async UniTask WaitUntilParticleEnd(GameObject vfxObject)
     {

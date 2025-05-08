@@ -69,11 +69,32 @@ MonoBehaviour:
   gameplayEffects:
     _serializedList:
     - Key: 0
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 20
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
     - Key: 1
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 30
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
     - Key: 2
-      Value: []
+      Value:
+      - effectType: 2
+        attributeType: 2
+        amount: 45
+        duration: 0
+        period: 0
+        tracking: 0
+        maxStack: 0
   magnetEffectDuration: 5
   magnetPassiveEffects:
     _serializedList:

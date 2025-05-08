@@ -1105,14 +1105,16 @@ namespace Moon
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
-        public float GetAttackDamage(float damageMultiplier = 1f)
+        public (float, bool) GetAttackDamage(float damageMultiplier = 1f)
         {
+            bool isCritical = false;
             var damage = _abilitySystem.GetValue(AttributeType.Strength);
             if (Random.value <= _abilitySystem.GetValue(AttributeType.CriticalRate))
             {
                 damage *= _abilitySystem.GetValue(AttributeType.CriticalDamage);
+                isCritical = true;
             }
-            return damage * damageMultiplier;
+            return (damage * damageMultiplier, isCritical);
         }
 
         public void OnKnockDown()

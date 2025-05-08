@@ -18,8 +18,13 @@ public class UIManager : Singleton<UIManager>
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
-            ShowArtifactInventoryUI(null);
+            ShowArtifactInventoryUI();
             ShowPlayerDetailUI();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            popupUIController.HideAllPopupAvailableUI();
         }
     }
 
@@ -71,9 +76,9 @@ public class UIManager : Singleton<UIManager>
         popupUIController.optionUIController.ShowUI();
     }
 
-    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO)
+    public void ShowArtifactInventoryUI(ArtifactDataSO artifactDataSO = null)
     {
-        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO);
+        popupUIController.artifactInventoryUIController.ShowUI(artifactDataSO ? artifactDataSO : null);
         ShowPlayerDetailUI();
         EnableCursor();
     }
@@ -81,6 +86,12 @@ public class UIManager : Singleton<UIManager>
     public void ShowGameOverUI()
     {
         popupUIController.gameOverUIController.ShowUI();
+        EnableCursor();
+    }
+
+    public void ShowClearUI()
+    {
+        popupUIController.clearUIController.ShowUI();
         EnableCursor();
     }
 

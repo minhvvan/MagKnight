@@ -49,11 +49,6 @@ public class Katana: BaseWeapon
     public override void OnNext(HitInfo hitInfo)
     {
         base.OnNext(hitInfo);
-        //SFX
-        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
-        
-        //FX
-        VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
     }
 
     public override void OnError(Exception error)
