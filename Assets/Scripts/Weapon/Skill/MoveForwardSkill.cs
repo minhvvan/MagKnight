@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using hvvan;
 using UnityEngine;
 
-public class TornadoSkill : Skill
+public class MoveForwardSkill : Skill
 {
     [SerializeField] private float moveSpeed;
 

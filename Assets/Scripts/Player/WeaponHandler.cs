@@ -222,8 +222,14 @@ public class WeaponHandler : MonoBehaviour
     
     public void SpawnSkillEffect(GameObject skillObj)
     {
-        Instantiate(skillObj, transform.position, transform.rotation);
-        VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
+        if(CurrentWeaponType == WeaponType.Bow)
+        {
+            Instantiate(skillObj, _currentWeapon.transform.position, transform.rotation);
+        }
+        else
+        {
+            Instantiate(skillObj, transform.position, transform.rotation);
+        }
     }
 
     public void CreateProjectile(int projectileLaunchMode)
