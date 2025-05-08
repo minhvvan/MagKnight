@@ -10,7 +10,6 @@ public class Bow : BaseWeapon
     [SerializeField] GameObject _hitEffectPrefab;
     [SerializeField] int skillIndex;
     [SerializeField] LayerMask _layerMask;
-    [SerializeField] GameObject _arrowPrefab;
     [SerializeField] GameObject muzzleVFXPrefab;
     [SerializeField] GameObject vfxMuzzle;
     [SerializeField] GameObject projectilePrefab;

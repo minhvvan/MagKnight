@@ -169,7 +169,8 @@ public class VFXManager : Singleton<VFXManager>
         DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
 
         damageNumberPrefab.Spawn(position, damage);
-    
+    }
+
     private async UniTask WaitUntilParticleEnd(GameObject vfxObject)
     {
         var particle = vfxObject.GetComponent<ParticleSystem>();
