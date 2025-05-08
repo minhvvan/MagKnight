@@ -117,14 +117,18 @@ public class WeaponHandler : MonoBehaviour
         VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon ? _currentWeapon.transform : transform);
 
         
-        switch (_isActiveMagneticSwitchEffect)
-        {
-            case true:
-                return;
-            case false:
-                _isActiveMagneticSwitchEffect = true;
-                break;
-        }
+        // switch (_isActiveMagneticSwitchEffect)
+        // {
+        //     case true:
+        //         return;
+        //     case false:
+        //         _isActiveMagneticSwitchEffect = true;
+        //         break;
+        // }
+
+        if(_isActiveMagneticSwitchEffect) return;
+
+        _isActiveMagneticSwitchEffect = true;
         
         var magCoreSO = currentMagCore.GetMagCoreSO();
         var currentUpgradeValue = currentMagCore.currentUpgradeValue;

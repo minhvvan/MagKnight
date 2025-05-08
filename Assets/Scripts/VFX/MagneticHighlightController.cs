@@ -16,6 +16,12 @@ public class MagneticHighlightController : MonoBehaviour
         GameManager.Instance.OnMagneticReleased += OnMagneticReleased;
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnMagneticPressed -= OnMagneticPressed;
+        GameManager.Instance.OnMagneticReleased -= OnMagneticReleased;
+    }
+
     private void OnMagneticPressed()
     {
         _highlighterN.enabled = true;
@@ -39,6 +45,20 @@ public class MagneticHighlightController : MonoBehaviour
         else
         {
             _highlighterS.Renderers.Add(new HighlighterRenderer(objectRenderer, 1));
+        }
+    }
+
+    public void UnbindRenderer(GameObject magneticObject, MagneticType magneticType)
+    {
+        var objectRenderer = magneticObject.GetComponentInChildren<Renderer>();
+
+        if (magneticType == MagneticType.N)
+        {
+            _highlighterN.Renderers.Remove(new HighlighterRenderer(objectRenderer, 1));
+        }
+        else
+        {
+            _highlighterS.Renderers.Remove(new HighlighterRenderer(objectRenderer, 1));
         }
     }
 }

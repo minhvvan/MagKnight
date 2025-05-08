@@ -235,11 +235,13 @@ namespace Moon
             }
             
             //HUD 생성 및 바인딩
-            var hud = Instantiate(hudPrefab);
-            if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
-            {
-                inGameUIController.BindAttributeChanges(_abilitySystem);
-            }
+            // var hud = Instantiate(hudPrefab);
+            // if (hud.TryGetComponent<InGameUIController>(out var inGameUIController))
+            // {
+            //     inGameUIController.BindAttributeChanges(_abilitySystem);
+            // }
+            UIManager.Instance.inGameUIController.UnbindAttributeChanges();
+            UIManager.Instance.inGameUIController.BindAttributeChanges(_abilitySystem);
             _magneticController.InitializeMagnetic();
         }
         

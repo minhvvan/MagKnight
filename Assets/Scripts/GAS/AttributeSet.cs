@@ -93,6 +93,14 @@ public abstract class AttributeSet
         }
     }
 
+    public void UnsubscribeAttributeChanged(AttributeType type, Action<float> action)
+    {
+        if (_attributeDictionary.ContainsKey(type))
+        {
+            _attributeDictionary[type].UnsubscribeChangeAction(action);
+        }
+    }
+
     // Modify 적용 전에 호출
     protected virtual float PreAttributeChange(AttributeType type, float newValue)
     {

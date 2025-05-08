@@ -34,13 +34,14 @@ public class MagneticTarget : MonoBehaviour
         set
         {
             _isLocked = value;
+            if(_currentImg == null) Initialize();
             _currentImg.sprite = !_isLocked ? targetImg[0] : targetImg[1];
             _currentImg.color = !_isLocked ? targetColor[0] : targetColor[1];
             _rectTransform.sizeDelta = !_isLocked ? readySize : lockSize;
         }
     }
 
-    private void Awake()
+    private void Start()
     {
         Initialize();
     }
@@ -54,7 +55,7 @@ public class MagneticTarget : MonoBehaviour
             {
                 targetPosition = enemy.blackboard.headTransform.position;
             }
-
+            if(_mainCamera == null) Initialize();
             _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition));
         }
         else
