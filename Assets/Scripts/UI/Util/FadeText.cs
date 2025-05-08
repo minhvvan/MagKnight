@@ -15,6 +15,11 @@ public class FadeText : MonoBehaviour
 
     public void SetTextAndShowFadeInAndOut(string text, bool isSetNewName)
     {
+        if (!_text)
+        {
+            _text = GetComponent<TextMeshProUGUI>();
+        }
+
         if(isSetNewName)
         {
             _text.text = text;
