@@ -9,8 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05d078c982014a959d18aceb9ee557e2, type: 3}
-  m_Name: Katana
+  m_Script: {fileID: 11500000, guid: 8a7a670993fd74c9ea5efd930c3aba27, type: 3}
+  m_Name: VFX_Whirlwind_Katana
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1500518611855372604, guid: 937fdc1491edcaf4698a209c60b3c492, type: 3}
-  range: 2
+  vfxType: 14
+  vfxPrefab: {fileID: 1887133516924678692, guid: 99f52f9fd6430234580a8692375601cc,
+    type: 3}
+  poolSize: 1
+  duration: 10
+  size: {x: 1, y: 1, z: 1}
