@@ -132793,7 +132793,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.7
-    functionName: CreateAttackEffectAtTarget
+    functionName: Missile
     data: 
     objectReferenceParameter: {fileID: 7634243536177421465, guid: 422b57b65054cf644b6695ff91fff9f6,
       type: 3}

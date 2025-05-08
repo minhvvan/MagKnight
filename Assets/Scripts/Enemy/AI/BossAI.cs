@@ -26,11 +26,6 @@ public class BossAI : IEnemyAI
     
     public void OnEnter()
     {
-        // _enemy.Anim.SetBool("Trace", true);
-        // if(_enemy.IsAvailableTarget())
-        // {
-        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        // }
     }
 
     public void OnUpdate()

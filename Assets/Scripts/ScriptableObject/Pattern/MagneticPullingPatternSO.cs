@@ -5,15 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MagneticPulling", menuName = "SO/Enemy/Pattern/MagneticPulling")]
 public class MagneticPullingPatternSO : PatternDataSO
 {
-    RaycastHit[] hits = new RaycastHit[1];
-    
     public override bool CanUse(Transform executorTransform, Transform targetTransform)
     {
-        return true;
+        return Vector3.Distance(executorTransform.position, targetTransform.position) > 6f;
     }
 
     public override void Execute(Animator animator)
     {
         animator.SetTrigger("MagneticPulling");
+        priority = 0;
+    }
+
+    public override void UpdatePriority(Transform executorTransform, Transform targetTransform)
+    {
+        priority += 1;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class PatternController : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class PatternController : MonoBehaviour
     
     public PatternDataSO GetAvailablePattern(Transform executorTransform, Transform targetTransform)
     {
+        UpdatePatternPriority(executorTransform, targetTransform);
+        
         foreach (PatternDataSO pattern in _activePatterns.Keys)
         {
             if (_activePatterns[pattern] < Time.time &&
@@ -67,7 +70,14 @@ public class PatternController : MonoBehaviour
         // animation event
         gameObject.GetComponent<HitDetector>().StopDetection(patternId);
     }
-    
+
+    private void UpdatePatternPriority(Transform executorTransform, Transform targetTransform)
+    {
+        foreach (PatternDataSO pattern in _activePatterns.Keys)
+        {
+            pattern.UpdatePriority(executorTransform, targetTransform);
+        }
+    }
     
     
     #region debugging
