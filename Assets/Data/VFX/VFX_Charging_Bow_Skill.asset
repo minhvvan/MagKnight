@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: VFX_Charging_Bow_Skill
   m_EditorClassIdentifier: 
   vfxType: 18
-  vfxPrefab: {fileID: 5732568103209889489, guid: e23741b3f14f27e46a31d8d542a2033e,
+  vfxPrefab: {fileID: 5732568103209889489, guid: ca4f8a030f56aef4bb98c3d4dae13117,
     type: 3}
   poolSize: 1
   duration: 10
