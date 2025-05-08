@@ -72,13 +72,69 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.20436761
+      - time: 0.17897224
         functionName: CreateProjectile
         data: 
         objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
           type: 3}
         floatParameter: 0
-        intParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.198588
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.220052
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.23715177
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.29296234
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.30114564
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.32733226
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
+        messageOptions: 0
+      - time: 0.3502455
+        functionName: CreateProjectile
+        data: 
+        objectReferenceParameter: {fileID: 7132600985719082559, guid: 15917649be670e14ba1a62eb853a1d8a,
+          type: 3}
+        floatParameter: 0
+        intParameter: 1
         messageOptions: 0
       transformMask:
       - path: 

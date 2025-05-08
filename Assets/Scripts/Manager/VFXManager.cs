@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
@@ -115,7 +114,22 @@ public class VFXManager : Singleton<VFXManager>
         return vfxObject;
     }
     
+    public void TriggerVFX(GameObject particlePrefab, Vector3 position, Quaternion rotation = default, Vector3 size = default, bool returnAutomatically = true)
+    {
+        GameObject particleInstance = Instantiate(particlePrefab);
+        particleInstance.transform.SetPositionAndRotation(position, rotation);
+    
+        if (size != default)
+        {
+            particleInstance.transform.localScale = size;
+        }
 
+        if (returnAutomatically)
+        {
+            UniTask.Void(async () => await WaitUntilParticleEnd(particleInstance));
+        }
+    }
+    
     private GameObject DequeueVFX(VFXType vfxType)
     {
         if (!vfxPools.ContainsKey(vfxType))
@@ -154,5 +168,25 @@ public class VFXManager : Singleton<VFXManager>
         DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
 
         damageNumberPrefab.Spawn(position, damage);
+    }
+
+    private async UniTask WaitUntilParticleEnd(GameObject vfxObject)
+    {
+        var particle = vfxObject.GetComponent<ParticleSystem>();
+        particle.Play();
+        
+        while (particle != null && vfxObject != null && particle.isPlaying)
+        {
+            await UniTask.Yield();
+        }
+        
+        // 게임 플레이 모드인지 에디터 모드인지에 따라 Destroy
+        if (vfxObject != null)
+        {
+            if (Application.isPlaying)
+                Destroy(vfxObject);
+            else
+                DestroyImmediate(vfxObject);
+        }
     }
 }

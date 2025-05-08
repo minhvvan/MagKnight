@@ -46,7 +46,7 @@ public class BaseWeapon: MonoBehaviour, IObserver<HitInfo>
     {
     }
 
-    public virtual Projectile CreateProjectile(GameObject projectilePrefab)
+    public virtual Projectile CreateProjectile(int projectileLaunchMode = 0)
     {
         return null;
     }

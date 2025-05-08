@@ -10,13 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 998b72c2390297944be31df0ed192c85, type: 3}
-  m_Name: MagCoreSwordKatana
+  m_Name: MagCoreGreatSword
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
-  itemName: Katana_Normal
-  description: "\uBBFC\uC218\uC6A9\uC73C\uB85C \uD754\uD558\uAC8C \uD314\uB9AC\uB294
-    \uCE74\uD0C0\uB098\uB2E4. \uAC00\uC18D\uACC4 \uCF54\uC5B4\uAC00 \uD29C\uB2DD\uB418\uC5B4
-    \uC788\uB2E4."
+  itemName: GreatSword_Normal
+  description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uC18D\uB3C4 \uCE7C\uB0A0"
   scrapValue: 35
   maxUpgradeLevel: 3
   weaponType: 1
