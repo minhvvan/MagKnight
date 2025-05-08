@@ -60,9 +60,5 @@ public class MagneticHighlightController : MonoBehaviour
         {
             _highlighterS.Renderers.Remove(new HighlighterRenderer(objectRenderer, 1));
         }
-    private void OnDestroy()
-    {
-        GameManager.Instance.OnMagneticPressed -= OnMagneticPressed;
-        GameManager.Instance.OnMagneticReleased -= OnMagneticReleased;
     }
 }
