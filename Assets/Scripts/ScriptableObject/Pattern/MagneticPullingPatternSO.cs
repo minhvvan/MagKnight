@@ -7,7 +7,7 @@ public class MagneticPullingPatternSO : PatternDataSO
 {
     public override bool CanUse(Transform executorTransform, Transform targetTransform)
     {
-        return Vector3.Distance(executorTransform.position, targetTransform.position) > 5f;
+        return Vector3.Distance(executorTransform.position, targetTransform.position) > 6f;
     }
 
     public override void Execute(Animator animator)

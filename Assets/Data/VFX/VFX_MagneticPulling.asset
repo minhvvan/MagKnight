@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7a670993fd74c9ea5efd930c3aba27, type: 3}
   m_Name: VFX_MagneticPulling
   m_EditorClassIdentifier: 
-  vfxType: 15
+  vfxType: 17
   vfxPrefab: {fileID: 4550076289710732121, guid: 187f4f1be30d46441a5f2e470645124e,
     type: 3}
   poolSize: 0
   duration: 3
-  size: {x: 2, y: 2, z: 2}
+  size: {x: 1, y: 1, z: 1}

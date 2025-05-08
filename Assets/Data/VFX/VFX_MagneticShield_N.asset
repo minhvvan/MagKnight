@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a7a670993fd74c9ea5efd930c3aba27, type: 3}
   m_Name: VFX_MagneticShield_N
   m_EditorClassIdentifier: 
-  vfxType: 13
+  vfxType: 15
   vfxPrefab: {fileID: 1756713697765045915, guid: 100e9cf91014705499778777884a1bde,
     type: 3}
   poolSize: 0

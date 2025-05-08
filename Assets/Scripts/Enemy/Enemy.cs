@@ -90,8 +90,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         actionState = new EnemyStateAction(this);
         staggerState = new EnemyStateStagger(this);
         deadState = new EnemyStateDead(this);
-
-        _stateMachine.ChangeState(spawnState);
     }
 
     void Update()

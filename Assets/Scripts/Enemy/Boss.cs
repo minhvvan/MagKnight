@@ -18,9 +18,6 @@ public class Boss : Enemy
     private GameObject _bomb;
     private CancellationTokenSource _buffCancellationToken;
     private CancellationTokenSource _missileCancellationToken;
-
-    // [SerializeField] private GameObject warningSign;
-    [SerializeField] private GameObject missileEffect;
     
     public override void OnPhaseChange(int phase)
     {
@@ -126,7 +123,7 @@ public class Boss : Enemy
         Anim.SetTrigger("PullSucceed");
     }
 
-    public void Missile()
+    public void Missile(GameObject missileEffect)
     {
         float duration = 1.5f;
         
