@@ -15,6 +15,6 @@ MonoBehaviour:
   patternName: MagneticPulling
   damageMultiplier: 0
   range: 0
-  priority: 1
-  cooldown: 40
+  priority: 84
+  cooldown: 15
   phase: 3

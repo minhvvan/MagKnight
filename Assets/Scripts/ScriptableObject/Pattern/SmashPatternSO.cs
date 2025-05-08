@@ -15,6 +15,12 @@ public class SmashPatternSO : PatternDataSO
     public override void Execute(Animator animator)
     {
         animator.SetTrigger("Smash");
+        priority = 0;
+    }
+
+    public override void UpdatePriority(Transform executorTransform, Transform targetTransform)
+    {
+        priority += 1;
     }
 
     private bool TargetInRange(Transform executorTransform, Transform targetTransform)

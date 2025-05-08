@@ -32,6 +32,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     
     private RaycastHit[] _hits = new RaycastHit[1];
     private Collider[] _colliders = new Collider[1];
+
+    public bool isDashing;
     
     // stateMachine
     private StateMachine _stateMachine;
@@ -88,8 +90,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         actionState = new EnemyStateAction(this);
         staggerState = new EnemyStateStagger(this);
         deadState = new EnemyStateDead(this);
-
-        _stateMachine.ChangeState(spawnState);
     }
 
     void Update()
@@ -97,6 +97,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         _stateMachine.Update();
         // var state = Anim.GetCurrentAnimatorStateInfo(0);
         // Debug.Log("현재 상태: " + state.fullPathHash);
+    }
+
+    protected void OnDestroy()
+    {
     }
 
     public void SetState(BaseState<Enemy> newState)
@@ -136,7 +140,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // position.y = Agent.nextPosition.y;
         // Agent.nextPosition = position;
         // transform.position = position;
-        
+
+        if (isDashing) return;
         Vector3 dir = Agent.desiredVelocity;
         if (dir.sqrMagnitude > 0.1f)
         {

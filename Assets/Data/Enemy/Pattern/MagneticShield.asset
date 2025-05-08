@@ -15,6 +15,6 @@ MonoBehaviour:
   patternName: MagneticShield
   damageMultiplier: 0
   range: 0
-  priority: 10
-  cooldown: 100
+  priority: 0
+  cooldown: 20
   phase: 2

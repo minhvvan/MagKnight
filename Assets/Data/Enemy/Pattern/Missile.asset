@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patternName: Missile
   damageMultiplier: 1
-  range: 20
-  priority: 20
-  cooldown: 30
+  range: 15
+  priority: 82
+  cooldown: 15
   phase: 3
