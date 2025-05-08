@@ -4,7 +4,7 @@ public class RangedNormalAI : IEnemyAI
 {
     private Enemy _enemy;
     private EnemyBlackboard _blackboard;
-    private Collider _targetCollider;
+    // private Collider _targetCollider;
     
     private float destinationUpdateInterval = 0.1f;
     private float _destinationTimer = 0f;
@@ -13,7 +13,7 @@ public class RangedNormalAI : IEnemyAI
     {
         _enemy = enemy;
         _blackboard = _enemy.blackboard;
-        _targetCollider = _blackboard.target.GetComponent<Collider>();
+        // _targetCollider = _blackboard.target.GetComponent<Collider>();
     }
     
     public void OnEnter()
@@ -57,7 +57,7 @@ public class RangedNormalAI : IEnemyAI
         if (_blackboard.target == null) return false;
 
         Vector3 origin = _blackboard.muzzleTransform.position; // 총구 위치 또는 눈 위치
-        Vector3 targetPos = _targetCollider.bounds.center; // 플레이어 중심
+        Vector3 targetPos = _blackboard.target.transform.position + Vector3.up * 0.5f;
 
         float distance = Vector3.Distance(origin, targetPos);
         if (distance > _blackboard.attackRange)
