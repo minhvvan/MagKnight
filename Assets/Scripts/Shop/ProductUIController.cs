@@ -177,12 +177,12 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         float width = _rectTransform.rect.width * ratio;
         float height = _rectTransform.rect.height * ratio;
         
-        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width, -slotHeight);
+        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width, -slotHeight/2);
         Vector2 pos = _rectTransform.position;
-        bool rightTruncated = pos.x + width > Screen.width;
+        bool rightTruncated = pos.x > Screen.width;
         
         if(rightTruncated)
-            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, slotHeight);
+            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
         
         inputGuidePanel.gameObject.SetActive(false);
         
