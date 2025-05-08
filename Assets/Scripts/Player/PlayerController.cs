@@ -67,7 +67,7 @@ namespace Moon
         Coroutine _parryWindowCoroutine;
         private bool _canSwitchMagnetic = true;
         private Coroutine _switchCooldownCoroutine;
-        [NonSerialized] public float switchMagneticCooldown = 5f;
+        [NonSerialized] public float switchMagneticCooldown = 0.5f;
         
         [Header("Parry Slow Motion")]
         [SerializeField] private float parrySlowAmount   = 0.2f;   // 슬로우모션 배율
