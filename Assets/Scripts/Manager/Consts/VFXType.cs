@@ -21,7 +21,8 @@ public enum VFXType
     WHIRLWIND_KATANA,
     MAGNETIC_SHIELD_N,
     MAGNETIC_SHIELD_S,
-    MAGNETIC_PULLING
+    MAGNETIC_PULLING,
+    PARRY,
 }
 
 public enum DAMAGEType

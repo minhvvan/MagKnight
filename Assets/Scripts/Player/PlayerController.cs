@@ -71,7 +71,7 @@ namespace Moon
         
         [Header("Parry Slow Motion")]
         [SerializeField] private float parrySlowAmount   = 0.2f;   // 슬로우모션 배율
-        [SerializeField] private float parrySlowDuration = 1f;   // 슬로우모션 실제 지속시간
+        [SerializeField] private float parrySlowDuration = 0.5f;   // 슬로우모션 실제 지속시간
         private float _originalFixedDeltaTime;
         private Coroutine _parrySlowCoroutine;
 
@@ -1176,15 +1176,12 @@ namespace Moon
         
         IEnumerator DoParrySlowMotion()
         {
-            Debug.Log("start"); 
             // (1) 슬로우 시작
-            Time.timeScale = 0.2f;
+            Time.timeScale = parrySlowAmount;
             //Time.fixedDeltaTime = _originalFixedDeltaTime * parrySlowAmount;
             
             // (2) real-time 대기
-            yield return new WaitForSecondsRealtime(2f);
-            
-            Debug.Log("slow");
+            yield return new WaitForSecondsRealtime(parrySlowDuration);
 
             // (3) 복원
             Time.timeScale = 1f;
