@@ -12,6 +12,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
     [SerializeField] private StatusUIController statusUIController;
+    [SerializeField] public GateIndicatorUI gateIndicatorUI;
 
 
     protected override void Initialize()

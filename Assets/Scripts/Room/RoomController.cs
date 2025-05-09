@@ -125,6 +125,14 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             }
         }
         
+        //gate 표시 연결
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUI;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.BindGate(gates[(RoomDirection)i]);
+        }
+        
         SetRoomReady(true);
         gameObject.SetActive(true);
         if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
@@ -145,6 +153,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         if (_navMeshSurface)
         {
             _navMeshSurface.RemoveData();
+        }
+        
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUI;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.UnBindGate(gates[(RoomDirection)i]);
         }
         
         SetGateOpen(false);
@@ -174,6 +189,9 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         _cleared = true;
         if(hasReward) Reward();
+        
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Common.Light);
         
         ClearRoom();
     }
