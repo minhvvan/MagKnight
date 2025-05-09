@@ -7,7 +7,7 @@ public class LastGate : MonoBehaviour
 {
     [SerializeField] private bool isLastFloor = false;
     
-    void OnTriggerEnter(Collider other)
+    private async void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<PlayerController>(out var playerController))
         {
@@ -19,7 +19,7 @@ public class LastGate : MonoBehaviour
             else
             {
                 //다음 층으로 이동
-                
+                await GameManager.Instance.MoveToNextFloor();
             }
         }
     }

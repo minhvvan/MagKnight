@@ -122,7 +122,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         var player = GameManager.Instance.Player;
 
         CharacterController controller = player.GetComponent<CharacterController>();
-        if (controller && gates[gateDirection])
+        if (controller && gates.ContainsKey(gateDirection))
         {
             controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         }
@@ -314,7 +314,10 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private void OnDestroy()
     {
         var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
-        gateIndicator.ClearGateBind();
+        if (gateIndicator)
+        {
+            gateIndicator.ClearGateBind();
+        }
     }
 
     private void BindGateIndicator()
