@@ -34,6 +34,11 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private Collider[] _colliders = new Collider[1];
 
     public bool isDashing;
+    public bool isFalling;
+
+    private float _gravity = 9.8f;
+    private float _maxFallSpeed = 10f;
+    private float _verticalSpeed = 0f;
     
     // stateMachine
     private StateMachine _stateMachine;
@@ -56,6 +61,14 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void OnEnable()
     {
         _stateMachine.ChangeState(spawnState);
+        
+        // 시작 y축 위치 보정
+        if (Physics.Raycast(transform.position + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 4f))
+        {
+            Vector3 newPos = hit.point;
+            newPos.y += 0.05f;
+            Agent.Warp(newPos);
+        }
     }
     
     private void Initialize()
@@ -95,8 +108,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Update()
     {
         _stateMachine.Update();
-        // var state = Anim.GetCurrentAnimatorStateInfo(0);
-        // Debug.Log("현재 상태: " + state.fullPathHash);
     }
 
     protected void OnDestroy()
@@ -120,10 +131,21 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         var enemies = Physics.OverlapSphere(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy"));
 
         ApplySoftCollision(enemies);
+        if (!Physics.Raycast(transform.position, Vector3.down, 1f))
+        {
+            Agent.ResetPath();
+            isFalling = true;
+            ApplyGravity();
+        }
     }
 
     private void OnAnimatorMove()
     {
+        if (isFalling)
+        {
+            return;
+        }
+        
         if (_currentAnimStateInfo.IsName("Trace"))
         {   
             Vector3 velocity = Agent.desiredVelocity.normalized * Time.deltaTime * 
@@ -385,7 +407,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
 
         Vector3 newPos = transform.position + correction * Time.deltaTime * 2f;
-        newPos.y = Agent.nextPosition.y;
+        newPos.y = transform.position.y;
 
         transform.position = newPos;
         Agent.nextPosition = newPos;
@@ -418,5 +440,48 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             return !player.IsInvisible;
         }
         return false;
+    }
+    
+    
+    #region animator
+    public void SetAnimBool(string paramName, bool value)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetBool(paramName, value);
+    }
+
+    public void SetAnimTrigger(string paramName)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetTrigger(paramName);
+    }
+
+    public void SetAnimFloat(string paramName, float value)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetFloat(paramName, value);
+    }
+    #endregion
+
+    private void ApplyGravity()
+    {
+        _verticalSpeed += _gravity * Time.fixedDeltaTime;
+        _verticalSpeed = Mathf.Clamp(_verticalSpeed, 0f, _maxFallSpeed);
+        Vector3 dir = Vector3.down * (_verticalSpeed * Time.fixedDeltaTime);
+        // 아래 방향으로 이동
+        Agent.nextPosition += dir;
+        transform.position += dir;
+        // Agent.nextPosition = transform.position;
+        
+        // 땅에 닿았는지 다시 체크해서 멈추기
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f))
+        {
+            Vector3 destination = new Vector3(transform.position.x, hit.point.y, transform.position.z);
+            destination.y += 0.05f;
+            Agent.Warp(destination);
+            transform.position = destination;
+            _verticalSpeed = 0f;
+            isFalling = false;
+        }
     }
 }

@@ -20,7 +20,8 @@ public class MeleeNormalAction : IEnemyAction
     public void OnEnter()
     {
         _blackboard.actionRecoveryCancellation = new CancellationTokenSource();
-        _enemy.Anim.SetTrigger("Action");
+        _enemy.SetAnimTrigger("Action");
+        // _enemy.Anim.SetTrigger("Action");
         _startupDuration = 0f;
     }
 
@@ -29,7 +30,7 @@ public class MeleeNormalAction : IEnemyAction
         _startupDuration += Time.deltaTime;
         if (_startupDuration > _blackboard.startupTime && !_actionRunned)
         {
-            _enemy.Anim.SetTrigger("ActionRun");
+            _enemy.SetAnimTrigger("ActionRun");
             _actionRunned = true;
         }
     }
