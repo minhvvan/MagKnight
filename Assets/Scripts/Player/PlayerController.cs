@@ -732,7 +732,7 @@ namespace Moon
             var timeout = 3f;
 
             _forwardSpeed = 4f;
-            while ((currentPosition - targetTransform.position).sqrMagnitude >= .05f && currentTime <= timeout)
+            while ((currentPosition - targetTransform.position).sqrMagnitude >= .2f && currentTime <= timeout)
             {
                 var dir = targetTransform.transform.position - transform.position;
                 dir.y = 0;

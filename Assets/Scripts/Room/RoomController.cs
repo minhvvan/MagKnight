@@ -5,8 +5,10 @@ using System.Linq;
 using System.Threading;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using hvvan;
 using Managers;
+using Moon;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -94,7 +96,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
     }
 
-    public async UniTask OnPlayerEnter(RoomDirection direction = RoomDirection.South)
+    public async UniTask OnPlayerEnter(RoomDirection direction = RoomDirection.South, bool moveForce = false)
     {
         if (_navMeshSurface)
         {
@@ -102,6 +104,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             _navMeshSurface.navMeshData = _loadedNavMeshData;
         }
         
+        gameObject.SetActive(true);
+
         SetGateOpen(false);
         var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
 
@@ -110,8 +114,44 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         CharacterController controller = player.GetComponent<CharacterController>();
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         
+        //함정방 입장 연출
+        if (Room.roomType is RoomType.TrapRoom)
+        {
+            if( !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
+            {
+                var camera = GameObject.Find("CameraRig");
+                if (camera && camera.TryGetComponent<CameraSettings>(out var cameraSettings))
+                {
+                    StartCoroutine(LookClearField(cameraSettings));
+                }
+            }
+        }
+        else
+        {
+            // 앞쪽으로 조금 이동(연출)
+            if (moveForce)
+            {
+                if (player.TryGetComponent<PlayerController>(out var playerController))
+                {
+                    var target = new GameObject()
+                    {
+                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
+                    };
+            
+                    playerController.MoveForce(target.transform);
+                }
+            }
+        }
+        
+        //gate 표시 연결
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.BindGate(gates[(RoomDirection)i]);
+        }
+        
         SetRoomReady(true);
-        gameObject.SetActive(true);
         if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
         {
             cancelTokenSource = new CancellationTokenSource();
@@ -119,6 +159,44 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
     }
 
+    private IEnumerator LookClearField(CameraSettings cameraSettings)
+    {
+        GameManager.Instance.Player.InputHandler.ReleaseControl();
+        
+        yield return new WaitForSeconds(1f);
+        
+        var origin = cameraSettings.Current.LookAt;
+        
+        // 임시 Transform 생성
+        GameObject tempObj = new GameObject("TempLookAt");
+        tempObj.transform.position = origin.position;
+        cameraSettings.Current.LookAt = tempObj.transform;
+        
+        // Sequence 생성
+        Sequence sequence = DOTween.Sequence();
+        
+        // 앞으로 이동
+        sequence.Append(tempObj.transform.DOMove(clearRoomField.transform.position, 1.5f)
+            .SetEase(Ease.InOutSine));
+        
+        // 일정 시간 대기
+        sequence.AppendInterval(.5f);
+        
+        // 원래 위치로 돌아가기
+        sequence.Append(tempObj.transform.DOMove(origin.position, 1.5f)
+            .SetEase(Ease.InOutSine));
+        
+        // 완료 후 콜백
+        sequence.OnComplete(() => {
+            cameraSettings.Current.LookAt = origin;
+            Destroy(tempObj);
+            GameManager.Instance.Player.InputHandler.GainControl();
+        });
+        
+        // 코루틴에서는 시퀀스가 완료될 때까지 대기
+        yield return sequence.WaitForCompletion();
+    }
+    
     private async UniTask LoadNavMeshData()
     {
         if(_loadedNavMeshData) return;
@@ -130,6 +208,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         if (_navMeshSurface)
         {
             _navMeshSurface.RemoveData();
+        }
+        
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.UnBindGate(gates[(RoomDirection)i]);
         }
         
         SetGateOpen(false);
@@ -159,6 +244,9 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         _cleared = true;
         if(hasReward) Reward();
+        
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Common.Light);
         
         ClearRoom();
     }
