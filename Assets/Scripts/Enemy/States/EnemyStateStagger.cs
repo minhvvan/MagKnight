@@ -15,7 +15,8 @@ public class EnemyStateStagger : BaseState<Enemy>
     public override void Enter()
     {
         _blackboard.staggerRecoveryCancellation = new CancellationTokenSource();
-        _controller.Anim.SetTrigger("Stagger");
+        _controller.SetAnimTrigger("Stagger");
+        // _controller.Anim.SetTrigger("Stagger");
     }
 
     public override void UpdateState()

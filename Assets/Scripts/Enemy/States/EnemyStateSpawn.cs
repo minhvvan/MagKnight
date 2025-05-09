@@ -22,7 +22,8 @@ public class EnemyStateSpawn : BaseState<Enemy>
 
     public override void Enter()
     {
-        _controller.Anim.SetBool("Spawn", true);
+        _controller.SetAnimBool("Spawn", true);
+        // _controller.Anim.SetBool("Spawn", true);
         
         _effector.Phase(2f, ()=>
         {
@@ -41,6 +42,7 @@ public class EnemyStateSpawn : BaseState<Enemy>
     public override void Exit()
     {
         _blackboard.target = GameObject.FindWithTag("Player");
-        _controller.Anim.SetBool("Spawn", false);
+        // _controller.Anim.SetBool("Spawn", false);
+        _controller.SetAnimBool("Spawn", false);
     }
 }

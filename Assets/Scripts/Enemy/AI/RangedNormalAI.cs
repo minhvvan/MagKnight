@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class RangedNormalAI : IEnemyAI
 {
@@ -18,11 +19,11 @@ public class RangedNormalAI : IEnemyAI
     
     public void OnEnter()
     {
-        _enemy.Anim.SetBool("Trace", true);
-        if(_enemy.IsAvailableTarget())
-        {
-            _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        }
+        // _enemy.Anim.SetBool("Trace", true);
+        // if(_enemy.IsAvailableTarget())
+        // {
+        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        // }
     }
 
     public void OnUpdate()
@@ -30,25 +31,53 @@ public class RangedNormalAI : IEnemyAI
         if (TargetInRayAndVisible())
         {
             _enemy.SetState(_enemy.actionState);
+            return;
         }
-        else
+        
+        _destinationTimer += Time.deltaTime;
+        if (_destinationTimer >= destinationUpdateInterval)
         {
-            _destinationTimer += Time.deltaTime;
-            if (_destinationTimer >= destinationUpdateInterval)
+            if(_enemy.IsAvailableTarget())
             {
-                if(_enemy.IsAvailableTarget())
-                {
-                    _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-                }
-
-                _destinationTimer = 0f;
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
             }
+
+            _destinationTimer = 0f;
         }
+        
+        if (!_enemy.Agent.pathPending)
+        {
+            if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
+            {
+                _enemy.SetAnimBool("Trace", true);
+                // _enemy.Anim.SetBool("Trace", true);
+            }
+            else
+            {
+                _enemy.SetAnimBool("Trace", false);
+                // _enemy.Anim.SetBool("Trace", false);
+            }
+        } 
+        
+        // else
+        // {
+        //     _destinationTimer += Time.deltaTime;
+        //     if (_destinationTimer >= destinationUpdateInterval)
+        //     {
+        //         if(_enemy.IsAvailableTarget())
+        //         {
+        //             _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+        //         }
+        //
+        //         _destinationTimer = 0f;
+        //     }
+        // }
     }
 
     public void OnExit()
     {
-        _enemy.Anim.SetBool("Trace", false);
+        _enemy.SetAnimBool("Trace", false);
+        // _enemy.Anim.SetBool("Trace", false);
     }
     
     public bool TargetInRayAndVisible()

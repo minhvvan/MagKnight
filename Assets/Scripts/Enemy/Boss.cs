@@ -23,26 +23,25 @@ public class Boss : Enemy
     {
         if (bossBlackboard.aiType == EnemyAIType.Boss)
         {
-            Anim.SetTrigger("PhaseChange");
+            SetAnimTrigger("PhaseChange");
             bossBlackboard.phase = phase;
             patternController.PhaseChange(phase);
             if (phase == 2)
             {
-                // blackboard.abilitySystem.
                 GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 2);
                 bossBlackboard.abilitySystem.ApplyEffect(gameplayEffect);
-                Anim.SetFloat("phase", phase);
+                SetAnimFloat("phase", phase);
                 bossBlackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
-                Anim.SetFloat("AttackSpeed", 1.5f);
+                SetAnimFloat("AttackSpeed", 1.5f);
             }
             else if (phase == 3)
             {
                 GameplayEffect gameplayEffect = new GameplayEffect(EffectType.Instant, AttributeType.MoveSpeed, 3);
                 bossBlackboard.abilitySystem.ApplyEffect(gameplayEffect);
-                Anim.SetFloat("phase", phase);
+                SetAnimFloat("phase", phase);
                 blackboard.enemyRenderer.material.SetColor("_EmissiveTint", Color.red);
                 blackboard.enemyRenderer.material.SetFloat("_Intensity", 1);
-                Anim.SetFloat("AttackSpeed", 2f);
+                SetAnimFloat("AttackSpeed", 2f);
             }
         }
     }
@@ -120,7 +119,7 @@ public class Boss : Enemy
         }
         MagneticController targetMC = bossBlackboard.target.GetComponent<MagneticController>();
         gameObject.GetComponent<EnemyMagnetActionController>().StartMagneticPull(targetMC);
-        Anim.SetTrigger("PullSucceed");
+        SetAnimTrigger("PullSucceed");
     }
 
     public void Missile(GameObject missileEffect)

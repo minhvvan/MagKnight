@@ -95,8 +95,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Update()
     {
         _stateMachine.Update();
-        // var state = Anim.GetCurrentAnimatorStateInfo(0);
-        // Debug.Log("현재 상태: " + state.fullPathHash);
     }
 
     protected void OnDestroy()
@@ -419,4 +417,25 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
         return false;
     }
+
+    
+    #region animator
+    public void SetAnimBool(string paramName, bool value)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetBool(paramName, value);
+    }
+
+    public void SetAnimTrigger(string paramName)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetTrigger(paramName);
+    }
+
+    public void SetAnimFloat(string paramName, float value)
+    {
+        if (Anim != null && Anim.gameObject != null)
+            Anim.SetFloat(paramName, value);
+    }
+    #endregion
 }

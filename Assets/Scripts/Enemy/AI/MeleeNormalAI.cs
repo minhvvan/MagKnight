@@ -18,15 +18,6 @@ public class MeleeNormalAI : IEnemyAI
     
     public void OnEnter()
     {
-        //  if(_enemy.IsAvailableTarget())
-        // {
-        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        // }
-        // if (!_enemy.Agent.pathPending && _enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
-        // {
-        //     // 갈 수 있는 경로
-        //     _enemy.Anim.SetBool("Trace", true);
-        // }
     }
 
     public void OnUpdate()
@@ -52,18 +43,21 @@ public class MeleeNormalAI : IEnemyAI
         {
             if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
-                _enemy.Anim.SetBool("Trace", true);
+                _enemy.SetAnimBool("Trace", true);
+                // _enemy.Anim.SetBool("Trace", true);
             }
             else
             {
-                _enemy.Anim.SetBool("Trace", false);
+                _enemy.SetAnimBool("Trace", false);
+                // _enemy.Anim.SetBool("Trace", false);
             }
         } 
     }
 
     public void OnExit()
     {
-        _enemy.Anim.SetBool("Trace", false);
+        _enemy.SetAnimBool("Trace", false);
+        // _enemy.Anim.SetBool("Trace", false);
     }
     
     public bool TargetInRay()

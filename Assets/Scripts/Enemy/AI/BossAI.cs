@@ -52,17 +52,20 @@ public class BossAI : IEnemyAI
         {
             if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
-                _enemy.Anim.SetBool("Trace", true);
+                _enemy.SetAnimBool("Trace", true);
+                // _enemy.Anim.SetBool("Trace", true);
             }
             else
             {
-                _enemy.Anim.SetBool("Trace", false);
+                _enemy.SetAnimBool("Trace", false);
+                // _enemy.Anim.SetBool("Trace", false);
             }
         } 
     }
 
     public void OnExit()
     {
-        _enemy.Anim.SetBool("Trace", false);
+        _enemy.SetAnimBool("Trace", false);
+        // _enemy.Anim.SetBool("Trace", false);
     }
 }
