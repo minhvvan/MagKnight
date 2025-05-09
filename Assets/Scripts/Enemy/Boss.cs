@@ -45,7 +45,7 @@ public class Boss : Enemy
                 Anim.SetFloat("AttackSpeed", 2f);
             }
         }
-    }
+    }    
 
     public void PatternAttackStart(int patternIndex)
     {
@@ -163,5 +163,7 @@ public class Boss : Enemy
         _buffCancellationToken?.Dispose();
         _missileCancellationToken?.Cancel();
         _missileCancellationToken?.Dispose();
+
+        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();
     }
 }
