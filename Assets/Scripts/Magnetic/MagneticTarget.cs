@@ -14,6 +14,7 @@ public class MagneticTarget : MonoBehaviour
     
     [NonSerialized] public Transform target;
     public Action<MagneticTarget> onReturnTarget;
+    public Action<Vector2> onTrakingCirclePos;//MagneticUI의 원형 Aim 추적용
     
     [Header("Image width & height Set")]
     public Vector2 readySize = new Vector2(118,119);
@@ -57,6 +58,7 @@ public class MagneticTarget : MonoBehaviour
             }
             if(_mainCamera == null) Initialize();
             _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition));
+            onTrakingCirclePos?.Invoke(OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition)));
         }
         else
         {
