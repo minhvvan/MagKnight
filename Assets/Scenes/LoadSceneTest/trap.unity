@@ -130,6 +130,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1366217963}
     m_Modifications:
+    - target: {fileID: 1539012079911461001, guid: 62396abe231bf69408ccd5e5822f9cdf,
+        type: 3}
+      propertyPath: roomDirection
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1668894355066235618, guid: 62396abe231bf69408ccd5e5822f9cdf,
         type: 3}
       propertyPath: m_Size.x
@@ -778,6 +783,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1366217963}
     m_Modifications:
+    - target: {fileID: 1539012079911461001, guid: 62396abe231bf69408ccd5e5822f9cdf,
+        type: 3}
+      propertyPath: roomDirection
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2701662863117678437, guid: 62396abe231bf69408ccd5e5822f9cdf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -864,6 +874,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1366217963}
     m_Modifications:
+    - target: {fileID: 1539012079911461001, guid: 62396abe231bf69408ccd5e5822f9cdf,
+        type: 3}
+      propertyPath: roomDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2701662863117678437, guid: 62396abe231bf69408ccd5e5822f9cdf,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1148,6 +1163,7 @@ MonoBehaviour:
       Value: {fileID: 18535869}
     - Key: 3
       Value: {fileID: 802934815}
+  nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 440396505}
   hasReward: 0
 --- !u!1 &1366217965 stripped
