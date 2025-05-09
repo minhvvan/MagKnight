@@ -37,10 +37,13 @@ public class GameplayEffect
     public GameplayEffect DeepCopy()
     {
         GameplayEffect copy = (GameplayEffect)MemberwiseClone();
+        copy.extraData = extraData.DeepCopy();
         return copy;
     }
 }
 
+
+[System.Serializable]
 public class ExtraData
 {
     public Transform sourceTransform;
@@ -49,4 +52,10 @@ public class ExtraData
     public bool isPoison = false;
     public HitInfo hitInfo;
     public float finalAmount = 0;
+
+    public ExtraData DeepCopy()
+    {
+        ExtraData copy = (ExtraData)MemberwiseClone();
+        return copy;
+    }
 }
