@@ -50,6 +50,7 @@ public class PauseMenuUIController : MonoBehaviour
     {
         //GameManager.Instance.RecoverPreviousState();
         HideUI();
+        UIManager.Instance.DisableCursor();
     }
 
     void OnClickGiveUp()
@@ -61,6 +62,7 @@ public class PauseMenuUIController : MonoBehaviour
             GameManager.Instance.SaveData(Constants.PlayerData);
             GameManager.Instance.ChangeGameState(GameState.InitGame);
             HideUI();
+            UIManager.Instance.DisableCursor();
         }, null, true);
     }
 
@@ -81,6 +83,7 @@ public class PauseMenuUIController : MonoBehaviour
             Application.Quit();
             //나중에 GameManager에서 베이스 캠프 나가는것 처럼 해도 괜찮을듯?
             HideUI();
+            UIManager.Instance.DisableCursor();
         }, null, true);
     }
 }
