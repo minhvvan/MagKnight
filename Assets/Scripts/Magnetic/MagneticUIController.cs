@@ -108,7 +108,7 @@ public class MagneticUIController : MonoBehaviour
         StartCoroutine(UIFade(_focusCircleCanvasGroup, 1f, _dotDuration));
         StartCoroutine(UIScale(trakingCircleRect.transform, Vector3.one, _dotDuration));
         StartCoroutine(UIFade(_trakingCircleCanvasGroup, 1f, _dotDuration));
-        StartCoroutine(UIScale(coolDownPanel.transform, Vector3.one, _dotDuration));
+        //StartCoroutine(UIScale(coolDownPanel.transform, Vector3.one, _dotDuration));
         
         StartCoroutine(SetRotateCircle());
         
@@ -121,7 +121,7 @@ public class MagneticUIController : MonoBehaviour
         StartCoroutine(UIFade(_focusCircleCanvasGroup, 0f, _dotDuration));
         StartCoroutine(UIScale(trakingCircleRect.transform, Vector3.zero, _dotDuration));
         StartCoroutine(UIFade(_trakingCircleCanvasGroup, 0f, _dotDuration));
-        StartCoroutine(UIScale(coolDownPanel.transform, Vector3.zero, _dotDuration));
+        //StartCoroutine(UIScale(coolDownPanel.transform, Vector3.zero, _dotDuration));
         
         _isRotate = false;
         yield return _waitDoTween;

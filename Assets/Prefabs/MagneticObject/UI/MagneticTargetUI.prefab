@@ -185,18 +185,20 @@ MonoBehaviour:
   magneticTargetPrefab: {fileID: 8591745875452543247, guid: 24eae76e2bc97ae48a7e14247b864821,
     type: 3}
   magneticTypeVisualAim: {fileID: 4816411019855910538}
-  trakingCircleImage: {fileID: 5848695879862118359}
   trakingCircleRect: {fileID: 4338727728778125977}
+  trakingCircleImage: {fileID: 5848695879862118359}
   trakingCircleOrigin: {x: 0, y: 0}
   trakerRotateSpeed: -10
-  trackingGroupImages: []
   triAimLeftRectTr: {fileID: 172119121844162976}
   triAimRightRectTr: {fileID: 67706503435227801}
   triAimOffset: 8
   triAimOrigin: 40
-  imageContainer: {fileID: 7622393266465487930}
-  poolSize: 20
   focusAreaCircle: {fileID: 4138513660950010702}
+  coolDownPanel: {fileID: 2877109708364379108}
+  coolDownIcon: {fileID: 7671029075713632373}
+  coolDownFill: {fileID: 1081690294400006753}
+  iconAlphaLow: 0.39
+  fillLowValue: 0.75
   circleUIColors:
   - colors:
     - serializedVersion: 2
@@ -213,12 +215,8 @@ MonoBehaviour:
       rgba: 3858814207
     - serializedVersion: 2
       rgba: 2516621055
-  magneticTypeImages: []
-  coolDownPanel: {fileID: 2877109708364379108}
-  coolDownIcon: {fileID: 7671029075713632373}
-  coolDownFill: {fileID: 1081690294400006753}
-  iconAlphaLow: 0.39
-  fillLowValue: 0.75
+  imageContainer: {fileID: 7622393266465487930}
+  poolSize: 20
 --- !u!1 &2877109708364379108
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +758,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.19607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

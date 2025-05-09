@@ -116,6 +116,7 @@ public class MagneticController : MagneticObject
         
         //추후 SO로 받아서 설정하게 될 기본값들
         _magneticUIController = FindObjectOfType<MagneticUIController>();
+        StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
         maxInCount = _magneticUIController.poolSize;
         
         mainCamera = Camera.main;
@@ -268,7 +269,8 @@ public class MagneticController : MagneticObject
         }
         var player = GetComponent<PlayerController>();
         StartCoroutine(_magneticUIController.MagneticSwitchCoolDownVisual(player.switchMagneticCooldown));
-
+        StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
+        
         ArtifactInventory inventory = GetComponent<ArtifactInventory>();
         if (inventory != null)
         {   
