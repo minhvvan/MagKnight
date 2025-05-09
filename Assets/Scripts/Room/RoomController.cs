@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using AYellowpaper.SerializedCollections;
@@ -12,11 +11,11 @@ using Moon;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 
 public class RoomController : MonoBehaviour, IObserver<bool>
 {
     [SerializeField] private SerializedDictionary<RoomDirection, Gate> gates;
+    [SerializeField] private LastGate nextFloorGate;
     [SerializeField] private ClearRoomField clearRoomField;
     [SerializeField] private bool hasReward;
 
@@ -49,6 +48,11 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             gate.gameObject.SetActive(false);
         }
+
+        if (nextFloorGate)
+        {
+            nextFloorGate.gameObject.SetActive(false);
+        }
         
         //클리어 필드 비활성화
         SetRoomReady(false);
@@ -77,7 +81,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         _roomIndex = index;
         Room = roomData;
         
-        if (Room is { roomType: RoomType.BattleRoom })
+        if (Room is { roomType: RoomType.BattleRoom } or { roomType: RoomType.BoosRoom })
         {
             if (_enemyController)
             {
@@ -93,6 +97,12 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             if(Room.connectedRooms[(int)dir] == Room.Empty || Room.connectedRooms[(int)dir] == Room.Blocked) continue; 
             gates[dir].gameObject.SetActive(isOpen);
+        }
+        
+        //마지막 문 제어
+        if (nextFloorGate)
+        {
+            nextFloorGate.gameObject.SetActive(isOpen);
         }
     }
 
@@ -112,7 +122,10 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         var player = GameManager.Instance.Player;
 
         CharacterController controller = player.GetComponent<CharacterController>();
-        controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
+        if (controller && gates.ContainsKey(gateDirection))
+        {
+            controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
+        }
         
         //함정방 입장 연출
         if (Room.roomType is RoomType.TrapRoom)
@@ -144,12 +157,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         //gate 표시 연결
-        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
-        for (var i = 0; i < Room.connectedRooms.Count; i++)
-        {
-            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
-            gateIndicator.BindGate(gates[(RoomDirection)i]);
-        }
+        BindGateIndicator();
         
         SetRoomReady(true);
         if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
@@ -210,13 +218,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             _navMeshSurface.RemoveData();
         }
         
-        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
-        for (var i = 0; i < Room.connectedRooms.Count; i++)
-        {
-            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
-            gateIndicator.UnBindGate(gates[(RoomDirection)i]);
-        }
-        
+        UnbindGateIndicator();
+
         SetGateOpen(false);
         gameObject.SetActive(false);
     }
@@ -306,5 +309,34 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             }
         }
         catch (OperationCanceledException) {}
+    }
+
+    private void OnDestroy()
+    {
+        var gateIndicator = UIManager.Instance?.inGameUIController?.gateIndicatorUIController;
+        if (gateIndicator)
+        {
+            gateIndicator.ClearGateBind();
+        }
+    }
+
+    private void BindGateIndicator()
+    {
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.BindGate(gates[(RoomDirection)i]);
+        }
+    }
+    
+    private void UnbindGateIndicator()
+    {
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
+        for (var i = 0; i < Room.connectedRooms.Count; i++)
+        {
+            if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
+            gateIndicator.UnBindGate(gates[(RoomDirection)i]);
+        }
     }
 }
