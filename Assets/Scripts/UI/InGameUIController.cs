@@ -13,6 +13,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
     [SerializeField] private StatusUIController statusUIController;
+    [SerializeField] private BossStatusUIController bossStatusUIController;
     [FormerlySerializedAs("gateIndicatorUI")] [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
 
 
@@ -60,5 +61,20 @@ public class InGameUIController : Singleton<InGameUIController>
     {
         //attributeSet에 묶인 UI 변경 해제
         statusUIController.UnbindAttributeChanges();
+    }
+    public void BindBossAttributeChanges(string bossName, AbilitySystem abilitySystem)
+    {
+        if(bossStatusUIController == null) return;
+        
+        bossStatusUIController.BindBossAttributeChanges(abilitySystem);
+        bossStatusUIController.SetBossName(bossName);
+        bossStatusUIController.Show();
+    }
+    public void UnbindBossAttributeChanges()
+    {
+        if(bossStatusUIController == null) return;
+
+        bossStatusUIController.UnbindBossAttributeChanges();
+        bossStatusUIController.Hide();
     }
 }

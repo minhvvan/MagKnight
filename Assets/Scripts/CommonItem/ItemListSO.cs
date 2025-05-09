@@ -34,7 +34,7 @@ public class ItemListSO : ScriptableObject
     
     [Header("Artifact")] 
     public GameObject artifactPrefab;
-    public List<ArtifactDataSO> artifactList;
+    public ArtifactDataMappingSO artifactMapping;
     
     [Header("MagCore")]
     public GameObject magCorePrefab;
