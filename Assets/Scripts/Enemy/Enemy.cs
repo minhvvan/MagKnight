@@ -63,8 +63,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         _stateMachine.ChangeState(spawnState);
         
         // 시작 y축 위치 보정
-        if (Physics.Raycast(transform.position + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 4f,
-                1 << LayerMask.NameToLayer("Environment")))
+        if (Physics.Raycast(transform.position + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 4f))
         {
             Vector3 newPos = hit.point;
             newPos.y += 0.05f;
@@ -132,7 +131,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         var enemies = Physics.OverlapSphere(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy"));
 
         ApplySoftCollision(enemies);
-        if (!Physics.Raycast(transform.position, Vector3.down, 1f, 1 << LayerMask.NameToLayer("Environment")))
+        if (!Physics.Raycast(transform.position, Vector3.down, 1f))
         {
             Agent.ResetPath();
             isFalling = true;
@@ -475,21 +474,14 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // Agent.nextPosition = transform.position;
         
         // 땅에 닿았는지 다시 체크해서 멈추기
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f, 1 << LayerMask.NameToLayer("Environment")))
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f))
         {
             Vector3 destination = new Vector3(transform.position.x, hit.point.y, transform.position.z);
             destination.y += 0.05f;
             Agent.Warp(destination);
-            // Agent.nextPosition = destination;
             transform.position = destination;
             _verticalSpeed = 0f;
             isFalling = false;
-            // Agent.SetDestination(blackboard.target.transform.position);
-            // if (NavMesh.SamplePosition(destination, out NavMeshHit navMeshHit, 1.0f, NavMesh.AllAreas))
-            // {
-            //     // 1만큼 떨어진 곳에 navmesh가 있을경우
-            //     Agent.SetDestination(navMeshHit.position);
-            // }
         }
     }
 }
