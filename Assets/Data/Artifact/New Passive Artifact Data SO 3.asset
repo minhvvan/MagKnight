@@ -10,39 +10,39 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb36e9c0bc715d6479f02981a9b08ff3, type: 3}
-  m_Name: New Passive Artifact Data SO
+  m_Name: New Passive Artifact Data SO 3
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 6c1c0bbb4676f44e996903fc7e742152, type: 3}
-  itemName: "\uC0B0\uC131 \uB3C5\uB2C8"
-  description: "\uC0B0\uC131\uC774 \uC801\uC744 \uC57D\uD654\uC2DC\uD0AC \uAC83 \uAC19\uB2E4"
-  scrapValue: 200
-  itemID: 20
-  rarity: 4
+  icon: {fileID: 21300000, guid: 16940990aa25a4ff29f75f395582bf0a, type: 3}
+  itemName: "\uC815\uCCB4\uBD88\uBA85\uC758 \uB208"
+  description: "\uC0C1\uB300\uBC29\uC758 \uC57D\uC810\uC774 \uBCF4\uC778\uB2E4"
+  scrapValue: 0
+  itemID: 16
+  rarity: 3
   N_passiveArtifacts:
-  - triggerChance: 0.5
+  - triggerChance: 0.1
     triggerEvent: 0
     effect:
       effectType: 1
-      attributeType: 8
-      amount: 2
-      duration: 2
-      period: 0.25
+      attributeType: 3
+      amount: 10
+      duration: 5
+      period: 0
       tracking: 1
       maxStack: 1
     isTarget: 1
     hasCount: 0
     triggerCount: 0
   S_passiveArtifacts:
-  - triggerChance: 1
-    triggerEvent: 0
+  - triggerChance: 0.3
+    triggerEvent: 4
     effect:
-      effectType: 1
-      attributeType: 3
-      amount: -3
-      duration: 5
+      effectType: 0
+      attributeType: 16
+      amount: 10
+      duration: 0
       period: 0
-      tracking: 1
-      maxStack: 5
-    isTarget: 1
+      tracking: 0
+      maxStack: 0
+    isTarget: 0
     hasCount: 0
     triggerCount: 0

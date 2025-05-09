@@ -96,7 +96,7 @@ public class ItemManager : Singleton<ItemManager>
             artifactList?.Add((ItemRarity)rarity, new List<ArtifactDataSO>());
         }
         
-        foreach (var data in datas.artifactList)
+        foreach (var data in datas.artifactMapping.artifacts.Values)
         {
             if (artifactList != null) artifactList[data.rarity].Add(data);
         }
