@@ -317,11 +317,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             {
                 Time.timeScale = 1;
             });
-            VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
+            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         else
         {
-            VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
+            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         
         AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
