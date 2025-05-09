@@ -46,15 +46,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageNumberPrefabs:
     _serializedList:
-    - Key: 1
+    - Key: 0
       Value: {fileID: 3106269974086679045, guid: 6f41cef9f25285c47a8d8a55f5f0dda8,
         type: 3}
-    - Key: 2
+    - Key: 1
       Value: {fileID: 8054030339143631686, guid: a37c240852a06cc41838ade10010ef2b,
         type: 3}
-    - Key: 3
+    - Key: 2
       Value: {fileID: 7538001082577599286, guid: c16fca86b1f13344196b948234d0542a,
         type: 3}
-    - Key: 4
+    - Key: 3
       Value: {fileID: 6943526546312432443, guid: f4c2563ab83d1ea4fae9071725efc6d4,
         type: 3}
