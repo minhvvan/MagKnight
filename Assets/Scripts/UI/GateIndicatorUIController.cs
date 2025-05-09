@@ -48,6 +48,7 @@ public class GateIndicatorUIController : MonoBehaviour
 
         for (int i = 0; i < _gates.Count; i++)
         {
+            if(!_gates[i]) continue;
             if(!_gates[i].gameObject.activeInHierarchy) continue;
             
             if (i >= indicator.Count) continue;
@@ -99,5 +100,10 @@ public class GateIndicatorUIController : MonoBehaviour
         
         _gates.Remove(gate);
         indicator[(int)gate.roomDirection].gameObject.SetActive(false);
+    }
+
+    public void ClearGateBind()
+    {
+        _gates.Clear();
     }
 }

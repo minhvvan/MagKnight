@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -267,6 +268,37 @@ namespace hvvan
         public PlayerStat GetCurrentStat()
         {
             return _currentRunData?.playerStat;
+        }
+
+        public async UniTask MoveToNextFloor()
+        {
+            CurrentRunData.currentFloor++;
+            CurrentRunData.currentRoomIndex = 0;
+            CurrentRunData.clearedRooms.Clear();
+            await SaveData(Constants.CurrentRun);
+            
+            var floorData = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
+
+            //다음층 시작룸 로드
+            var startRoom = floorData.Floor[CurrentRunData.currentFloor].rooms[RoomType.StartRoom];
+            SceneController.TransitionToScene(startRoom.sceneName, true, NextFloorSceneLoaded);
+        }
+
+        private IEnumerator NextFloorSceneLoaded()
+        {
+            var enterTask = RoomSceneController.Instance.EnterFloor();
+            while (!enterTask.Status.IsCompleted())
+            {
+                yield return null;
+            }
+            
+            RoomSceneController.Instance.CurrentRoomController.SetRoomReady(true);
+            
+            //플레이어 설정
+            if (Player)
+            {
+                Player.InitializeByCurrentRunData(CurrentRunData);
+            }
         }
     }
 }

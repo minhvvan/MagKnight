@@ -20,6 +20,9 @@ MonoBehaviour:
     - Key: Prototype
       Value:
         sceneTitle: "\uD504\uB85C\uD1A0\uD0C0\uC785"
-    - Key: start
+    - Key: start 1
       Value:
-        sceneTitle: "\uC2DC\uC791\uBC29"
+        sceneTitle: "1\uCE35 \uC2DC\uC791\uBC29"
+    - Key: start 2
+      Value:
+        sceneTitle: "2\uCE35 \uC2DC\uC791\uBC29"
