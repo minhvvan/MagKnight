@@ -313,7 +313,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     private void OnDestroy()
     {
-        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
+        var gateIndicator = UIManager.Instance?.inGameUIController?.gateIndicatorUIController;
         if (gateIndicator)
         {
             gateIndicator.ClearGateBind();
