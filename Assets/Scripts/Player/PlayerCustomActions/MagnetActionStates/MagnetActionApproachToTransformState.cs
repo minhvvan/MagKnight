@@ -6,7 +6,7 @@ public class MagnetActionApproachToTransformState : BaseMagnetActionState
     Transform _toTransform; //Anchor Transform
 
 
-    private float _swingStartDistance = 4.5f;  // 스윙 시작 거리
+    private float _swingStartDistance = 4f;  // 스윙 시작 거리
     private float _initialAccelSpeed = 15;  // 초기 이동 속도
 
     public MagnetActionApproachToTransformState(PlayerMagnetActionController controller) : base(controller)
@@ -29,6 +29,7 @@ public class MagnetActionApproachToTransformState : BaseMagnetActionState
         controller.PlayerController.inMagnetSkill = true;
         //controller.PlayerController.InputHandler.ReleaseControl();
         VolumeController.MotionBlurPlay(0.8f, 0.1f);
+        controller.StartCoroutine(controller.PlayerController.cameraSettings.AdjustFOV(50, 30, 0.5f));
 
         controller.PlayerController.LookAtForce(_toTransform, true);
     }
