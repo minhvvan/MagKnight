@@ -89,14 +89,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetImg:
-  - {fileID: 21300000, guid: 3fc1f13f0fb422d46ac4490b14237c19, type: 3}
-  - {fileID: 21300000, guid: 5aa6e38e7ba4215458d6bba9e4e90ecd, type: 3}
+  - {fileID: 21300000, guid: efd4baf934b10dd47b32964fc2c95343, type: 3}
+  - {fileID: 21300000, guid: 585cdbb5f17dd8f4bbabb4b9dd9625e1, type: 3}
   targetColor:
   - serializedVersion: 2
     rgba: 4292006610
   - serializedVersion: 2
     rgba: 4278244607
-  rectTransform: {fileID: 0}
-  target: {fileID: 0}
-  _uiCanvas: {fileID: 0}
-  _canvasRectTransform: {fileID: 0}
+  readySize: {x: 32, y: 32}
+  lockSize: {x: 120, y: 120}

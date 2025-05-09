@@ -8,21 +8,22 @@ using UnityEngine;
 
 public class InitGameState: IGameState
 {
-    private CurrentRunData _currentRunData;
     
     public async void OnEnter()
     {
-        await GameManager.Instance.SetPlayerData(SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData));
-
-        _currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
-
-        //currentRunData 설정
-        GameManager.Instance.SetCurrentRunData(_currentRunData); //null이면 생성
-        _currentRunData = GameManager.Instance.CurrentRunData;
-
-        await ItemManager.Instance.SetAllItemUpdate(_currentRunData);
+        var currentRunData = GameManager.Instance.CurrentRunData;
+        if (currentRunData == null)
+        {
+            await GameManager.Instance.SetPlayerData(SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData));
+            currentRunData = SaveDataManager.Instance.LoadData<CurrentRunData>(Constants.CurrentRun);
+            //currentRunData 설정
+            GameManager.Instance.SetCurrentRunData(currentRunData); //null이면 생성
+            currentRunData = GameManager.Instance.CurrentRunData;
+        }
         
-        if (!_currentRunData.isDungeonEnter)
+        await ItemManager.Instance.SetAllItemUpdate(currentRunData);
+        
+        if (!currentRunData.isDungeonEnter)
         {
             //던전 입장 X => BaseCamp로
             SceneController.TransitionToScene(Constants.BaseCamp, true, TransitionToBaseCampCallback);
@@ -32,7 +33,7 @@ public class InitGameState: IGameState
             //회차 정보대로 씬 이동 및 설정
 
             var floorList = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
-            var currentFloorRooms = floorList.Floor[_currentRunData.currentFloor];
+            var currentFloorRooms = floorList.Floor[currentRunData.currentFloor];
             
             //시작씬으로 이동 -> 시작씬 로드 이후 최근 저장 위치로 이동
             SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
@@ -64,7 +65,7 @@ public class InitGameState: IGameState
         var player = GameManager.Instance.Player;
         if (player)
         {
-            player.InitializeByCurrentRunData(_currentRunData);
+            player.InitializeByCurrentRunData(GameManager.Instance.CurrentRunData);
         }
         
         //룸 클리어
@@ -79,6 +80,5 @@ public class InitGameState: IGameState
 
     public void OnExit()
     {
-        _currentRunData = null;
     }
 }

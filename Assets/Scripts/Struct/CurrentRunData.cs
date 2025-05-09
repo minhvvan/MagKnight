@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class CurrentRunData : ISaveData
@@ -21,6 +22,10 @@ public class CurrentRunData : ISaveData
     public PlayerStat playerStat = new();
     
     //무기
+    public MagCoreSO currentMagCoreSO;
+    public string currentItemName;
+    public ItemCategory currentItemCategory;
+    public ItemRarity currentItemRarity;
     public WeaponType currentWeapon;
     public PartsType currentPartsType;
     public int currentPartsUpgradeValue;
