@@ -10,25 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 998b72c2390297944be31df0ed192c85, type: 3}
-  m_Name: MagCoreGreatSword
+  m_Name: MagCoreGreatSword 2
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
-  itemName: "\uBCF4\uAE09\uD615 \uB300\uAC80 - \uC18D\uACF5"
-  description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uC18D\uB3C4 \uCE7C\uB0A0"
+  itemName: "\uBCF4\uAE09\uD615 \uB300\uAC80 - \uD761\uD608"
+  description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uD761\uD608 \uCE7C\uB0A0"
   scrapValue: 35
   maxUpgradeLevel: 3
   weaponType: 1
-  partsType: 1
+  partsType: 3
   passiveEffects:
     _serializedList:
     - Key: 0
       Value:
-      - triggerChance: 1
+      - triggerChance: 0.07
         triggerEvent: 0
         effect:
-          effectType: 1
-          attributeType: 7
-          amount: 0.05
+          effectType: 0
+          attributeType: 1
+          amount: 3
           duration: 5
           period: 0
           isPoison: 0
@@ -45,12 +45,12 @@ MonoBehaviour:
         triggerCount: 0
     - Key: 1
       Value:
-      - triggerChance: 1
+      - triggerChance: 0.07
         triggerEvent: 0
         effect:
-          effectType: 1
-          attributeType: 7
-          amount: 0.0625
+          effectType: 0
+          attributeType: 1
+          amount: 5
           duration: 5
           period: 0
           isPoison: 0
@@ -67,12 +67,12 @@ MonoBehaviour:
         triggerCount: 0
     - Key: 2
       Value:
-      - triggerChance: 1
+      - triggerChance: 0.07
         triggerEvent: 0
         effect:
-          effectType: 1
-          attributeType: 7
-          amount: 0.075
+          effectType: 0
+          attributeType: 1
+          amount: 7
           duration: 5
           period: 0
           isPoison: 0
@@ -104,12 +104,12 @@ MonoBehaviour:
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 7
-          amount: 2
-          duration: 0
-          period: 0
-          isPoison: 0
-          tracking: 1
+          attributeType: 8
+          amount: 0.2
+          duration: 5
+          period: 0.5
+          isPoison: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -117,19 +117,19 @@ MonoBehaviour:
             isCritical: 0
             isPoison: 0
             finalAmount: 0
-        isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        isTarget: 1
+        hasCount: 0
+        triggerCount: 0
       - triggerChance: 1
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 4
-          amount: 1
-          duration: 0
-          period: 0
+          attributeType: 1
+          amount: 0.1
+          duration: 5
+          period: 0.5
           isPoison: 0
-          tracking: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -138,20 +138,20 @@ MonoBehaviour:
             isPoison: 0
             finalAmount: 0
         isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        hasCount: 0
+        triggerCount: 0
     - Key: 1
       Value:
       - triggerChance: 1
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 7
-          amount: 2
-          duration: 0
-          period: 0
-          isPoison: 0
-          tracking: 1
+          attributeType: 8
+          amount: 0.4
+          duration: 5
+          period: 0.5
+          isPoison: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -159,19 +159,19 @@ MonoBehaviour:
             isCritical: 0
             isPoison: 0
             finalAmount: 0
-        isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        isTarget: 1
+        hasCount: 0
+        triggerCount: 0
       - triggerChance: 1
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 4
-          amount: 1
-          duration: 0
-          period: 0
+          attributeType: 1
+          amount: 0.2
+          duration: 5
+          period: 0.5
           isPoison: 0
-          tracking: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -180,20 +180,20 @@ MonoBehaviour:
             isPoison: 0
             finalAmount: 0
         isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        hasCount: 0
+        triggerCount: 0
     - Key: 2
       Value:
       - triggerChance: 1
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 7
-          amount: 2
-          duration: 0
-          period: 0
-          isPoison: 0
-          tracking: 1
+          attributeType: 8
+          amount: 0.7
+          duration: 5
+          period: 0.5
+          isPoison: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -201,19 +201,19 @@ MonoBehaviour:
             isCritical: 0
             isPoison: 0
             finalAmount: 0
-        isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        isTarget: 1
+        hasCount: 0
+        triggerCount: 0
       - triggerChance: 1
         triggerEvent: 0
         effect:
           effectType: 1
-          attributeType: 4
-          amount: 1
-          duration: 0
-          period: 0
+          attributeType: 1
+          amount: 0.35
+          duration: 5
+          period: 0.5
           isPoison: 0
-          tracking: 1
+          tracking: 0
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -222,8 +222,8 @@ MonoBehaviour:
             isPoison: 0
             finalAmount: 0
         isTarget: 0
-        hasCount: 1
-        triggerCount: 2
+        hasCount: 0
+        triggerCount: 0
   magnetGameplayEffects:
     _serializedList:
     - Key: 0
