@@ -409,7 +409,7 @@ namespace Moon
 
         void UpdateCameraHandler()
         {
-            if(_inputHandler.IsControllerInputBlocked())
+            if(_inputHandler.IsControllerInputBlocked() && !_isDodging)
             {
                 cameraSettings.DisableCameraMove();
                 if(isDead)
@@ -507,7 +507,7 @@ namespace Moon
             if (_isGrounded)
             {
                 //땅에 붙도록
-                _verticalSpeed = -gravity * k_StickingGravityProportion;
+                //_verticalSpeed = -gravity * k_StickingGravityProportion;
                 
                 if (_inputHandler.JumpInput && _readyToJump && !_inCombo && !_isDodging)
                 {                    
