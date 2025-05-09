@@ -117,29 +117,22 @@ public class WeaponHandler : MonoBehaviour
         VFXType vfxType = type == MagneticType.N ? VFXType.MAGNETIC_SWITCH_N : VFXType.MAGNETIC_SWITCH_S;
         VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon ? _currentWeapon.transform : transform);
 
-        
-        // switch (_isActiveMagneticSwitchEffect)
-        // {
-        //     case true:
-        //         return;
-        //     case false:
-        //         _isActiveMagneticSwitchEffect = true;
-        //         break;
-        // }
-
         if(_isActiveMagneticSwitchEffect) return;
 
         _isActiveMagneticSwitchEffect = true;
         
-        var magCoreSO = currentMagCore.GetMagCoreSO();
-        var currentUpgradeValue = currentMagCore.currentUpgradeValue;
-        var duration = magCoreSO.magnetEffectDuration;
+        if (currentMagCore != null)
+        {
+            var magCoreSO = currentMagCore.GetMagCoreSO();
+            var currentUpgradeValue = currentMagCore.currentUpgradeValue;
+            var duration = magCoreSO.magnetEffectDuration;
         
-        StartCoroutine(magCoreSO.MagnetSwitchEffect(abilitySystem, currentUpgradeValue, duration,
-            ()=>
-            {
-                _isActiveMagneticSwitchEffect = false;
-            }));
+            StartCoroutine(magCoreSO.MagnetSwitchEffect(abilitySystem, currentUpgradeValue, duration,
+                ()=>
+                {
+                    _isActiveMagneticSwitchEffect = false;
+                }));
+        }
     }
 
     public void AttackStart(int hitboxGroupId = default)

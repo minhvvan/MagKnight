@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7979921823216323565
 RectTransform:
   m_ObjectHideFlags: 0
@@ -141,6 +141,7 @@ MonoBehaviour:
   imageContainer: {fileID: 7622393266465487930}
   poolSize: 20
   focusAreaCircle: {fileID: 4138513660950010702}
+  circleUIColors: []
   magneticTypeN: {fileID: 6039956043106656106}
   magneticTypeS: {fileID: 4073313130185044032}
 --- !u!1 &2303889696304922489
@@ -617,7 +618,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4801753139806543930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -767,7 +768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6747050475063467110
 RectTransform:
   m_ObjectHideFlags: 0
@@ -917,7 +918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4568538319525216425
 RectTransform:
   m_ObjectHideFlags: 0
