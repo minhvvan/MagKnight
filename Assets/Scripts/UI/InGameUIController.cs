@@ -14,7 +14,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] public DialogueUIController dialogueUIController;
     [SerializeField] private StatusUIController statusUIController;
     [SerializeField] private BossStatusUIController bossStatusUIController;
-    [FormerlySerializedAs("gateIndicatorUI")] [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
+    [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
 
 
     protected override void Initialize()
