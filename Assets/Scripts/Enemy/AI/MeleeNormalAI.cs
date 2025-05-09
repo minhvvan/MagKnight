@@ -44,12 +44,10 @@ public class MeleeNormalAI : IEnemyAI
             if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
                 _enemy.SetAnimBool("Trace", true);
-                // _enemy.Anim.SetBool("Trace", true);
             }
             else
             {
                 _enemy.SetAnimBool("Trace", false);
-                // _enemy.Anim.SetBool("Trace", false);
             }
         } 
     }
@@ -57,7 +55,6 @@ public class MeleeNormalAI : IEnemyAI
     public void OnExit()
     {
         _enemy.SetAnimBool("Trace", false);
-        // _enemy.Anim.SetBool("Trace", false);
     }
     
     public bool TargetInRay()
@@ -77,17 +74,17 @@ public class MeleeNormalAI : IEnemyAI
         );
     }
 
-    public void SetDestination(Vector3 position)
-    {
-        if (NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
-        {
-            // 1만큼 떨어진 곳에 navmesh가 있을경우
-            _enemy.Agent.SetDestination(hit.position);
-        }
-        else
-        {
-            _enemy.Agent.ResetPath();
-        }
-        
-    }
+    // public void SetDestination(Vector3 position)
+    // {
+    //     if (NavMesh.SamplePosition(position, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+    //     {
+    //         // 1만큼 떨어진 곳에 navmesh가 있을경우
+    //         _enemy.Agent.SetDestination(hit.position);
+    //     }
+    //     else
+    //     {
+    //         _enemy.Agent.ResetPath();
+    //     }
+    //     
+    // }
 }
