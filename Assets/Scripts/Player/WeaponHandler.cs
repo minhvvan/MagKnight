@@ -185,6 +185,8 @@ public class WeaponHandler : MonoBehaviour
         if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
             Enemy enemy = hitInfo.collider.gameObject.GetComponent<Enemy>();
+            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
             
             GameplayEffect damageEffect = _damageEffect.DeepCopy();
             GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
@@ -194,8 +196,6 @@ public class WeaponHandler : MonoBehaviour
 
             enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
             enemy.blackboard.abilitySystem.ApplyEffect(resistanceEffect);
-            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, enemy.blackboard.abilitySystem);
-            _abilitySystem.TriggerEvent(TriggerEventType.OnHit, _abilitySystem);
         }
     }
     
