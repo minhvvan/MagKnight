@@ -45,6 +45,8 @@ namespace Moon
 
             if(isPunch && smoothly)
             {
+                DOTween.Kill(_rectTransform);
+                _rectTransform.localScale = Vector3.one;
                 _rectTransform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f).OnComplete(() =>
                 {
                     _rectTransform.localScale = Vector3.one;
