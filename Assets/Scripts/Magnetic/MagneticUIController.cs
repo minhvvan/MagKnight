@@ -181,6 +181,8 @@ public class MagneticUIController : MonoBehaviour
     {
         var colorGroup = circleUIColors[(int)type];
         magneticTypeVisualAim.color = colorGroup.colors[0];
+        magneticTypeVisualAim.gameObject.SetActive(true);
+        if (_magneticTypeImages == null) yield break;
         for (int i = 0; i < _magneticTypeImages.Length; i++)
         {
             //if (i != 0) trackingGroupImages[i].color = colorGroup.colors[i];
