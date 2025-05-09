@@ -29,7 +29,7 @@ public class MagnetActionApproachToTransformState : BaseMagnetActionState
         controller.PlayerController.inMagnetSkill = true;
         //controller.PlayerController.InputHandler.ReleaseControl();
         VolumeController.MotionBlurPlay(0.8f, 0.1f);
-        controller.StartCoroutine(controller.PlayerController.cameraSettings.AdjustFOV(50, 30, 0.5f));
+        // controller.StartCoroutine(controller.PlayerController.cameraSettings.AdjustFOV(50, 30, 0.5f));
 
         controller.PlayerController.LookAtForce(_toTransform, true);
     }
