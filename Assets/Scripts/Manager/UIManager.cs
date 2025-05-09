@@ -31,6 +31,7 @@ public class UIManager : Singleton<UIManager>
             if(popupUIController != null)
             {
                 popupUIController.HideAllPopupAvailableUI();
+                DisableCursor();
             }
         }
     }
