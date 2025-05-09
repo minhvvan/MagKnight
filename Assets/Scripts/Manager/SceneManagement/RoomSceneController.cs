@@ -55,7 +55,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
             _currentRoomController = targetController;
             GameManager.Instance.ChangeGameState(GameState.RoomEnter);
             
-            await targetController.OnPlayerEnter(direction);
+            await targetController.OnPlayerEnter(direction, true);
 
             if (GameManager.Instance.CurrentRunData.clearedRooms.Contains(targetRoomIndex))
             {

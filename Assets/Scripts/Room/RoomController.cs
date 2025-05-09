@@ -7,6 +7,7 @@ using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
+using Moon;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -94,7 +95,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
     }
 
-    public async UniTask OnPlayerEnter(RoomDirection direction = RoomDirection.South)
+    public async UniTask OnPlayerEnter(RoomDirection direction = RoomDirection.South, bool moveForce = false)
     {
         if (_navMeshSurface)
         {
@@ -109,6 +110,20 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
         CharacterController controller = player.GetComponent<CharacterController>();
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
+
+        // 앞쪽으로 조금 이동(연출)
+        if (moveForce)
+        {
+            if (player.TryGetComponent<PlayerController>(out var playerController))
+            {
+                var target = new GameObject()
+                {
+                    transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
+                };
+            
+                playerController.MoveForce(target.transform);
+            }
+        }
         
         SetRoomReady(true);
         gameObject.SetActive(true);
