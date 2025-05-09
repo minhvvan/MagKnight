@@ -3421,6 +3421,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss Status Bar
       objectReference: {fileID: 0}
+    - target: {fileID: 6973887684686995003, guid: 39a1bf69b9e79474ca95f44eadb3c1a9,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

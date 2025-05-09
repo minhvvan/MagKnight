@@ -35,6 +35,11 @@ public class EnemyStateSpawn : BaseState<Enemy>
         if (_controller.IsCurrentAnimFinished("Spawn") && _isSpawnEffectEnded)
         {
             _controller.SetState(_controller.aiState);
+            
+            if (_blackboard is BossBlackboard bossBlackboard)
+            {
+                bossBlackboard.BindHPBar();
+            }
         }
     }
 
