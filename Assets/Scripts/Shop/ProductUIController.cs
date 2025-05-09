@@ -428,12 +428,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         var isTarget = data.isTarget;
         var hasCount = data.hasCount;
         var triggerCount = data.triggerCount;
-
-        if (chance < 1f)
-        {
-            completeText += $"{chance*100f}% 의 확률로 ";
-        }
-
+        
         switch (eventType)
         {
             case TriggerEventType.OnHit:
@@ -455,6 +450,11 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 completeText += $"스킬 사용 시 ";
                 break;
         }
+        
+        if (chance < 1f)
+        {
+            completeText += $"{chance*100f}%의 확률로 ";
+        }
 
         // switch (effectType)
         // {
@@ -474,7 +474,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             if (duration > 0) completeText += $"{duration}초 동안 ";
         }
 
-        if (isTarget) completeText += "대상의 ";
+        if (isTarget) completeText += "대상에게 ";
         else if (!isTarget) completeText += "라이언의 ";
 
         bool isPercent = false;
@@ -488,19 +488,36 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         }
 
         string addText = string.Empty;
-        if (!isTarget)
+        // if (!isTarget)
+        // {
+        //     if (amount > 0) addText += "증가";
+        //     else if (amount < 0) addText += "감소";
+        // }
+        // else if (isTarget)
+        // {
+        //     if (amount > 0) addText += "감소";
+        //     else if (amount < 0) addText += "증가";
+        // }
+
+        if (attributeType == AttributeType.Damage && amount > 0)
+        {
+            completeText += $"{amount}가합니다.";
+        }
+        else
         {
             if (amount > 0) addText += "증가";
             else if (amount < 0) addText += "감소";
-        }
-        else if (isTarget)
-        {
-            if (amount > 0) addText += "감소";
-            else if (amount < 0) addText += "증가";
-        }
 
-        if(!isPercent) completeText += $"{amount} {addText}시킵니다.";
-        else if(isPercent) completeText += $"{amount*100f}% {addText}시킵니다.";
+            if (attributeType == AttributeType.Defense)
+            { 
+                if (amount < 0) amount *= -1f;
+            }
+
+            if(!isPercent) completeText += $"{amount} {addText}시킵니다.";
+            else if(isPercent) completeText += $"{amount*100f}% {addText}시킵니다.";
+        }
+        
+        
 
         if (effectType == EffectType.Duration)
         {
@@ -616,7 +633,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 isPercent = true;
                 break;
             case AttributeType.Damage:
-                completeText += $"받는 피해량을 ";
+                completeText += $"피해를 ";
                 break;
             case AttributeType.MaxResistance:
                 completeText += $"최대 저항력을 ";
