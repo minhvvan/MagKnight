@@ -97,12 +97,7 @@ public class GateIndicatorUIController : MonoBehaviour
     {
         if (!_gates.Contains(gate)) return;
         
-        int index = _gates.IndexOf(gate);
         _gates.Remove(gate);
-        
-        if (index >= 0 && index < indicator.Count)
-        {
-            indicator[index].gameObject.SetActive(false);
-        }
+        indicator[(int)gate.roomDirection].gameObject.SetActive(false);
     }
 }
