@@ -4,6 +4,7 @@ using Jun;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class InGameUIController : Singleton<InGameUIController>
@@ -12,7 +13,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
     [SerializeField] private StatusUIController statusUIController;
-    [SerializeField] public GateIndicatorUI gateIndicatorUI;
+    [FormerlySerializedAs("gateIndicatorUI")] [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
 
 
     protected override void Initialize()

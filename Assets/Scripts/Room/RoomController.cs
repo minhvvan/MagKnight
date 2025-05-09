@@ -126,7 +126,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         //gate 표시 연결
-        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUI;
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
         for (var i = 0; i < Room.connectedRooms.Count; i++)
         {
             if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
@@ -155,7 +155,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             _navMeshSurface.RemoveData();
         }
         
-        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUI;
+        var gateIndicator = UIManager.Instance.inGameUIController.gateIndicatorUIController;
         for (var i = 0; i < Room.connectedRooms.Count; i++)
         {
             if(Room.connectedRooms[i] == Room.Empty || Room.connectedRooms[i] == Room.Blocked) continue;
