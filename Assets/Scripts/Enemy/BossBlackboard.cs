@@ -20,6 +20,7 @@ public class BossBlackboard : EnemyBlackboard
         ai = new BossAI(_enemy);
         action = new BossAction(_enemy);
         
-
+        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();        
+        UIManager.Instance.inGameUIController.BindBossAttributeChanges(_enemy.name, abilitySystem);
     }
 }
