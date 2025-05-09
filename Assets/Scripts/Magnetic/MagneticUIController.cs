@@ -82,6 +82,8 @@ public class MagneticUIController : MonoBehaviour
 
     private void InitializeUI()
     {
+        magneticTypeVisualAim.gameObject.SetActive(false);
+        
         _focusCircleCanvasGroup = focusAreaCircle.GetComponent<CanvasGroup>();
         _coolDownCanvasGroup = coolDownPanel.GetComponent<CanvasGroup>();
         _coolDownIconCanvasGroup = coolDownIcon.GetComponent<CanvasGroup>();
