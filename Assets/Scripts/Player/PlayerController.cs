@@ -409,7 +409,7 @@ namespace Moon
 
         void UpdateCameraHandler()
         {
-            if(_inputHandler.IsControllerInputBlocked())
+            if(_inputHandler.IsControllerInputBlocked() && !_isDodging)
             {
                 cameraSettings.DisableCameraMove();
                 if(isDead)
