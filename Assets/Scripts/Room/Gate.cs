@@ -7,6 +7,7 @@ public class Gate : MonoBehaviour
     
     public RoomDirection roomDirection;
     public Action<RoomDirection> OnEnter;
+    public Transform indicatorPoint;
 
     void OnTriggerEnter(Collider other)
     {
