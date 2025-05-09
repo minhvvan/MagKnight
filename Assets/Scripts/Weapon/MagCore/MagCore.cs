@@ -125,7 +125,10 @@ public class MagCore: MonoBehaviour, IInteractable
             if (GameManager.Instance.CurrentRunData != null)
             {
                 var currentRunData = GameManager.Instance.CurrentRunData;
-                // GameManager.Instance.CurrentRunData.currentMagCore = this;
+                currentRunData.currentMagCoreSO = _magCoreSO;
+                currentRunData.currentItemName = itemName;
+                currentRunData.currentItemCategory = category;
+                currentRunData.currentItemRarity = rarity;
                 currentRunData.currentWeapon = weaponType;
                 currentRunData.currentPartsUpgradeValue = currentUpgradeValue;
 

@@ -191,6 +191,24 @@ namespace Moon
                 Debug.Log("CurrentWeapon is None");
                 //TODO: 무기가 없으면 베이스캠프로 강제 이동(예외 처리)
             }
+
+            //현재 Magcore 오브젝트를 플레이어 transform에 귀속시켜야 MagCoreData가 유지됨.
+            //Magcore만 가져오면 오브젝트가 없어서 Missing발생. -> 추가적으로 기존무기 Drop 로직도 이어지지 않게됨.
+            var category = currentRunData.currentItemCategory;
+            if (category == ItemCategory.MagCore)//MagCore가 아니면 데이터가 없는 것.
+            {
+                var rarity = currentRunData.currentItemRarity;
+                var itemName = currentRunData.currentItemName;
+                var upgradeValue = currentRunData.currentPartsUpgradeValue;
+                var magCore = ItemManager.Instance.CreateItem(category, rarity, transform.position, 
+                    Quaternion.identity,itemName: itemName, parent: transform);
+                var currentSpec = magCore.GetComponent<MagCore>();
+                currentSpec.SetMagCoreData(currentRunData.currentMagCoreSO);
+                currentSpec.currentUpgradeValue = upgradeValue;
+                currentSpec.SetPartsEffect(_abilitySystem);
+                magCore.SetActive(false);//외부 영향없게 비활성화
+                _weaponHandler.currentMagCore = currentSpec;
+            }
             
             SetCurrentWeapon(currentRunData.currentWeapon);
             RecoverArtifact(currentRunData);
@@ -980,7 +998,7 @@ namespace Moon
         // 5초 뒤에 다시 사용 가능하도록 해제
         private IEnumerator SwitchMagneticCooldown()
         {
-            yield return new WaitForSeconds(switchMagneticCooldown);
+            yield return new WaitForSecondsRealtime(switchMagneticCooldown);
             _canSwitchMagnetic = true;
             _switchCooldownCoroutine = null;
         }

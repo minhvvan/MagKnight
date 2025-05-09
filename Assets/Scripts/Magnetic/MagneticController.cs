@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
+using Moon;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -115,6 +116,7 @@ public class MagneticController : MagneticObject
         
         //추후 SO로 받아서 설정하게 될 기본값들
         _magneticUIController = FindObjectOfType<MagneticUIController>();
+        StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
         maxInCount = _magneticUIController.poolSize;
         
         mainCamera = Camera.main;
@@ -157,12 +159,10 @@ public class MagneticController : MagneticObject
         _isPressMagnetic = true;
         
         StartCoroutine(_magneticUIController.ShowFocusArea());
-        StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
+        StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
         
         _playerMagnetActionController.EndSwingWithInertia();
         _timeScaleCoroutine = StartCoroutine(TimeScaleCoroutine(1f));
-        
-
     
         //끝
         _isShortRelease = false;
@@ -193,7 +193,7 @@ public class MagneticController : MagneticObject
         VolumeController.SetChromaticAberration(0, 0, 0.1f);
         
         StartCoroutine(_magneticUIController.HideFocusArea());
-        StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
+        //StartCoroutine(_magneticUIController.HideMagneticTypeVisual());
     }
 
     //Q 짧게 누르고 뗐을때
@@ -263,8 +263,14 @@ public class MagneticController : MagneticObject
         base.SwitchMagneticType(type); //극성 전환
         
         //극성 전환 후
-        if(_isPressMagnetic) StartCoroutine(_magneticUIController.ShowMagneticTypeVisual(GetMagneticType()));
-
+        if (_isPressMagnetic)
+        {
+            StartCoroutine(_magneticUIController.SwitchMagneticTypeVisual(GetMagneticType()));
+        }
+        var player = GetComponent<PlayerController>();
+        StartCoroutine(_magneticUIController.MagneticSwitchCoolDownVisual(player.switchMagneticCooldown));
+        StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
+        
         ArtifactInventory inventory = GetComponent<ArtifactInventory>();
         if (inventory != null)
         {   
@@ -364,6 +370,7 @@ public class MagneticController : MagneticObject
                     _isDetectedMagnetic = true;
                     targetMagneticObject = magneticObject;
                     _magneticUIController.InLockOnTarget(targetMagneticObject.transform);
+                    StartCoroutine(_magneticUIController.SetTargetMagneticTypeColor(targetMagneticObject.GetMagneticType()));
                     
                     return;
                 }
@@ -425,7 +432,7 @@ public class MagneticController : MagneticObject
 
         // 월드 거리 기준 반지름
         float dynamicRadius = Vector3.Distance(worldCenter, worldOffset);
-        return dynamicRadius*2f;
+        return dynamicRadius * 1.5f;
     }
     
     
