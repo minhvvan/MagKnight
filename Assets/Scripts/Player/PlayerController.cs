@@ -65,6 +65,17 @@ namespace Moon
         [SerializeField] private float parryWindow = 0.2f;
         private bool _parryWindowActive = false;
         Coroutine _parryWindowCoroutine;
+        private bool _canSwitchMagnetic = true;
+        private Coroutine _switchCooldownCoroutine;
+        [NonSerialized] public float switchMagneticCooldown = 5f;
+        
+        [Header("Parry Slow Motion")]
+        [SerializeField] private float parrySlowAmount   = 0.2f;   // 슬로우모션 배율
+        [SerializeField] private float parrySlowDuration = 0.5f;   // 슬로우모션 실제 지속시간
+        private float _originalFixedDeltaTime;
+        private Coroutine _parrySlowCoroutine;
+
+
         #endregion
 
         #region Animation
@@ -165,6 +176,8 @@ namespace Moon
             _inputHandler.magneticInput = MagneticPress;
             _inputHandler.magneticOutput = MagneticRelease;
             _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
+            
+            _originalFixedDeltaTime = Time.fixedDeltaTime; // 패링 슬로우모션 용
         }
         
         //명시적 초기화
@@ -177,6 +190,24 @@ namespace Moon
             {
                 Debug.Log("CurrentWeapon is None");
                 //TODO: 무기가 없으면 베이스캠프로 강제 이동(예외 처리)
+            }
+
+            //현재 Magcore 오브젝트를 플레이어 transform에 귀속시켜야 MagCoreData가 유지됨.
+            //Magcore만 가져오면 오브젝트가 없어서 Missing발생. -> 추가적으로 기존무기 Drop 로직도 이어지지 않게됨.
+            var category = currentRunData.currentItemCategory;
+            if (category == ItemCategory.MagCore)//MagCore가 아니면 데이터가 없는 것.
+            {
+                var rarity = currentRunData.currentItemRarity;
+                var itemName = currentRunData.currentItemName;
+                var upgradeValue = currentRunData.currentPartsUpgradeValue;
+                var magCore = ItemManager.Instance.CreateItem(category, rarity, transform.position, 
+                    Quaternion.identity,itemName: itemName, parent: transform);
+                var currentSpec = magCore.GetComponent<MagCore>();
+                currentSpec.SetMagCoreData(currentRunData.currentMagCoreSO);
+                currentSpec.currentUpgradeValue = upgradeValue;
+                currentSpec.SetPartsEffect(_abilitySystem);
+                magCore.SetActive(false);//외부 영향없게 비활성화
+                _weaponHandler.currentMagCore = currentSpec;
             }
             
             SetCurrentWeapon(currentRunData.currentWeapon);
@@ -223,6 +254,14 @@ namespace Moon
                 };
                 
                 _abilitySystem.RegisterPassiveEffect(chargeSkillGauageMagnetic);
+                
+                var chargeSkillGauageParry = new PassiveEffectData {
+                    effect        = new GameplayEffect(EffectType.Instant, AttributeType.SkillGauge, 10),
+                    triggerChance = 1,
+                    triggerEvent  = TriggerEventType.OnParry
+                };
+                
+                _abilitySystem.RegisterPassiveEffect(chargeSkillGauageParry);
                 
                 var onSkill = new PassiveEffectData
                 {
@@ -388,7 +427,7 @@ namespace Moon
 
         void UpdateCameraHandler()
         {
-            if(_inputHandler.IsControllerInputBlocked())
+            if(_inputHandler.IsControllerInputBlocked() && !_isDodging)
             {
                 cameraSettings.DisableCameraMove();
                 if(isDead)
@@ -486,7 +525,7 @@ namespace Moon
             if (_isGrounded)
             {
                 //땅에 붙도록
-                _verticalSpeed = -gravity * k_StickingGravityProportion;
+                //_verticalSpeed = -gravity * k_StickingGravityProportion;
                 
                 if (_inputHandler.JumpInput && _readyToJump && !_inCombo && !_isDodging)
                 {                    
@@ -693,7 +732,7 @@ namespace Moon
             var timeout = 3f;
 
             _forwardSpeed = 4f;
-            while ((currentPosition - targetTransform.position).sqrMagnitude >= .05f && currentTime <= timeout)
+            while ((currentPosition - targetTransform.position).sqrMagnitude >= .2f && currentTime <= timeout)
             {
                 var dir = targetTransform.transform.position - transform.position;
                 dir.y = 0;
@@ -930,24 +969,42 @@ namespace Moon
 
         void SwitchMagneticInput()
         {
+            // 쿨다운 중이면 무시
+            if (! _canSwitchMagnetic)
+                return;
+
+            // 즉시 쿨타임 잠금
+            _canSwitchMagnetic = false;
+
+            // 기존 동작
             if (_magneticController != null)
             {
                 _magneticController.SwitchMagneticType();
                 OnMagneticEffect();
             }
+
+            // 패링 윈도우 열기
             if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
             _parryWindowActive = true;
             _abilitySystem.SetTag("Parry");
             _parryWindowCoroutine = StartCoroutine(CloseParryWindow());
+
+            // 쿨타임 시작
+            if (_switchCooldownCoroutine != null)
+                StopCoroutine(_switchCooldownCoroutine);
+            _switchCooldownCoroutine = StartCoroutine(SwitchMagneticCooldown());
+        }
+
+        // 5초 뒤에 다시 사용 가능하도록 해제
+        private IEnumerator SwitchMagneticCooldown()
+        {
+            yield return new WaitForSecondsRealtime(switchMagneticCooldown);
+            _canSwitchMagnetic = true;
+            _switchCooldownCoroutine = null;
         }
         
-        IEnumerator CloseParryWindow()
-        {
-            yield return new WaitForSeconds(parryWindow);
-            _abilitySystem.DeleteTag("Parry");
-            _parryWindowActive = false;
-            _parryWindowCoroutine = null;
-        }
+        
+
 
         void MagneticPress()
         {
@@ -1071,13 +1128,14 @@ namespace Moon
             // 1) 패링 창이 열려 있으면 ─────────
             if (_parryWindowActive)
             {
-                _parryWindowActive = false;
                 if (_parryWindowCoroutine != null)
                     StopCoroutine(_parryWindowCoroutine);
+                _abilitySystem.DeleteTag("Parry");
+                _parryWindowActive = false;
 
                 // 1-a) 패링 성공 애니 실행
                 _animator.SetTrigger(PlayerAnimatorConst.hashParry);
-                Debug.Log("parry success");
+                VFXManager.Instance.TriggerVFX(VFXType.PARRY, transform.position + 0.5f * Vector3.up);
                 
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
                 if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
@@ -1085,6 +1143,13 @@ namespace Moon
                     //넉백?
                     enemy.OnStagger();
                 }
+
+                _abilitySystem.TriggerEvent(TriggerEventType.OnParry, _abilitySystem);
+                
+                if (_parrySlowCoroutine != null)
+                    StopCoroutine(_parrySlowCoroutine);
+                _parrySlowCoroutine = StartCoroutine(DoParrySlowMotion());
+
 
                 // (피해는 받지 않음)
                 return;
@@ -1117,6 +1182,30 @@ namespace Moon
                 isCritical = true;
             }
             return (damage * damageMultiplier, isCritical);
+        }
+
+        IEnumerator CloseParryWindow()
+        {
+            yield return new WaitForSecondsRealtime(parryWindow);
+            _abilitySystem.DeleteTag("Parry");
+            _parryWindowActive = false;
+            _parryWindowCoroutine = null;
+        }
+        
+        IEnumerator DoParrySlowMotion()
+        {
+            // (1) 슬로우 시작
+            Time.timeScale = parrySlowAmount;
+            //Time.fixedDeltaTime = _originalFixedDeltaTime * parrySlowAmount;
+            
+            // (2) real-time 대기
+            yield return new WaitForSecondsRealtime(parrySlowDuration);
+
+            // (3) 복원
+            Time.timeScale = 1f;
+            //Time.fixedDeltaTime = _originalFixedDeltaTime;
+
+            _parrySlowCoroutine = null;
         }
 
         public void OnKnockDown()

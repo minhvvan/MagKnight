@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e1bcd082ea38a4c8b55427bc9fb300, type: 3}
+  m_Name: New Stat Artifact Data SO 19
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: b0d50492d5373444dae28f2c947b0c73, type: 3}
+  itemName: "\uC9F1\uB3CC"
+  description: "\uAC00\uC7A5 \uB2E8\uC21C\uD558\uBA74\uC11C \uD655\uC2E4\uD558\uB2E4"
+  scrapValue: 0
+  itemID: 1
+  rarity: 0
+  N_ArtifactEffect:
+  - effectType: 2
+    attributeType: 2
+    amount: 10
+    duration: 0
+    period: 0
+    tracking: 0
+    maxStack: 0
+  S_ArtifactEffect:
+  - effectType: 2
+    attributeType: 5
+    amount: 0.15
+    duration: 0
+    period: 0
+    tracking: 0
+    maxStack: 0

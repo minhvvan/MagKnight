@@ -340,10 +340,10 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: 550b565b470ce304d8a970244f711d15, type: 2}
   bgmSource: {fileID: 237861337940658416}
   environmentSource: {fileID: 2781744914278687826}
-  sfxSources: []
   sfxPoolPrefab: {fileID: 1327016088544565967, guid: 19d715bd62b46894e9f0aaccb7d0685c,
     type: 3}
   sfxContainer: {fileID: 9162961298812431006}
+  sfxPoolSize: 20
   bgmClips:
   - {fileID: 8300000, guid: da75483652b71134aafb6831c119133b, type: 3}
   - {fileID: 8300000, guid: e4c24e134f49cc443accda02c9a8d1c5, type: 3}
@@ -482,8 +482,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: dbc314e4e72be484a9f3ca07c43f8fea, type: 3}
   - {fileID: 8300000, guid: ef14d5d67650d14438feece55e04d545, type: 3}
   - {fileID: 8300000, guid: 7b03981f923c7af4580ed04fad969036, type: 3}
-  bgmPoolSize: 20
-  sfxPoolSize: 20
+  - {fileID: 8300000, guid: 33859ef635ee7cb4bb9e36a63dc9ef74, type: 3}
 --- !u!82 &1587106976543791563
 AudioSource:
   m_ObjectHideFlags: 0

@@ -39,11 +39,23 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         //자기력 상호작용
         SetMagneticInteract();
-        
+    }
+
+    private void OnEnable()
+    {
         //Highlight Binding
         if (isMagneticHighlight)
         {
             BindMagneticHighlight();
+        }
+    }
+
+    private void OnDisable()
+    {
+        //Highlight Unbinding
+        if (isMagneticHighlight)
+        {
+            UnbindMagneticHighlight();
         }
     }
 
@@ -74,13 +86,19 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     {
         //MagneticHighlightController 찾아서 renderer묶어주기
         var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
-        magneticHighlighter.BindRenderer(gameObject, magneticType);
+        if (magneticHighlighter)
+        {
+            magneticHighlighter.BindRenderer(gameObject, magneticType);
+        }
     }
 
     private void UnbindMagneticHighlight()
     {
         var magneticHighlighter = FindObjectOfType<MagneticHighlightController>();
-        magneticHighlighter.UnbindRenderer(gameObject, magneticType);
+        if (magneticHighlighter)
+        {
+            magneticHighlighter.UnbindRenderer(gameObject, magneticType);
+        }
     }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)

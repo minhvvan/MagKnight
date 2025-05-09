@@ -51,14 +51,17 @@ public class MagneticHighlightController : MonoBehaviour
     public void UnbindRenderer(GameObject magneticObject, MagneticType magneticType)
     {
         var objectRenderer = magneticObject.GetComponentInChildren<Renderer>();
-
+    
+        // 동일한 Renderer를 갖는 HighlighterRenderer 객체 생성
+        var highlighterToRemove = new HighlighterRenderer(objectRenderer, 1);
+    
         if (magneticType == MagneticType.N)
         {
-            _highlighterN.Renderers.Remove(new HighlighterRenderer(objectRenderer, 1));
+            _highlighterN.Renderers.Remove(highlighterToRemove);
         }
         else
         {
-            _highlighterS.Renderers.Remove(new HighlighterRenderer(objectRenderer, 1));
+            _highlighterS.Renderers.Remove(highlighterToRemove);
         }
     }
 }

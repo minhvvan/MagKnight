@@ -132,7 +132,7 @@ namespace Jun
                 // 예시 실드가 있다면?
                 // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
 
-#if true //공격 효과
+#if false //공격 효과
                 //CameraShake.Shake(0.2f, 0.1f);
                 CinemachineImpulseController.GenerateImpulse();
                 Time.timeScale = 0.1f;

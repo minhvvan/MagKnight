@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class BossBlackboard : EnemyBlackboard
@@ -19,7 +20,16 @@ public class BossBlackboard : EnemyBlackboard
 
         ai = new BossAI(_enemy);
         action = new BossAction(_enemy);
-        
+    }
 
+    public void BindHPBar()
+    {
+        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();
+        UIManager.Instance.inGameUIController.BindBossAttributeChanges(_enemy.name, abilitySystem);
+    }
+
+    public void UnbindHPBar()
+    {
+        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();
     }
 }

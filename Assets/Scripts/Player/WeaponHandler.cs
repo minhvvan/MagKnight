@@ -3,6 +3,7 @@ using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
 using hvvan;
 using Managers;
+using Moon;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -116,29 +117,22 @@ public class WeaponHandler : MonoBehaviour
         VFXType vfxType = type == MagneticType.N ? VFXType.MAGNETIC_SWITCH_N : VFXType.MAGNETIC_SWITCH_S;
         VFXManager.Instance.TriggerVFX(vfxType, _currentWeapon ? _currentWeapon.transform : transform);
 
-        
-        // switch (_isActiveMagneticSwitchEffect)
-        // {
-        //     case true:
-        //         return;
-        //     case false:
-        //         _isActiveMagneticSwitchEffect = true;
-        //         break;
-        // }
-
         if(_isActiveMagneticSwitchEffect) return;
 
         _isActiveMagneticSwitchEffect = true;
         
-        var magCoreSO = currentMagCore.GetMagCoreSO();
-        var currentUpgradeValue = currentMagCore.currentUpgradeValue;
-        var duration = magCoreSO.magnetEffectDuration;
+        if (currentMagCore != null)
+        {
+            var magCoreSO = currentMagCore.GetMagCoreSO();
+            var currentUpgradeValue = currentMagCore.currentUpgradeValue;
+            var duration = magCoreSO.magnetEffectDuration;
         
-        StartCoroutine(magCoreSO.MagnetSwitchEffect(abilitySystem, currentUpgradeValue, duration,
-            ()=>
-            {
-                _isActiveMagneticSwitchEffect = false;
-            }));
+            StartCoroutine(magCoreSO.MagnetSwitchEffect(abilitySystem, currentUpgradeValue, duration,
+                ()=>
+                {
+                    _isActiveMagneticSwitchEffect = false;
+                }));
+        }
     }
 
     public void AttackStart(int hitboxGroupId = default)
@@ -171,6 +165,13 @@ public class WeaponHandler : MonoBehaviour
 		    Debug.Log("CurrentWeapon is null");
             return;
         }
+
+        if (CurrentWeaponType == WeaponType.Bow)
+        {
+            var controller = GetComponent<PlayerController>();
+            controller.SetForceRotationToAim();
+        }
+
         UseSkill(_currentWeapon.OnSkill());
     }
 
@@ -222,13 +223,28 @@ public class WeaponHandler : MonoBehaviour
     
     public void SpawnSkillEffect(GameObject skillObj)
     {
-        Instantiate(skillObj, transform.position, transform.rotation);
-        VFXManager.Instance.TriggerVFX(VFXType.SKILL_KATANA, transform.position);
+        if(CurrentWeaponType == WeaponType.Bow)
+        {
+            Instantiate(skillObj, _currentWeapon.transform.position, transform.rotation);
+            var arrowSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.ArrowE);
+            AudioManager.Instance.PlaySFX(arrowSfxRandomClip);
+        }
+        else
+        {
+            Instantiate(skillObj, transform.position, transform.rotation);
+        }
     }
 
     public void CreateProjectile(int projectileLaunchMode)
     {
         Projectile projectile = _currentWeapon.CreateProjectile(projectileLaunchMode);
         projectile.OnHit += OnHitAction;
+    }
+
+    public void StartCharging()
+    {
+        VFXManager.Instance.TriggerVFX(VFXType.CHARGING_ARCHER_SKILL, _currentWeapon.transform.position, _currentWeapon.transform.rotation);
+        var bowStretchSFX = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.BowStretch);
+        AudioManager.Instance.PlaySFX(bowStretchSFX);
     }
 }
