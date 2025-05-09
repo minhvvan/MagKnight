@@ -116,7 +116,6 @@ public class MagneticController : MagneticObject
         
         //추후 SO로 받아서 설정하게 될 기본값들
         _magneticUIController = FindObjectOfType<MagneticUIController>();
-        _magneticUIController.magneticTypeVisualAim.gameObject.SetActive(true);
         StartCoroutine(_magneticUIController.SetMagneticTypeVisual(GetMagneticType()));
         maxInCount = _magneticUIController.poolSize;
         
