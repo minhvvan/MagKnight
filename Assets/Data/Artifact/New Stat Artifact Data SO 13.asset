@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26e1bcd082ea38a4c8b55427bc9fb300, type: 3}
-  m_Name: New Stat Artifact Data SO 1
+  m_Name: New Stat Artifact Data SO 13
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: a61c1e38c77474060bc53ea61b29f728, type: 3}
-  itemName: "\uC0AC\uB0E5\uAFBC\uC758 \uB36B"
-  description: "\uC0AC\uB0E5\uAFBC\uC758 \uC704\uD5D8\uD55C \uB36B\uC774\uB2E4"
-  scrapValue: 300
-  itemID: 21
-  rarity: 0
+  icon: {fileID: 21300000, guid: dc322d861a05d422eac16719c35220dc, type: 3}
+  itemName: "\uCD5C\uC0C1\uAE09 \uBB18\uC57D"
+  description: "\uC5C4\uCCAD\uB09C \uD798\uC774 \uB290\uAEF4\uC9C4\uB2E4"
+  scrapValue: 0
+  itemID: 9
+  rarity: 4
   N_ArtifactEffect:
   - effectType: 2
-    attributeType: 5
-    amount: 0.3
+    attributeType: 2
+    amount: 50
     duration: 0
     period: 0
     tracking: 0
     maxStack: 0
   S_ArtifactEffect:
   - effectType: 2
-    attributeType: 4
-    amount: 0.1
+    attributeType: 3
+    amount: 25
     duration: 0
     period: 0
     tracking: 0
