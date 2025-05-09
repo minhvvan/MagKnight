@@ -32,7 +32,6 @@ namespace Moon
         private void OnClickRestart()
         {
             GameManager.Instance.DeleteData(Constants.CurrentRun);
-            GameManager.Instance.SaveData(Constants.PlayerData);
             GameManager.Instance.ChangeGameState(GameState.InitGame);
         }
 
