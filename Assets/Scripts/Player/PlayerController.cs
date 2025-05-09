@@ -998,7 +998,7 @@ namespace Moon
         // 5초 뒤에 다시 사용 가능하도록 해제
         private IEnumerator SwitchMagneticCooldown()
         {
-            yield return new WaitForSeconds(switchMagneticCooldown);
+            yield return new WaitForSecondsRealtime(switchMagneticCooldown);
             _canSwitchMagnetic = true;
             _switchCooldownCoroutine = null;
         }
