@@ -18,7 +18,7 @@ public class SelfDestructAction : IEnemyAction
     
     public void OnEnter()
     {
-        _enemy.Anim.SetTrigger("Action");
+        _enemy.SetAnimTrigger("Action");
         _startupDuration = 0f;
         _blackboard.projectilePrefab.GetComponent<AttackEffect>().OnHit += _enemy.GiveDamageEffect;
     }
@@ -28,7 +28,7 @@ public class SelfDestructAction : IEnemyAction
         _startupDuration += Time.deltaTime;
         if (_startupDuration > _blackboard.startupTime && !_actionRunned)
         {
-            _enemy.Anim.SetTrigger("ActionRun");
+            _enemy.SetAnimTrigger("ActionRun");
             _actionRunned = true;
         }
     }
