@@ -18,7 +18,9 @@ public class GameplayEffect
     public float amount;
     public float duration;
     public float period = 0f; // 주기, Duration에서 틱 데미지와 같은 효과에 사용, BaseValue값을 변경, ex) duration : 1, period : 0.25일 때 총 5번의 효과 적용
+    public bool isPoison = false;
     public bool tracking; // buff, 아이템같이 저장해두고 관리가 필요할 때 true
+    
 
     public int maxStack = 1;
     [NonSerialized] public int currentStack;
