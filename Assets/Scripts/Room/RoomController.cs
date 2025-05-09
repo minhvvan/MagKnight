@@ -104,6 +104,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             _navMeshSurface.navMeshData = _loadedNavMeshData;
         }
         
+        gameObject.SetActive(true);
+
         SetGateOpen(false);
         var gateDirection = (RoomDirection)(((int)direction + 2) % 4);
 
@@ -111,18 +113,33 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
         CharacterController controller = player.GetComponent<CharacterController>();
         controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
-
-        // 앞쪽으로 조금 이동(연출)
-        if (moveForce)
+        
+        //함정방 입장 연출
+        if (Room.roomType is RoomType.TrapRoom)
         {
-            if (player.TryGetComponent<PlayerController>(out var playerController))
+            if( !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
             {
-                var target = new GameObject()
+                var camera = GameObject.Find("CameraRig");
+                if (camera && camera.TryGetComponent<CameraSettings>(out var cameraSettings))
                 {
-                    transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
-                };
+                    StartCoroutine(LookClearField(cameraSettings));
+                }
+            }
+        }
+        else
+        {
+            // 앞쪽으로 조금 이동(연출)
+            if (moveForce)
+            {
+                if (player.TryGetComponent<PlayerController>(out var playerController))
+                {
+                    var target = new GameObject()
+                    {
+                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
+                    };
             
-                playerController.MoveForce(target.transform);
+                    playerController.MoveForce(target.transform);
+                }
             }
         }
         
@@ -135,21 +152,10 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         }
         
         SetRoomReady(true);
-        gameObject.SetActive(true);
         if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
         {
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
-        }
-        
-        //함정방 입장 연출
-        if (Room.roomType is RoomType.TrapRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
-        {
-            var camera = GameObject.Find("CameraRig");
-            if (camera && camera.TryGetComponent<CameraSettings>(out var cameraSettings))
-            {
-                StartCoroutine(LookClearField(cameraSettings));
-            }
         }
     }
 
