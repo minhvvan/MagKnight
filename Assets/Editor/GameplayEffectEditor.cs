@@ -31,7 +31,6 @@ public class GameplayEffectEditor : PropertyDrawer
         var amountProp = property.FindPropertyRelative("amount");
         var durationProp = property.FindPropertyRelative("duration");
         var periodProp = property.FindPropertyRelative("period");
-        var poisonProp = property.FindPropertyRelative("isPoison");
         var trackingProp = property.FindPropertyRelative("tracking");
         var maxStackProp = property.FindPropertyRelative("maxStack");
 
@@ -42,6 +41,13 @@ public class GameplayEffectEditor : PropertyDrawer
         EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), amountProp);
         y += lineHeight;
 
+        if(attributeTypeProp.enumValueIndex == (int)AttributeType.Damage)
+        {
+            var damageTypeProp = property.FindPropertyRelative("damageType");
+            EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), damageTypeProp);
+            y += lineHeight;
+        }
+
         var effectType = (EffectType)effectTypeProp.enumValueIndex;
 
         if (effectType == EffectType.Duration)
@@ -49,8 +55,6 @@ public class GameplayEffectEditor : PropertyDrawer
             EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), durationProp);
             y += lineHeight;
             EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), periodProp);
-            y += lineHeight;
-            EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), poisonProp);
             y += lineHeight;
             EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), trackingProp);
             y += lineHeight;
