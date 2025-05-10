@@ -12,7 +12,7 @@ public class GameplayEffectEditor : PropertyDrawer
         int lineCount = effectType switch
         {
             EffectType.Instant => 3,
-            EffectType.Duration => 7,
+            EffectType.Duration => 8,
             EffectType.Infinite => 3
         };
 
