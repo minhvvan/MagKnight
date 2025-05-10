@@ -75,7 +75,7 @@ public class EnemyAttributeSet : AttributeSet
 
 
             //최종 데미지 extraData에 전달
-            effect.extraData.isPoison = effect.isPoison;
+            effect.extraData.damageType = effect.damageType;
             effect.extraData.finalAmount = effect.amount;
 
             if(effect.extraData.sourceTransform != null)

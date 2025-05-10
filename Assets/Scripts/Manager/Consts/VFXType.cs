@@ -28,7 +28,6 @@ public enum VFXType
 
 public enum DAMAGEType
 {
-    NONE,
     NORMAL,
     CRITICAL,
     POISON,

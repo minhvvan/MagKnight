@@ -303,11 +303,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
         
-        DAMAGEType damageType = extraData.isCritical ? DAMAGEType.CRITICAL : DAMAGEType.NORMAL;
-        damageType = extraData.isPoison ? DAMAGEType.POISON : damageType;
-        
+        DAMAGEType damageType = extraData.isCritical ? DAMAGEType.CRITICAL : extraData.damageType;
+
         // 피격 효과
-        VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType);
+        VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType, transform);
 
         if(extraData.isCritical)
         {
