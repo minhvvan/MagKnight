@@ -126,6 +126,18 @@ public class UIManager : Singleton<UIManager>
         popupUIController.upgradeStatUIController.HideUI();
         DisableCursor();
     }
+
+    public void ShowGameResultUI(CurrentRunData currentRunData, GameResult gameResult)
+    {
+        popupUIController.gameResultUIController.ShowUI(currentRunData, gameResult);
+        EnableCursor();
+    }
+
+    public void HideGameResultUI()
+    {
+        popupUIController.gameResultUIController.HideUI();
+        DisableCursor();
+    }
     
     public void EnableCursor()
     {

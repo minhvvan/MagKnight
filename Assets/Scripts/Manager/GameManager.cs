@@ -14,6 +14,8 @@ namespace hvvan
     {
         [SerializeField] GameObject playerCharacterPrefab;
         
+        private float _sessionStartTime;
+        
         public PlayerController Player
         {
             get
@@ -66,6 +68,7 @@ namespace hvvan
 
         private void Start()
         {
+            _sessionStartTime = Time.unscaledTime;
             Player = FindObjectOfType<PlayerController>();
         }
 
@@ -187,6 +190,10 @@ namespace hvvan
                 {
                     _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
                 }
+
+                _currentRunData.playTime += Time.unscaledTime - _sessionStartTime;
+                _sessionStartTime = Time.unscaledTime;
+                
                 await SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }
