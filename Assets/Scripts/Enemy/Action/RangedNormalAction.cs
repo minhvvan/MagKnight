@@ -22,7 +22,7 @@ public class RangedNormalAction : IEnemyAction
     public void OnEnter()
     {
         _blackboard.actionRecoveryCancellation = new CancellationTokenSource();
-        _enemy.Anim.SetTrigger("Action");
+        _enemy.SetAnimTrigger("Action");
         _startupDuration = 0f;
     }
 
@@ -30,7 +30,7 @@ public class RangedNormalAction : IEnemyAction
     {
         if (!_shot && _startupDuration > _blackboard.startupTime)
         {
-            _enemy.Anim.SetTrigger("ActionRun");
+            _enemy.SetAnimTrigger("ActionRun");
             _shot = true;
             _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
             ProjectileLaunchData launchData = new ProjectileLaunchData(_blackboard.target.GetComponent<Collider>());

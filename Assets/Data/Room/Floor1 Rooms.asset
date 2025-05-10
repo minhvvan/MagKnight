@@ -17,13 +17,13 @@ MonoBehaviour:
     - Key: 1
       Value:
         roomTitle: "\uC2DC\uC791\uBC29"
-        sceneName: start
+        sceneName: start 1
         connectedRooms: 
         roomType: 1
     - Key: 2
       Value:
         roomTitle: "\uBCF4\uC2A4\uBC29"
-        sceneName: boss
+        sceneName: boss 1
         connectedRooms: 
         roomType: 2
     - Key: 3

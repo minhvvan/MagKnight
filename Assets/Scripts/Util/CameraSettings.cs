@@ -143,5 +143,17 @@ namespace Moon
             }
             Current.m_Lens.FieldOfView = to;
         }
+
+        public IEnumerator RestoreFOV(float to, float duration)
+        {
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.deltaTime;
+                Current.m_Lens.FieldOfView = Mathf.Lerp(Current.m_Lens.FieldOfView, to, t / duration);
+                yield return null;
+            }
+            Current.m_Lens.FieldOfView = to;
+        }
     } 
 }

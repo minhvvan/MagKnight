@@ -110,20 +110,20 @@ public class MagCoreSO : ScriptableObject
         }
         
         //효과 해제
-        foreach (var pair in magnetPassiveEffects)
-        {
-            if (pair.Key != currentLevel) continue;
-            foreach (var instance in pair.Value)
-            {
-                target.RemovePassiveEffect(instance);
-            }
-        }
         foreach (var pair in magnetGameplayEffects)
         {
             if (pair.Key != currentLevel) continue;
             foreach (var instance in pair.Value)
             {
                 target.RemoveEffect(instance);
+            }
+        }
+        foreach (var pair in magnetPassiveEffects)
+        {
+            if (pair.Key != currentLevel) continue;
+            foreach (var instance in pair.Value)
+            {
+                target.RemovePassiveEffect(instance);
             }
         }
         onComplete?.Invoke();

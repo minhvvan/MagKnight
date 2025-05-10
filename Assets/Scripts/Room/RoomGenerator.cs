@@ -58,16 +58,16 @@ public class RoomGenerator
 {
     private List<Room> _rooms = new List<Room>();
     private int _seed;
-    private RoomDataSO _roomData;
+    private FloorDataSO _floorData;
 
     private async UniTask Initialize()
     {
-        _roomData = await DataManager.Instance.LoadScriptableObjectAsync<RoomDataSO>(Addresses.Data.Room.RoomData);
+        _floorData = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
     }
 
     public async UniTask GenerateRooms()
     {
-        if (_roomData == null) await Initialize();
+        if (_floorData == null) await Initialize();
         
         //seed 설정
         var currentSaveData = GameManager.Instance.CurrentRunData;
@@ -119,9 +119,11 @@ public class RoomGenerator
         
         //generateRoomCount만큼 생성 + 시작 + 보스 + 상점
         //필수 지점 추가
-        _rooms.Add(new Room(_roomData.rooms[RoomType.StartRoom]));
-        _rooms.Add(new Room(_roomData.rooms[RoomType.BoosRoom]));
-        _rooms.Add(new Room(_roomData.rooms[RoomType.ShopRoom]));
+        var currentFloor = GameManager.Instance.CurrentRunData.currentFloor;
+        
+        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.StartRoom]));
+        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.BoosRoom]));
+        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.ShopRoom]));
 
         //treasureRoom 개수 제한
         int treasureRoomCount = 0;
@@ -138,7 +140,7 @@ public class RoomGenerator
                 }
             }
             
-            var room = _roomData.rooms[type];
+            var room = _floorData.Floor[currentFloor].rooms[type];
             
             _rooms.Add(new Room(room));
         }

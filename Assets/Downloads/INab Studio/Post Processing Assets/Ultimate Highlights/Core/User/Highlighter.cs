@@ -1077,6 +1077,23 @@ namespace Highlighters
                 submeshIndexes.Add(i);
             }
         }
+        
+        // Equals 메서드 오버라이드 - Renderer 객체만으로 비교
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+                return false;
+            
+            HighlighterRenderer other = (HighlighterRenderer)obj;
+            return renderer == other.renderer; // 렌더러 인스턴스만 비교
+        }
+    
+        // GetHashCode 오버라이드 - Renderer의 해시코드 반환
+        public override int GetHashCode()
+        {
+            // 만약 Renderer가 null이면 0을 반환하고, 그렇지 않으면 Renderer의 GetHashCode()를 반환
+            return renderer != null ? renderer.GetHashCode() : 0;
+        }
 
 
         /// <summary>

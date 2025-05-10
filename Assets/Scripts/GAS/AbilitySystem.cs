@@ -104,6 +104,8 @@ public class AbilitySystem : MonoBehaviour
             {
                 if (_activatedEffects.TryGetValue(hash, out var effect))
                 {
+                    if (effect.maxStack == 0) return;
+                    
                     if (effect.currentStack < effect.maxStack)
                     {
                         Attributes.Modify(instanceGE);

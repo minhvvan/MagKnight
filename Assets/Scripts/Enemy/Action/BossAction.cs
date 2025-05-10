@@ -21,7 +21,7 @@ public class BossAction : IEnemyAction
     public void OnEnter()
     {
         _blackboard.actionRecoveryCancellation = new CancellationTokenSource();
-        _enemy.Anim.SetTrigger("Action");
+        _enemy.SetAnimTrigger("Action");
         _startupDuration = 0f;
     }
 
@@ -33,7 +33,7 @@ public class BossAction : IEnemyAction
         if (_startupDuration > _blackboard.startupTime)
         {
             _patternController.ExecutePattern(_enemy.Anim);
-            _enemy.Anim.SetTrigger("ActionRun");
+            _enemy.SetAnimTrigger("ActionRun");
             _actionRunned = true;
         }
     }

@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: MagCoreGreatSword
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
-  itemName: GreatSword_Normal
+  itemName: "\uBCF4\uAE09\uD615 \uB300\uAC80 - \uC18D\uACF5"
   description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uC18D\uB3C4 \uCE7C\uB0A0"
   scrapValue: 35
   maxUpgradeLevel: 3
   weaponType: 1
-  partsType: 2
+  partsType: 1
   passiveEffects:
     _serializedList:
     - Key: 0
@@ -28,11 +28,18 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 0.08
+          amount: 0.05
           duration: 5
           period: 0
+          isPoison: 0
           tracking: 1
           maxStack: 4
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
         isTarget: 0
         hasCount: 0
         triggerCount: 0
@@ -43,11 +50,18 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 0.1
+          amount: 0.0625
           duration: 5
           period: 0
+          isPoison: 0
           tracking: 1
           maxStack: 4
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
         isTarget: 0
         hasCount: 0
         triggerCount: 0
@@ -58,78 +72,163 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 7
-          amount: 0.12
+          amount: 0.075
           duration: 5
           period: 0
+          isPoison: 0
           tracking: 1
           maxStack: 4
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
         isTarget: 0
         hasCount: 0
         triggerCount: 0
   gameplayEffects:
     _serializedList:
     - Key: 0
-      Value:
-      - effectType: 2
-        attributeType: 2
-        amount: 20
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
     - Key: 1
-      Value:
-      - effectType: 2
-        attributeType: 2
-        amount: 30
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
     - Key: 2
-      Value:
-      - effectType: 2
-        attributeType: 2
-        amount: 45
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
   magnetEffectDuration: 5
   magnetPassiveEffects:
     _serializedList:
     - Key: 0
-      Value: []
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 7
+          amount: 2
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 4
+          amount: 1
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
     - Key: 1
-      Value: []
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 7
+          amount: 2
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 4
+          amount: 1
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
     - Key: 2
-      Value: []
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 7
+          amount: 2
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 4
+          amount: 1
+          duration: 0
+          period: 0
+          isPoison: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            isPoison: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 1
+        triggerCount: 2
   magnetGameplayEffects:
     _serializedList:
     - Key: 0
-      Value:
-      - effectType: 2
-        attributeType: 7
-        amount: 0.5
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
     - Key: 1
-      Value:
-      - effectType: 2
-        attributeType: 7
-        amount: 0.55
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
     - Key: 2
-      Value:
-      - effectType: 2
-        attributeType: 7
-        amount: 0.6
-        duration: 0
-        period: 0
-        tracking: 0
-        maxStack: 0
+      Value: []
