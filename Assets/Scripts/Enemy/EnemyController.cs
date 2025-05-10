@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using hvvan;
 using UnityEngine;
 
 public class EnemyController: MonoBehaviour
@@ -30,6 +31,7 @@ public class EnemyController: MonoBehaviour
 
     private void RemoveEnemy(Enemy enemy)
     {
+        GameManager.Instance.CurrentRunData.opponentsDefeated++;
         _enemies.Remove(enemy);
         if(NoEnemies) OnEnemiesClear?.Invoke();
     }
