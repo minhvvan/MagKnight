@@ -258,6 +258,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0388725113740147a3c0428c3a9e27e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &28057495 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6052182423153827441, guid: 3049754ec44bc014d95e43d16e66cb6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1366217961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &150389346 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3864985041017452224, guid: 3049754ec44bc014d95e43d16e66cb6a,
@@ -288,6 +294,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 172588338}
 --- !u!114 &150389349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +336,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 1758825415}
 --- !u!114 &150389351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -352,6 +360,37 @@ MonoBehaviour:
     - Key: 1
       Value: {r: 0.043137256, g: 0, b: 1, a: 1}
   switchPolarityRenderer: {fileID: 0}
+--- !u!1 &172588337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 172588338}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &172588338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172588337}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 2.06, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1963148652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &255777759 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 818649649177058803, guid: 3049754ec44bc014d95e43d16e66cb6a,
@@ -382,6 +421,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 1105561009}
 --- !u!114 &255777762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,6 +463,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 1847720802}
 --- !u!114 &255777764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,6 +605,37 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!1 &313223607
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 313223608}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &313223608
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 313223607}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.647, y: 2.738, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 28057495}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &440396500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -744,6 +816,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8494e6f427043649a894c5eff42eaca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &744635608 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 817105993130422159, guid: 3049754ec44bc014d95e43d16e66cb6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1366217961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &754753184
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,6 +853,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1366217963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &769239231 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5068567761442083601, guid: 3049754ec44bc014d95e43d16e66cb6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1366217961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &802934813
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -866,6 +950,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0388725113740147a3c0428c3a9e27e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1105561008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1105561009}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1105561009
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105561008}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.736, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 744635608}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1138565518
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1083,6 +1198,26 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 802934814}
+    - targetCorrespondingSourceObject: {fileID: 618379496890006970, guid: 3049754ec44bc014d95e43d16e66cb6a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1758825415}
+    - targetCorrespondingSourceObject: {fileID: 4533154252070808698, guid: 3049754ec44bc014d95e43d16e66cb6a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 172588338}
+    - targetCorrespondingSourceObject: {fileID: 6052182423153827441, guid: 3049754ec44bc014d95e43d16e66cb6a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 313223608}
+    - targetCorrespondingSourceObject: {fileID: 5068567761442083601, guid: 3049754ec44bc014d95e43d16e66cb6a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1847720802}
+    - targetCorrespondingSourceObject: {fileID: 817105993130422159, guid: 3049754ec44bc014d95e43d16e66cb6a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1105561009}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4579630770688252878, guid: 3049754ec44bc014d95e43d16e66cb6a,
         type: 3}
@@ -1190,6 +1325,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 313223608}
 --- !u!114 &1366217967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1244,6 +1380,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1366217963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1758825414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1758825415}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1758825415
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1758825414}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 1.19, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1963148653}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1844433209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1280,7 +1447,7 @@ PrefabInstance:
     - target: {fileID: 2701662863117678437, guid: 62396abe231bf69408ccd5e5822f9cdf,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.9200332
+      value: 2.119
       objectReference: {fileID: 0}
     - target: {fileID: 2701662863117678437, guid: 62396abe231bf69408ccd5e5822f9cdf,
         type: 3}
@@ -1355,6 +1522,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0388725113740147a3c0428c3a9e27e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1847720801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1847720802}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1847720802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847720801}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: 4.9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 769239231}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1963148652 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4533154252070808698, guid: 3049754ec44bc014d95e43d16e66cb6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1366217961}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1963148653 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 618379496890006970, guid: 3049754ec44bc014d95e43d16e66cb6a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1366217961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
