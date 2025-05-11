@@ -17,6 +17,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
     public bool isMagneticHighlight = true;
+    public Transform magneticPoint;
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
