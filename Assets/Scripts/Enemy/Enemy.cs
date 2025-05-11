@@ -32,6 +32,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     
     private RaycastHit[] _hits = new RaycastHit[1];
     private Collider[] _colliders = new Collider[1];
+    private RaycastHit[] _hitsBelow = new RaycastHit[5];
 
     public bool isDashing;
     public bool isFalling;
@@ -39,6 +40,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     private float _gravity = 9.8f;
     private float _maxFallSpeed = 10f;
     private float _verticalSpeed = 0f;
+    private float _yOffset = 0.05f;
     
     // stateMachine
     private StateMachine _stateMachine;
@@ -55,7 +57,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         
         Initialize();
         InitializeMagnetic();
-        // TestCode();
     }
 
     void OnEnable()
@@ -66,7 +67,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         if (Physics.Raycast(transform.position + Vector3.up * 2f, Vector3.down, out RaycastHit hit, 4f))
         {
             Vector3 newPos = hit.point;
-            newPos.y += 0.05f;
+            newPos.y += _yOffset;
             Agent.Warp(newPos);
         }
     }
@@ -131,14 +132,17 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         var enemies = Physics.OverlapSphere(transform.position, 0.5f, 1 << LayerMask.NameToLayer("Enemy"));
 
         ApplySoftCollision(enemies);
-        if (!Physics.Raycast(transform.position, Vector3.down, 1f))
+
+        int a = Physics.SphereCastNonAlloc(transform.position + Vector3.up * 1f, 1f, Vector3.down, _hitsBelow, 1f, 
+            LayerMask.GetMask("Environment")); // 주변에 environment 감지 안될 시 중력 적용
+        if (a <= 0)
         {
             Agent.ResetPath();
             isFalling = true;
             ApplyGravity();
         }
     }
-
+    
     private void OnAnimatorMove()
     {
         if (isFalling)
@@ -150,18 +154,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         {   
             Vector3 velocity = Agent.desiredVelocity.normalized * Time.deltaTime * 
                                blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
-            
-            Agent.nextPosition += velocity;
             transform.position += velocity;
+            Agent.nextPosition = transform.position;
         }
-        
-        // Vector3 rootDelta = Anim.deltaPosition;
-        // Vector3 scaledDelta = rootDelta * blackboard.abilitySystem.GetValue(AttributeType.MoveSpeed);
-        //
-        // Vector3 position = transform.position + scaledDelta;
-        // position.y = Agent.nextPosition.y;
-        // Agent.nextPosition = position;
-        // transform.position = position;
 
         if (isDashing) return;
         Vector3 dir = Agent.desiredVelocity;
@@ -279,7 +274,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
                 targetPos = _hits[0].point - knockBackDir * .1f;
             }
         }
-        
+        targetPos.y = transform.position.y;
         try
         {
             while (duration < moveTime)
@@ -392,7 +387,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         foreach (var other in colliders)
         {
             if (other.gameObject == gameObject) continue;
-
+        
             Vector3 diff = transform.position - other.transform.position;
             float dist = diff.magnitude;
             float minDist = 0.5f; // 적당한 간격
@@ -406,10 +401,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
                 correction += diff.normalized * pushStrength;
             }
         }
-
+        
         Vector3 newPos = transform.position + correction * Time.deltaTime * 2f;
-        newPos.y = transform.position.y;
-
+        if(isFalling)
+            newPos.y = transform.position.y;
+        else
+            newPos.y = Agent.nextPosition.y;
+        
         transform.position = newPos;
         Agent.nextPosition = newPos;
     }
@@ -478,7 +476,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1f))
         {
             Vector3 destination = new Vector3(transform.position.x, hit.point.y, transform.position.z);
-            destination.y += 0.05f;
+            destination.y += _yOffset;
             Agent.Warp(destination);
             transform.position = destination;
             _verticalSpeed = 0f;

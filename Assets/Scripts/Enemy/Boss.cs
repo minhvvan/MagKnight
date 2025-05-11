@@ -67,9 +67,9 @@ public class Boss : Enemy
         NavMeshAgent bombAgent = _bomb.GetComponent<NavMeshAgent>();
         bombAgent.enabled = true;
         _bomb.GetComponent<Enemy>().enabled = true;
-        Vector3 pos = transform.position;
-        pos.y = 0;
-        transform.position = pos;
+        Vector3 pos = _bomb.transform.position;
+        pos.y = 0.05f;
+        _bomb.transform.position = pos;
         bombAgent.nextPosition = pos;
     }
 
