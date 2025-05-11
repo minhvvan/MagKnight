@@ -24,6 +24,7 @@ public enum VFXType
     MAGNETIC_PULLING,
     PARRY,
     CHARGING_ARCHER_SKILL,
+    MAGNET_AIM_SHOCKWAVE,
 }
 
 public enum DAMAGEType
@@ -32,4 +33,7 @@ public enum DAMAGEType
     CRITICAL,
     POISON,
     MAGNETIC,
+    UI_DAMAGE,
+    FIRE,
+    BLEED,
 }

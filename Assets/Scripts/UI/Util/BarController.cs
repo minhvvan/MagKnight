@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 namespace Moon
 {
     public class BarController : MonoBehaviour
@@ -10,6 +11,8 @@ namespace Moon
         [SerializeField] Image frameActiveImage;
         Image _backgorundImage;
         RectTransform _rectTransform;
+        //HP바에 체력감소를 띄워주기 위한 변수
+        [SerializeField] public RectTransform damageTextRectTransform;
         [SerializeField] bool isPunch = false;
 
         void Awake()

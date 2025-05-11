@@ -166,6 +166,7 @@ public class VFXManager : Singleton<VFXManager>
     public void TriggerDamageNumber(Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.NORMAL, Transform followTransform = null)
     {
         DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
+        DamageNumber numberGameObject;
         bool isFollow = false;
 
         if(damageType == DAMAGEType.POISON)
@@ -175,13 +176,22 @@ public class VFXManager : Singleton<VFXManager>
 
         if(followTransform != null && isFollow)
         {
-            damageNumberPrefab.Spawn(position, damage, followTransform);
+            numberGameObject = damageNumberPrefab.Spawn(position, damage, followTransform);
         }
         else
         {
-            damageNumberPrefab.Spawn(position, damage);
+            numberGameObject = damageNumberPrefab.Spawn(position, damage);
         }
     }
+
+    public void TriggerDamageNumberUI(RectTransform rectParent, Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.UI_DAMAGE)
+    {
+        DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];        
+
+        var damageObject = damageNumberPrefab.Spawn(position, damage);
+        damageObject.transform.SetParent(rectParent, false);
+    }
+    
 
     private async UniTask WaitUntilParticleEnd(GameObject vfxObject)
     {
