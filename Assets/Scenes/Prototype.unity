@@ -367,6 +367,149 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8f7ca74868c08a46bc7e45fa591c6d3, type: 3}
+--- !u!1001 &94390088
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1830152887314286, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_Name
+      value: SM_Prop_Beams_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1830152887314286, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 10.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.29
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.23863207
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.105019376
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.9524441
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.15772134
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -20.522
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -153.257
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 7.656
+      objectReference: {fileID: 0}
+    - target: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 603129774}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1830152887314286, guid: beeb4c311e48ba14cb1d92a034a553be,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 94390092}
+    - targetCorrespondingSourceObject: {fileID: 1830152887314286, guid: beeb4c311e48ba14cb1d92a034a553be,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 94390091}
+  m_SourcePrefab: {fileID: 100100000, guid: beeb4c311e48ba14cb1d92a034a553be, type: 3}
+--- !u!1 &94390089 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1830152887314286, guid: beeb4c311e48ba14cb1d92a034a553be,
+    type: 3}
+  m_PrefabInstance: {fileID: 94390088}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &94390090 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4307534541420894, guid: beeb4c311e48ba14cb1d92a034a553be,
+    type: 3}
+  m_PrefabInstance: {fileID: 94390088}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &94390091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94390089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8eca2100b3daaf409b92ef2f05add48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  magneticType: 0
+  isStructure: 0
+  objectMass: 0
+  magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
+  rb: {fileID: 0}
+  isMagneticHighlight: 1
+  magneticPoint: {fileID: 603129774}
+--- !u!114 &94390092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94390089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd37000e7b70df8498283b91eb71b4e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _visualEffects:
+    _serializedList: []
+  _highlighters:
+    _serializedList: []
+  colors:
+    _serializedList:
+    - Key: 0
+      Value: {r: 1, g: 0.03137255, b: 0.03137255, a: 1}
+    - Key: 1
+      Value: {r: 0.043137256, g: 0, b: 1, a: 1}
+  switchPolarityRenderer: {fileID: 0}
 --- !u!1001 &164897106
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1750,6 +1893,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SK_MechanicRobot_lv2 1
       objectReference: {fileID: 0}
+    - target: {fileID: 152928721955278981, guid: c3cc3b1852dc85846af9d67fa13ee818,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 672337549358336575, guid: c3cc3b1852dc85846af9d67fa13ee818,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2074,6 +2222,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SK_ShooterRobot_lv1 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7638276460097541421, guid: dd86e327a8dcba0448d3c0eff7a15c3d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2325,6 +2478,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 4841a50bd2ac7f84b8c1c8a004b75308, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 0}
 --- !u!114 &583014367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2356,6 +2510,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b80c0d6d31594700a77ae0d723fb8c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &603129773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 603129774}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &603129774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 603129773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.016, y: 0.074, z: 4.75}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 94390090}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &626551195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3118,7 +3303,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 750867151}
+      objectReference: {fileID: 0}
     - target: {fileID: 9118096037296755493, guid: 8b1ec6e3c660449599524e7c70c35cc9,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
@@ -3144,18 +3329,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b1ec6e3c660449599524e7c70c35cc9, type: 3}
---- !u!114 &750867151 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7332727795676077322, guid: 8b1ec6e3c660449599524e7c70c35cc9,
-    type: 3}
-  m_PrefabInstance: {fileID: 746070096}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b064abb027e72d44f8e0a66e6109d547, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &769668404
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3510,6 +3683,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gates:
     _serializedList: []
+  nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 0}
   hasReward: 0
 --- !u!114 &960850731
@@ -4136,6 +4310,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: BossTest
+      objectReference: {fileID: 0}
+    - target: {fileID: 7088363676231925649, guid: e493f22bb785f694fbb7ca6ec235013a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8971413983252580530, guid: e493f22bb785f694fbb7ca6ec235013a,
         type: 3}
@@ -4789,6 +4968,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 4841a50bd2ac7f84b8c1c8a004b75308, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 0}
 --- !u!114 &1442970512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5503,6 +5683,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 0}
 --- !u!114 &1633929285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6093,37 +6274,37 @@ PrefabInstance:
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.10145891
+      value: -0.05058917
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.298886
+      value: 4.2988863
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.0017748437
+      value: 0.08796442
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.5879109
+      value: 0.052221708
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.57419705
+      value: 0.05100358
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.40762722
+      value: 0.7134928
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.39811882
+      value: -0.69684976
       objectReference: {fileID: 0}
     - target: {fileID: 4050224717561007378, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -7752,6 +7933,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 0}
 --- !u!114 &4556294219886501648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7770,6 +7952,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 0}
 --- !u!4 &4556294219886501649 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1487864779171702897, guid: d1e600d15fcef4b4aa7139c8f34c9f33,
@@ -7918,3 +8101,4 @@ SceneRoots:
   - {fileID: 420333383}
   - {fileID: 164897106}
   - {fileID: 1135051261}
+  - {fileID: 94390088}

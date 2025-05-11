@@ -232,6 +232,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6289612252033067016}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &422522771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 422522772}
+  m_Layer: 11
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &422522772
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422522771}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3104875525302549779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &480216741
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -483,6 +514,37 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: a3820e552c33f844b911f37e21f02aea, type: 2}
   m_BuildHeightMesh: 0
+--- !u!1 &831073555
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 831073556}
+  m_Layer: 11
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &831073556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831073555}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5935385736616877630}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &944031365
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -541,7 +603,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4026635139655712, guid: 8ae9acfff905d5e4ca5a16a83cdb346a,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1751744128}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1356947201743452, guid: 8ae9acfff905d5e4ca5a16a83cdb346a,
         type: 3}
@@ -576,6 +642,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2fb15eb0aa78b244da3509054e9f785a, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 1751744128}
 --- !u!114 &944031368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1134,6 +1201,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6289612252033067016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1751744127
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1751744128}
+  m_Layer: 8
+  m_Name: MagneticPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1751744128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751744127}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 944031369}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2030648088
 PrefabInstance:
@@ -29124,7 +29222,8 @@ Transform:
   m_LocalPosition: {x: -15.799, y: 5.978, z: 15.882984}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 422522772}
   m_Father: {fileID: 4874002040634413666}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3106571697632242777
@@ -30123,6 +30222,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 4841a50bd2ac7f84b8c1c8a004b75308, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 422522772}
 --- !u!114 &3162340990528634907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55837,7 +55937,8 @@ Transform:
   m_LocalPosition: {x: -7.54, y: 5.49, z: -0.81}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 831073556}
   m_Father: {fileID: 2383768171235168947}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!64 &5940838372545513334
@@ -55994,6 +56095,7 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 4841a50bd2ac7f84b8c1c8a004b75308, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 831073556}
 --- !u!114 &5960256317808899456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79357,6 +79459,7 @@ MonoBehaviour:
       Value: {fileID: 955465288}
     - Key: 3
       Value: {fileID: 1435133749}
+  nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 0}
   hasReward: 1
 --- !u!64 &8225070604145483035
