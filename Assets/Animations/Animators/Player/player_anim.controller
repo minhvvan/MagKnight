@@ -5647,7 +5647,7 @@ AnimatorStateTransition:
     m_EventTreshold: 0
   - m_ConditionMode: 3
     m_ConditionEvent: StateTime
-    m_EventTreshold: 0.3
+    m_EventTreshold: 0.5
   - m_ConditionMode: 4
     m_ConditionEvent: StateTime
     m_EventTreshold: 1
@@ -5660,9 +5660,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.2643
-  m_TransitionOffset: 0.004158582
-  m_ExitTime: 0.6939991
+  m_TransitionDuration: 0.13954389
+  m_TransitionOffset: 0.004158423
+  m_ExitTime: 0.8704635
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
