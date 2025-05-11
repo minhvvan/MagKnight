@@ -34,6 +34,8 @@ public class MagneticFilter : MonoBehaviour
 
             }, maxRange, duration)
             .SetEase(Ease.OutQuad);
+            
+        VFXManager.Instance.TriggerVFX(VFXType.MAGNET_AIM_SHOCKWAVE, transform);
     }
 
     private void OnMagneticReleased()

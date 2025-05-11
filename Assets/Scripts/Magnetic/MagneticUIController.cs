@@ -236,7 +236,9 @@ public class MagneticUIController : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.unscaledDeltaTime;
-            target.localScale = Vector3.Lerp(target.localScale, scale, elapsedTime / duration);
+            var EaseFunction = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+            var t = EaseFunction(0, 1, elapsedTime / duration);
+            target.localScale = Vector3.Lerp(target.localScale, scale, t);
             yield return null;
         }
         onComplete?.Invoke();

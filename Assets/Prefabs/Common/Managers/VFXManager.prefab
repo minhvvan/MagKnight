@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8312210132348293142}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -50,11 +50,20 @@ MonoBehaviour:
       Value: {fileID: 3106269974086679045, guid: 6f41cef9f25285c47a8d8a55f5f0dda8,
         type: 3}
     - Key: 1
-      Value: {fileID: 8054030339143631686, guid: a37c240852a06cc41838ade10010ef2b,
+      Value: {fileID: 8054030339143631686, guid: be742e60f8114445386cab0a85a0f464,
         type: 3}
     - Key: 2
       Value: {fileID: 7538001082577599286, guid: c16fca86b1f13344196b948234d0542a,
         type: 3}
     - Key: 3
       Value: {fileID: 6943526546312432443, guid: f4c2563ab83d1ea4fae9071725efc6d4,
+        type: 3}
+    - Key: 4
+      Value: {fileID: 2516138302149482097, guid: 6aead5d5c87b040eeae241fad95736a5,
+        type: 3}
+    - Key: 5
+      Value: {fileID: 2449900319499816613, guid: d2eb75edd2a119245965787768d55c40,
+        type: 3}
+    - Key: 6
+      Value: {fileID: 4888194837565303189, guid: 41e1d98f3819fdd4a94a15c4e02b150a,
         type: 3}

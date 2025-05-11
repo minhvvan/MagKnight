@@ -10,7 +10,8 @@ namespace Jun
     public class PlayerAttributeSet : AttributeSet
     {
         public Action OnDead;
-        public Action<Transform> OnDamaged;
+        public Action<ExtraData> OnDamaged;
+        public Action<ExtraData> OnImpulse;
         public Action OnMoveSpeedChanged;
         public Action OnAttackSpeedChanged;
         
@@ -132,6 +133,9 @@ namespace Jun
                 // 예시 실드가 있다면?
                 // SetValue(AttributeType.HP, GetValue(AttributeType.Shield) + GetValue(AttributeType.HP) - effect.amount);
 
+                effect.extraData.damageType = effect.damageType;
+                effect.extraData.finalAmount = effect.amount;
+
 #if false //공격 효과
                 //CameraShake.Shake(0.2f, 0.1f);
                 CinemachineImpulseController.GenerateImpulse();
@@ -148,6 +152,7 @@ namespace Jun
                 else
                 {
                     //OnDamaged?.Invoke(effect.sourceTransform);
+                    OnDamaged?.Invoke(effect.extraData);
                 }
                 // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
                 SetValue(AttributeType.Damage, 0);
@@ -161,7 +166,9 @@ namespace Jun
                 if(GetValue(AttributeType.Impulse) == 0)
                     return;
                 
-                OnDamaged?.Invoke(effect.extraData.sourceTransform);
+                if(effect.extraData.sourceTransform != null)
+                    OnImpulse?.Invoke(effect.extraData);
+                    
                 SetValue(AttributeType.Impulse, 0);
             }
 
