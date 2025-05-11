@@ -28,9 +28,13 @@ public class PlayerMagnetActionController : MonoBehaviour
 
     public Vector3 GetCenterPosition(Transform target)
     {
-        var collider = target.GetComponent<Collider>();
-        var centerPos = collider.bounds.center;
-        return centerPos; 
+        if (target.TryGetComponent<Collider>(out var targetCollider))
+        {
+            var centerPos = targetCollider.bounds.center;
+            return centerPos; 
+        }
+        
+        return target.position;
     }
 
 
@@ -41,22 +45,14 @@ public class PlayerMagnetActionController : MonoBehaviour
         var playerPos = transform.position;
         var playerCenterPos = GetCenterPosition(transform);
         
-        var casterPos = caster.transform.position;
-        var casterCollider = caster.GetComponent<Collider>();
-        var casterCenterPos = casterCollider.bounds.center;
+        var casterMagneticPoint = caster.magneticPoint;
+        var casterPos = casterMagneticPoint.position;
 
-        var casterWidth = casterCollider.bounds.size.x;
-
-        var targetVector = playerPos - casterCenterPos;
-        var targetVectorRemoveY = new Vector3(targetVector.x, 0f, targetVector.z);
-
-        Vector3 casterFrontPos = casterPos + targetVectorRemoveY.normalized * casterWidth * 1.5f;
-        
         _playerController.inMagnetSkill = true;
         _playerController.inMagnetActionJump = true;
         _playerController.InputHandler.ReleaseControl();
 
-        float distance = Vector3.Distance(playerPos, casterFrontPos);
+        float distance = Vector3.Distance(playerPos, casterPos);
         float speed = 30f;
         float dashDuration =  distance / speed;
         float hitTiming = Mathf.Clamp(dashDuration - 0.15f, 0, dashDuration);
@@ -70,7 +66,7 @@ public class PlayerMagnetActionController : MonoBehaviour
             .OnStart(() => {
                 VFXManager.Instance.TriggerVFX(VFXType.MAGNET_ACTION_EXPLOSION, playerCenterPos); 
 
-                _electricLine.ShowEffect(playerCenterPos, casterCenterPos);
+                _electricLine.ShowEffect(playerCenterPos, casterPos);
 
                 Time.timeScale = 0.2f;
                 if(!isCloseTarget){
@@ -105,7 +101,7 @@ public class PlayerMagnetActionController : MonoBehaviour
                 VFXManager.Instance.TriggerVFX(VFXType.DASH_TRAIL_BLUE, transform.position, rotation);
             }
 
-            StartCoroutine(MagnetDashCoroutine(caster.transform, dashDuration,() => {
+            StartCoroutine(MagnetDashCoroutine(casterMagneticPoint, dashDuration,() => {
                     VolumeController.MotionBlurPlay(0, 0.1f);
                     Time.timeScale = 1f;
                 }));
@@ -136,7 +132,7 @@ public class PlayerMagnetActionController : MonoBehaviour
     }
 #endregion 
 
-    IEnumerator MagnetDashCoroutine(Transform destinationTranform, float duration, Action onComplete, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
+    IEnumerator MagnetDashCoroutine(Transform destinationTransform, float duration, Action onComplete, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
     {
         float elapsed = 0f;
         Vector3 startPos = transform.position;
@@ -146,11 +142,9 @@ public class PlayerMagnetActionController : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             
-            Vector3 desFrontPos = GetTargetFrontPosition(destinationTranform, startPos);
-
             var EaseFunction = EasingFunction.GetEasingFunction(easeType);
             
-            Vector3 nextPos = Vector3.Lerp(startPos, desFrontPos, EaseFunction(0, 1, t));
+            Vector3 nextPos = Vector3.Lerp(startPos, destinationTransform.position, EaseFunction(0, 1, t));
             Vector3 delta = nextPos - transform.position;
             _playerController.characterController.Move(delta);
 
@@ -158,7 +152,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         }
 
         // 마지막 위치로 이동
-        Vector3 finalPos = GetTargetFrontPosition(destinationTranform, startPos);
+        Vector3 finalPos = destinationTransform.position;
         Vector3 finalDelta = finalPos - transform.position;
         if (finalDelta.magnitude > 0f)
         {
@@ -236,7 +230,7 @@ public class PlayerMagnetActionController : MonoBehaviour
 
     public void StartMagnetSwing(MagneticObject caster)
     {
-        SetMagnetActionState(magnetActionApproachToTransformState, new MagnetActionApproachToTransformStateData(caster.transform));
+        SetMagnetActionState(magnetActionApproachToTransformState, new MagnetActionApproachToTransformStateData(caster.magneticPoint));
     }
 
     public void EndSwingWithInertia()
