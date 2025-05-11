@@ -33,4 +33,7 @@ public enum DAMAGEType
     CRITICAL,
     POISON,
     MAGNETIC,
+    UI_DAMAGE,
+    FIRE,
+    BLEED,
 }

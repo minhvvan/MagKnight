@@ -12,7 +12,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] FadeText _entranceText;
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
-    [SerializeField] private StatusUIController statusUIController;
+    [SerializeField] public StatusUIController statusUIController;
     [SerializeField] private BossStatusUIController bossStatusUIController;
     [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
 

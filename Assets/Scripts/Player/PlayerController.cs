@@ -223,6 +223,7 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
+                attributeSet.OnImpulse += Impulse;
                 attributeSet.OnMoveSpeedChanged += MoveSpeedChanged;
                 attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
                 
@@ -1123,7 +1124,7 @@ namespace Moon
             }
         }
 
-        public void Damaged(Transform sourceTransform)
+        public void Damaged(ExtraData extraData)
         {
             // 1) 패링 창이 열려 있으면 ─────────
             if (_parryWindowActive)
@@ -1138,7 +1139,7 @@ namespace Moon
                 VFXManager.Instance.TriggerVFX(VFXType.PARRY, transform.position + 0.5f * Vector3.up);
                 
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
-                if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
+                if (extraData.sourceTransform.TryGetComponent<Enemy>(out var enemy))
                 {
                     //넉백?
                     enemy.OnStagger();
@@ -1150,17 +1151,22 @@ namespace Moon
                     StopCoroutine(_parrySlowCoroutine);
                 _parrySlowCoroutine = StartCoroutine(DoParrySlowMotion());
 
-
                 // (피해는 받지 않음)
                 return;
             }
+            
+            VFXManager.Instance.TriggerDamageNumberUI(UIManager.Instance.inGameUIController.statusUIController.healthBar.damageTextRectTransform, Vector3.zero, extraData.finalAmount, DAMAGEType.UI_DAMAGE);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
 
+        public void Impulse(ExtraData extraData)
+        {
             // 2) 패링 실패 or 타이밍 아웃 시 기존 데미지 처리
             if (isDead || _isKnockDown) return;
-            if(sourceTransform != null)
+            if(extraData.sourceTransform != null)
             {
                 // 공격이 들어온 방향
-                var dir = sourceTransform.position - transform.position;
+                var dir = extraData.sourceTransform.position - transform.position;
                 // 내 캐릭터에 방향에 맞게 계산
                 var hurtFrom = transform.InverseTransformDirection(dir.normalized);
                 _animator.SetFloat(PlayerAnimatorConst.hashHurtFromX, hurtFrom.x);
@@ -1169,7 +1175,6 @@ namespace Moon
                 
                 _animator.SetTrigger(PlayerAnimatorConst.hashHurt);
             }
-            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
         public (float, bool) GetAttackDamage(float damageMultiplier = 1f)
