@@ -308,7 +308,10 @@ public class MagneticController : MagneticObject
         if (countHits.Length <= 0) return;
         for (int i = 0; i < hitCount; i++)
         {
-            InCountVisor(countHits[i].transform, targetPoint);
+            if (countHits[i].TryGetComponent<MagneticObject>(out var magneticObject))
+            {
+                InCountVisor(magneticObject.magneticPoint, targetPoint);
+            }
         }
     }
 
@@ -363,13 +366,13 @@ public class MagneticController : MagneticObject
                     //새로 타겟된 대상이 이전과 다르면 언록
                     if (targetMagneticObject != null && magneticObject != targetMagneticObject)
                     {
-                        _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+                        _magneticUIController.UnLockOnTarget(targetMagneticObject.magneticPoint);
                         targetMagneticObject = null;
                     }
                 
                     _isDetectedMagnetic = true;
                     targetMagneticObject = magneticObject;
-                    _magneticUIController.InLockOnTarget(targetMagneticObject.transform);
+                    _magneticUIController.InLockOnTarget(targetMagneticObject.magneticPoint);
                     StartCoroutine(_magneticUIController.SetTargetMagneticTypeColor(targetMagneticObject.GetMagneticType()));
                     
                     return;
@@ -379,7 +382,7 @@ public class MagneticController : MagneticObject
 
         if (targetMagneticObject != null)
         {
-            _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+            _magneticUIController.UnLockOnTarget(targetMagneticObject.magneticPoint);
         }
         _isDetectedMagnetic = false;
         targetMagneticObject = null;

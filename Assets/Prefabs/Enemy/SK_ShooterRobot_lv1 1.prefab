@@ -1472,8 +1472,12 @@ MonoBehaviour:
   objectMass: 0
   magneticObjectSO: {fileID: 11400000, guid: f12c550ac1edc27418bb08a36e919585, type: 2}
   rb: {fileID: 0}
+  isMagneticHighlight: 1
+  magneticPoint: {fileID: 5038158113086590374}
   blackboard: {fileID: 3918791580375778709}
   hpBarController: {fileID: 133048197641694031}
+  isDashing: 0
+  isFalling: 0
 --- !u!136 &3095233884370065667
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -52,10 +52,12 @@ public class MagneticTarget : MonoBehaviour
         if (target != null)
         {
             var targetPosition = target.position;
-            if(target.TryGetComponent(out Enemy enemy))
-            {
-                targetPosition = enemy.blackboard.headTransform.position;
-            }
+            
+            // if(target.TryGetComponent(out Enemy enemy))
+            // {
+            //     targetPosition = enemy.blackboard.headTransform.position;
+            // }
+            
             if(_mainCamera == null) Initialize();
             _rectTransform.anchoredPosition = OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition));
             onTrakingCirclePos?.Invoke(OperateUiPoint(_mainCamera.WorldToScreenPoint(targetPosition)));
