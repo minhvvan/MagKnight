@@ -77,4 +77,9 @@ public class InGameUIController : Singleton<InGameUIController>
         bossStatusUIController.UnbindBossAttributeChanges();
         bossStatusUIController.Hide();
     }
+
+    public void ImmediateHideInGameUI()
+    {
+        bossStatusUIController.gameObject.SetActive(false);
+    }
 }

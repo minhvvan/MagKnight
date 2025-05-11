@@ -155,6 +155,11 @@ public class Boss : Enemy
         catch (OperationCanceledException){ }
     }
 
+    void OnDisable()
+    {
+        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();
+    }
+
     protected void OnDestroy()
     {
         base.OnDestroy();
@@ -162,7 +167,5 @@ public class Boss : Enemy
         _buffCancellationToken?.Dispose();
         _missileCancellationToken?.Cancel();
         _missileCancellationToken?.Dispose();
-
-        UIManager.Instance.inGameUIController.UnbindBossAttributeChanges();
     }
 }

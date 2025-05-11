@@ -39,6 +39,8 @@ public class InitGameState: IGameState
             SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
         }
         
+        //보스체력바 강제 비활성화
+        UIManager.Instance.inGameUIController.ImmediateHideInGameUI();
     }
 
     private IEnumerator TransitionToBaseCampCallback()
