@@ -24,15 +24,20 @@ public class Katana: BaseWeapon
         base.AttackStart(hitboxGroupId);
 
         //VFX 재생
-        if (hitboxGroupId == 1)
+        // if (hitboxGroupId == 1)
+        // {
+        //     var player = GameManager.Instance.Player;
+        //     _whirlwindVFX = VFXManager.Instance.TriggerVFX(VFXType.WHIRLWIND_KATANA, player.transform.position);
+        // }
+        // else
+        // {
+        //     VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
+        // }
+        if(_weaponTrail != null)
         {
-            var player = GameManager.Instance.Player;
-            _whirlwindVFX = VFXManager.Instance.TriggerVFX(VFXType.WHIRLWIND_KATANA, player.transform.position);
+            _weaponTrail.EnableTrail(true);
         }
-        else
-        {
-            VFXManager.Instance.TriggerVFX(slashVFXPrefab, vfxSocket.transform.position, vfxSocket.transform.rotation);
-        }
+
         
         //SFX 재생
         var sfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Swing);
@@ -42,13 +47,18 @@ public class Katana: BaseWeapon
     public override void AttackEnd(int hitboxGroupId)
     {
         base.AttackEnd(hitboxGroupId);
-        if (hitboxGroupId == 1)
+        // if (hitboxGroupId == 1)
+        // {
+        //     if (_whirlwindVFX)
+        //     {
+        //         VFXManager.Instance.ReturnVFX(VFXType.WHIRLWIND_KATANA, _whirlwindVFX);
+        //         _whirlwindVFX = null;
+        //     }
+        // }
+
+        if(_weaponTrail != null)
         {
-            if (_whirlwindVFX)
-            {
-                VFXManager.Instance.ReturnVFX(VFXType.WHIRLWIND_KATANA, _whirlwindVFX);
-                _whirlwindVFX = null;
-            }
+            _weaponTrail.EnableTrail(false);
         }
     }
 
