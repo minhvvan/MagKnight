@@ -12,7 +12,7 @@ public class GameplayEffectEditor : PropertyDrawer
         int lineCount = effectType switch
         {
             EffectType.Instant => 3,
-            EffectType.Duration => 7,
+            EffectType.Duration => 8,
             EffectType.Infinite => 3
         };
 
@@ -40,6 +40,13 @@ public class GameplayEffectEditor : PropertyDrawer
         y += lineHeight;
         EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), amountProp);
         y += lineHeight;
+
+        if(attributeTypeProp.enumValueIndex == (int)AttributeType.Damage)
+        {
+            var damageTypeProp = property.FindPropertyRelative("damageType");
+            EditorGUI.PropertyField(new Rect(position.x, y, position.width, lineHeight), damageTypeProp);
+            y += lineHeight;
+        }
 
         var effectType = (EffectType)effectTypeProp.enumValueIndex;
 

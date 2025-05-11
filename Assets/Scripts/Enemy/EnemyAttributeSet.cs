@@ -18,6 +18,8 @@ public class EnemyAttributeSet : AttributeSet
     private string BarrierN = "BarrierN";
     private string BarrierS = "BarrierS";
     
+    private float maxDefense = 100f;
+    
     protected override float PreAttributeChange(AttributeType type, float newValue)
     {
         float returnValue = newValue;
@@ -36,6 +38,9 @@ public class EnemyAttributeSet : AttributeSet
                      GameManager.Instance.Player.GetComponent<MagneticController>().magneticType == MagneticType.S))
                     returnValue = 1f;
             }
+            
+            // Defense% 만큼 데미지 감소
+            returnValue *= (1 - GetValue(AttributeType.Defense)/ 100f);
         }
         
         if (type == AttributeType.ResistanceDamage)
@@ -70,6 +75,7 @@ public class EnemyAttributeSet : AttributeSet
 
 
             //최종 데미지 extraData에 전달
+            effect.extraData.damageType = effect.damageType;
             effect.extraData.finalAmount = effect.amount;
 
             if(effect.extraData.sourceTransform != null)
@@ -88,6 +94,11 @@ public class EnemyAttributeSet : AttributeSet
             
             // 메타 어트리뷰트는 적용 후 바로 0으로 값을 초기화하도록 설정
             SetValue(AttributeType.Damage, 0);
+        }
+        
+        if (effect.attributeType == AttributeType.Defense)
+        {
+            SetValue(AttributeType.Defense, Mathf.Clamp(GetValue(AttributeType.Defense), float.NegativeInfinity, maxDefense));
         }
 
         // 최대체력 증가시 그만큼 HP도 증가

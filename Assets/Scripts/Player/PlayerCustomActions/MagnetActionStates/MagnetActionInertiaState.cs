@@ -28,6 +28,7 @@ public class MagnetActionInertiaState : BaseMagnetActionState
 
         controller.ElectricLine.HideEffect();
         VolumeController.MotionBlurPlay(0.0f, 0.1f);
+        // controller.StartCoroutine(controller.PlayerController.cameraSettings.RestoreFOV(50, 0.1f));
     }
 
     public override void Exit()

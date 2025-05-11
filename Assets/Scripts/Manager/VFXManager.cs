@@ -163,11 +163,24 @@ public class VFXManager : Singleton<VFXManager>
         vfxPools[vfxType].Enqueue(vfxObject);
     }
 
-    public void TriggerDamageNumber(Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.NORMAL)
+    public void TriggerDamageNumber(Vector3 position, float damage, DAMAGEType damageType = DAMAGEType.NORMAL, Transform followTransform = null)
     {
         DamageNumber damageNumberPrefab = damageNumberPrefabs[damageType];
+        bool isFollow = false;
 
-        damageNumberPrefab.Spawn(position, damage);
+        if(damageType == DAMAGEType.POISON)
+        {
+            isFollow = true;
+        }
+
+        if(followTransform != null && isFollow)
+        {
+            damageNumberPrefab.Spawn(position, damage, followTransform);
+        }
+        else
+        {
+            damageNumberPrefab.Spawn(position, damage);
+        }
     }
 
     private async UniTask WaitUntilParticleEnd(GameObject vfxObject)

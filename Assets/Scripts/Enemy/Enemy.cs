@@ -298,11 +298,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
         
-        DAMAGEType damageType = extraData.isCritical ? DAMAGEType.CRITICAL : DAMAGEType.NORMAL;
-        damageType = extraData.isPoison ? DAMAGEType.POISON : damageType;
-        
+        DAMAGEType damageType = extraData.isCritical ? DAMAGEType.CRITICAL : extraData.damageType;
+
         // 피격 효과
-        VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType);
+        VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType, transform);
 
         if(extraData.isCritical)
         {
@@ -312,11 +311,13 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             {
                 Time.timeScale = 1;
             });
-            VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
+            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         else
         {
-            VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
+            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         
         AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);

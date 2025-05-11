@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace hvvan
     public class GameManager : Singleton<GameManager>
     {
         [SerializeField] GameObject playerCharacterPrefab;
+        
+        private float _sessionStartTime;
         
         public PlayerController Player
         {
@@ -65,6 +68,7 @@ namespace hvvan
 
         private void Start()
         {
+            _sessionStartTime = Time.unscaledTime;
             Player = FindObjectOfType<PlayerController>();
         }
 
@@ -186,6 +190,10 @@ namespace hvvan
                 {
                     _currentRunData.currentWeapon = Player.WeaponHandler.CurrentWeaponType;
                 }
+
+                _currentRunData.playTime += Time.unscaledTime - _sessionStartTime;
+                _sessionStartTime = Time.unscaledTime;
+                
                 await SaveDataManager.Instance.SaveData(Constants.CurrentRun, _currentRunData);
             }
         }
@@ -267,6 +275,37 @@ namespace hvvan
         public PlayerStat GetCurrentStat()
         {
             return _currentRunData?.playerStat;
+        }
+
+        public async UniTask MoveToNextFloor()
+        {
+            CurrentRunData.currentFloor++;
+            CurrentRunData.currentRoomIndex = 0;
+            CurrentRunData.clearedRooms.Clear();
+            await SaveData(Constants.CurrentRun);
+            
+            var floorData = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
+
+            //다음층 시작룸 로드
+            var startRoom = floorData.Floor[CurrentRunData.currentFloor].rooms[RoomType.StartRoom];
+            SceneController.TransitionToScene(startRoom.sceneName, true, NextFloorSceneLoaded);
+        }
+
+        private IEnumerator NextFloorSceneLoaded()
+        {
+            var enterTask = RoomSceneController.Instance.EnterFloor();
+            while (!enterTask.Status.IsCompleted())
+            {
+                yield return null;
+            }
+            
+            RoomSceneController.Instance.CurrentRoomController.SetRoomReady(true);
+            
+            //플레이어 설정
+            if (Player)
+            {
+                Player.InitializeByCurrentRunData(CurrentRunData);
+            }
         }
     }
 }

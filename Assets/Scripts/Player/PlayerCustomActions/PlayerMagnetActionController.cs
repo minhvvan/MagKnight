@@ -231,7 +231,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         _playerController.inMagnetSkill = false;
         _playerController.InputHandler.GainControl();
         _electricLine.HideEffect();
-        VolumeController.MotionBlurPlay(0.0f, 0.1f);
+        VolumeController.MotionBlurPlay(0.0f, 0.0f);
     }
 
     public void StartMagnetSwing(MagneticObject caster)

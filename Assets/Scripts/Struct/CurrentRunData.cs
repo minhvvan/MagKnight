@@ -18,6 +18,8 @@ public class CurrentRunData : ISaveData
     public Quaternion lastPlayerRotation = Quaternion.identity;
     public int seed = (int)DateTime.Now.Ticks % int.MaxValue;
     public List<int> clearedRooms = new List<int>();
+    public int opponentsDefeated;
+    public float playTime;
     
     public PlayerStat playerStat = new();
     
