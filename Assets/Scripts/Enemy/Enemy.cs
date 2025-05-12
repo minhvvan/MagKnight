@@ -335,8 +335,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
         damageEffect.extraData.sourceTransform = transform;
         impulseEffect.extraData.sourceTransform = transform;
-        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
-        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
+
+        if (hitInfo.collider.gameObject.TryGetComponent(out AbilitySystem abilitySystem))
+        {
+            abilitySystem.ApplyEffect(damageEffect);
+            abilitySystem.ApplyEffect(impulseEffect);
+        }
     }
 
     public void OnError(Exception error)
