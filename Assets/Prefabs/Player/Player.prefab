@@ -224,17 +224,17 @@ MonoBehaviour:
   highlighterSettings:
     depthMask: 3
     infoRenderScale: 1
-    useOuterGlow: 0
+    useOuterGlow: 1
     useSingleOuterGlow: 1
-    outerGlowColorFront: {r: 0, g: 0, b: 0, a: 1}
+    outerGlowColorFront: {r: 0.23815604, g: 1, b: 0.2216981, a: 1}
     outerGlowColorBack: {r: 0, g: 0, b: 0, a: 1}
     outlineVisibleBeforeObject: 1
     blurType: 1
     blendType: 0
-    boxBlurSize: 0.04
-    blurIterations: 40
+    boxBlurSize: 0.01
+    blurIterations: 10
     blurRenderScale: 1
-    blurIntensity: 1
+    blurIntensity: 5
     blurIntensityMultiplier: 1
     blurAdaptiveThickness: 0
     cameraDistanceMultiplier: 1
@@ -244,8 +244,8 @@ MonoBehaviour:
       color: {r: 0.40396938, g: 0.9622642, b: 0.40552607, a: 1}
     meshOutlineBack:
       color: {r: 1, g: 1, b: 1, a: 1}
-    meshOutlineThickness: 0.05
-    meshOutlineAdaptiveThickness: 0
+    meshOutlineThickness: 0.0002
+    meshOutlineAdaptiveThickness: 0.01
     useInnerGlow: 0
     useSingleInnerGlow: 1
     innerGlowFront:

@@ -125,6 +125,11 @@ public class ProductCase : MonoBehaviour, IInteractable
 
     public void Select(Highlighter highlighter)
     {
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.SetItemText(inItem, true);
         uiController.ShowUI();

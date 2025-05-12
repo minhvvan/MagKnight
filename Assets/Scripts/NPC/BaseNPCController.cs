@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using Highlighters;
 using Moon;
@@ -29,10 +31,13 @@ public class BaseNPCController : MonoBehaviour, IInteractable
     Vector3 _lastTargetPosition = Vector3.zero;
     
     protected IInteractor _currentInteractor;
+    
+    private List<Renderer> _renderers = new List<Renderer>();
 
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
+        _renderers = GetComponentsInChildren<Renderer>().ToList();
     }
 
     protected virtual void Update()
@@ -163,12 +168,18 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
     public void Select(Highlighter highlighter)
     {
-        
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
     }
 
     public void UnSelect(Highlighter highlighter)
     {
-        
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
     }
 
     public GameObject GetGameObject()

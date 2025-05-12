@@ -125,7 +125,7 @@ public class InteractionController : MonoBehaviour
         {
             if (hit.collider.IsUnityNull()) continue;
             if (!hit.collider.TryGetComponent<IInteractable>(out var interactable)) continue;
-            if(_currentInteractable == interactable) continue;
+            if(_currentInteractable == interactable) break;
             
             _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = interactable;
