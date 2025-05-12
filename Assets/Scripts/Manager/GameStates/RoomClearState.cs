@@ -11,7 +11,8 @@ public class RoomClearState: IGameState
         currentRunData.currentRoomIndex = RoomSceneController.Instance.CurrentRoomController.RoomIndex;
         currentRunData.lastPlayerPosition = GameManager.Instance.Player.transform.position;
         currentRunData.lastPlayerRotation = GameManager.Instance.Player.transform.rotation;
-        currentRunData.clearedRooms.AddUnique(RoomSceneController.Instance.CurrentRoomController.RoomIndex);
+        if(currentRunData.clearedRooms.AddUnique(RoomSceneController.Instance.CurrentRoomController.RoomIndex))
+            currentRunData.clearedRoomsCount++;
         
         GameManager.Instance.SetCurrentRunData(currentRunData);
         _ = GameManager.Instance.SaveData(Constants.CurrentRun);

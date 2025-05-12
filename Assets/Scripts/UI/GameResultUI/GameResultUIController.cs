@@ -52,7 +52,7 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
         playTimeText.SetText($"[ {hours:00}:{minutes:00}:{seconds:00} ]");
         clearedFloorText.SetText(currentRunData.currentFloor.ToString());
         
-        int clearedRooms = currentRunData.clearedRooms.Count - 1; //시작 방 제외
+        int clearedRooms = currentRunData.clearedRoomsCount - 1; //시작 방 제외
         
         clearedRoomText.SetText(clearedRooms.ToString());
         opponentsDefeatedText.SetText(currentRunData.opponentsDefeated.ToString());
