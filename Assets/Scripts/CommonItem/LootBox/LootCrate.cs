@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Highlighters;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -25,7 +26,7 @@ public class LootCrate : MonoBehaviour, IInteractable
     private bool _isChoose = false;
     private Vector3 _openAngle;
     
-    private List<MeshRenderer> _renderers = new List<MeshRenderer>();
+    private List<Renderer> _renderers = new List<Renderer>();
     private Material _baseMaterial;
 
     public Dictionary<ItemRarity, List<GameObject>> rarityVfxObjects;
@@ -35,7 +36,7 @@ public class LootCrate : MonoBehaviour, IInteractable
     
     private void Awake()
     {
-        _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
+        _renderers = GetComponentsInChildren<Renderer>().ToList();
         _baseMaterial = BaseRenderer.material;
         _animator = GetComponent<Animator>();
         
@@ -160,16 +161,22 @@ public class LootCrate : MonoBehaviour, IInteractable
         }
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: outline
-        if(!_isOpen) _renderers.ForEach(render => render.material.color = Color.green);
+        if (_isOpen) return;
+        
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: outline 제거
-        _renderers.ForEach(render => render.material.color = Color.gray);
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
     }
 
     public GameObject GetGameObject()

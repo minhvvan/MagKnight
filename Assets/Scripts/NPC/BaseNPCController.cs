@@ -1,5 +1,6 @@
 using System;
 using Cinemachine;
+using Highlighters;
 using Moon;
 using UnityEngine;
 
@@ -160,12 +161,12 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         }
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
         
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
         
     }

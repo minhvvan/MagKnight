@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Highlighters;
 using hvvan;
 using Moon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ArtifactObject : MonoBehaviour, IInteractable
 {
@@ -78,9 +77,13 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         Destroy(gameObject);
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: outline
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         _renderers.ForEach(render => render.material.color = Color.blue);
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
@@ -88,9 +91,13 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         uiController.ShowUI();
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: outline 제거
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         _renderers.ForEach(render => render.material.color = Color.gray);
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;

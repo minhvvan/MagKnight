@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Highlighters;
 using hvvan;
 using JetBrains.Annotations;
 using Moon;
@@ -161,20 +162,24 @@ public class MagCore: MonoBehaviour, IInteractable
         Destroy(gameObject);
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: outline
-        _renderers.ForEach(render => render.material.color = Color.green);
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.SetItemText(gameObject);
         uiController.ShowUI();
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: outline 제거
-        _renderers.ForEach(render => render.material.color = Color.gray);
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.HideUI();
