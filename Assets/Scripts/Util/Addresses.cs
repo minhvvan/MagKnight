@@ -21,7 +21,8 @@ public static class Addresses
         {
             public const string Floor = "data/floor";
             public const string RoomData = "data/room";
-            public const string NavMeshData  = "data/navmesh";
+            public const string NavMeshDataBattle  = "data/navmesh/battle";
+            public const string NavMeshDataBoss  = "data/navmesh/boss";
         }
 
         public static class Magnetic
@@ -52,5 +53,18 @@ public static class Addresses
     
     public static class Prefabs
     {
+    }
+    
+    public static class NavMeshAddressLoader
+    {
+        public static string GetPath(RoomType roomType)
+        {
+            switch (roomType)
+            {
+                case RoomType.BattleRoom: return "data/navmesh/battle";
+                case RoomType.BoosRoom: return "data/navmesh/boss";
+                default: return string.Empty;
+            }
+        }
     }
 }
