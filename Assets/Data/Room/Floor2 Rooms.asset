@@ -50,3 +50,29 @@ MonoBehaviour:
         sceneName: trap
         connectedRooms: 
         roomType: 6
+  roomNumLimit:
+    _serializedList:
+    - Key: 1
+      Value:
+        min: 1
+        max: 1
+    - Key: 2
+      Value:
+        min: 1
+        max: 1
+    - Key: 3
+      Value:
+        min: 1
+        max: 1
+    - Key: 4
+      Value:
+        min: 2
+        max: 5
+    - Key: 5
+      Value:
+        min: 1
+        max: 2
+    - Key: 6
+      Value:
+        min: 2
+        max: 5
