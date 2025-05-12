@@ -66,6 +66,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
 
     public void ShowUI()
     {
+        rectTransform.DOKill();
         rectTransform.DOScale(1, 0.1f);
         GameManager.Instance.Player.InputHandler.ReleaseControl();
         gameObject.SetActive(true);
@@ -85,6 +86,7 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         {
             artifact.GetComponent<ArtifactUI>().DumpArtifact();
         }
+        rectTransform.DOKill();
         rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
         gameObject.SetActive(false);
         GameManager.Instance.Player.InputHandler.GainControl();
