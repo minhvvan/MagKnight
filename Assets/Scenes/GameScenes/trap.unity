@@ -1314,7 +1314,7 @@ MonoBehaviour:
       Value: {fileID: 1208415337}
   nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 440396505}
-  hasReward: 0
+  hasReward: 1
 --- !u!1 &1366217965 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1417772962928174, guid: 55b18cdda7a908b4faa975482e0358e6,
@@ -5699,7 +5699,7 @@ Transform:
   m_GameObject: {fileID: 4579630772012224295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -7.1, z: -52.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
