@@ -262,7 +262,7 @@ namespace hvvan
         public async UniTask<PlayerData> GetPlayerData()
         {
             //이미 존재하면서 유효하면 반환
-            if (_playerData != null && _playerData.PlayerStat.IsValid()) return _playerData;
+            if (_playerData != null && _playerData.PlayerStat.IsValid()) return _playerData.DeepCopy();
             
             //데이터 로드 시도
             _playerData = SaveDataManager.Instance.LoadData<PlayerData>(Constants.PlayerData);
@@ -286,7 +286,7 @@ namespace hvvan
             }
             
             await SetPlayerData(_playerData);
-            return _playerData;
+            return _playerData.DeepCopy();
         }
 
         public PlayerStat GetCurrentStat()

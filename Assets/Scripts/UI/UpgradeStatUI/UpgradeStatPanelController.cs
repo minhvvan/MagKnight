@@ -16,7 +16,7 @@ public class UpgradeStatPanelController : MonoBehaviour
     [SerializeField] TMP_Text upgradeCostText;
     [SerializeField] AttributeType statType;
 
-    public Action OnClickButton;
+    public Action<GameplayEffect> OnClickButton;
     
     private readonly float _baseMaxHp = 200f;
     private readonly float _baseStrength = 20;
@@ -40,6 +40,7 @@ public class UpgradeStatPanelController : MonoBehaviour
     {
         currentLevel = CalculateLevel(playerData.PlayerStat);
         UpdateLevel(playerData);
+        upgradeButton.onClick.RemoveAllListeners();
         upgradeButton.onClick.AddListener(() => UpgradeStat(playerData));
     }
     
@@ -91,7 +92,7 @@ public class UpgradeStatPanelController : MonoBehaviour
         return 0;
     }
     
-    private async void UpgradeStat(PlayerData playerData)
+    private void UpgradeStat(PlayerData playerData)
     {
         switch (statType)
         {
@@ -137,19 +138,15 @@ public class UpgradeStatPanelController : MonoBehaviour
                 statText.SetText($"{playerData.PlayerStat.MagneticRange.Value}");
                 break;
         }
-
-        GameManager.Instance.Player.AbilitySystem.ApplyEffect(upgradeEffect);
+        
 
         if(statType == AttributeType.MaxHP)
-            GameManager.Instance.Player.AbilitySystem.ApplyEffect(new GameplayEffect(EffectType.Instant, AttributeType.HP, 10f));
+            OnClickButton?.Invoke(new GameplayEffect(EffectType.Instant, AttributeType.HP, 10f));
         
         playerData.Currency -= upgradeCosts[currentLevel];
-        
-        await GameManager.Instance.SaveData(Constants.PlayerData);
-        await GameManager.Instance.SaveData(Constants.CurrentRun);
         currentLevel++;
         
-        OnClickButton?.Invoke();
+        OnClickButton?.Invoke(upgradeEffect);
     }
 
     public void UpdateLevel(PlayerData playerData)
@@ -160,10 +157,16 @@ public class UpgradeStatPanelController : MonoBehaviour
             levelText.text = $"Lv.{currentLevel+1}";
         if (currentLevel > 0)
             statText.color = Color.green;
+        else
+            statText.color = Color.white;
         fillImage.fillAmount = currentLevel/10f;
         upgradeCostText.text = upgradeCosts[currentLevel] + "$";
         
         if(currentLevel == maxLevel || playerData.Currency < upgradeCosts[currentLevel])
             upgradeButton.interactable = false;
+        else
+        {
+            upgradeButton.interactable = true;
+        }
     }
 }
