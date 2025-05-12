@@ -830,6 +830,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room_Treaser
       objectReference: {fileID: 0}
+    - target: {fileID: 5164319358323626152, guid: baccb55193da19945940e28e11183e22,
+        type: 3}
+      propertyPath: m_Convex
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6218561326305412248, guid: baccb55193da19945940e28e11183e22,
         type: 3}
       propertyPath: m_LocalPosition.x
