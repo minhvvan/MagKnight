@@ -122,7 +122,7 @@ public class InteractionController : MonoBehaviour
         {
             if(_currentInteractable == null)
             {
-                if(UIManager.Instance.popupUIController.productUIController != null && UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
+                if(UIManager.Instance.popupUIController != null && UIManager.Instance.popupUIController.productUIController != null && UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
                 {
                     UIManager.Instance.popupUIController.productUIController.HideUI();
                 }
@@ -165,7 +165,7 @@ public class InteractionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //cursor가 UI에 있을 때는 상호작용 불가
+        //cursor가 잠겨있을때만 상호작용 감지
         if(Cursor.lockState == CursorLockMode.Locked){
             FindClosestInteractable();
         }
