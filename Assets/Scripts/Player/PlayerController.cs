@@ -309,10 +309,10 @@ namespace Moon
             }
 
             //임의로 무기 강화 강제로 올리기.
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                UpgradeParts();
-            }
+            // if (Input.GetKeyDown(KeyCode.Alpha0))
+            // {
+            //     UpgradeParts();
+            // }
 
             TriggerSkill();
 
