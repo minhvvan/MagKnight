@@ -351,6 +351,11 @@ namespace Moon
 
         private void TriggerAttack()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             _animator.SetFloat(PlayerAnimatorConst.hashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
             _animator.ResetTrigger(PlayerAnimatorConst.hashMeleeAttack);
 
@@ -378,6 +383,11 @@ namespace Moon
 
         void TriggerSkill()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             if (_inputHandler.SkillInput && _isGrounded)
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
@@ -970,6 +980,11 @@ namespace Moon
 
         void SwitchMagneticInput()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             // 쿨다운 중이면 무시
             if (! _canSwitchMagnetic)
                 return;
