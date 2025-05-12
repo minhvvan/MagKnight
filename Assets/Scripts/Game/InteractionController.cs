@@ -5,6 +5,7 @@ using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using Highlighters;
+using hvvan;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -121,7 +122,7 @@ public class InteractionController : MonoBehaviour
         {
             if(_currentInteractable == null)
             {
-                if(UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
+                if(UIManager.Instance.popupUIController.productUIController != null && UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
                 {
                     UIManager.Instance.popupUIController.productUIController.HideUI();
                 }
@@ -164,7 +165,10 @@ public class InteractionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FindClosestInteractable();
+        //cursor가 UI에 있을 때는 상호작용 불가
+        if(Cursor.lockState == CursorLockMode.Locked){
+            FindClosestInteractable();
+        }
     }
 
     private void OnDrawGizmos()
