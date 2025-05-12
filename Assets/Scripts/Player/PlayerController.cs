@@ -1141,6 +1141,14 @@ namespace Moon
 
         public void Damaged(ExtraData extraData)
         {
+            
+            
+            VFXManager.Instance.TriggerDamageNumberUI(UIManager.Instance.inGameUIController.statusUIController.healthBar.damageTextRectTransform, Vector3.zero, extraData.finalAmount, DAMAGEType.UI_DAMAGE);
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public void Impulse(ExtraData extraData)
+        {
             // 1) 패링 창이 열려 있으면 ─────────
             if (_parryWindowActive)
             {
@@ -1169,13 +1177,7 @@ namespace Moon
                 // (피해는 받지 않음)
                 return;
             }
-            
-            VFXManager.Instance.TriggerDamageNumberUI(UIManager.Instance.inGameUIController.statusUIController.healthBar.damageTextRectTransform, Vector3.zero, extraData.finalAmount, DAMAGEType.UI_DAMAGE);
-            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
-        }
 
-        public void Impulse(ExtraData extraData)
-        {
             // 2) 패링 실패 or 타이밍 아웃 시 기존 데미지 처리
             if (isDead || _isKnockDown) return;
             if(extraData.sourceTransform != null)
