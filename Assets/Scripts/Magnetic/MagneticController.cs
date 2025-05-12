@@ -163,6 +163,8 @@ public class MagneticController : MagneticObject
         
         _playerMagnetActionController.EndSwingWithInertia();
         _timeScaleCoroutine = StartCoroutine(TimeScaleCoroutine(1f));
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.ActiveMagnet);
     
         //끝
         _isShortRelease = false;
@@ -224,7 +226,11 @@ public class MagneticController : MagneticObject
         {
             _isActivatedMagnetic = true;
             _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.MagneticForce);
+            
             await targetMagneticObject.OnMagneticInteract(this);
+            
             
             var playerASC = GameManager.Instance.Player.AbilitySystem;
             playerASC.TriggerEvent(TriggerEventType.OnMagnetic, playerASC);
@@ -363,6 +369,8 @@ public class MagneticController : MagneticObject
                     bestHit.collider.transform.TryGetComponent(out MagneticObject magneticObject) 
                     && magneticObject != null)
                 {
+                    if (targetMagneticObject == null || magneticObject != targetMagneticObject)
+                        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.AimActivate);
                     //새로 타겟된 대상이 이전과 다르면 언록
                     if (targetMagneticObject != null && magneticObject != targetMagneticObject)
                     {
@@ -373,6 +381,9 @@ public class MagneticController : MagneticObject
                     _isDetectedMagnetic = true;
                     targetMagneticObject = magneticObject;
                     _magneticUIController.InLockOnTarget(targetMagneticObject.magneticPoint);
+                    
+                    
+                    
                     StartCoroutine(_magneticUIController.SetTargetMagneticTypeColor(targetMagneticObject.GetMagneticType()));
                     
                     return;
