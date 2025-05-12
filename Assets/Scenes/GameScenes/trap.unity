@@ -295,6 +295,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 172588338}
+  magneticTargetPoint: {fileID: 172588338}
 --- !u!114 &150389349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +338,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1758825415}
+  magneticTargetPoint: {fileID: 1758825415}
 --- !u!114 &150389351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,6 +455,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1105561009}
+  magneticTargetPoint: {fileID: 1105561009}
 --- !u!114 &255777762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +498,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1847720802}
+  magneticTargetPoint: {fileID: 1847720802}
 --- !u!114 &255777764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1336,6 +1340,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 313223608}
+  magneticTargetPoint: {fileID: 313223608}
 --- !u!114 &1366217967
 MonoBehaviour:
   m_ObjectHideFlags: 0
