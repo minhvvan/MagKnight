@@ -402,7 +402,8 @@ public class MagneticUIController : MonoBehaviour
 
     private void OnDestroy()
     {
-        DOTween.KillAll();
+        //DOTween.KillAll();
+
         _currentTargetList.Clear();
         DisposePooling();
     }
