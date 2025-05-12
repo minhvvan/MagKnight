@@ -46,7 +46,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         SetMagneticInteract();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         //Highlight Binding
         if (isMagneticHighlight)
@@ -147,5 +147,13 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         if(magneticType == MagneticType.N) magneticType = MagneticType.S;
         else if(magneticType == MagneticType.S) magneticType = MagneticType.N;
+    }
+
+    protected void OnDestroy()
+    {
+        if (isMagneticHighlight)
+        {
+            UnbindMagneticHighlight();
+        }
     }
 }
