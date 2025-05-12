@@ -165,6 +165,11 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
         }
+
+        if (Room.roomType is RoomType.BoosRoom)
+        {
+            GameManager.Instance.ChangeGameState(GameState.BossRoom);
+        }
     }
 
     private IEnumerator LookClearField(CameraSettings cameraSettings)
