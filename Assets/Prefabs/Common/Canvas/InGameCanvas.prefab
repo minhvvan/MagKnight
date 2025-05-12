@@ -3654,6 +3654,46 @@ PrefabInstance:
       propertyPath: mainCanvas
       value: 
       objectReference: {fileID: 4439416975751160258}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[1].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[2].Key
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[3].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[0].Value
+      value: 
+      objectReference: {fileID: 3557154432291611166}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 1554865477634235294}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[2].Value
+      value: 
+      objectReference: {fileID: 6135074696479720282}
+    - target: {fileID: 5426094504333329017, guid: d3360f1e44ece0d46bbb56880d59984e,
+        type: 3}
+      propertyPath: indicator._serializedList.Array.data[3].Value
+      value: 
+      objectReference: {fileID: 6300905968812386178}
     - target: {fileID: 7672770364134906506, guid: d3360f1e44ece0d46bbb56880d59984e,
         type: 3}
       propertyPath: m_Name
@@ -3676,9 +3716,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658222568b625c64f9c0f95a86553ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &1554865477634235294 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5597686603597936613, guid: d3360f1e44ece0d46bbb56880d59984e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6358246663034956923}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &3557154432291611166 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7593221507970518629, guid: d3360f1e44ece0d46bbb56880d59984e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6358246663034956923}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &5988366129471199500 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 803880315589129591, guid: d3360f1e44ece0d46bbb56880d59984e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6358246663034956923}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6135074696479720282 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 943836489633738529, guid: d3360f1e44ece0d46bbb56880d59984e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6358246663034956923}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &6300905968812386178 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1102351938012417017, guid: d3360f1e44ece0d46bbb56880d59984e,
     type: 3}
   m_PrefabInstance: {fileID: 6358246663034956923}
   m_PrefabAsset: {fileID: 0}

@@ -295,6 +295,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 172588338}
+  magneticTargetPoint: {fileID: 172588338}
 --- !u!114 &150389349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +338,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1758825415}
+  magneticTargetPoint: {fileID: 1758825415}
 --- !u!114 &150389351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,6 +455,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1105561009}
+  magneticTargetPoint: {fileID: 1105561009}
 --- !u!114 &255777762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +498,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1847720802}
+  magneticTargetPoint: {fileID: 1847720802}
 --- !u!114 &255777764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1310,7 +1314,7 @@ MonoBehaviour:
       Value: {fileID: 1208415337}
   nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 440396505}
-  hasReward: 0
+  hasReward: 1
 --- !u!1 &1366217965 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1417772962928174, guid: 55b18cdda7a908b4faa975482e0358e6,
@@ -1336,6 +1340,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 313223608}
+  magneticTargetPoint: {fileID: 313223608}
 --- !u!114 &1366217967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5694,7 +5699,7 @@ Transform:
   m_GameObject: {fileID: 4579630772012224295}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -7.1, z: -52.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
