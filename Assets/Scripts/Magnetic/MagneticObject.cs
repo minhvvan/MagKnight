@@ -17,7 +17,11 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
     public bool isMagneticHighlight = true;
+    
+    //UI에서 표시되는 포인트(상호작용 시작 지점)
     public Transform magneticPoint;
+    //실제 물리 연산이 일어날 지점
+    public Transform magneticTargetPoint;
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
@@ -42,7 +46,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         SetMagneticInteract();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         //Highlight Binding
         if (isMagneticHighlight)
@@ -143,5 +147,13 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         if(magneticType == MagneticType.N) magneticType = MagneticType.S;
         else if(magneticType == MagneticType.S) magneticType = MagneticType.N;
+    }
+
+    protected void OnDestroy()
+    {
+        if (isMagneticHighlight)
+        {
+            UnbindMagneticHighlight();
+        }
     }
 }

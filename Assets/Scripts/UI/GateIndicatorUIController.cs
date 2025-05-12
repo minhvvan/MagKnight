@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GateIndicatorUIController : MonoBehaviour
 {
-    private List<Gate> _gates = new List<Gate>();
-    public List<RectTransform> indicator = new List<RectTransform>();
+    private Dictionary<RoomDirection, Gate> _gates = new Dictionary<RoomDirection, Gate>();
+    public SerializedDictionary<RoomDirection, RectTransform> indicator = new SerializedDictionary<RoomDirection, RectTransform>();
     public Camera mainCamera;
     
     [SerializeField] private Canvas mainCanvas;
@@ -46,33 +47,31 @@ public class GateIndicatorUIController : MonoBehaviour
         if (_gates == null || indicator == null) return;
         if(_gates.Count == 0) return;
 
-        for (int i = 0; i < _gates.Count; i++)
+        foreach (var (direction, gate) in _gates)
         {
-            if(!_gates[i]) continue;
-            if(!_gates[i].gameObject.activeInHierarchy) continue;
+            if(!gate) continue;
+            if(!gate.gameObject.activeInHierarchy) continue;
             
-            if (i >= indicator.Count) continue;
-            
-            indicator[i].gameObject.SetActive(true);
+            indicator[direction].gameObject.SetActive(true);
             
             // 게이트와의 거리 계산
-            float distanceToGate = Vector3.Distance(mainCamera.transform.position, _gates[i].indicatorPoint.position);
+            float distanceToGate = Vector3.Distance(mainCamera.transform.position, gate.indicatorPoint.position);
             
             // 월드 좌표를 스크린 좌표로 변환
-            Vector3 screenPos = mainCamera.WorldToScreenPoint(_gates[i].indicatorPoint.position);
+            Vector3 screenPos = mainCamera.WorldToScreenPoint(gate.indicatorPoint.position);
         
             // 오브젝트가 카메라 뒤에 있을 경우 처리
             if (screenPos.z < 0)
             {
-                indicator[i].gameObject.SetActive(false);
+                indicator[direction].gameObject.SetActive(false);
                 continue;
             }
         
             // 스크린 좌표를 캔버스 좌표로 변환
-            indicator[i].position = screenPos;
+            indicator[direction].position = screenPos;
             
             // 거리에 따른 스케일 조정 - 간단하게 적용
-            AdjustScale(indicator[i], distanceToGate);
+            AdjustScale(indicator[direction], distanceToGate);
         }
     }
     
@@ -91,15 +90,16 @@ public class GateIndicatorUIController : MonoBehaviour
 
     public void BindGate(Gate gate)
     {
-        _gates.Add(gate);
+        if(_gates.TryAdd(gate.roomDirection, gate)) return;;
+        _gates[gate.roomDirection] = gate;
     }
 
     public void UnBindGate(Gate gate)
     {
-        if (!_gates.Contains(gate)) return;
+        if (!_gates.ContainsKey(gate.roomDirection)) return;
         
-        _gates.Remove(gate);
-        indicator[(int)gate.roomDirection].gameObject.SetActive(false);
+        _gates.Remove(gate.roomDirection);
+        indicator[gate.roomDirection].gameObject.SetActive(false);
     }
 
     public void ClearGateBind()

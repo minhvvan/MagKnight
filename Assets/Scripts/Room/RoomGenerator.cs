@@ -117,13 +117,7 @@ public class RoomGenerator
 
     private void CreateRooms()
     {
-        //generateRoomCount만큼 생성 + 시작 + 보스 + 상점
-        //필수 지점 추가
         var currentFloor = GameManager.Instance.CurrentRunData.currentFloor;
-        
-        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.StartRoom]));
-        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.BoosRoom]));
-        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.ShopRoom]));
 
         //room 개수 제한
         Dictionary<RoomType, int> generatedRoomCount = new();

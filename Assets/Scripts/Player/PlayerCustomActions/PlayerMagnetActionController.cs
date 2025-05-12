@@ -45,7 +45,7 @@ public class PlayerMagnetActionController : MonoBehaviour
         var playerPos = transform.position;
         var playerCenterPos = GetCenterPosition(transform);
         
-        var casterMagneticPoint = caster.magneticPoint;
+        var casterMagneticPoint = caster.magneticTargetPoint;
         var casterPos = casterMagneticPoint.position;
 
         _playerController.inMagnetSkill = true;
@@ -230,7 +230,7 @@ public class PlayerMagnetActionController : MonoBehaviour
 
     public void StartMagnetSwing(MagneticObject caster)
     {
-        SetMagnetActionState(magnetActionApproachToTransformState, new MagnetActionApproachToTransformStateData(caster.magneticPoint));
+        SetMagnetActionState(magnetActionApproachToTransformState, new MagnetActionApproachToTransformStateData(caster.magneticTargetPoint));
     }
 
     public void EndSwingWithInertia()
