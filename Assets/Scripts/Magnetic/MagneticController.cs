@@ -224,7 +224,7 @@ public class MagneticController : MagneticObject
         if (targetMagneticObject != null)
         {
             _isActivatedMagnetic = true;
-            _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+            _magneticUIController.UnLockOnTarget();
             
             await targetMagneticObject.RunMagneticInteract(this, GetMagnetPlate());
             var playerASC = GameManager.Instance.Player.AbilitySystem;
@@ -369,7 +369,7 @@ public class MagneticController : MagneticObject
                     //새로 타겟된 대상이 이전과 다르면 언록
                     if (targetMagneticObject != null && magneticObject != targetMagneticObject)
                     {
-                        _magneticUIController.UnLockOnTarget(targetMagneticObject.magneticPoint);
+                        _magneticUIController.UnLockOnTarget();
                         targetMagneticObject = null;
                     }
                 
@@ -385,7 +385,7 @@ public class MagneticController : MagneticObject
 
         if (targetMagneticObject != null)
         {
-            _magneticUIController.UnLockOnTarget(targetMagneticObject.magneticPoint);
+            _magneticUIController.UnLockOnTarget();
         }
         _isDetectedMagnetic = false;
         targetMagneticObject = null;
