@@ -32,6 +32,7 @@ public class GameManagerEditor : Editor
             GameState.DungeonEnter => new Color(0.6f, 0.4f, 0.2f, 1f),// 갈색 - 던전 입장
             GameState.RoomEnter => new Color(0.5f, 0.2f, 0.7f, 1f),   // 보라색 - 방 입장
             GameState.RoomClear => new Color(0.2f, 0.8f, 0.6f, 1f),   // 청록색 - 방 클리어
+            GameState.BossRoom => new Color(0.85f, 0.30f, 0.10f, 1f),
             GameState.Dialogue => new Color(0.7f, 0.7f, 0.9f, 1f),    // 연한 보라색 - 대화
             GameState.GameClear => new Color(1f, 0.8f, 0.2f, 1f),     // 황금색 - 게임 클리어
             GameState.GameOver => new Color(0.8f, 0.2f, 0.2f, 1f),    // 빨간색 - 게임 오버
@@ -69,6 +70,9 @@ public class GameManagerEditor : Editor
 
         if (GUILayout.Button("RoomClear"))
             gameManager.ChangeGameState(GameState.RoomClear);
+        if (GUILayout.Button("BossRoom"))
+            gameManager.ChangeGameState(GameState.BossRoom);
+
         if (GUILayout.Button("Dialogue"))
             gameManager.ChangeGameState(GameState.Dialogue);
         if (GUILayout.Button("GameClear"))

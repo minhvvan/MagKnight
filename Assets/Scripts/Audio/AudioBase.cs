@@ -17,8 +17,8 @@ public static class AudioBase
     {
         public static class BaseCamp
         { 
-            public const string Main = "AMBIENCE_Ferry_Car_Deck_02_loop_stereo";
-            public const string Environment  = "LVSD-0006_04_SealedSanctuary_loop";
+            public const string Environment = "AMBIENCE_Ferry_Car_Deck_02_loop_stereo";
+            public const string Main  = "LVSD-0006_04_SealedSanctuary_loop";
         }
 
         public static class Dungeon
