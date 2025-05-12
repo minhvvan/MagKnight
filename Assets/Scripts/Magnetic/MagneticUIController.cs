@@ -362,7 +362,7 @@ public class MagneticUIController : MonoBehaviour
     {
         if (_isDispose) return;
         StartCoroutine(SetTriAimPosition(true));
-        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target))
+        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target)) 
         {
             targetObj.onTrakingCirclePos = SetTrakingCircle;
             targetObj.LockTarget();
