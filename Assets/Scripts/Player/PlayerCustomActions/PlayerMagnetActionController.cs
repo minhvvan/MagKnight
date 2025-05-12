@@ -130,13 +130,13 @@ public class PlayerMagnetActionController : MonoBehaviour
 
         return targetFrontPos;
     }
-#endregion 
+#endregion
 
     IEnumerator MagnetDashCoroutine(Transform destinationTransform, float duration, Action onComplete, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
     {
         float elapsed = 0f;
         Vector3 startPos = transform.position;
-
+        
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -285,4 +285,226 @@ public class PlayerMagnetActionController : MonoBehaviour
         UpdateMagnetActionState();
     }
 #endregion
+
+#region MagnetPlate
+public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool isGetPlate)
+    {
+        if (_playerController.inMagnetSkill) return;
+        
+        var playerPos = transform.position;
+        var playerCenterPos = GetCenterPosition(transform);
+        
+        var casterMagneticPoint = caster.magneticPoint;
+        var casterPos = casterMagneticPoint.position;
+
+        MagnetPlate magnetPlate = null;
+        
+        if (isGetPlate)
+        {
+            magnetPlate = caster.magnetPlate;
+            casterMagneticPoint = magnetPlate.magneticPoint;
+            casterPos = magnetPlate.transform.position;
+        }
+        else
+        {
+            if (caster.TryGetComponent(out magnetPlate))
+            {
+                target.magnetPlate = magnetPlate;
+            }
+        }
+        
+        var targetMagneticPoint = target.magneticPoint;
+        var targetPos = targetMagneticPoint.position;
+        
+        //_playerController.inMagnetSkill = true;
+
+        float distance = 0f;
+        switch (isGetPlate)
+        {
+            case false:
+                distance = Vector3.Distance(playerPos, casterPos);
+                break;
+            case true:
+                distance = Vector3.Distance(casterPos, targetPos);
+                break;
+        }
+        
+        float speed = 5f;
+        float duration =  distance / speed;
+        
+        Sequence sequence = DOTween.Sequence();
+
+        sequence.AppendCallback(()=>
+        {
+            switch (isGetPlate)
+            {
+                case false:
+                    StartCoroutine(MagnetPlatePullCoroutine(casterMagneticPoint, duration, 
+                        () => StartCoroutine(MagnetPlateHoldCoroutine(casterMagneticPoint, magnetPlate)
+                        )));
+                    break;
+                case true:
+                    StartCoroutine(MagnetPlateThrowCoroutine(
+                        magnetPlate, targetMagneticPoint, duration));
+                    break;
+            }
+        });
+    }
+
+    Vector3 GetPlayerFrontPosition(Collider playerCollider, float distance = 1f)
+    {
+        var offset = new Vector3(0, playerCollider.bounds.size.y / 2f, distance);
+        var playerFrontPos = transform.TransformPoint(offset);
+        return playerFrontPos;
+    }
+    
+    //철판 당겨오기
+    IEnumerator MagnetPlatePullCoroutine(Transform plateTransform, float duration, Action onComplete = null, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
+    {
+        float elapsed = 0f;
+        var playerCollider = transform.GetComponent<Collider>();
+        var playerCenterPos = Vector3.zero;
+        var handle = _playerController.WeaponHandler.GetHandTransform();
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            var EaseFunction = EasingFunction.GetEasingFunction(easeType);
+
+            playerCenterPos = playerCollider.bounds.center;
+            var playerFrontPos = GetPlayerFrontPosition(playerCollider);
+            
+            Vector3 nextPos = Vector3.Lerp(plateTransform.position, playerFrontPos, EaseFunction(0, 1, t));
+            plateTransform.LookAt(playerCenterPos);
+            plateTransform.position = nextPos;
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
+            yield return null;
+        }
+
+        // 마지막 위치로 이동
+        Vector3 finalPos = GetPlayerFrontPosition(playerCollider);
+        Vector3 finalDelta = finalPos - plateTransform.position;
+        if (finalDelta.magnitude > 0f)
+        {
+            plateTransform.LookAt(playerCenterPos);
+            plateTransform.position = finalPos;
+        }
+        
+        // 종료 처리
+        onComplete?.Invoke();
+    }
+
+    //철판 전방에 홀딩
+    IEnumerator MagnetPlateHoldCoroutine(Transform plateTransform, MagnetPlate plate)
+    {
+        var playerCollider = transform.GetComponent<Collider>();
+        var handle = _playerController.WeaponHandler.GetHandTransform();
+        plate.rb.isKinematic = true;
+        while (true)
+        {
+            //평타 공격,  plate의 hold가 해제될때
+            if (_playerController.CanMagneticPlateHoldCancel())
+            {
+                ElectricLine.HideEffect();
+                plate.rb.isKinematic = false;
+                yield break;
+            }
+            if (!plate.isHold)
+            {
+                plate.rb.isKinematic = false;
+                yield break;
+            }
+
+            var playerFrontPos = GetPlayerFrontPosition(playerCollider);
+            plateTransform.LookAt(playerCollider.bounds.center);
+            plateTransform.position = playerFrontPos;
+            
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
+            yield return null;
+        }
+    }
+    
+    //철판 던지기
+    IEnumerator MagnetPlateThrowCoroutine(MagnetPlate plate, Transform destinationTransform, float duration, Action onComplete = null, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
+    {
+        float elapsed = 0f;
+        var handle = _playerController.WeaponHandler.GetHandTransform();
+        var plateTransform = plate.magneticPoint;
+        plate.OnHitDetect(true);
+
+        var rotationSpeed = 10f;
+        
+        plate.transform.Rotate(new Vector3(45f,0,0));
+        var rotateSpeed = new Vector3(0,0,600f);
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+                
+            var EaseFunction = EasingFunction.GetEasingFunction(easeType);
+            Vector3 nextPos = Vector3.Lerp(plateTransform.position, destinationTransform.position, EaseFunction(0, 1, t));
+            plateTransform.position = nextPos;
+            plate.transform.Rotate(rotateSpeed * Time.deltaTime);
+            //이동 도중 충돌하면 종료
+            if (CheckBoxCollision(plate)) break;
+            
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
+            yield return null;
+        }
+        _electricLine.HideEffect();
+        
+        yield return new WaitForSeconds(0.2f);
+        
+        plate.OnHitDetect(false);
+        
+        
+        // 종료 처리
+        onComplete?.Invoke();
+    }
+
+    public bool CheckBoxCollision(MagneticObject magneticObject, bool isPlayer = false)
+    {
+        var playerLayer = LayerMask.NameToLayer("Player");
+        var magneticLayer = LayerMask.NameToLayer("Magnetic");
+        var enemyLayer = LayerMask.NameToLayer("Enemy");
+        var groundLayer = LayerMask.NameToLayer("Ground");
+        var environmentLayer = LayerMask.NameToLayer("Environment");
+
+        var obj = magneticObject.gameObject;
+        var col = magneticObject.GetComponent<BoxCollider>();
+        var center = col.bounds.center;
+        var size = col.bounds.size;
+        var halfExtents = size / 2f;
+
+        var hitColliders = new Collider[20];
+        var hitCount = Physics.OverlapBoxNonAlloc(center, halfExtents, hitColliders, Quaternion.identity,
+            isPlayer ? playerLayer : 
+            (1 << magneticLayer) | (1 << enemyLayer) |
+            (1 << groundLayer) | (1 << environmentLayer));
+
+        //감지한 대상 기반으로 보정, 충돌 찾기 수행.
+        for (int i = 0; i < hitCount; i++)
+        {
+            var hitCol = hitColliders[i];
+
+            //본인 제외
+            if (hitCol == col) continue;
+
+            //ComputePenetration
+            if (Physics.ComputePenetration(col, obj.transform.position, obj.transform.rotation,
+                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                    out Vector3 direction, out float distance))
+            {
+                //겹침(침투) 보정 //겹친만큼 반대방향으로 이동시킴.
+                obj.transform.position += direction * distance;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
 }

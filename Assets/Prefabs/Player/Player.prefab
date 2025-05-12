@@ -3391,7 +3391,10 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 2286fa9972cd7be4288e8f6e71a19e42, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 0
-  magneticPoint: {fileID: 0}
+  magneticPoint: {fileID: 1279936801640721549}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
   targetMagneticObject: {fileID: 0}
   mainCamera: {fileID: 0}
   targetHit: {x: 0, y: 0, z: 0}
