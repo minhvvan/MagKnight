@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Highlighters;
 using hvvan;
 using UnityEngine;
 
@@ -12,11 +14,13 @@ public class ProductCase : MonoBehaviour, IInteractable
     public string itemDescription;
     public int itemPrice;
     public GameObject inItem;
+    private List<MeshRenderer> _renderers = new List<MeshRenderer>();
     
     private void Awake()
     {
         //필드 사전배치 대응
         if(inItem != null) Casing(inItem);
+        _renderers = GetComponentsInChildren<MeshRenderer>().ToList();
     }
 
     private void Update()
@@ -119,17 +123,25 @@ public class ProductCase : MonoBehaviour, IInteractable
         }
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: 아이템 정보와 가격 표시 UI
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.SetItemText(inItem, true);
         uiController.ShowUI();
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: 아이템 정보 UI 끄기.
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.HideUI();
     }
@@ -137,5 +149,10 @@ public class ProductCase : MonoBehaviour, IInteractable
     public GameObject GetGameObject()
     {
         return this.gameObject;
+    }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Buy;
     }
 }

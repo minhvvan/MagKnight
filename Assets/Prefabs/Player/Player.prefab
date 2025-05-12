@@ -168,6 +168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4320287908361065859}
   - component: {fileID: 5378873323398674128}
+  - component: {fileID: 7992284907517012213}
   m_Layer: 0
   m_Name: InteractionSystem
   m_TagString: Untagged
@@ -208,6 +209,77 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   cameraSettings: {fileID: 0}
+--- !u!114 &7992284907517012213
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338960094367526779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0970a923eff145744a66a980e20b235c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlighterSettings:
+    depthMask: 3
+    infoRenderScale: 1
+    useOuterGlow: 1
+    useSingleOuterGlow: 1
+    outerGlowColorFront: {r: 0.23815604, g: 1, b: 0.2216981, a: 1}
+    outerGlowColorBack: {r: 0, g: 0, b: 0, a: 1}
+    outlineVisibleBeforeObject: 1
+    blurType: 1
+    blendType: 0
+    boxBlurSize: 0.01
+    blurIterations: 10
+    blurRenderScale: 1
+    blurIntensity: 5
+    blurIntensityMultiplier: 1
+    blurAdaptiveThickness: 0
+    cameraDistanceMultiplier: 1
+    useMeshOutline: 1
+    useSingleMeshOutline: 1
+    meshOutlineFront:
+      color: {r: 0.40396938, g: 0.9622642, b: 0.40552607, a: 1}
+    meshOutlineBack:
+      color: {r: 1, g: 1, b: 1, a: 1}
+    meshOutlineThickness: 0.0002
+    meshOutlineAdaptiveThickness: 0.01
+    useInnerGlow: 0
+    useSingleInnerGlow: 1
+    innerGlowFront:
+      color: {r: 0, g: 1, b: 1, a: 1}
+      power: 4
+    innerGlowBack:
+      color: {r: 0, g: 1, b: 1, a: 1}
+      power: 4
+    useOverlay: 0
+    useSingleOverlay: 1
+    overlayFront:
+      color: {r: 0, g: 1, b: 1, a: 1}
+      useTexture: 0
+      texture: {fileID: 0}
+      background: 0
+      tilling: 60
+      rotation: 0
+    overlayBack:
+      color: {r: 0, g: 1, b: 1, a: 1}
+      useTexture: 0
+      texture: {fileID: 0}
+      background: 0
+      tilling: 60
+      rotation: 0
+    RenderingBoundsSizeIncrease: 0.2
+    RenderingBoundsDistanceFix: 0
+    RenderingBoundsMaxDistanceFix: 1
+    RenderingBoundsMinDistanceFix: 0
+  findRenderers: 0
+  renderers: []
+  id: -1
+  showRenderBounds: 0
+  showScreenAdjustedRenderBounds: 0
+  highlighterName: 
 --- !u!1 &450063133152014215
 GameObject:
   m_ObjectHideFlags: 0

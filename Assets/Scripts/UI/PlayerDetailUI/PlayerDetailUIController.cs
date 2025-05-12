@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using hvvan;
 using Moon;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
@@ -24,6 +26,8 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
     [SerializeField] private TMP_Text MagneticPowerText;
     [SerializeField] private TMP_Text MagneticRangeText;
     
+    [SerializeField] RectTransform rectTransform;
+    
     private float _baseStrength;
     private float _baseDefense;
     private float _baseEndureImpulse;
@@ -34,15 +38,23 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
     private float _baseMagneticPower;
     private float _baseMagneticRange;
 
+    void Start()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+    
     public void ShowUI()
     {
+        rectTransform.DOKill();
+        rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
         UpdateUI();
     }
 
     public void HideUI()
     {
-        gameObject.SetActive(false);
+        rectTransform.DOKill();
+        rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
     }
 
     public async void UpdateUI()

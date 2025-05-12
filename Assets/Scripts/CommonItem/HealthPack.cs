@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Highlighters;
 using Moon;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -67,20 +68,24 @@ public class HealthPack : MonoBehaviour, IInteractable
         }
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: outline
-        _renderers.ForEach(render => render.material.color = Color.green);
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.SetItemText(gameObject);
         uiController.ShowUI();
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: outline 제거
-        _renderers.ForEach(render => render.material.color = Color.gray);
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
         uiController.HideUI();
@@ -90,7 +95,12 @@ public class HealthPack : MonoBehaviour, IInteractable
     {
         return gameObject;
     }
-    
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Loot;
+    }
+
     public void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.layer != (1 <<LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy")))

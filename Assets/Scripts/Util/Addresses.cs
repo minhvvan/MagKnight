@@ -48,6 +48,11 @@ public static class Addresses
         public static class Artifact
         {
             public const string ArtifactMappingData = "data/artifactMapping";
+        }        
+        
+        public static class Interact
+        {
+            public const string InteractText = "data/interactText";
         }
     }
     
