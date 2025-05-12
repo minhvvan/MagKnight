@@ -146,6 +146,7 @@ public class MagCore: MonoBehaviour, IInteractable
         {
             GameManager.Instance.CurrentRunData.scrap += scrapValue;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateUI();
+            _= GameManager.Instance.SaveData(Constants.CurrentRun);
             Dismantling();
         }
     }
