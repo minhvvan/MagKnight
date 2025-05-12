@@ -88,9 +88,11 @@ public class RoomGenerator
 
     private void SetUpDefault()
     {
+        //시작 남쪽 막기
         var startRoom = _rooms[0];
         startRoom.connectedRooms[(int)RoomDirection.South] = Room.Blocked;
         
+        //보스방 남쪽 제외 모든 방향 막기
         var bossRoom = _rooms[1];
         bossRoom.connectedRooms[(int)RoomDirection.North] = Room.Blocked;
         bossRoom.connectedRooms[(int)RoomDirection.East] = Room.Blocked;
