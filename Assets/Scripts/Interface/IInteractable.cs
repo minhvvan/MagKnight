@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Highlighters;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +7,8 @@ using UnityEngine;
 public interface IInteractable
 {
     void Interact(IInteractor interactor);
-    void Select();
-    void UnSelect();
+    void Select(Highlighter highlighter);
+    void UnSelect(Highlighter highlighter);
     GameObject GetGameObject();
+    InteractType GetInteractType();
 }

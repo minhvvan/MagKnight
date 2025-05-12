@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using Highlighters;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,13 +19,18 @@ public class InteractionController : MonoBehaviour
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
     
+    private Highlighter _interactHighlighter;
+    
     private Camera _mainCamera;
     private RaycastHit[] _hits = new RaycastHit[10];
+
+    private InteractIndicator _interactIndicator;
     
     private void Awake()
     {
         _interactor = this.GetInterfaceInParent<IInteractor>();
         cameraSettings = FindObjectOfType<CameraSettings>();
+        _interactHighlighter = GetComponent<Highlighter>();
         _mainCamera = Camera.main;
     }
 
@@ -112,8 +118,15 @@ public class InteractionController : MonoBehaviour
         
         if (hitCount <= 0)
         {
-            _currentInteractable?.UnSelect();
+            _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = null;
+
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+            
+            _interactIndicator?.InteractUnSelected();
             return;
         }
         
@@ -121,10 +134,18 @@ public class InteractionController : MonoBehaviour
         {
             if (hit.collider.IsUnityNull()) continue;
             if (!hit.collider.TryGetComponent<IInteractable>(out var interactable)) continue;
+            if(_currentInteractable == interactable) break;
             
-            _currentInteractable?.UnSelect();
+            _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = interactable;
-            _currentInteractable?.Select();
+            _currentInteractable?.Select(_interactHighlighter);
+            
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+
+            _interactIndicator?.InteractSelected(_currentInteractable.GetInteractType());
 
             break;
         }
