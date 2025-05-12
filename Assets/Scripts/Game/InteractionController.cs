@@ -5,6 +5,7 @@ using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using Highlighters;
+using hvvan;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -119,7 +120,17 @@ public class InteractionController : MonoBehaviour
         
         if (hitCount <= 0)
         {
-            _currentInteractable?.UnSelect(_interactHighlighter);
+            if(_currentInteractable == null)
+            {
+                if(UIManager.Instance.popupUIController != null && UIManager.Instance.popupUIController.productUIController != null && UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
+                {
+                    UIManager.Instance.popupUIController.productUIController.HideUI();
+                }
+            }
+            else
+            {
+                _currentInteractable?.UnSelect(_interactHighlighter);
+            }
             _currentInteractable = null;
 
             if (!_interactIndicator)
@@ -154,7 +165,10 @@ public class InteractionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FindClosestInteractable();
+        //cursor가 잠겨있을때만 상호작용 감지
+        if(Cursor.lockState == CursorLockMode.Locked){
+            FindClosestInteractable();
+        }
     }
 
     private void OnDrawGizmos()

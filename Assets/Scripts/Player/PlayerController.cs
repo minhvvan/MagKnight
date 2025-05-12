@@ -942,6 +942,8 @@ namespace Moon
                         hitCol, hitCol.transform.position, hitCol.transform.rotation,
                         out Vector3 pushDir, out float pushDist))
                 {
+                    pushDir.y = 0f;
+                    pushDir.Normalize();
                     transform.position = Vector3.Lerp(transform.position, transform.position + pushDir * pushDist, 1f);
                 }
             }
