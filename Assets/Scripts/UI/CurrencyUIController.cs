@@ -16,9 +16,11 @@ public class CurrencyUIController : MonoBehaviour
         UpdateUI();
     }
     
-    public void UpdateUI()
+    public async void UpdateUI()
     {
         var currentRunData = GameManager.Instance.CurrentRunData;
+        var playerData = await GameManager.Instance.GetPlayerData();
         scrapText.text = currentRunData.scrap.ToString();
+        currencyText.text = playerData.Currency.ToString();
     }
 }
