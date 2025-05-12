@@ -28695,7 +28695,7 @@ GameObject:
   - component: {fileID: 3162340990528634905}
   - component: {fileID: 3162340990528634907}
   - component: {fileID: 3162340990528634906}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: SM_Prop_SatDish_03 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55120,7 +55120,7 @@ GameObject:
   - component: {fileID: 5960256317808899454}
   - component: {fileID: 5960256317808899456}
   - component: {fileID: 5960256317808899455}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: SM_Prop_Overhang_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

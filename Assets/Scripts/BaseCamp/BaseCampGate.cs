@@ -57,6 +57,12 @@ namespace Moon
                 yield return null;
             }
             
+            var enterRoomTask = RoomSceneController.Instance.CurrentRoomController.OnPlayerEnter(RoomDirection.North, true);
+            while (!enterRoomTask.Status.IsCompleted())
+            {
+                yield return null;
+            }
+            
             RoomSceneController.Instance.CurrentRoomController.SetRoomReady(true);
         }
     }
