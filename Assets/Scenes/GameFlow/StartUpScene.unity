@@ -264,46 +264,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
+    - target: {fileID: 819870750114459421, guid: 1d73c9e6a276341e18e169bc156354ff,
         type: 3}
-      propertyPath: indicator._serializedList.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[1].Key
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[2].Key
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[3].Key
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[0].Value
-      value: 
-      objectReference: {fileID: 272080901}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[1].Value
-      value: 
-      objectReference: {fileID: 1847678688}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[2].Value
-      value: 
-      objectReference: {fileID: 850556390}
-    - target: {fileID: 1400720179234483714, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: indicator._serializedList.Array.data[3].Value
-      value: 
-      objectReference: {fileID: 839908965}
     - target: {fileID: 1502803925773692954, guid: 1d73c9e6a276341e18e169bc156354ff,
         type: 3}
       propertyPath: m_Pivot.x
@@ -408,11 +373,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InGameCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 6309899718315147236, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -604,12 +564,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!224 &272080901 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3557154432291611166, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 115832486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &289189108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1435,18 +1389,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 807505185}
   m_CullTransparentMesh: 1
---- !u!224 &839908965 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6300905968812386178, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 115832486}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &850556390 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 6135074696479720282, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 115832486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &870386331
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2419,12 +2361,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840176863}
   m_CullTransparentMesh: 1
---- !u!224 &1847678688 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1554865477634235294, guid: 1d73c9e6a276341e18e169bc156354ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 115832486}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2003414904
 PrefabInstance:
   m_ObjectHideFlags: 0

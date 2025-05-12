@@ -83,12 +83,16 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        _rectTransform.DOKill();
+        
         _rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
     }
 
     public void HideUI()
     {
+        _rectTransform.DOKill();
+        
         _rectTransform.DOScale(0, 0.1f).OnComplete(() =>
         {
             _rectTransform.anchoredPosition = _startPosition;
