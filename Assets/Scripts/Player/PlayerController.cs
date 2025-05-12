@@ -1041,6 +1041,11 @@ namespace Moon
             if(inputValue) _magneticController.OnLongRelease().Forget(); 
             else _magneticController.OnShortRelease().Forget();
         }
+        
+        public bool CanMagneticPlateHoldCancel()
+        {
+            return _inputHandler.Attack1 || _inputHandler.Attack2;
+        }
 
         public void MeleeAttackStart(int throwing = 0)
         {

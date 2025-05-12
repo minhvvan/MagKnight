@@ -224,7 +224,7 @@ public class MagneticController : MagneticObject
         {
             _isActivatedMagnetic = true;
             _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
-            await targetMagneticObject.OnMagneticInteract(this);
+            await targetMagneticObject.RunMagneticInteract(this, GetMagnetPlate());
             
             var playerASC = GameManager.Instance.Player.AbilitySystem;
             playerASC.TriggerEvent(TriggerEventType.OnMagnetic, playerASC);
