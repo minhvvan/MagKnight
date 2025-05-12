@@ -155,6 +155,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1074653491101515325}
+  magneticTargetPoint: {fileID: 1074653491101515325}
 --- !u!114 &7127694384042664435
 MonoBehaviour:
   m_ObjectHideFlags: 0
