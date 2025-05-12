@@ -119,7 +119,17 @@ public class InteractionController : MonoBehaviour
         
         if (hitCount <= 0)
         {
-            _currentInteractable?.UnSelect(_interactHighlighter);
+            if(_currentInteractable == null)
+            {
+                if(UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
+                {
+                    UIManager.Instance.popupUIController.productUIController.HideUI();
+                }
+            }
+            else
+            {
+                _currentInteractable?.UnSelect(_interactHighlighter);
+            }
             _currentInteractable = null;
 
             if (!_interactIndicator)
