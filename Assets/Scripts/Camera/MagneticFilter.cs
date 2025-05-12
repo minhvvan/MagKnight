@@ -21,6 +21,19 @@ public class MagneticFilter : MonoBehaviour
         _material.SetFloat(SplitValue, 0);
     }
 
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnMagneticPressed -= OnMagneticPressed;
+        GameManager.Instance.OnMagneticReleased -= OnMagneticReleased;
+        
+        if (_magneticFilterTween != null && _magneticFilterTween.IsActive())
+        {
+            _magneticFilterTween.Kill();
+        }
+    }
+
+    
+
     private void OnMagneticPressed()
     {
         if (_magneticFilterTween != null && _magneticFilterTween.IsActive())
