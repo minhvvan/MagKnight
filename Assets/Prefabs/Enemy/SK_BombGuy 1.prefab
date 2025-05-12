@@ -105,6 +105,8 @@ Transform:
   - {fileID: 6314746939070764369}
   - {fileID: 7912762996422777045}
   - {fileID: 4439884926855566031}
+  - {fileID: 8061179396181372006}
+  - {fileID: 8596882119463784591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1549215235704952516
@@ -230,9 +232,12 @@ MonoBehaviour:
   magneticObjectSO: {fileID: 11400000, guid: 93a3ed3514bfe45459bd6d3f470282a4, type: 2}
   rb: {fileID: 0}
   isMagneticHighlight: 1
+  magneticPoint: {fileID: 8061179396181372006}
+  magneticTargetPoint: {fileID: 8596882119463784591}
   blackboard: {fileID: -6905869880639368828}
   hpBarController: {fileID: 6329110283273601692}
   isDashing: 0
+  isFalling: 0
 --- !u!136 &8735798488375646379
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -565,6 +570,68 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000000014901161, y: 0.13224046, z: -0.003600493}
     m_Extent: {x: 0.16971314, y: 0.20276172, z: 0.19292282}
   m_DirtyAABB: 0
+--- !u!1 &2976978813432639204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8596882119463784591}
+  m_Layer: 7
+  m_Name: MagneticTargetPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8596882119463784591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2976978813432639204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.51}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2222986283103216416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3557089008154458180
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8061179396181372006}
+  m_Layer: 7
+  m_Name: HeadPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8061179396181372006
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3557089008154458180}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.195, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2222986283103216416}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4923249254538291717
 GameObject:
   m_ObjectHideFlags: 0
