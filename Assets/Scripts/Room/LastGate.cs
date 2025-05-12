@@ -9,6 +9,8 @@ public class LastGate : MonoBehaviour
     
     private async void OnTriggerEnter(Collider other)
     {
+        if (!other.gameObject.CompareTag("Player")) return;
+        
         if (other.TryGetComponent<PlayerController>(out var playerController))
         {
             if (isLastFloor)

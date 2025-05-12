@@ -208,7 +208,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private async UniTask LoadNavMeshData()
     {
         if(_loadedNavMeshData) return;
-        _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(Addresses.Data.Room.NavMeshData);
+        var address = Addresses.NavMeshAddressLoader.GetPath(Room.roomType);
+        _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(address);
     }
 
     public void OnPlayerExit()

@@ -88,9 +88,11 @@ public class RoomGenerator
 
     private void SetUpDefault()
     {
+        //시작 남쪽 막기
         var startRoom = _rooms[0];
         startRoom.connectedRooms[(int)RoomDirection.South] = Room.Blocked;
         
+        //보스방 남쪽 제외 모든 방향 막기
         var bossRoom = _rooms[1];
         bossRoom.connectedRooms[(int)RoomDirection.North] = Room.Blocked;
         bossRoom.connectedRooms[(int)RoomDirection.East] = Room.Blocked;
@@ -115,34 +117,47 @@ public class RoomGenerator
 
     private void CreateRooms()
     {
-        var generateRoomCount = Random.Range(Constants.MinRooms, Constants.MaxRooms);
-        
         //generateRoomCount만큼 생성 + 시작 + 보스 + 상점
         //필수 지점 추가
         var currentFloor = GameManager.Instance.CurrentRunData.currentFloor;
         
-        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.StartRoom]));
-        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.BoosRoom]));
-        _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.ShopRoom]));
+        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.StartRoom]));
+        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.BoosRoom]));
+        // _rooms.Add(new Room(_floorData.Floor[currentFloor].rooms[RoomType.ShopRoom]));
 
-        //treasureRoom 개수 제한
-        int treasureRoomCount = 0;
-        for (int i = 0; i < generateRoomCount; i++)
+        //room 개수 제한
+        Dictionary<RoomType, int> generatedRoomCount = new();
+
+        for (int roomType = (int)RoomType.StartRoom; roomType < (int)RoomType.Max; roomType++)
+        {
+            //min 개수만큼 생성
+            generatedRoomCount.Add((RoomType)roomType, 0);
+
+            for (int j = 0; j < _floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].min; j++)
+            {
+                var room = _floorData.Floor[currentFloor].rooms[(RoomType)roomType];
+                _rooms.Add(new Room(room));
+                generatedRoomCount[(RoomType)roomType]++;
+            }
+        }
+        
+        var additiveChance = Random.Range(Constants.MinRooms, Constants.MaxRooms);
+        
+        for (int i = 0; i < additiveChance; i++)
         {
             var type = (RoomType)Random.Range((int)RoomType.BattleRoom, (int)RoomType.Max);
-            if (type == RoomType.TreasureRoom)
+            
+            //max를 넘으면 다시 생성
+            if (generatedRoomCount[type] >= _floorData.Floor[currentFloor].roomNumLimit[type].max)
             {
-                treasureRoomCount++;
-                if (treasureRoomCount >= Constants.MaxTreasureRoomCount)
-                {
-                    i--;
-                    continue;
-                }
+                i--;
+                continue;
             }
-            
+
             var room = _floorData.Floor[currentFloor].rooms[type];
-            
             _rooms.Add(new Room(room));
+            
+            generatedRoomCount[type]++;
         }
     }
     
