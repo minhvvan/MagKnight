@@ -37,6 +37,11 @@ public class MagnetPlate : MagneticObject, IObserver<HitInfo>
             extraData = new ExtraData(){ sourceTransform = transform }
         };
     }
+
+    private void FixedUpdate()
+    {
+        CheckBoxCollision();
+    }
     
     public override async UniTask OnMagneticInteract(MagneticObject target)
     {
@@ -87,5 +92,44 @@ public class MagnetPlate : MagneticObject, IObserver<HitInfo>
     public void OnCompleted()
     {
         
+    }
+    
+    public void CheckBoxCollision(bool isPlayer = false)
+    {
+        var playerLayer = LayerMask.NameToLayer("Player");
+        var magneticLayer = LayerMask.NameToLayer("Magnetic");
+        var enemyLayer = LayerMask.NameToLayer("Enemy");
+        var groundLayer = LayerMask.NameToLayer("Ground");
+        var environmentLayer = LayerMask.NameToLayer("Environment");
+
+        var obj = gameObject;
+        var col = obj.GetComponent<BoxCollider>();
+        var center = col.bounds.center;
+        var size = col.bounds.size;
+        var halfExtents = size / 2f;
+
+        var hitColliders = new Collider[20];
+        var hitCount = Physics.OverlapBoxNonAlloc(center, halfExtents, hitColliders, Quaternion.identity,
+            isPlayer ? playerLayer : 
+                (1 << magneticLayer) | (1 << enemyLayer) |
+                (1 << groundLayer) | (1 << environmentLayer));
+
+        //감지한 대상 기반으로 보정, 충돌 찾기 수행.
+        for (int i = 0; i < hitCount; i++)
+        {
+            var hitCol = hitColliders[i];
+
+            //본인 제외
+            if (hitCol == col) continue;
+
+            //ComputePenetration
+            if (Physics.ComputePenetration(col, obj.transform.position, obj.transform.rotation,
+                    hitCol, hitCol.transform.position, hitCol.transform.rotation,
+                    out Vector3 direction, out float distance))
+            {
+                //겹침(침투) 보정 //겹친만큼 반대방향으로 이동시킴.
+                obj.transform.position += direction * distance;
+            }
+        }
     }
 }

@@ -364,7 +364,7 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
         float elapsed = 0f;
         var playerCollider = transform.GetComponent<Collider>();
         var playerCenterPos = Vector3.zero;
-        
+        var handle = _playerController.WeaponHandler.GetHandTransform();
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -377,7 +377,7 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
             Vector3 nextPos = Vector3.Lerp(plateTransform.position, playerFrontPos, EaseFunction(0, 1, t));
             plateTransform.LookAt(playerCenterPos);
             plateTransform.position = nextPos;
-
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
             yield return null;
         }
 
@@ -395,23 +395,31 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
     }
 
     //철판 전방에 홀딩
-    IEnumerator MagnetPlateHoldCoroutine(Transform plateTransform, MagnetPlate plate, Action onComplete = null)
+    IEnumerator MagnetPlateHoldCoroutine(Transform plateTransform, MagnetPlate plate)
     {
         var playerCollider = transform.GetComponent<Collider>();
+        var handle = _playerController.WeaponHandler.GetHandTransform();
         plate.rb.isKinematic = true;
         while (true)
         {
-            //평타 공격, Q 재사용, plate의 hold가 해제될때
-            if (_playerController.CanMagneticPlateHoldCancel() || !plate.isHold)
+            //평타 공격,  plate의 hold가 해제될때
+            if (_playerController.CanMagneticPlateHoldCancel())
+            {
+                ElectricLine.HideEffect();
+                plate.rb.isKinematic = false;
+                yield break;
+            }
+            if (!plate.isHold)
             {
                 plate.rb.isKinematic = false;
-                onComplete?.Invoke();
                 yield break;
             }
 
             var playerFrontPos = GetPlayerFrontPosition(playerCollider);
             plateTransform.LookAt(playerCollider.bounds.center);
             plateTransform.position = playerFrontPos;
+            
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
             yield return null;
         }
     }
@@ -420,9 +428,14 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
     IEnumerator MagnetPlateThrowCoroutine(MagnetPlate plate, Transform destinationTransform, float duration, Action onComplete = null, EasingFunction.Ease easeType = EasingFunction.Ease.Linear)
     {
         float elapsed = 0f;
-        
+        var handle = _playerController.WeaponHandler.GetHandTransform();
         var plateTransform = plate.magneticPoint;
         plate.OnHitDetect(true);
+
+        var rotationSpeed = 10f;
+        
+        plate.transform.Rotate(new Vector3(45f,0,0));
+        var rotateSpeed = new Vector3(0,0,600f);
         
         while (elapsed < duration)
         {
@@ -431,17 +444,18 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
                 
             var EaseFunction = EasingFunction.GetEasingFunction(easeType);
             Vector3 nextPos = Vector3.Lerp(plateTransform.position, destinationTransform.position, EaseFunction(0, 1, t));
-            plateTransform.LookAt(destinationTransform);
             plateTransform.position = nextPos;
-
+            plate.transform.Rotate(rotateSpeed * Time.deltaTime);
             //이동 도중 충돌하면 종료
             if (CheckBoxCollision(plate)) break;
-
+            
+            if(handle != null) _electricLine.ShowEffect(handle.position, plateTransform.position);
             yield return null;
         }
-        _playerController.inMagnetSkill = false;
-
-        yield return new WaitForSeconds(0.5f);
+        _electricLine.HideEffect();
+        
+        yield return new WaitForSeconds(0.2f);
+        
         plate.OnHitDetect(false);
         
         
