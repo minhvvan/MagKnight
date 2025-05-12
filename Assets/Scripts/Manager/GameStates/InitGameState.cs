@@ -23,6 +23,9 @@ public class InitGameState: IGameState
         
         await ItemManager.Instance.SetAllItemUpdate(currentRunData);
         
+        var playerData = await GameManager.Instance.GetPlayerData();
+        UIManager.Instance.inGameUIController.currencyUIController.InitializeCurrencyUI(playerData);
+        
         if (!currentRunData.isDungeonEnter)
         {
             //던전 입장 X => BaseCamp로
