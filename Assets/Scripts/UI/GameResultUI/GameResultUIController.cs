@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using hvvan;
 using Managers;
 using TMPro;
@@ -21,9 +22,15 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
     [SerializeField] Image clearedImage;
     [SerializeField] Button restartButton;
     [SerializeField] GameObject artifactImageObj;
+    [SerializeField] TMP_Text gameOverText;
     
     [SerializeField] private List<Sprite> resultImage;
 
+    
+    [SerializeField] CanvasGroup backgroundCanvasGroup;
+    [SerializeField] RectTransform resultUIRectTransform;
+    [SerializeField] RectTransform gameOverTextRectTransform;
+    
     private int _currency;
     
     void Start()
@@ -36,11 +43,14 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
         if (gameResult == GameResult.GameOver)
         {
             resultText.text = "죽었습니다";
+            gameOverText.text = "게임 오버";
+            gameOverText.color = Color.red;
             clearedImage.sprite = resultImage[0];
         }
-        else
+        else if (gameResult == GameResult.GameClear)
         {
             resultText.text = "클리어하였습니다";
+            gameOverText.text = "게임 클리어";
             clearedImage.sprite = resultImage[1];
         }
         int totalSeconds = Mathf.FloorToInt(currentRunData.playTime);
@@ -78,12 +88,14 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
     public void ShowUI()
     {
         GameManager.Instance.Player.InputHandler.ReleaseControl();
+        UIManager.Instance.inGameUIController.HideInGameUI();
         gameObject.SetActive(true);
+        AnimateShowUI();
     }
 
     public void HideUI()
     {
-        gameObject.SetActive(false);
+        AnimateHideUI();
         GameManager.Instance.Player.InputHandler.GainControl();
     }
 
@@ -96,6 +108,28 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
         GameManager.Instance.ChangeGameState(GameState.InitGame);
         
         HideUI();
+    }
+    
+    void AnimateShowUI()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(backgroundCanvasGroup.DOFade(1f, 0.5f))
+            .Append(gameOverTextRectTransform.DOScale(1, 0.5f)).OnComplete(async () =>
+            {
+                await UniTask.Delay(1500);
+                resultUIRectTransform.DOScale(1, 0.5f);
+            });
+    }
+
+    void AnimateHideUI()
+    {
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(backgroundCanvasGroup.DOFade(0, 0.5f)).OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+            resultUIRectTransform.localScale = Vector3.zero;
+            gameOverTextRectTransform.localScale = Vector3.zero;
+        });
     }
 }
 
