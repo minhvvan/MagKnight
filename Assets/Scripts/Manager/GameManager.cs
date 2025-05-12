@@ -58,6 +58,7 @@ namespace hvvan
             _states[GameState.DungeonEnter] = new DungeonEnterState();
             _states[GameState.RoomEnter] = new RoomEnterState();
             _states[GameState.RoomClear] = new RoomClearState();
+            _states[GameState.BossRoom]  = new BossRoomState();
             _states[GameState.Dialogue] = new DialogueState();
             _states[GameState.Pause] = new PauseState();
             _states[GameState.GameClear] = new GameClearState();
@@ -112,7 +113,23 @@ namespace hvvan
 
             _states[_currentState].OnEnter();
             GameStateChanged?.Invoke(_currentState);
-    
+
+            switch (_currentState)
+            {
+                case GameState.BaseCamp:
+                    AudioManager.Instance.PlayBGM(AudioBase.BGM.BaseCamp.Main);
+                    AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.BaseCamp.Environment);
+                    break;
+
+                case GameState.DungeonEnter:
+                    AudioManager.Instance.PlayBGM(AudioBase.BGM.Dungeon.Stage1.MainBattle);
+                    AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.Dungeon.Stage1.Environment);
+                    break;
+                case GameState.BossRoom:
+                    AudioManager.Instance.PlayBGM(AudioBase.BGM.Dungeon.Stage1.Boss);
+                    break;
+            }
+
             if (_stateListeners.TryGetValue(newState, out var stateListener))
             {
                 foreach (var listener in stateListener)
@@ -295,6 +312,12 @@ namespace hvvan
         {
             var enterTask = RoomSceneController.Instance.EnterFloor();
             while (!enterTask.Status.IsCompleted())
+            {
+                yield return null;
+            }
+
+            var enterRoomTask = RoomSceneController.Instance.CurrentRoomController.OnPlayerEnter(RoomDirection.North, true);
+            while (!enterRoomTask.Status.IsCompleted())
             {
                 yield return null;
             }
