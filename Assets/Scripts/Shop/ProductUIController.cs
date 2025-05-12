@@ -193,6 +193,14 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         if(rightTruncated)
             _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
         
+        //Effect 패널 배경색 초기화
+        itemEffectBg.color = panelColors[0];
+        itemEffectBgSub.color = panelColors[0];
+        
+        //아티팩트일 경우 극성 표시로 보이게 변경
+        itemEffectBg.color = panelColors[1];
+        itemEffectBgSub.color = panelColors[2];
+        
         inputGuidePanel.gameObject.SetActive(false);
         
         itemImage.sprite = artifactData.icon;
