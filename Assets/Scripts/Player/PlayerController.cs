@@ -75,7 +75,6 @@ namespace Moon
         private float _originalFixedDeltaTime;
         private Coroutine _parrySlowCoroutine;
 
-
         #endregion
 
         #region Animation
@@ -544,6 +543,9 @@ namespace Moon
                     _isGrounded = false;
                     _readyToJump = false;
                     VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+                    
+                    var jumpSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Jump);
+                    AudioManager.Instance.PlaySFX(jumpSfxRandomClip);
                 }
             }
             else if (inMagnetActionJump)
@@ -681,9 +683,14 @@ namespace Moon
             _isGrounded = characterController.isGrounded;
 
             if (_isGrounded && !_previouslyGrounded && !IsInvisible)
+            {
                 VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+                
+                var landingSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Land);
+                AudioManager.Instance.PlaySFX(landingSfxRandomClip);
+            }
 
-            
+
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
 
@@ -691,6 +698,7 @@ namespace Moon
             _animator.SetBool(PlayerAnimatorConst.hashGrounded, _isGrounded || _previouslyGrounded);
 
             _previouslyGrounded = _isGrounded;
+            
         }
 
         void UpdateOrientation()
@@ -998,6 +1006,8 @@ namespace Moon
                 _magneticController.SwitchMagneticType();
                 OnMagneticEffect();
             }
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.MagneticSwitch2);
 
             // 패링 윈도우 열기
             if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
@@ -1152,7 +1162,7 @@ namespace Moon
                 // 1-a) 패링 성공 애니 실행
                 _animator.SetTrigger(PlayerAnimatorConst.hashParry);
                 VFXManager.Instance.TriggerVFX(VFXType.PARRY, transform.position + 0.5f * Vector3.up);
-                
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Parry[1]);
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
                 if (extraData.sourceTransform.TryGetComponent<Enemy>(out var enemy))
                 {
@@ -1277,6 +1287,8 @@ namespace Moon
 
             VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, dodgeRotation);
 
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Movement.Avoid[2]);
+
             StartCoroutine(UnblockAfterDodge());
         }
 
@@ -1289,5 +1301,10 @@ namespace Moon
         }
 
 
+        void PlayFootStep()
+        {
+            var footStepSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Step);
+            AudioManager.Instance.PlaySFX(footStepSfxRandomClip);
+        }
     }
 }
