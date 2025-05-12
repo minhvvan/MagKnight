@@ -41,6 +41,12 @@ public class ShopNPCController : BaseNPCController
             {
                 var artifactObj = ItemManager.Instance.CreateItem(ItemCategory.Artifact,ItemRarity.Common,
                     createPoints[i].position,Quaternion.identity);
+
+                if (artifactObj == null)
+                {
+                    caseObj.Destroy();
+                    continue;
+                }
                 productCase.Casing(artifactObj);
             }
             
@@ -49,6 +55,12 @@ public class ShopNPCController : BaseNPCController
             {
                 var magCoreObj = ItemManager.Instance.CreateItem(ItemCategory.MagCore,ItemRarity.Common,
                     createPoints[i].position,Quaternion.identity);
+                if (magCoreObj == null)
+                {
+                    caseObj.Destroy();
+                    continue;
+                }
+
                 productCase.Casing(magCoreObj);
             }
             
@@ -57,6 +69,12 @@ public class ShopNPCController : BaseNPCController
             {
                 var healthPackObj = ItemManager.Instance.CreateItem(ItemCategory.HealthPack,ItemRarity.Common,
                     createPoints[i].position,Quaternion.identity);
+
+                if (healthPackObj == null)
+                {
+                    caseObj.Destroy();
+                    continue;
+                }
                 productCase.Casing(healthPackObj);
             }
             
