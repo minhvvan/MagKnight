@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using hvvan;
 using TMPro;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
     [SerializeField] UpgradeStatPanelController moveSpeedPanel;
     [SerializeField] UpgradeStatPanelController magneticRangePanel;
     [SerializeField] UpgradeStatPanelController magneticPowerPanel;
-    
+    [SerializeField] RectTransform rectTransform;
 
     public PlayerData _playerData;
 
@@ -73,13 +74,14 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
         GameManager.Instance.Player.InputHandler.ReleaseControl();
     }
 
     public void HideUI()
     {
-        gameObject.SetActive(false);
+        rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
         GameManager.Instance.Player.InputHandler.GainControl();
     }
     
