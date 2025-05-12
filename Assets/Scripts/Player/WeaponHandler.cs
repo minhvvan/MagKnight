@@ -250,6 +250,6 @@ public class WeaponHandler : MonoBehaviour
 
     public Transform GetHandTransform()
     {
-        return _currentWeapon.transform != null ? _currentWeapon.transform : null;
+        return _currentWeapon.transform ? _currentWeapon.transform : transform;
     }
 }
