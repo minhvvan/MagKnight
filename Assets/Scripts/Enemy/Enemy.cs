@@ -59,8 +59,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         InitializeMagnetic();
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         _stateMachine.ChangeState(spawnState);
         
         // 시작 y축 위치 보정
@@ -109,10 +110,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Update()
     {
         _stateMachine.Update();
-    }
-
-    protected void OnDestroy()
-    {
     }
 
     public void SetState(BaseState<Enemy> newState)

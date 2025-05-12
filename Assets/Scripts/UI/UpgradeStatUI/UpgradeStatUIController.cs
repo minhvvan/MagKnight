@@ -74,6 +74,7 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        rectTransform.DOKill();
         rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
         GameManager.Instance.Player.InputHandler.ReleaseControl();
@@ -81,6 +82,7 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
 
     public void HideUI()
     {
+        rectTransform.DOKill();
         rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
         GameManager.Instance.Player.InputHandler.GainControl();
     }

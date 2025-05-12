@@ -643,6 +643,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1751744128}
+  magneticTargetPoint: {fileID: 1751744128}
 --- !u!114 &944031368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28694,7 +28695,7 @@ GameObject:
   - component: {fileID: 3162340990528634905}
   - component: {fileID: 3162340990528634907}
   - component: {fileID: 3162340990528634906}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: SM_Prop_SatDish_03 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29737,6 +29738,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 422522772}
+  magneticTargetPoint: {fileID: 422522772}
 --- !u!114 &3162340990528634907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -55118,7 +55120,7 @@ GameObject:
   - component: {fileID: 5960256317808899454}
   - component: {fileID: 5960256317808899456}
   - component: {fileID: 5960256317808899455}
-  m_Layer: 11
+  m_Layer: 8
   m_Name: SM_Prop_Overhang_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55379,6 +55381,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 831073556}
+  magneticTargetPoint: {fileID: 831073556}
 --- !u!114 &5960256317808899456
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58734,7 +58737,7 @@ Transform:
   m_GameObject: {fileID: 8223380089356401940}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -22.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

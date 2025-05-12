@@ -45,6 +45,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        rectTransform.DOKill();
         rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
         UpdateUI();
@@ -52,6 +53,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
 
     public void HideUI()
     {
+        rectTransform.DOKill();
         rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
     }
 

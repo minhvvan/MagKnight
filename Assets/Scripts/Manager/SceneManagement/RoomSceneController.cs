@@ -35,6 +35,9 @@ public class RoomSceneController: Singleton<RoomSceneController>
         {
             await LoadConnectedRooms(_currentRoomController.Room.connectedRooms);
         }
+
+        //시작방 입장 
+        await _currentRoomController.OnPlayerEnter(RoomDirection.North, true);
     }
 
     public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
@@ -50,6 +53,12 @@ public class RoomSceneController: Singleton<RoomSceneController>
         }
         
         //targetRoom활성화 + currentRoom비활성화
+        RoomController currentController = _loadedRoomControllers[currentRoomIndex];
+        if (currentController != null)
+        {
+            currentController.OnPlayerExit();
+        }
+        
         if (targetController != null)
         {
             _currentRoomController = targetController;
@@ -61,12 +70,6 @@ public class RoomSceneController: Singleton<RoomSceneController>
             {
                 targetController.ClearRoom();
             }
-        }
-
-        RoomController currentController = _loadedRoomControllers[currentRoomIndex];
-        if (currentController != null)
-        {
-            currentController.OnPlayerExit();
         }
         
         var currentRoom = _roomGenerator.GetRoom(currentRoomIndex);
@@ -164,6 +167,9 @@ public class RoomSceneController: Singleton<RoomSceneController>
 
             if (operation.isDone)
             {
+                //start룸 비활성화
+                _loadedRoomControllers[0].OnPlayerExit();
+                
                 Scene loadedScene = SceneManager.GetSceneAt(SceneManager.sceneCount - 1);
 
                 //현재 roomController 캐싱
@@ -178,9 +184,6 @@ public class RoomSceneController: Singleton<RoomSceneController>
                     await loadedSceneController.OnPlayerEnter();
                 }
             }
-            
-            //start룸 비활성화
-            _loadedRoomControllers[0].OnPlayerExit();
             
             //최종 클리어 방 타이틀 출력
             SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);

@@ -14,9 +14,11 @@ public enum GameState
     DungeonEnter,
     RoomEnter,
     RoomClear,
+    BossRoom,
     Dialogue,
     GameClear,
     GameOver,
     Pause,
-    Max
+    Max,
+    
 }

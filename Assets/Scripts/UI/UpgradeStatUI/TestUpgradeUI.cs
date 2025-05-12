@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Highlighters;
 using UnityEngine;
 
 public class TestUpgradeUI : MonoBehaviour, IInteractable
@@ -9,16 +10,21 @@ public class TestUpgradeUI : MonoBehaviour, IInteractable
         UIManager.Instance.ShowUpgradeStatUI();
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
     }
 
     public GameObject GetGameObject()
     {
         return gameObject;
+    }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Dialogue;
     }
 }
