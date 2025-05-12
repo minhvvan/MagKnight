@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: c78231f1e9c884d4da9c95f60a49c9f9,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -487,6 +488,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 603129774}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!114 &94390092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,10 +622,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
         type: 3}
       propertyPath: m_Name
       value: InGameCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1948,6 +1987,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5886232322091844789, guid: c3cc3b1852dc85846af9d67fa13ee818,
+        type: 3}
+      propertyPath: id
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9198767429708749648, guid: c3cc3b1852dc85846af9d67fa13ee818,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -2479,6 +2523,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 0}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!114 &583014367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2599,10 +2646,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6796001127801567281, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: magneticPoint
+      value: 
+      objectReference: {fileID: 1153146799}
     - target: {fileID: 6999629288266388604, guid: f8218e57c4edd4ed786326372ca4a590,
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992284907517012213, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: id
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3651,6 +3708,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8f7ca74868c08a46bc7e45fa591c6d3, type: 3}
+--- !u!1001 &923487900
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 3.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1852108020185794257, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6583742763634641885, guid: 316244bbdd4b3074ca7010253e5569ba,
+        type: 3}
+      propertyPath: m_Name
+      value: Plate
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 316244bbdd4b3074ca7010253e5569ba, type: 3}
 --- !u!1 &960850729
 GameObject:
   m_ObjectHideFlags: 0
@@ -4969,6 +5094,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 0}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!114 &1442970512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5684,6 +5812,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 0}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!114 &1633929285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6269,42 +6400,42 @@ PrefabInstance:
     - target: {fileID: 3087560768384647460, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: field of view
-      value: 40
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.0981492
+      value: -0.033561204
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.2988863
+      value: 4.298886
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.025762454
+      value: -0.09576349
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6381035
+      value: 0.67043525
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.62321895
+      value: 0.6547965
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.32345492
+      value: 0.24963118
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.31590992
+      value: -0.2438082
       objectReference: {fileID: 0}
     - target: {fileID: 4050224717561007378, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -6329,12 +6460,12 @@ PrefabInstance:
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.5361104
+      value: 2.0361106
       objectReference: {fileID: 0}
     - target: {fileID: 6503532007288422559, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.194354
+      value: -12.194354
       objectReference: {fileID: 0}
     - target: {fileID: 7748620689700012619, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -7934,6 +8065,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 0}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!114 &4556294219886501648
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7953,6 +8087,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 0}
+  magneticTargetPoint: {fileID: 0}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
 --- !u!4 &4556294219886501649 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1487864779171702897, guid: d1e600d15fcef4b4aa7139c8f34c9f33,
@@ -8066,6 +8203,7 @@ SceneRoots:
   - {fileID: 2130144759}
   - {fileID: 1607064551}
   - {fileID: 4556294219886501642}
+  - {fileID: 923487900}
   - {fileID: 1720727668}
   - {fileID: 626551195}
   - {fileID: 398526080}
