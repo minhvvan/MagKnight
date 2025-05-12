@@ -173,10 +173,10 @@ MonoBehaviour:
   rb: {fileID: 0}
   isMagneticHighlight: 1
   magneticPoint: {fileID: 1852108020185794257}
+  magneticTargetPoint: {fileID: 0}
   magnetPlate: {fileID: 0}
   isGetPlate: 0
   isHold: 0
-  isAttack: 0
 --- !u!114 &5160225207940908425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,13 +228,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7227538439053773350}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1.5, z: 0.1}
+  m_LocalScale: {x: 0.19, y: 0.21, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1852108020185794257}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!33 &5762000032339560034
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -242,7 +242,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7227538439053773350}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4456811645025513694, guid: ba2455e29b756e846838ce9e5d5d74cc, type: 3}
 --- !u!23 &4493071353364870889
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -263,7 +263,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 0cb44352831fc1a439a0ecff245686a4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
