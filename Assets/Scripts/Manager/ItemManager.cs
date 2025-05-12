@@ -205,7 +205,9 @@ public class ItemManager : Singleton<ItemManager>
         {
             case ItemCategory.Artifact:
                 if (_artifactPrefab == null) break;
+                if(artifactList[rarity].Count == 0) break;
                 if(isRandom) randomIndex = Random.Range(0, artifactList[rarity].Count);
+                
                 
                 ArtifactDataSO artifactData;
                 
@@ -341,7 +343,7 @@ public class ItemManager : Singleton<ItemManager>
                 
                 return healthPackObj;
         }
-        Debug.LogError($"Cannot found item / Path: {category}, {rarity}");
+        Debug.Log($"Cannot found item / Path: {category}, {rarity}");
         return null;
     }
 
