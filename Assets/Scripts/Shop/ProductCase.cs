@@ -150,4 +150,9 @@ public class ProductCase : MonoBehaviour, IInteractable
     {
         return this.gameObject;
     }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Buy;
+    }
 }

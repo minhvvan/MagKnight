@@ -109,6 +109,11 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         return gameObject != null ? gameObject : null;
     }
 
+    public InteractType GetInteractType()
+    {
+        return InteractType.Loot;
+    }
+
     public ArtifactDataSO GetArtifactData()
     {
         return artifactDataSO;

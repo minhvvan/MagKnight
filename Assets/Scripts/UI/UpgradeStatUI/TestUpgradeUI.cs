@@ -22,4 +22,9 @@ public class TestUpgradeUI : MonoBehaviour, IInteractable
     {
         return gameObject;
     }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Dialogue;
+    }
 }

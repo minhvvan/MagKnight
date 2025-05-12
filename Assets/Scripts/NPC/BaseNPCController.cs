@@ -187,6 +187,11 @@ public class BaseNPCController : MonoBehaviour, IInteractable
         return gameObject;
     }
 
+    public InteractType GetInteractType()
+    {
+        return InteractType.Dialogue;
+    }
+
     protected Transform GetHeadTransform()
     {
         return headTransform ? headTransform : transform;

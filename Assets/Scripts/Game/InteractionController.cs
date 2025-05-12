@@ -23,6 +23,8 @@ public class InteractionController : MonoBehaviour
     
     private Camera _mainCamera;
     private RaycastHit[] _hits = new RaycastHit[10];
+
+    private InteractIndicator _interactIndicator;
     
     private void Awake()
     {
@@ -118,6 +120,13 @@ public class InteractionController : MonoBehaviour
         {
             _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = null;
+
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+            
+            _interactIndicator?.InteractUnSelected();
             return;
         }
         
@@ -130,6 +139,13 @@ public class InteractionController : MonoBehaviour
             _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = interactable;
             _currentInteractable?.Select(_interactHighlighter);
+            
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+
+            _interactIndicator?.InteractSelected(_currentInteractable.GetInteractType());
 
             break;
         }

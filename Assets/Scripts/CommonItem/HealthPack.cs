@@ -95,7 +95,12 @@ public class HealthPack : MonoBehaviour, IInteractable
     {
         return gameObject;
     }
-    
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Loot;
+    }
+
     public void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.layer != (1 <<LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Enemy")))

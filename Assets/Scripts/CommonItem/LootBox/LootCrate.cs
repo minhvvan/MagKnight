@@ -182,8 +182,13 @@ public class LootCrate : MonoBehaviour, IInteractable
     public GameObject GetGameObject()
     {
         return gameObject;
-    }   
-    
+    }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Open;
+    }
+
     private void OnDestroy()
     {
         _cts?.Cancel();

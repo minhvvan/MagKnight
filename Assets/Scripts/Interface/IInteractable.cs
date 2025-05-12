@@ -10,4 +10,5 @@ public interface IInteractable
     void Select(Highlighter highlighter);
     void UnSelect(Highlighter highlighter);
     GameObject GetGameObject();
+    InteractType GetInteractType();
 }
