@@ -1154,6 +1154,10 @@ namespace Moon
             
             
             VFXManager.Instance.TriggerDamageNumberUI(UIManager.Instance.inGameUIController.statusUIController.healthBar.damageTextRectTransform, Vector3.zero, extraData.finalAmount, DAMAGEType.UI_DAMAGE);
+            
+            var hurtSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Hurt);
+            AudioManager.Instance.PlaySFX(hurtSfxRandomClip);
+            
             _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
