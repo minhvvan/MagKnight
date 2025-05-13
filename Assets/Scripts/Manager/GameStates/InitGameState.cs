@@ -8,7 +8,6 @@ using UnityEngine;
 
 public class InitGameState: IGameState
 {
-    
     public async void OnEnter()
     {
         var currentRunData = GameManager.Instance.CurrentRunData;
@@ -39,7 +38,7 @@ public class InitGameState: IGameState
             var currentFloorRooms = floorList.Floor[currentRunData.currentFloor];
             
             //시작씬으로 이동 -> 시작씬 로드 이후 최근 저장 위치로 이동
-            SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom].sceneName, false, MoveToLastRoom);
+            SceneController.TransitionToScene(currentFloorRooms.rooms[RoomType.StartRoom][0].sceneName, false, MoveToLastRoom);
         }
         
         //보스체력바 강제 비활성화

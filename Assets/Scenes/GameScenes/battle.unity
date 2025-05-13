@@ -81168,6 +81168,7 @@ MonoBehaviour:
   nextFloorGate: {fileID: 0}
   clearRoomField: {fileID: 0}
   hasReward: 1
+  _loadedNavMeshData: {fileID: 23800000, guid: 261ce2bc9984a384b8d74d55a45a08ff, type: 2}
 --- !u!64 &8225070604145483035
 MeshCollider:
   m_ObjectHideFlags: 0
