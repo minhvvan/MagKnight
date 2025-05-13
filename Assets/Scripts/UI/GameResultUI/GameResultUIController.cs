@@ -81,6 +81,7 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
         
         var playerData = await GameManager.Instance.GetPlayerData();
         playerData.Currency = _currency;
+        _ = GameManager.Instance.SetPlayerData(playerData);
         
         ShowUI();
     }
