@@ -310,15 +310,20 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             {
                 Time.timeScale = 1;
             });
-            
-            if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+
+            if (extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero)
+            {
+                VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Critical[0]);
+            }
         }
         else
         {
             if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
         }
         
-        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
+        
     }
 
     public void OnNext(HitInfo hitInfo)
