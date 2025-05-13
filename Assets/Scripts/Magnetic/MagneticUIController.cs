@@ -388,6 +388,7 @@ public class MagneticUIController : MonoBehaviour
         foreach (var targetObj in _currentTargetList)
         {
             targetObj.onTrakingCirclePos = null;
+            targetObj.UnlockTarget();
         }
         StartCoroutine(SetTargetMagneticTypeColor());
         StartCoroutine(SetTriAimPosition(false));
