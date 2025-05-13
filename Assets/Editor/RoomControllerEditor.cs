@@ -79,7 +79,7 @@ public class RoomControllerEditor : Editor
                 return "없음";
             case RoomType.StartRoom:
                 return "시작 방";
-            case RoomType.BoosRoom:
+            case RoomType.BossRoom:
                 return "보스 방";
             case RoomType.ShopRoom:
                 return "상점 방";

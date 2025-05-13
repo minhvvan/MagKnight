@@ -203,4 +203,9 @@ public class RoomSceneController: Singleton<RoomSceneController>
             Debug.Log("No character controller found");
         }
     }
+
+    public Room GetRoom(int roomIndex)
+    {
+        return _roomGenerator.GetRoom(roomIndex);
+    }
 }
