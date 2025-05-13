@@ -245,7 +245,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     {
         //TODO: 파츠도 생성되도록 랜덤 추가
         var rotation = Quaternion.Euler(0, 180, 0);
-        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), rotation);
+        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), rotation, Room.roomType is RoomType.BossRoom);
     }
 
     public void SetRoomReady(bool isEnable)

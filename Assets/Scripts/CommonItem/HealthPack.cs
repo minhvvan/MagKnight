@@ -20,7 +20,7 @@ public class HealthPack : MonoBehaviour, IInteractable
     public int scrapValue;
     
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
-    public Action onChooseItem;
+    public Action<GameObject> onChooseItem;
     private Rigidbody rb;
     private Collider col;
     private bool _isStake;
@@ -65,7 +65,7 @@ public class HealthPack : MonoBehaviour, IInteractable
             
             AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Health.Recovery);
             
-            onChooseItem?.Invoke();
+            onChooseItem?.Invoke(gameObject);
             Destroy(gameObject);
         }
     }

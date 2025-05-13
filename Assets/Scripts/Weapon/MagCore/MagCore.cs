@@ -40,7 +40,7 @@ public class MagCore: MonoBehaviour, IInteractable
     [SerializeField] private PartsType partsType;
     
     private List<MeshRenderer> _renderers = new List<MeshRenderer>();
-    public Action onChooseItem;
+    public Action<GameObject> onChooseItem;
     private Rigidbody rb;
     private Collider col;
     private bool _isStake;
@@ -138,7 +138,7 @@ public class MagCore: MonoBehaviour, IInteractable
             }
             
             
-            onChooseItem?.Invoke();
+            onChooseItem?.Invoke(gameObject);
         }
     }
 
@@ -156,7 +156,7 @@ public class MagCore: MonoBehaviour, IInteractable
     //제거 연출 넣는 곳
     private void Dismantling()
     {
-        onChooseItem?.Invoke();
+        onChooseItem?.Invoke(gameObject);
         var vfxObj = Instantiate(ItemManager.Instance.dismantleVfxPrefab, transform.position, Quaternion.identity);
         vfxObj.transform.localScale *= 0.1f;
         Destroy(vfxObj, 3f);

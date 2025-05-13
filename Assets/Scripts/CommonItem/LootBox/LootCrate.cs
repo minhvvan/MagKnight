@@ -20,6 +20,7 @@ public class LootCrate : MonoBehaviour, IInteractable
 
     public bool IsOpen => _isOpen;
     
+    
     private Animator _animator;
     private List<GameObject> _items = new List<GameObject>();
     private bool _isOpen = false;
@@ -33,6 +34,8 @@ public class LootCrate : MonoBehaviour, IInteractable
     private GameObject vfxObj;
 
     private CancellationTokenSource _cts;
+    
+    private List<ItemRarity> randomRarity = new List<ItemRarity>();
     
     private void Awake()
     {
@@ -51,6 +54,14 @@ public class LootCrate : MonoBehaviour, IInteractable
 
     private void Start()
     {
+        if(maxSpawnCount == 3)
+        {
+            for (int i = 0; i < maxSpawnCount; i++)
+            {
+                randomRarity.Add(RaritySelector.GetRandomRarity());
+            }
+            crateRarity = randomRarity.Max();
+        }
         InitializeCrate();
     }
 
@@ -61,10 +72,21 @@ public class LootCrate : MonoBehaviour, IInteractable
         vfxObj.transform.localScale = new Vector3(2,2,2);
     }
     
-    public void SetLootCrate(ItemCategory category, ItemRarity rarity)
+    public void SetLootCrate(ItemCategory category, ItemRarity rarity, bool isBoss = false)
     {
         crateCategory = category;
         crateRarity = rarity;
+        if (isBoss)
+        {
+            randomRarity.Clear();
+            for (int i = 0; i < maxSpawnCount; i++)
+            {
+                randomRarity.Add(RaritySelector.GetRandomRarityExcluding(ItemRarity.Common));
+                Debug.Log(randomRarity[i]);
+            }
+            crateRarity = randomRarity.Max();
+            InitializeCrate();
+        }
     }
 
     public async UniTask OpenCrate()
@@ -84,7 +106,7 @@ public class LootCrate : MonoBehaviour, IInteractable
         if (!rarityVfxObjects.IsUnityNull())
         {
             vfxObj = Instantiate(rarityVfxObjects[crateRarity][1], transform);
-            vfxObj.transform.localScale = new Vector3(4,4,4);
+            vfxObj.transform.localScale = new Vector3(2,2,2);
         }
         
         AudioManager.Instance.PlaySFX(AudioBase.SFX.Item.LootCreate);
@@ -92,12 +114,52 @@ public class LootCrate : MonoBehaviour, IInteractable
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName(Constants.CrateOpen) 
                                     && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f, cancellationToken: _cts.Token);
         
-        for (int i = 0; i < maxSpawnCount; i++)
+        if(maxSpawnCount == 3)
+        {
+            for (int i = 0; i < maxSpawnCount; i++)
+            {
+                await UniTask.Delay(250);
+                
+                crateCategory = Random.value > 0.3 ? ItemCategory.Artifact : ItemCategory.MagCore;
+
+                var item = ItemManager.Instance.CreateItem
+                    (crateCategory, randomRarity[i], itemPoint[i].position, Quaternion.identity, parent: itemPoint[i]);
+                if (item.IsUnityNull())
+                {
+                    item = ItemManager.Instance.CreateItem
+                        (ItemCategory.MagCore, randomRarity[i], itemPoint[i].position, Quaternion.identity, parent: itemPoint[i]);
+                }
+                item.TryGetComponent(out Rigidbody rb);
+                rb.isKinematic = true;
+
+                if (!rarityVfxObjects.IsUnityNull())
+                {
+                    var flashVfx = Instantiate(rarityVfxObjects[randomRarity[i]][2], item.transform);
+                    Destroy(flashVfx.gameObject, 0.25f);
+                }
+
+                switch (crateCategory)
+                {
+                    case ItemCategory.Artifact:
+                        item.GetComponent<ArtifactObject>().onChooseItem = CloseCrate;
+                        break;
+                    case ItemCategory.MagCore:
+                        item.GetComponent<MagCore>().onChooseItem = CloseCrate;
+                        break;
+                    case ItemCategory.HealthPack:
+                        item.GetComponent<HealthPack>().onChooseItem = CloseCrate;
+                        break;
+                }
+
+                _items.Add(item);
+            }
+        }
+        else
         {
             await UniTask.Delay(250);
-            
-            var item =ItemManager.Instance.CreateItem
-                (crateCategory,crateRarity,itemPoint[i].position,Quaternion.identity, parent: itemPoint[i]);
+
+            var item = ItemManager.Instance.CreateItem
+                (crateCategory, crateRarity, itemPoint[0].position, Quaternion.identity, parent: itemPoint[0]);
             item.TryGetComponent(out Rigidbody rb);
             rb.isKinematic = true;
             
@@ -121,12 +183,14 @@ public class LootCrate : MonoBehaviour, IInteractable
                     item.GetComponent<HealthPack>().onChooseItem = CloseCrate;
                     break;
             }
+
             _items.Add(item);
         }
     }
 
-    private void CloseCrate()
+    private void CloseCrate(GameObject obj)
     {
+        _items.Remove(obj);
         Closing().Forget();
     }
 
