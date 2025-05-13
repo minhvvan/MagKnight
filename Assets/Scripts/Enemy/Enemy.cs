@@ -209,6 +209,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
     private async UniTask OnHitHelper(ExtraData extraData)
     {
+        if (blackboard.aiType == EnemyAIType.Boss) return; // 보스 넉백 없음
+        
         CancellationToken token = blackboard.onHitCancellation.Token;
         
         blackboard.enemyRenderer.material.SetTexture("_BaseColor", blackboard.onHitTexture);

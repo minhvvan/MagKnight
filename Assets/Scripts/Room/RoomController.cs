@@ -126,6 +126,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         }
+        player.AbilitySystem.ClearTag();
         
         //함정방 입장 연출
         if (Room.roomType is RoomType.TrapRoom)
