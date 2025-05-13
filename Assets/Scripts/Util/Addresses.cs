@@ -67,7 +67,7 @@ public static class Addresses
             switch (roomType)
             {
                 case RoomType.BattleRoom: return "data/navmesh/battle";
-                case RoomType.BoosRoom: return "data/navmesh/boss";
+                case RoomType.BossRoom: return "data/navmesh/boss";
                 default: return string.Empty;
             }
         }
