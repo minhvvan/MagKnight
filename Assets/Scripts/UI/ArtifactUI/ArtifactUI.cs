@@ -18,6 +18,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     
     [SerializeField] public Transform onDragParent;
     
+    [SerializeField] public RectTransform rect;
     public void Initialized(ArtifactDataSO artifact, Transform onDragParent)
     {
         this.artifact = artifact;
@@ -87,7 +88,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        UIManager.Instance.popupUIController.productUIController.ShowArtifactUI(artifact, GetComponent<RectTransform>());
+        UIManager.Instance.popupUIController.productUIController.ShowArtifactUI(artifact, rect);
     }
 
     public void OnPointerExit(PointerEventData eventData)
