@@ -241,6 +241,8 @@ public class MagneticController : MagneticObject
             //     //OnSeparation(targetMagneticObject).Forget();
             // }
             
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.MagneticForce);
+            
             _isActivatedMagnetic = false;
             _isDetectedMagnetic = false;
             
