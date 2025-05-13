@@ -132,7 +132,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         {
             CriticalRateText.color = Color.green;
         }
-        else if (playerASC.GetValue(AttributeType.CriticalRate) < _baseCriticalRate)
+        else if (Math.Round(playerASC.GetValue(AttributeType.CriticalRate), 2) < Math.Round(_baseCriticalRate, 2))
         {
             CriticalRateText.color = Color.red;
         }

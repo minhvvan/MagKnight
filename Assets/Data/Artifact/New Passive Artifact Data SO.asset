@@ -27,8 +27,15 @@ MonoBehaviour:
       amount: 2
       duration: 2
       period: 0.25
+      damageType: 2
       tracking: 1
       maxStack: 1
+      extraData:
+        sourceTransform: {fileID: 0}
+        weaponRange: 0
+        isCritical: 0
+        damageType: 0
+        finalAmount: 0
     isTarget: 1
     hasCount: 0
     triggerCount: 0
@@ -41,8 +48,15 @@ MonoBehaviour:
       amount: -3
       duration: 5
       period: 0
+      damageType: 0
       tracking: 1
       maxStack: 5
+      extraData:
+        sourceTransform: {fileID: 0}
+        weaponRange: 0
+        isCritical: 0
+        damageType: 0
+        finalAmount: 0
     isTarget: 1
     hasCount: 0
     triggerCount: 0
