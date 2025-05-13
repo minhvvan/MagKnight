@@ -116,7 +116,7 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
         await GameManager.Instance.SaveData(Constants.PlayerData);
         await GameManager.Instance.SaveData(Constants.CurrentRun);
         
-        UIManager.Instance.inGameUIController.currencyUIController.UpdateUI();
+        UIManager.Instance.inGameUIController.currencyUIController.UpdateCurrency(_playerData);
         HideUI();
     }
 }
