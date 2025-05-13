@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6a16ef4e65368841a827bf9642b43f1, type: 3}
   m_Name: HealthPackS
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 117b17facff65dc42b1b57deb7c21551, type: 3}
+  icon: {fileID: 21300000, guid: 9778dfe874e1744f5a75c74bd76e1d63, type: 3}
   itemName: "\uCCB4\uB825\uD68C\uBCF5(\uC18C)"
   description: "\uCCB4\uB825\uC744 20 \uD68C\uBCF5 \uD569\uB2C8\uB2E4."
   healValue: 20
