@@ -188,8 +188,9 @@ public class LootCrate : MonoBehaviour, IInteractable
         }
     }
 
-    private void CloseCrate()
+    private void CloseCrate(GameObject obj)
     {
+        _items.Remove(obj);
         Closing().Forget();
     }
 
