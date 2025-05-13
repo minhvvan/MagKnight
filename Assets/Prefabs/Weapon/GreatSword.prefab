@@ -108,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slashVFXPrefab: {fileID: 4826838247511964120}
   vfxSocket: {fileID: 5989735729343133932}
-  skillIndex: 1
+  skillIndex: 2
 --- !u!114 &1649273249709524683
 MonoBehaviour:
   m_ObjectHideFlags: 0

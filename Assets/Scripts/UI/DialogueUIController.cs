@@ -20,6 +20,8 @@ public class DialogueUIController : MonoBehaviour
     public bool IsTyping => _typingCoroutine != null;
 
     DialogueDataSO _currentDialogueData = null;
+    
+    private AudioSource _typingLoopSrc; 
 
     int _currentDialogueIndex = 0;
     public int CurrentDialogueIndex => _currentDialogueIndex;
@@ -81,10 +83,14 @@ public class DialogueUIController : MonoBehaviour
     // 대화 출력
     IEnumerator TypingText() 
     {   
+        _typingLoopSrc = AudioManager.Instance.PlayLoopSFX(AudioBase.SFX.NPC.Talk[0]);
         for (int i = 0; i <= _text.GetTypingLength(); i++) {
             _dialogueText.text = _text.Typing(i);
             yield return new WaitForSeconds(_typingSpeed);
         }
+
+        AudioManager.Instance.StopLoopSFX(_typingLoopSrc);
+        _typingLoopSrc = null;
 
         _nextImage.gameObject.SetActive(true);
     }
@@ -97,6 +103,8 @@ public class DialogueUIController : MonoBehaviour
             StopCoroutine(_typingCoroutine);
             _typingCoroutine = null;
         }
+        AudioManager.Instance.StopLoopSFX(_typingLoopSrc);
+        _typingLoopSrc = null;
 
         _dialogueText.text = _text;
         _nextImage.gameObject.SetActive(true);
@@ -113,6 +121,7 @@ public class DialogueUIController : MonoBehaviour
 
     public void ShowDialogue(DialogueDataSO dialogueData)
     {
+        
         _currentDialogueData = dialogueData;
         _currentDialogueIndex = 0;
         gameObject.SetActive(true);
@@ -125,6 +134,7 @@ public class DialogueUIController : MonoBehaviour
         {
             SetText(_currentDialogueData.lines[0].text);
         }
+        
         
         _dialogueText.text = string.Empty;
     }

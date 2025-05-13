@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998b72c2390297944be31df0ed192c85, type: 3}
   m_Name: MagCoreBow
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: bbf8638a8a75d9c42b93639213c92c9b, type: 3}
+  icon: {fileID: 21300000, guid: 56113d77198ca4e7db0a78aab2221a77, type: 3}
   itemName: "\uBCF4\uAE09\uD615 \uD65C - \uC2E0\uC18D"
   description: "\uAD6C\uC2DC\uB300\uC758 \uC0B0\uBB3C\uC774\uC9C0\uB9CC \uC5EC\uC804\uD788
     \uC704\uD611\uC801\uC778 \uC7A5\uBE44\uB2E4."

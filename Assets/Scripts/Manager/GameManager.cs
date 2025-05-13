@@ -128,6 +128,14 @@ namespace hvvan
                 case GameState.BossRoom:
                     AudioManager.Instance.PlayBGM(AudioBase.BGM.Dungeon.Stage1.Boss);
                     break;
+                case GameState.GameClear:
+                    AudioManager.Instance.PlayBGM(null);
+                    AudioManager.Instance.PlaySFX(AudioBase.SFX.Room.StageClear);
+                    break;
+                case GameState.GameOver:
+                    AudioManager.Instance.PlayBGM(null);
+                    AudioManager.Instance.PlaySFX(AudioBase.SFX.Room.GameOver);
+                    break;
             }
 
             if (_stateListeners.TryGetValue(newState, out var stateListener))

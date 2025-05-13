@@ -3,13 +3,15 @@ using DG.Tweening;
 using hvvan;
 using Moon;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
 {
-    [SerializeField] private Image weaponImage;
+    [SerializeField] private GameObject magCorePrefab;
+    [SerializeField] private Transform weaponBackGround;
     [SerializeField] private BarController hpBarController;
     [SerializeField] private TMP_Text HpText;
     [SerializeField] private BarController skillBarController;
@@ -72,6 +74,11 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         
         var playerASC = GameManager.Instance.Player.AbilitySystem;
         // TODO : WeaponImage 연결
+        var magCore = GameManager.Instance.Player.WeaponHandler.currentMagCore;
+        if (!magCore.IsUnityNull())
+        {
+            Instantiate(magCorePrefab, weaponBackGround).GetComponent<MagCoreUI>().SetIcon();
+        }
         
         hpBarController.SetFillAmount(playerASC.GetValue(AttributeType.HP) / playerASC.GetValue(AttributeType.MaxHP), false);
         HpText.text = "[" + playerASC.GetValue(AttributeType.HP) + "/" + playerASC.GetValue(AttributeType.MaxHP) + "]";
@@ -121,7 +128,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         }
         
         CriticalRateText.text = Math.Round(playerASC.GetValue(AttributeType.CriticalRate) * 100f, 2) + "%";
-        if (playerASC.GetValue(AttributeType.CriticalRate) > _baseCriticalRate)
+        if (Math.Round(playerASC.GetValue(AttributeType.CriticalRate),2) > Math.Round(_baseCriticalRate,2))
         {
             CriticalRateText.color = Color.green;
         }

@@ -85,6 +85,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
         load.Remove(currentRoomIndex);
         await LoadConnectedRooms(load);
 
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Room.NextRoom);
         await Moon.ScreenFader.FadeSceneIn().ToUniTask(this);
         Time.timeScale = 1f;
         SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);

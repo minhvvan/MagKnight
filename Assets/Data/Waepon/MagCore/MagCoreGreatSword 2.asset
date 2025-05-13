@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998b72c2390297944be31df0ed192c85, type: 3}
   m_Name: MagCoreGreatSword 2
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 8f28955d92038974a9b04aafaeea79b0, type: 3}
+  icon: {fileID: 21300000, guid: 169d45648e00348038299fc345aa6b4f, type: 3}
   itemName: "\uBCF4\uAE09\uD615 \uB300\uAC80 - \uD761\uD608"
   description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uD761\uD608 \uCE7C\uB0A0"
   scrapValue: 35
