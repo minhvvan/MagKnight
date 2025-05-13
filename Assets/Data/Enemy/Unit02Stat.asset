@@ -15,16 +15,16 @@ MonoBehaviour:
   Stat:
     MaxHP:
       Key: 0
-      Value: 200
+      Value: 150
     HP:
       Key: 1
-      Value: 200
+      Value: 150
     Strength:
       Key: 2
-      Value: 5
+      Value: 10
     MoveSpeed:
       Key: 6
-      Value: 5
+      Value: 10
     MaxResistance:
       Key: 9
       Value: 1

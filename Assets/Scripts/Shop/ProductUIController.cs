@@ -100,12 +100,10 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             inputGuidePanel.gameObject.SetActive(true);
         });
     }
-    
-    public void SetItemText(GameObject item, bool isProduct = false)
+
+    //팝업 레이아웃 기본값으로 초기화.
+    private void SetRelocationUI(bool isProduct = false)
     {
-        if (_uiItem != item) _uiItem = item;
-        else return;
-        
         if (isProduct)
         {
             inputInteract.text = "구매(E)";
@@ -121,9 +119,29 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin, inputGuidePanel.rect.height);
         }
         
+        itemEffectSubRectTr.gameObject.SetActive(true);
+        inputGuidePanel.gameObject.SetActive(true);
+        
+        //프레임 크기 초기화.
+        itemFrameRectTr.sizeDelta = new Vector2(
+            itemFrameRectTr.rect.width, 
+            itemFrameHeightOrigin);
+        contentRectTr.sizeDelta = new Vector2(
+            contentRectTr.rect.width,
+            contentHeightOrigin);
+        
         //Effect 패널 배경색 초기화
         itemEffectBg.color = panelColors[0];
         itemEffectBgSub.color = panelColors[0];
+    }
+    
+    //아이템 팝업 정보 세팅
+    public void SetItemText(GameObject item, bool isProduct = false)
+    {
+        if (_uiItem != item) _uiItem = item;
+        else return;
+
+        SetRelocationUI(isProduct);
         
         if (_uiItem.TryGetComponent(out ArtifactObject artifactObject))
         {
@@ -164,6 +182,15 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             
             itemEffect.text = $"체력을 {healthPack.healValue}회복합니다.";
             itemPrice.text = healthPack.scrapValue.ToString();
+            
+            //힐팩 출력시 필요없는 영역 비활성화
+            itemEffectSubRectTr.gameObject.SetActive(false);
+            itemFrameRectTr.sizeDelta = new Vector2(
+                itemFrameRectTr.rect.width, 
+                itemFrameHeightOrigin - itemFrameHeightOffset);
+            contentRectTr.sizeDelta = new Vector2(
+                contentRectTr.rect.width,
+                contentHeightOrigin - contentHeightOffset);
         }
         else
         {
@@ -175,6 +202,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     public void ShowArtifactUI(ArtifactDataSO artifactData, RectTransform artifactRect)
     {
         CalculateUIPosition(artifactRect);
+
+        SetRelocationUI();
 
         //Effect 패널 배경색 초기화
         itemEffectBg.color = panelColors[0];
@@ -223,6 +252,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     public void ShowMagCoreUI(MagCore magCore, RectTransform magCoreRect)
     {
         CalculateUIPosition(magCoreRect);
+        
+        SetRelocationUI();
         
         //Effect 패널 배경색 초기화
         itemEffectBg.color = panelColors[0];

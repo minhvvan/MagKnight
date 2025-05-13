@@ -18,9 +18,9 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     [SerializeField] private LastGate nextFloorGate;
     [SerializeField] private ClearRoomField clearRoomField;
     [SerializeField] private bool hasReward;
+    [SerializeField] private NavMeshData _loadedNavMeshData;
 
     private EnemyController _enemyController;
-    private NavMeshData _loadedNavMeshData;
     private NavMeshSurface _navMeshSurface;
     
     private int _roomIndex;
@@ -120,7 +120,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     {
         if (_navMeshSurface)
         {
-            await LoadNavMeshData();
             _navMeshSurface.navMeshData = _loadedNavMeshData;
         }
         

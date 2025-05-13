@@ -122,36 +122,29 @@ public class RoomGenerator
         //room 개수 제한
         Dictionary<RoomType, int> generatedRoomCount = new();
 
+        var seed = GameManager.Instance.CurrentRunData.seed;
+        
         for (int roomType = (int)RoomType.StartRoom; roomType < (int)RoomType.Max; roomType++)
         {
             //min 개수만큼 생성
             generatedRoomCount.Add((RoomType)roomType, 0);
 
-            for (int j = 0; j < _floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].min; j++)
+            int currentSeed = seed + (roomType * 1000);
+
+            var genNum = Random.Range(_floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].min, _floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].max);
+    
+            for (int j = 0; j < genNum; j++)
             {
-                var room = _floorData.Floor[currentFloor].rooms[(RoomType)roomType];
+                // 각 반복마다 시드 변경 (j에 따라)
+                currentSeed += (j * 137); // 137은 임의의 소수로 분포를 좋게 함
+                Random.InitState(currentSeed);
+        
+                var roomList = _floorData.Floor[currentFloor].rooms[(RoomType)roomType];
+                var room = roomList[Random.Range(0, roomList.Count)];
+        
                 _rooms.Add(new Room(room));
                 generatedRoomCount[(RoomType)roomType]++;
             }
-        }
-        
-        var additiveChance = Random.Range(Constants.MinRooms, Constants.MaxRooms);
-        
-        for (int i = 0; i < additiveChance; i++)
-        {
-            var type = (RoomType)Random.Range((int)RoomType.BattleRoom, (int)RoomType.Max);
-            
-            //max를 넘으면 다시 생성
-            if (generatedRoomCount[type] >= _floorData.Floor[currentFloor].roomNumLimit[type].max)
-            {
-                i--;
-                continue;
-            }
-
-            var room = _floorData.Floor[currentFloor].rooms[type];
-            _rooms.Add(new Room(room));
-            
-            generatedRoomCount[type]++;
         }
     }
     
