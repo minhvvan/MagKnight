@@ -174,25 +174,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
 
     public void ShowArtifactUI(ArtifactDataSO artifactData, RectTransform artifactRect)
     {
-        float wRatio = Screen.width / _canvasScaler.referenceResolution.x;
-        float hRatio = Screen.height / _canvasScaler.referenceResolution.y;
-        float ratio =
-            wRatio * (1f - _canvasScaler.matchWidthOrHeight) +
-            hRatio * (_canvasScaler.matchWidthOrHeight);
+        CalculateUIPosition(artifactRect);
 
-        float slotWidth = artifactRect.rect.width * ratio;
-        float slotHeight = artifactRect.rect.height * ratio;
-        // 툴팁의 크기
-        float width = _rectTransform.rect.width * ratio;
-        float height = _rectTransform.rect.height * ratio;
-        
-        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width, -slotHeight/2);
-        Vector2 pos = _rectTransform.position;
-        bool rightTruncated = pos.x > Screen.width;
-        
-        if(rightTruncated)
-            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
-        
         //Effect 패널 배경색 초기화
         itemEffectBg.color = panelColors[0];
         itemEffectBgSub.color = panelColors[0];
@@ -212,6 +195,51 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         
         (itemEffect.text, itemEffectSub.text) = ConvertArtifactEffectToText(artifactData);
         itemPrice.text = artifactData.scrapValue.ToString();
+        ShowUI();
+    }
+
+    private void CalculateUIPosition(RectTransform artifactRect)
+    {
+        float wRatio = Screen.width / _canvasScaler.referenceResolution.x;
+        float hRatio = Screen.height / _canvasScaler.referenceResolution.y;
+        float ratio =
+            wRatio * (1f - _canvasScaler.matchWidthOrHeight) +
+            hRatio * (_canvasScaler.matchWidthOrHeight);
+
+        float slotWidth = artifactRect.rect.width * ratio;
+        float slotHeight = artifactRect.rect.height * ratio;
+        // 툴팁의 크기
+        float width = _rectTransform.rect.width * ratio;
+        float height = _rectTransform.rect.height * ratio;
+        
+        _rectTransform.position = artifactRect.position + new Vector3(slotWidth + width, -slotHeight/2);
+        Vector2 pos = _rectTransform.position;
+        bool rightTruncated = pos.x > Screen.width;
+        
+        if(rightTruncated)
+            _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
+    }
+
+    public void ShowMagCoreUI(MagCore magCore, RectTransform magCoreRect)
+    {
+        CalculateUIPosition(magCoreRect);
+        
+        //Effect 패널 배경색 초기화
+        itemEffectBg.color = panelColors[0];
+        itemEffectBgSub.color = panelColors[0];
+        
+        itemImage.sprite = magCore.icon;
+        itemNameAndUpgrade.text = $"+{magCore.currentUpgradeValue} {magCore.itemName}";
+            
+        inputGuidePanel.gameObject.SetActive(false);
+        
+        ConvertSort(magCore.category);
+        ConvertSort(magCore.rarity);
+        itemSpec.text += magCore.itemDescription;
+            
+        (itemEffect.text, itemEffectSub.text) = ConvertMagCoreEffectToText(magCore.GetMagCoreSO(), magCore.currentUpgradeValue);
+        itemPrice.text = magCore.scrapValue.ToString();
+        
         ShowUI();
     }
     

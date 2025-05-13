@@ -83,6 +83,13 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.27506426
+        functionName: SetAttackLevel
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 2.5
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

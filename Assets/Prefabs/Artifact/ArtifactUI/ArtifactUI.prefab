@@ -95,6 +95,7 @@ MonoBehaviour:
     type: 3}
   startParent: {fileID: 0}
   onDragParent: {fileID: 0}
+  rect: {fileID: 1055726106121761146}
 --- !u!225 &4302722762674105238
 CanvasGroup:
   m_ObjectHideFlags: 0

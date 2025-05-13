@@ -310,6 +310,7 @@ namespace hvvan
             CurrentRunData.currentFloor++;
             CurrentRunData.currentRoomIndex = 0;
             CurrentRunData.clearedRooms.Clear();
+            CurrentRunData.seed = (int)DateTime.Now.Ticks % int.MaxValue;
             await SaveData(Constants.CurrentRun);
             
             var floorData = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);

@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Threading;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using hvvan;
 using Moon;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -50,6 +52,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     [NonSerialized] public EnemyStateAction actionState;
     [NonSerialized] public EnemyStateStagger staggerState;
     [NonSerialized] public EnemyStateDead deadState;
+    
+    //enemy scrap value
+    [NonSerialized] public int scrapMinValue = 10;
+    [NonSerialized] public int scrapMaxValue = 40;
 
     void Awake()
     {
@@ -177,6 +183,16 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         {
             ItemManager.Instance.CreateItem(ItemCategory.HealthPack, ItemRarity.Common, 
                 MainCollider.bounds.center + Vector3.up, Quaternion.identity);
+        }
+        
+        //죽으면 scrap 흭득
+        if (GameManager.Instance.CurrentRunData is { } currentRunData)// is { } => 왼쪽 데이터가 null이 아니라면.
+        {
+            VFXManager.Instance.TriggerVFX(VFXType.GET_SCRAP,transform.position,Quaternion.identity);
+            
+            var dropScrap = Random.Range(scrapMinValue, scrapMaxValue);
+            GameManager.Instance.CurrentRunData.scrap += dropScrap;
+            UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
         }
 
         if (blackboard.aiType == EnemyAIType.Boss)
