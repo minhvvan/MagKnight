@@ -86510,6 +86510,13 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
+  - time: 0.76666665
+    functionName: SetAttackLevel
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 1.3
+    intParameter: 0
+    messageOptions: 0
   - time: 0.80803376
     functionName: MeleeAttackStart
     data: 

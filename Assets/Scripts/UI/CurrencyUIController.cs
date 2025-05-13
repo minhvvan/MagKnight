@@ -13,14 +13,17 @@ public class CurrencyUIController : MonoBehaviour
     public void InitializeCurrencyUI(PlayerData playerData)
     {
         currencyText.text = playerData.Currency.ToString();
-        UpdateUI();
+        UpdateScrap();
     }
     
-    public async void UpdateUI()
+    public void UpdateScrap()
     {
         var currentRunData = GameManager.Instance.CurrentRunData;
-        var playerData = await GameManager.Instance.GetPlayerData();
         scrapText.text = currentRunData.scrap.ToString();
+    }
+
+    public void UpdateCurrency(PlayerData playerData)
+    {
         currencyText.text = playerData.Currency.ToString();
     }
 }

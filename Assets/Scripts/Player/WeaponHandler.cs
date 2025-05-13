@@ -22,6 +22,7 @@ public class WeaponHandler : MonoBehaviour
 
     private GameplayEffect _damageEffect;
     private GameplayEffect _resistanceEffect;
+    private float _currentAttackLevel;
     
     private async void Awake()
     {
@@ -191,7 +192,7 @@ public class WeaponHandler : MonoBehaviour
             GameplayEffect damageEffect = _damageEffect.DeepCopy();
             GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
             
-            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage();
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage(_currentAttackLevel);
             damageEffect.extraData.hitInfo = hitInfo;
 
             enemy.blackboard.abilitySystem.ApplyEffect(damageEffect);
@@ -251,5 +252,10 @@ public class WeaponHandler : MonoBehaviour
     public Transform GetHandTransform()
     {
         return _currentWeapon.transform ? _currentWeapon.transform : transform;
+    }
+
+    public void SetAttackLevel(float damageLevel)
+    {
+        _currentAttackLevel = damageLevel;
     }
 }

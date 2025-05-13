@@ -2596,6 +2596,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1895797284832264210, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: _weaponSockets._serializedList.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895797284832264210, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: _weaponSockets._serializedList.Array.data[1].Key
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895797284832264210, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: _weaponSockets._serializedList.Array.data[2].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895797284832264210, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: _weaponSockets._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 2140419676}
+    - target: {fileID: 1895797284832264210, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: _weaponSockets._serializedList.Array.data[2].Value
+      value: 
+      objectReference: {fileID: 1468946968}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[1].Key
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[2].Key
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[3].Key
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[1].Value
+      value: 
+      objectReference: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[2].Value
+      value: 
+      objectReference: {fileID: 9100000, guid: 0fa7b19c9c9aa164aa68bcd8e2611daa, type: 2}
+    - target: {fileID: 3871821562387904727, guid: f8218e57c4edd4ed786326372ca4a590,
+        type: 3}
+      propertyPath: animatorControllers._serializedList.Array.data[3].Value
+      value: 
+      objectReference: {fileID: 9100000, guid: 9df9ad061858b46b79025abe334b653d, type: 2}
     - target: {fileID: 6405904943649314114, guid: f8218e57c4edd4ed786326372ca4a590,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5111,6 +5171,12 @@ MonoBehaviour:
   colors:
     _serializedList: []
   switchPolarityRenderer: {fileID: 0}
+--- !u!4 &1468946968 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6575478012002503276, guid: f8218e57c4edd4ed786326372ca4a590,
+    type: 3}
+  m_PrefabInstance: {fileID: 626551195}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1474937268 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6405904943649314114, guid: f8218e57c4edd4ed786326372ca4a590,
@@ -6400,7 +6466,7 @@ PrefabInstance:
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.075268835
+      value: -0.055296037
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -6410,27 +6476,27 @@ PrefabInstance:
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0680534
+      value: -0.08508378
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.6965705
+      value: 0.63585716
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.6803224
+      value: 0.621025
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.16305968
+      value: 0.32784873
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.15925618
+      value: -0.3202013
       objectReference: {fileID: 0}
     - target: {fileID: 4050224717561007378, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -6548,8 +6614,8 @@ MonoBehaviour:
   itemDescription: 
   currentUpgradeValue: 0
   scrapValue: 0
-  _magCoreSO: {fileID: 11400000, guid: 4ab47e80bebf307439202e06a6736644, type: 2}
-  weaponType: 1
+  _magCoreSO: {fileID: 11400000, guid: f8bebf5d51b2348cb83f8d2a403e38bc, type: 2}
+  weaponType: 3
   partsType: 0
 --- !u!54 &1777030537
 Rigidbody:
@@ -7633,6 +7699,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60ae9527326814c4e993c3abad7b3e00, type: 3}
+--- !u!4 &2140419676 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5320577145862287676, guid: f8218e57c4edd4ed786326372ca4a590,
+    type: 3}
+  m_PrefabInstance: {fileID: 626551195}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4556294219886501642
 PrefabInstance:
   m_ObjectHideFlags: 0
