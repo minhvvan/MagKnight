@@ -134,12 +134,16 @@ public class BaseNPCController : MonoBehaviour, IInteractable
 
         InteractionEvent.OnDialogueEnd += InteractExit;
         InteractionEvent.DialogueStart();
+
+        
     }
     
     protected void EndDialogue(CinemachineVirtualCamera interactionCamera)
     {
         interactionCamera.Priority = 0;
         UIManager.Instance.inGameUIController.ShowInGameUI();
+        
+        
     }
     
     protected void FocusOnTarget(CinemachineVirtualCamera interactionCamera, Transform target, Transform lookFrom = null)
