@@ -31,14 +31,14 @@ MonoBehaviour:
           amount: 0.015
           duration: 6
           period: 0
-          isPoison: 0
+          damageType: 0
           tracking: 1
           maxStack: 15
           extraData:
             sourceTransform: {fileID: 0}
             weaponRange: 0
             isCritical: 0
-            isPoison: 0
+            damageType: 0
             finalAmount: 0
         isTarget: 0
         hasCount: 0
@@ -53,14 +53,14 @@ MonoBehaviour:
           amount: 0.015
           duration: 6
           period: 0
-          isPoison: 0
+          damageType: 0
           tracking: 1
           maxStack: 20
           extraData:
             sourceTransform: {fileID: 0}
             weaponRange: 0
             isCritical: 0
-            isPoison: 0
+            damageType: 0
             finalAmount: 0
         isTarget: 0
         hasCount: 0
@@ -75,14 +75,14 @@ MonoBehaviour:
           amount: 0.015
           duration: 6
           period: 0
-          isPoison: 0
+          damageType: 0
           tracking: 1
           maxStack: 25
           extraData:
             sourceTransform: {fileID: 0}
             weaponRange: 0
             isCritical: 0
-            isPoison: 0
+            damageType: 0
             finalAmount: 0
         isTarget: 0
         hasCount: 0
@@ -113,28 +113,28 @@ MonoBehaviour:
         amount: 3
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
       - effectType: 2
         attributeType: 5
         amount: 0.15
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
     - Key: 1
       Value:
@@ -143,28 +143,28 @@ MonoBehaviour:
         amount: 5
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
       - effectType: 2
         attributeType: 5
         amount: 0.18
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
     - Key: 2
       Value:
@@ -173,26 +173,26 @@ MonoBehaviour:
         amount: 8
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
       - effectType: 2
         attributeType: 5
         amount: 0.22
         duration: 0
         period: 0
-        isPoison: 0
+        damageType: 0
         tracking: 0
         maxStack: 0
         extraData:
           sourceTransform: {fileID: 0}
           weaponRange: 0
           isCritical: 0
-          isPoison: 0
+          damageType: 0
           finalAmount: 0
