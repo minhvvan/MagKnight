@@ -82,7 +82,12 @@ public class ProductCase : MonoBehaviour, IInteractable
 
     private bool SellItem(IInteractor interactor)
     {
-        if (CheckItemValue()) GameManager.Instance.CurrentRunData.scrap -= itemPrice;
+        if (CheckItemValue())
+        {
+            GameManager.Instance.CurrentRunData.scrap -= itemPrice;
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.BuyItem);
+        }
         else
         {
             Debug.Log("Scrap이 부족합니다.");

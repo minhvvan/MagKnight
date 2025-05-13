@@ -344,6 +344,8 @@ public class ItemManager : Singleton<ItemManager>
                 return healthPackObj;
         }
         Debug.Log($"Cannot found item / Path: {category}, {rarity}");
+
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.DropItem);
         return null;
     }
 

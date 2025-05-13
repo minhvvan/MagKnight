@@ -194,6 +194,16 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             GameManager.Instance.CurrentRunData.scrap += dropScrap;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
         }
+
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.PowerDown1);
+        }
+        else
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.SignalLost);
+        }
+        
     }
 
     public void OnStagger()
@@ -326,15 +336,20 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             {
                 Time.timeScale = 1;
             });
-            
-            if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+
+            if (extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero)
+            {
+                VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Critical[0]);
+            }
         }
         else
         {
             if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
         }
         
-        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
+        
     }
 
     public void OnNext(HitInfo hitInfo)
@@ -501,4 +516,16 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             isFalling = false;
         }
     }
+    
+    void PlayMeleeAttack()
+    {
+        var EnemyMeleeAttackSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Enemy.Attack.HurtL);
+        AudioManager.Instance.PlaySFX(EnemyMeleeAttackSfxRandomClip);
+    }
+    
+    void PlayRangedAttack()
+    {
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Attack.Cannon.ShotP1);
+    }
+    
 }
