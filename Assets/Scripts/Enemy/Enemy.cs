@@ -320,6 +320,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     
     public void OnDamaged(ExtraData extraData)
     {
+        if(blackboard.isDead) return;
+        
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
         
