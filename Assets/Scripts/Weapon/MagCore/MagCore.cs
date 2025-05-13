@@ -12,6 +12,7 @@ public enum WeaponType
     None = 0,
     GreatSword = 1,
     Bow = 2,
+    Hammer = 3,
 }
 
 public enum PartsType
