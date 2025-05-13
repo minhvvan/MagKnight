@@ -66,7 +66,7 @@ MonoBehaviour:
         max: 1
     - Key: 4
       Value:
-        min: 2
+        min: 3
         max: 5
     - Key: 5
       Value:
@@ -74,5 +74,5 @@ MonoBehaviour:
         max: 2
     - Key: 6
       Value:
-        min: 2
-        max: 5
+        min: 1
+        max: 2
