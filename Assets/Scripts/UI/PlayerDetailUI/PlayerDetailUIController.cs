@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using hvvan;
 using Moon;
@@ -121,7 +120,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
             EndureImpulseText.color = Color.white;
         }
         
-        CriticalRateText.text = playerASC.GetValue(AttributeType.CriticalRate) * 100f + "%";
+        CriticalRateText.text = Math.Round(playerASC.GetValue(AttributeType.CriticalRate) * 100f, 2) + "%";
         if (playerASC.GetValue(AttributeType.CriticalRate) > _baseCriticalRate)
         {
             CriticalRateText.color = Color.green;
@@ -135,7 +134,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
             CriticalRateText.color = Color.white;
         }
         
-        CriticalDamageText.text = playerASC.GetValue(AttributeType.CriticalDamage) * 100f + "%";
+        CriticalDamageText.text = Math.Round(playerASC.GetValue(AttributeType.CriticalDamage) * 100f,2) + "%";
         if (playerASC.GetValue(AttributeType.CriticalDamage) > _baseCriticalDamage)
         {
             CriticalDamageText.color = Color.green;
@@ -149,7 +148,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
             CriticalDamageText.color = Color.white;
         }
         
-        AttackSpeedText.text = playerASC.GetValue(AttributeType.AttackSpeed) * 100f + "%";
+        AttackSpeedText.text = Math.Round(playerASC.GetValue(AttributeType.AttackSpeed) * 100f,2) + "%";
         if (playerASC.GetValue(AttributeType.AttackSpeed) > _baseAttackSpeed)
         {
             AttackSpeedText.color = Color.green;
@@ -163,7 +162,7 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
             AttackSpeedText.color = Color.white;
         }
         
-        MoveSpeedText.text = playerASC.GetValue(AttributeType.MoveSpeed) * 100f + "%";
+        MoveSpeedText.text = Math.Round(playerASC.GetValue(AttributeType.MoveSpeed) * 100f,2) + "%";
         if (playerASC.GetValue(AttributeType.MoveSpeed) > _baseMoveSpeed)
         {
             MoveSpeedText.color = Color.green;
