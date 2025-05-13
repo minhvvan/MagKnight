@@ -90,4 +90,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _damageNumberPrefab: {fileID: 8690564695306702212, guid: a95b5bae3c63b4c58bd999ac7bd2228d,
     type: 3}
-  _comboDuration: 1.5
+  _comboDuration: 2
