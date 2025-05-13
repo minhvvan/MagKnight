@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MoveForwardSkill : Skill
 {
-    [SerializeField] private float moveSpeed;
+    private float moveSpeed = 15;
 
     new void Start()
     {
