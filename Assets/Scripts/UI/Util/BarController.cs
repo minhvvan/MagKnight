@@ -8,12 +8,16 @@ namespace Moon
     {
         [SerializeField] Image fillImage;
         [SerializeField] Image delayFillImage;
-        [SerializeField] Image frameActiveImage;
+        [SerializeField] CanvasGroup frameActiveCanvasGroup;
         Image _backgorundImage;
         RectTransform _rectTransform;
         //HP바에 체력감소를 띄워주기 위한 변수
         [SerializeField] public RectTransform damageTextRectTransform;
         [SerializeField] bool isPunch = false;
+
+
+        //canvasGroup flag
+        float _canvasGroupTargetAlpha = 0;
 
         void Awake()
         {
@@ -36,15 +40,18 @@ namespace Moon
 
             SetFillAmountWithDelay(amount, 1f);
 
-            if(frameActiveImage != null)
+            if(frameActiveCanvasGroup != null)
             {
                 if(amount >= 1)
                 {
-                    frameActiveImage.gameObject.SetActive(true);
+                    frameActiveCanvasGroup.gameObject.SetActive(true);
+                    frameActiveCanvasGroup.alpha = 0;
+                    _canvasGroupTargetAlpha = 1;
                 }
                 else
                 {
-                    frameActiveImage.gameObject.SetActive(false);
+                    frameActiveCanvasGroup.alpha = 0;
+                    frameActiveCanvasGroup.gameObject.SetActive(false);
                 }
             }
 
@@ -65,6 +72,34 @@ namespace Moon
             if (delayFillImage != null)
             {
                 delayFillImage.DOFillAmount(amount, 0.5f).SetDelay(delayTime);
+            }
+        }
+
+
+        void Update()
+        {
+            //Blink frameActive
+            if(frameActiveCanvasGroup != null)
+            {
+                if(frameActiveCanvasGroup.gameObject.activeSelf)
+                {
+                    if(_canvasGroupTargetAlpha == 1)
+                    {
+                        frameActiveCanvasGroup.alpha = Mathf.MoveTowards(frameActiveCanvasGroup.alpha, 1, Time.deltaTime);
+                        if(frameActiveCanvasGroup.alpha >= 0.95f)
+                        {
+                            _canvasGroupTargetAlpha = 0;
+                        }
+                    }
+                    else
+                    {
+                        frameActiveCanvasGroup.alpha = Mathf.MoveTowards(frameActiveCanvasGroup.alpha, 0, Time.deltaTime);
+                        if(frameActiveCanvasGroup.alpha <= 0.05f)
+                        {
+                            _canvasGroupTargetAlpha = 1;
+                        }
+                    }
+                }
             }
         }
     }
