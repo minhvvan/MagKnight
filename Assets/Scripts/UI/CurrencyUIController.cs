@@ -14,7 +14,10 @@ public class CurrencyUIController : MonoBehaviour
     {
         currencyText.text = playerData.Currency.ToString();
         scrapText.text = 0.ToString();
-        UpdateScrap();
+        if (GameManager.Instance.CurrentRunData is { } currentRunData)
+        {
+            scrapText.text = currentRunData.scrap.ToString();
+        }
     }
     
     public void UpdateScrap()
