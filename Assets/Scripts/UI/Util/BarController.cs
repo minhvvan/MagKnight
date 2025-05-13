@@ -23,6 +23,8 @@ namespace Moon
         
         public void SetFillAmount(float amount, bool smoothly)
         {   
+            if(_rectTransform == null) return;
+
             if(smoothly)
             {
                 fillImage.DOFillAmount(amount, 0.5f).SetEase(Ease.OutSine);

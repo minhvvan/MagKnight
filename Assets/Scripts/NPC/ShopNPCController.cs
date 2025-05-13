@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using hvvan;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ShopNPCController : BaseNPCController
 {
@@ -11,6 +12,8 @@ public class ShopNPCController : BaseNPCController
     [SerializeField] private GameObject productCasePrefab;
     [SerializeField] private Transform[] createPoints;
 
+    private HashSet<ArtifactDataSO> artifactsItem = new HashSet<ArtifactDataSO>();
+    
     protected override void Awake()
     {
         base.Awake();
@@ -25,6 +28,7 @@ public class ShopNPCController : BaseNPCController
     //상인 앞에 아이템 진열
     private void ItemDisplay()
     {
+        artifactsItem.Clear();
         for (int i = 0; i < createPoints.Length; i++)
         {
             var caseObj = Instantiate(productCasePrefab, createPoints[i].position, 
@@ -36,13 +40,14 @@ public class ShopNPCController : BaseNPCController
                 Debug.LogError("ProductCase component not found on the prefab.");
                 continue;
             }
+            
             //아티팩트
             if (i >= 0 && i <= 2)
             {
-                var artifactObj = ItemManager.Instance.CreateItem(ItemCategory.Artifact,ItemRarity.Common,
+                var artifactObj = ItemManager.Instance.CreateItem(ItemCategory.Artifact, RaritySelector.GetRandomRarity(),
                     createPoints[i].position,Quaternion.identity);
-
-                if (artifactObj == null)
+                
+                if (artifactObj == null || !artifactsItem.Add(artifactObj.GetComponent<ArtifactObject>().GetArtifactData()))
                 {
                     caseObj.Destroy();
                     continue;
@@ -53,7 +58,7 @@ public class ShopNPCController : BaseNPCController
             //파츠
             if (i >= 3 && i <= 4)
             {
-                var magCoreObj = ItemManager.Instance.CreateItem(ItemCategory.MagCore,ItemRarity.Common,
+                var magCoreObj = ItemManager.Instance.CreateItem(ItemCategory.MagCore,RaritySelector.GetRandomRarity(),
                     createPoints[i].position,Quaternion.identity);
                 if (magCoreObj == null)
                 {
