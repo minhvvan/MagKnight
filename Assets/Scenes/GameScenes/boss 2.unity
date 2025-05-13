@@ -6356,6 +6356,7 @@ MonoBehaviour:
   nextFloorGate: {fileID: 2136093182}
   clearRoomField: {fileID: 0}
   hasReward: 1
+  _loadedNavMeshData: {fileID: 23800000, guid: 3b404e0f12d0ee94c84bb0ee6fde0c9e, type: 2}
 --- !u!114 &6766026834978857242
 MonoBehaviour:
   m_ObjectHideFlags: 0

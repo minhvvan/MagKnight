@@ -105,11 +105,11 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 0.2
+          amount: 3
           duration: 5
           period: 0.5
-          damageType: 0
-          tracking: 0
+          damageType: 6
+          tracking: 1
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -147,11 +147,11 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 0.4
+          amount: 5
           duration: 5
           period: 0.5
-          damageType: 0
-          tracking: 0
+          damageType: 6
+          tracking: 1
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
