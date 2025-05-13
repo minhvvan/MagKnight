@@ -32,8 +32,8 @@ MonoBehaviour:
           amount: 2
           duration: 10
           period: 1
-          damageType: 0
-          tracking: 0
+          damageType: 2
+          tracking: 1
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
@@ -51,11 +51,11 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 3.25
+          amount: 4
           duration: 10
           period: 1
-          damageType: 0
-          tracking: 0
+          damageType: 2
+          tracking: 1
           maxStack: 0
           extraData:
             sourceTransform: {fileID: 0}
