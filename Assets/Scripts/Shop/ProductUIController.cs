@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -82,21 +83,29 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        _rectTransform.DOKill();
+        
+        _rectTransform.DOScale(1, 0.1f);
         gameObject.SetActive(true);
     }
 
     public void HideUI()
     {
-        _rectTransform.anchoredPosition = _startPosition;
-        inputGuidePanel.gameObject.SetActive(true);
-        gameObject.SetActive(false);
+        _rectTransform.DOKill();
+        
+        _rectTransform.DOScale(0, 0.1f).OnComplete(() =>
+        {
+            _rectTransform.anchoredPosition = _startPosition;
+            gameObject.SetActive(false); 
+            inputGuidePanel.gameObject.SetActive(true);
+        });
     }
     
     public void SetItemText(GameObject item, bool isProduct = false)
     {
         if (_uiItem != item) _uiItem = item;
         else return;
-
+        
         if (isProduct)
         {
             inputInteract.text = "구매(E)";
@@ -183,6 +192,14 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         
         if(rightTruncated)
             _rectTransform.position = artifactRect.position + new Vector3(-slotWidth, -slotHeight/2);
+        
+        //Effect 패널 배경색 초기화
+        itemEffectBg.color = panelColors[0];
+        itemEffectBgSub.color = panelColors[0];
+        
+        //아티팩트일 경우 극성 표시로 보이게 변경
+        itemEffectBg.color = panelColors[1];
+        itemEffectBgSub.color = panelColors[2];
         
         inputGuidePanel.gameObject.SetActive(false);
         

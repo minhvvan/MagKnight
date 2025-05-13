@@ -166,6 +166,11 @@ public class RoomController : MonoBehaviour, IObserver<bool>
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
         }
+
+        if (Room.roomType is RoomType.BoosRoom)
+        {
+            GameManager.Instance.ChangeGameState(GameState.BossRoom);
+        }
     }
 
     private IEnumerator LookClearField(CameraSettings cameraSettings)
@@ -209,7 +214,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private async UniTask LoadNavMeshData()
     {
         if(_loadedNavMeshData) return;
-        _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(Addresses.Data.Room.NavMeshData);
+        var address = Addresses.NavMeshAddressLoader.GetPath(Room.roomType);
+        _loadedNavMeshData = await DataManager.Instance.LoadData<NavMeshData>(address);
     }
 
     public void OnPlayerExit()
@@ -227,6 +233,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     private void Reward()
     {
+        //TODO: 파츠도 생성되도록 랜덤 추가
         ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), Quaternion.identity);
     }
 
@@ -314,6 +321,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     private void OnDestroy()
     {
+        if (RoomSceneController.Instance.CurrentRoomController != this) return;
         var gateIndicator = UIManager.Instance?.inGameUIController?.gateIndicatorUIController;
         if (gateIndicator)
         {

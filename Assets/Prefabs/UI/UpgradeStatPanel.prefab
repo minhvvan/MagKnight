@@ -658,10 +658,10 @@ RectTransform:
   - {fileID: 4385644208575239322}
   m_Father: {fileID: 2336553283808914305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -200, y: 0}
-  m_SizeDelta: {x: 400, y: 60}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2053481986652417814
 CanvasRenderer:
@@ -700,7 +700,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 2
+  m_PixelsPerUnitMultiplier: 4
 --- !u!114 &7335226485353901982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,7 +887,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillImage: {fileID: 3112115360171125948}
+  delayFillImage: {fileID: 0}
   frameActiveImage: {fileID: 0}
+  damageTextRectTransform: {fileID: 0}
+  isPunch: 0
 --- !u!1 &8348700163886197320
 GameObject:
   m_ObjectHideFlags: 0

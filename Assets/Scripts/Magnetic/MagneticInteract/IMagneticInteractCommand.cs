@@ -354,6 +354,32 @@ public class MagnetSwingAction : IMagneticInteractCommand
     }
 }
 
+public class MagnetPlatePullAction : IMagneticInteractCommand
+{
+    public override UniTask Execute(MagneticObject caster, MagneticObject target)
+    {
+        if(target.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
+        {
+            targetPlayerMagnetActionController.StartMagnetPlate(caster, target, false);
+        }
+
+        return UniTask.CompletedTask;
+    }
+}
+
+public class MagnetPlateThrowAction : IMagneticInteractCommand
+{
+    public override UniTask Execute(MagneticObject caster, MagneticObject target)
+    {
+        if(caster.TryGetComponent(out PlayerMagnetActionController targetPlayerMagnetActionController))
+        {
+            targetPlayerMagnetActionController.StartMagnetPlate(caster, target, true);
+        }
+
+        return UniTask.CompletedTask;
+    }
+}
+
 public static class MagneticInteractFactory
 {
     public static IMagneticInteractCommand GetInteract<T>() where T : IMagneticInteractCommand, new()

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
+using Highlighters;
+using hvvan;
 using Moon;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,13 +20,18 @@ public class InteractionController : MonoBehaviour
     private IInteractable _currentInteractable;
     private IInteractor _interactor;
     
+    private Highlighter _interactHighlighter;
+    
     private Camera _mainCamera;
     private RaycastHit[] _hits = new RaycastHit[10];
+
+    private InteractIndicator _interactIndicator;
     
     private void Awake()
     {
         _interactor = this.GetInterfaceInParent<IInteractor>();
         cameraSettings = FindObjectOfType<CameraSettings>();
+        _interactHighlighter = GetComponent<Highlighter>();
         _mainCamera = Camera.main;
     }
 
@@ -62,6 +69,7 @@ public class InteractionController : MonoBehaviour
         else
         {
             _currentInteractable.Interact(_interactor);
+            _currentInteractable.UnSelect(_interactHighlighter);
         }
         
         FindClosestInteractable();
@@ -112,8 +120,25 @@ public class InteractionController : MonoBehaviour
         
         if (hitCount <= 0)
         {
-            _currentInteractable?.UnSelect();
+            if(_currentInteractable == null)
+            {
+                if(UIManager.Instance.popupUIController != null && UIManager.Instance.popupUIController.productUIController != null && UIManager.Instance.popupUIController.productUIController.gameObject.activeSelf)
+                {
+                    UIManager.Instance.popupUIController.productUIController.HideUI();
+                }
+            }
+            else
+            {
+                _currentInteractable?.UnSelect(_interactHighlighter);
+            }
             _currentInteractable = null;
+
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+            
+            _interactIndicator?.InteractUnSelected();
             return;
         }
         
@@ -121,10 +146,18 @@ public class InteractionController : MonoBehaviour
         {
             if (hit.collider.IsUnityNull()) continue;
             if (!hit.collider.TryGetComponent<IInteractable>(out var interactable)) continue;
+            if(_currentInteractable == interactable) break;
             
-            _currentInteractable?.UnSelect();
+            _currentInteractable?.UnSelect(_interactHighlighter);
             _currentInteractable = interactable;
-            _currentInteractable?.Select();
+            _currentInteractable?.Select(_interactHighlighter);
+            
+            if (!_interactIndicator)
+            {
+                _interactIndicator = UIManager.Instance.inGameUIController.interactIndicator;
+            }
+
+            _interactIndicator?.InteractSelected(_currentInteractable.GetInteractType());
 
             break;
         }
@@ -132,7 +165,10 @@ public class InteractionController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        FindClosestInteractable();
+        //cursor가 잠겨있을때만 상호작용 감지
+        if(Cursor.lockState == CursorLockMode.Locked){
+            FindClosestInteractable();
+        }
     }
 
     private void OnDrawGizmos()

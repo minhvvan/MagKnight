@@ -17,12 +17,21 @@ public class MagneticObject : MonoBehaviour, IMagnetic
     public MagneticObjectSO magneticObjectSO;
     public Rigidbody rb; //
     public bool isMagneticHighlight = true;
+    
+    //UI에서 표시되는 포인트(상호작용 시작 지점)
+    public Transform magneticPoint;
+    //실제 물리 연산이 일어날 지점
+    public Transform magneticTargetPoint;
 
     public IMagneticInteractCommand magnetApproach;
     public IMagneticInteractCommand magnetSeparation;
     public IMagneticInteractCommand magnetDashAttackAction;
     public IMagneticInteractCommand magnetDashJumpAction;
     public IMagneticInteractCommand magnetSwingAction;
+    public IMagneticInteractCommand magnetPlatePullAction;
+    public IMagneticInteractCommand magnetPlateThrowAction;
+    public MagnetPlate magnetPlate;
+    public bool isGetPlate;
     
     public Effector Effector { get; protected set; }
 
@@ -41,7 +50,7 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         SetMagneticInteract();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         //Highlight Binding
         if (isMagneticHighlight)
@@ -80,6 +89,8 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         magnetDashAttackAction = MagneticInteractFactory.GetInteract<MagnetDashAttackAction>();
         magnetDashJumpAction = MagneticInteractFactory.GetInteract<MagnetDashJumpAction>();
         magnetSwingAction = MagneticInteractFactory.GetInteract<MagnetSwingAction>();
+        magnetPlatePullAction = MagneticInteractFactory.GetInteract<MagnetPlatePullAction>();
+        magnetPlateThrowAction = MagneticInteractFactory.GetInteract<MagnetPlateThrowAction>();
     }
     
     private void BindMagneticHighlight()
@@ -100,6 +111,21 @@ public class MagneticObject : MonoBehaviour, IMagnetic
             magneticHighlighter.UnbindRenderer(gameObject, magneticType);
         }
     }
+    
+    public async UniTask RunMagneticInteract(MagneticObject target, bool isHoldPlate = false)
+    {
+        //plate를 hold중인 상태라면 선택한 타겟에게 던지는 액션을 우선 구사한다.
+        if (isHoldPlate)
+        {
+            //이 구간의 target은 Player
+            if(target.magnetPlate != null) target.magnetPlate.isHold = false;
+            await magnetPlateThrowAction.Execute(target, this);
+            target.magnetPlate = null;
+            return;
+        }
+        
+        await OnMagneticInteract(target);
+    }
 
     public virtual async UniTask OnMagneticInteract(MagneticObject target)
     {
@@ -115,6 +141,11 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         {
             await magnetSeparation.Execute(target, this);
         }
+    }
+
+    public bool GetMagnetPlate()
+    {
+        return magnetPlate != null;
     }
 
     public virtual void MagneticCoolDown()
@@ -142,5 +173,13 @@ public class MagneticObject : MonoBehaviour, IMagnetic
         
         if(magneticType == MagneticType.N) magneticType = MagneticType.S;
         else if(magneticType == MagneticType.S) magneticType = MagneticType.N;
+    }
+
+    protected void OnDestroy()
+    {
+        if (isMagneticHighlight)
+        {
+            UnbindMagneticHighlight();
+        }
     }
 }

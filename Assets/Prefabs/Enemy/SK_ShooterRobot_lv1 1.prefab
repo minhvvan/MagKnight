@@ -383,6 +383,37 @@ Transform:
   - {fileID: 1897516205605637477}
   m_Father: {fileID: 8498954983926240594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3443762219898748282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 891192344551721887}
+  m_Layer: 7
+  m_Name: MagneticTargetPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &891192344551721887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3443762219898748282}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.653}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7010780069197500311}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3613062783976179678
 GameObject:
   m_ObjectHideFlags: 0
@@ -1344,6 +1375,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7285732983585976230}
+  - {fileID: 891192344551721887}
   - {fileID: 5038158113086590374}
   - {fileID: 3356644006556031373}
   - {fileID: 2136297535810097078}
@@ -1472,8 +1504,13 @@ MonoBehaviour:
   objectMass: 0
   magneticObjectSO: {fileID: 11400000, guid: f12c550ac1edc27418bb08a36e919585, type: 2}
   rb: {fileID: 0}
+  isMagneticHighlight: 1
+  magneticPoint: {fileID: 5038158113086590374}
+  magneticTargetPoint: {fileID: 891192344551721887}
   blackboard: {fileID: 3918791580375778709}
   hpBarController: {fileID: 133048197641694031}
+  isDashing: 0
+  isFalling: 0
 --- !u!136 &3095233884370065667
 CapsuleCollider:
   m_ObjectHideFlags: 0

@@ -75,7 +75,6 @@ namespace Moon
         private float _originalFixedDeltaTime;
         private Coroutine _parrySlowCoroutine;
 
-
         #endregion
 
         #region Animation
@@ -223,6 +222,7 @@ namespace Moon
             {
                 attributeSet.OnDead += Death;
                 attributeSet.OnDamaged += Damaged;
+                attributeSet.OnImpulse += Impulse;
                 attributeSet.OnMoveSpeedChanged += MoveSpeedChanged;
                 attributeSet.OnAttackSpeedChanged += AttackSpeedChanged;
                 
@@ -308,10 +308,10 @@ namespace Moon
             }
 
             //임의로 무기 강화 강제로 올리기.
-            if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                UpgradeParts();
-            }
+            // if (Input.GetKeyDown(KeyCode.Alpha0))
+            // {
+            //     UpgradeParts();
+            // }
 
             TriggerSkill();
 
@@ -350,6 +350,11 @@ namespace Moon
 
         private void TriggerAttack()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             _animator.SetFloat(PlayerAnimatorConst.hashStateTime, Mathf.Repeat(_animator.GetCurrentAnimatorStateInfo(0).normalizedTime, 1f));
             _animator.ResetTrigger(PlayerAnimatorConst.hashMeleeAttack);
 
@@ -377,6 +382,11 @@ namespace Moon
 
         void TriggerSkill()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             if (_inputHandler.SkillInput && _isGrounded)
             {
                 if (Mathf.Approximately(_abilitySystem.GetValue(AttributeType.SkillGauge), _abilitySystem.GetValue(AttributeType.MaxSkillGauge)))
@@ -533,6 +543,9 @@ namespace Moon
                     _isGrounded = false;
                     _readyToJump = false;
                     VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+                    
+                    var jumpSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Jump);
+                    AudioManager.Instance.PlaySFX(jumpSfxRandomClip);
                 }
             }
             else if (inMagnetActionJump)
@@ -670,9 +683,14 @@ namespace Moon
             _isGrounded = characterController.isGrounded;
 
             if (_isGrounded && !_previouslyGrounded && !IsInvisible)
+            {
                 VFXManager.Instance.TriggerVFX(VFXType.JUMP_DUST, transform.position);
+                
+                var landingSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Land);
+                AudioManager.Instance.PlaySFX(landingSfxRandomClip);
+            }
 
-            
+
             if (!_isGrounded && !_previouslyGrounded)
                 _animator.SetFloat(PlayerAnimatorConst.hashAirborneVerticalSpeed, _verticalSpeed);
 
@@ -680,6 +698,7 @@ namespace Moon
             _animator.SetBool(PlayerAnimatorConst.hashGrounded, _isGrounded || _previouslyGrounded);
 
             _previouslyGrounded = _isGrounded;
+            
         }
 
         void UpdateOrientation()
@@ -923,6 +942,8 @@ namespace Moon
                         hitCol, hitCol.transform.position, hitCol.transform.rotation,
                         out Vector3 pushDir, out float pushDist))
                 {
+                    pushDir.y = 0f;
+                    pushDir.Normalize();
                     transform.position = Vector3.Lerp(transform.position, transform.position + pushDir * pushDist, 1f);
                 }
             }
@@ -969,6 +990,11 @@ namespace Moon
 
         void SwitchMagneticInput()
         {
+            if(_weaponHandler.CurrentWeaponType == WeaponType.None)
+            {
+                return;
+            }
+
             // 쿨다운 중이면 무시
             if (! _canSwitchMagnetic)
                 return;
@@ -982,6 +1008,8 @@ namespace Moon
                 _magneticController.SwitchMagneticType();
                 OnMagneticEffect();
             }
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.MagneticSwitch2);
 
             // 패링 윈도우 열기
             if (_parryWindowCoroutine != null) StopCoroutine(_parryWindowCoroutine);
@@ -1024,6 +1052,11 @@ namespace Moon
             
             if(inputValue) _magneticController.OnLongRelease().Forget(); 
             else _magneticController.OnShortRelease().Forget();
+        }
+        
+        public bool CanMagneticPlateHoldCancel()
+        {
+            return _inputHandler.Attack1 || _inputHandler.Attack2;
         }
 
         public void MeleeAttackStart(int throwing = 0)
@@ -1123,7 +1156,19 @@ namespace Moon
             }
         }
 
-        public void Damaged(Transform sourceTransform)
+        public void Damaged(ExtraData extraData)
+        {
+            
+            
+            VFXManager.Instance.TriggerDamageNumberUI(UIManager.Instance.inGameUIController.statusUIController.healthBar.damageTextRectTransform, Vector3.zero, extraData.finalAmount, DAMAGEType.UI_DAMAGE);
+            
+            var hurtSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.Hurt);
+            AudioManager.Instance.PlaySFX(hurtSfxRandomClip);
+            
+            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
+        }
+
+        public void Impulse(ExtraData extraData)
         {
             // 1) 패링 창이 열려 있으면 ─────────
             if (_parryWindowActive)
@@ -1136,9 +1181,9 @@ namespace Moon
                 // 1-a) 패링 성공 애니 실행
                 _animator.SetTrigger(PlayerAnimatorConst.hashParry);
                 VFXManager.Instance.TriggerVFX(VFXType.PARRY, transform.position + 0.5f * Vector3.up);
-                
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Parry[1]);
                 // 1-b) 적을 스턴시키거나 반격 로직 호출
-                if (sourceTransform.TryGetComponent<Enemy>(out var enemy))
+                if (extraData.sourceTransform.TryGetComponent<Enemy>(out var enemy))
                 {
                     //넉백?
                     enemy.OnStagger();
@@ -1150,17 +1195,16 @@ namespace Moon
                     StopCoroutine(_parrySlowCoroutine);
                 _parrySlowCoroutine = StartCoroutine(DoParrySlowMotion());
 
-
                 // (피해는 받지 않음)
                 return;
             }
 
             // 2) 패링 실패 or 타이밍 아웃 시 기존 데미지 처리
             if (isDead || _isKnockDown) return;
-            if(sourceTransform != null)
+            if(extraData.sourceTransform != null)
             {
                 // 공격이 들어온 방향
-                var dir = sourceTransform.position - transform.position;
+                var dir = extraData.sourceTransform.position - transform.position;
                 // 내 캐릭터에 방향에 맞게 계산
                 var hurtFrom = transform.InverseTransformDirection(dir.normalized);
                 _animator.SetFloat(PlayerAnimatorConst.hashHurtFromX, hurtFrom.x);
@@ -1169,7 +1213,6 @@ namespace Moon
                 
                 _animator.SetTrigger(PlayerAnimatorConst.hashHurt);
             }
-            _abilitySystem.TriggerEvent(TriggerEventType.OnDamage, _abilitySystem);
         }
 
         public (float, bool) GetAttackDamage(float damageMultiplier = 1f)
@@ -1257,6 +1300,8 @@ namespace Moon
 
             VFXManager.Instance.TriggerVFX(VFXType.DODGE_DUST, transform.position, dodgeRotation);
 
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Movement.Avoid[2]);
+
             StartCoroutine(UnblockAfterDodge());
         }
 
@@ -1269,5 +1314,10 @@ namespace Moon
         }
 
 
+        void PlayFootStep()
+        {
+            var footStepSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Step);
+            AudioManager.Instance.PlaySFX(footStepSfxRandomClip);
+        }
     }
 }

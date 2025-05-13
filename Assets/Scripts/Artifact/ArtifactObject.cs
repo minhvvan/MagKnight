@@ -1,11 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Highlighters;
 using hvvan;
 using Moon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class ArtifactObject : MonoBehaviour, IInteractable
 {
@@ -63,9 +62,10 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     {
         //TODO: 아이템 재활용(판매,분해) 로직 수행.
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
-        {
-            var scrap = GameManager.Instance.CurrentRunData.scrap += scrapValue;
-            Debug.Log("Scrap:" + scrap);
+        { 
+            GameManager.Instance.CurrentRunData.scrap += scrapValue;
+            UIManager.Instance.inGameUIController.currencyUIController.UpdateUI();
+            _= GameManager.Instance.SaveData(Constants.CurrentRun);
             Dismantling();
         }
     }
@@ -77,9 +77,13 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         Destroy(gameObject);
     }
 
-    public void Select()
+    public void Select(Highlighter highlighter)
     {
-        //TODO: outline
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Add(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         _renderers.ForEach(render => render.material.color = Color.blue);
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
@@ -87,9 +91,13 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         uiController.ShowUI();
     }
 
-    public void UnSelect()
+    public void UnSelect(Highlighter highlighter)
     {
-        //TODO: outline 제거
+        foreach (var crateRenderer in _renderers)
+        {
+            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+        }
+        
         _renderers.ForEach(render => render.material.color = Color.gray);
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
@@ -99,6 +107,11 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     public GameObject GetGameObject()
     {
         return gameObject != null ? gameObject : null;
+    }
+
+    public InteractType GetInteractType()
+    {
+        return InteractType.Loot;
     }
 
     public ArtifactDataSO GetArtifactData()

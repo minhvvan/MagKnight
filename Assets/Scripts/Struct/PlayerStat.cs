@@ -60,6 +60,27 @@ public class PlayerStat
         // 모든 필드의 키가 중복 없이 추가되었으면 true 반환
         return true;
     }
+
+    public PlayerStat DeepCopy()
+    {
+        var copy = (PlayerStat)MemberwiseClone();
+        // copy.MaxHP = MaxHP.DeepCopy();
+        // copy.HP = HP.DeepCopy();
+        // copy.Strength = Strength.DeepCopy();
+        // copy.CriticalRate = CriticalRate.DeepCopy();
+        // copy.Defense = Defense.DeepCopy();
+        // copy.CriticalDamage = CriticalDamage.DeepCopy();
+        // copy.Damage = Damage.DeepCopy();
+        // copy.MoveSpeed = MoveSpeed.DeepCopy();
+        // copy.AttackSpeed = AttackSpeed.DeepCopy();
+        // copy.Impulse = Impulse.DeepCopy();
+        // copy.EndureImpulse = EndureImpulse.DeepCopy();
+        // copy.MaxSkillGauge = MaxSkillGauge.DeepCopy();
+        // copy.SkillGauge = SkillGauge.DeepCopy();
+        // copy.MagneticRange = MagneticRange.DeepCopy();
+        // copy.MagneticPower = MagneticPower.DeepCopy();
+        return copy;
+    }
 }
 
 [Serializable]
@@ -72,5 +93,10 @@ public struct AttributePair
     {
         Key = key;
         Value = value;
+    }
+
+    public AttributePair DeepCopy()
+    {
+        return (AttributePair)MemberwiseClone();
     }
 }

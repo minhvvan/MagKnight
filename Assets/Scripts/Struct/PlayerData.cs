@@ -14,4 +14,11 @@ public class PlayerData: ISaveData
     {
         return Constants.PlayerData;
     }
+
+    public PlayerData DeepCopy()
+    {
+        var copy= (PlayerData)MemberwiseClone();
+        copy.PlayerStat = PlayerStat.DeepCopy();
+        return copy;
+    }
 }

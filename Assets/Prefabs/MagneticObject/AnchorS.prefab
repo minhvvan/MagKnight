@@ -74,6 +74,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AnchorS
       objectReference: {fileID: 0}
+    - target: {fileID: 7562006262849127011, guid: f04337dc3e161354ea9e4cff744e3df0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7971238283549314223, guid: f04337dc3e161354ea9e4cff744e3df0,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

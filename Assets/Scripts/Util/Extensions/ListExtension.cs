@@ -4,11 +4,12 @@ using UnityEngine;
 
 public static class ListExtensions
 {
-    public static void AddUnique<T>(this List<T> list, T newItem)
+    public static bool AddUnique<T>(this List<T> list, T newItem)
     {
-        if (list == null) return;
-        if(list.Contains(newItem)) return;
+        if (list == null) return false;
+        if(list.Contains(newItem)) return false;
         
         list.Add(newItem);
+        return true;
     }
 }

@@ -247,4 +247,9 @@ public class WeaponHandler : MonoBehaviour
         var bowStretchSFX = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Attack.BowStretch);
         AudioManager.Instance.PlaySFX(bowStretchSFX);
     }
+
+    public Transform GetHandTransform()
+    {
+        return _currentWeapon.transform ? _currentWeapon.transform : transform;
+    }
 }

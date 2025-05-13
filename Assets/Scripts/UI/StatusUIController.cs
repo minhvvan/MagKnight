@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class StatusUIController : MonoBehaviour
 {
-    [SerializeField] private BarController healthBar;
+    [SerializeField] public BarController healthBar;
     [SerializeField] private BarController skillBar;
     
     private PlayerAttributeSet _attributeSet;

@@ -12,10 +12,11 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] FadeText _entranceText;
     [SerializeField] RectTransform _inGameUI;
     [SerializeField] public DialogueUIController dialogueUIController;
-    [SerializeField] private StatusUIController statusUIController;
+    [SerializeField] public StatusUIController statusUIController;
     [SerializeField] private BossStatusUIController bossStatusUIController;
     [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
-
+    [SerializeField] public CurrencyUIController currencyUIController;
+    [SerializeField] public InteractIndicator interactIndicator;
 
     protected override void Initialize()
     {
@@ -76,5 +77,10 @@ public class InGameUIController : Singleton<InGameUIController>
 
         bossStatusUIController.UnbindBossAttributeChanges();
         bossStatusUIController.Hide();
+    }
+
+    public void ImmediateHideInGameUI()
+    {
+        bossStatusUIController.gameObject.SetActive(false);
     }
 }

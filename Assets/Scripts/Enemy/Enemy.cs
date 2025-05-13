@@ -59,8 +59,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         InitializeMagnetic();
     }
 
-    void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         _stateMachine.ChangeState(spawnState);
         
         // 시작 y축 위치 보정
@@ -109,10 +110,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     void Update()
     {
         _stateMachine.Update();
-    }
-
-    protected void OnDestroy()
-    {
     }
 
     public void SetState(BaseState<Enemy> newState)
@@ -313,13 +310,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             {
                 Time.timeScale = 1;
             });
-            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
-            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            
+            if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_CRITICAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         else
         {
-            //Attribute.Damage 적용 시 hitInfo가 null이 오는 문제가 있음.
-            if(extraData.hitInfo != null) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
+            if(extraData.hitInfo != null && extraData.hitInfo.hit.point != Vector3.zero) VFXManager.Instance.TriggerVFX(VFXType.HIT_NORMAL, extraData.hitInfo.hit.point, Quaternion.identity, Vector3.one * 0.5f);
         }
         
         AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Attack.Hit[0]);
@@ -337,8 +333,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
         damageEffect.extraData.sourceTransform = transform;
         impulseEffect.extraData.sourceTransform = transform;
-        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
-        hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
+
+        if (hitInfo.collider.gameObject.TryGetComponent(out AbilitySystem abilitySystem))
+        {
+            abilitySystem.ApplyEffect(damageEffect);
+            abilitySystem.ApplyEffect(impulseEffect);
+        }
     }
 
     public void OnError(Exception error)

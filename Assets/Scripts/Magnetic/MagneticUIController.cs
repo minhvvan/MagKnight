@@ -236,7 +236,9 @@ public class MagneticUIController : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.unscaledDeltaTime;
-            target.localScale = Vector3.Lerp(target.localScale, scale, elapsedTime / duration);
+            var EaseFunction = EasingFunction.GetEasingFunction(EasingFunction.Ease.EaseInQuad);
+            var t = EaseFunction(0, 1, elapsedTime / duration);
+            target.localScale = Vector3.Lerp(target.localScale, scale, t);
             yield return null;
         }
         onComplete?.Invoke();
@@ -349,9 +351,11 @@ public class MagneticUIController : MonoBehaviour
             return;
         }
         
-        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target))
+        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target).ToList())
         {
             targetObj.LostTarget();
+            targetObj.UnlockTarget();
+            _currentTargetList.Remove(targetObj);
         }
     }
 
@@ -359,27 +363,35 @@ public class MagneticUIController : MonoBehaviour
     public void InLockOnTarget(Transform target)
     {
         if (_isDispose) return;
-        StartCoroutine(SetTriAimPosition(true));
-        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target))
+       
+        foreach (var targetObj in _currentTargetList) 
         {
-            targetObj.onTrakingCirclePos = SetTrakingCircle;
-            targetObj.LockTarget();
+            if (targetObj.target == target)
+            {
+                StartCoroutine(SetTriAimPosition(true));
+                targetObj.onTrakingCirclePos = SetTrakingCircle;
+                targetObj.LockTarget();
+            }
+            else
+            {
+                targetObj.onTrakingCirclePos = null;
+                targetObj.UnlockTarget();
+            }
         }
     }
 
     // 플레이어의 정면 탐색범위 밖으로 벗어난 대상을 다시 Ready상태로 되돌립니다.
-    public void UnLockOnTarget(Transform target)
+    public void UnLockOnTarget()
     {
         if (_isDispose) return;
-        StartCoroutine(SetTargetMagneticTypeColor());
-        StartCoroutine(SetTriAimPosition(false));
-        foreach (var targetObj in _currentTargetList.Where(targetObj => targetObj.target == target))
+        
+        foreach (var targetObj in _currentTargetList)
         {
             targetObj.onTrakingCirclePos = null;
-            trakingCircleRect.anchoredPosition = trakingCircleOrigin;
-            targetObj.UnlockTarget();
-            
         }
+        StartCoroutine(SetTargetMagneticTypeColor());
+        StartCoroutine(SetTriAimPosition(false));
+        trakingCircleRect.anchoredPosition = trakingCircleOrigin;
     }
     
     //모든 대상을 타겟대상에서 제외합니다.
@@ -400,7 +412,8 @@ public class MagneticUIController : MonoBehaviour
 
     private void OnDestroy()
     {
-        DOTween.KillAll();
+        //DOTween.KillAll();
+
         _currentTargetList.Clear();
         DisposePooling();
     }

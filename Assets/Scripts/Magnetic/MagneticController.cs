@@ -163,6 +163,7 @@ public class MagneticController : MagneticObject
         
         _playerMagnetActionController.EndSwingWithInertia();
         _timeScaleCoroutine = StartCoroutine(TimeScaleCoroutine(1f));
+		AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.ActiveMagnet);
     
         //끝
         _isShortRelease = false;
@@ -223,9 +224,9 @@ public class MagneticController : MagneticObject
         if (targetMagneticObject != null)
         {
             _isActivatedMagnetic = true;
-            _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
-            await targetMagneticObject.OnMagneticInteract(this);
+            _magneticUIController.UnLockOnTarget();
             
+            await targetMagneticObject.RunMagneticInteract(this, GetMagnetPlate());
             var playerASC = GameManager.Instance.Player.AbilitySystem;
             playerASC.TriggerEvent(TriggerEventType.OnMagnetic, playerASC);
             
@@ -308,7 +309,10 @@ public class MagneticController : MagneticObject
         if (countHits.Length <= 0) return;
         for (int i = 0; i < hitCount; i++)
         {
-            InCountVisor(countHits[i].transform, targetPoint);
+            if (countHits[i].TryGetComponent<MagneticObject>(out var magneticObject))
+            {
+                InCountVisor(magneticObject.magneticPoint, targetPoint);
+            }
         }
     }
 
@@ -359,17 +363,19 @@ public class MagneticController : MagneticObject
                 if (bestHit.collider != null && 
                     bestHit.collider.transform.TryGetComponent(out MagneticObject magneticObject) 
                     && magneticObject != null)
-                {
+                {		
+					if (targetMagneticObject == null || magneticObject != targetMagneticObject)
+                        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.AimActivate);
                     //새로 타겟된 대상이 이전과 다르면 언록
                     if (targetMagneticObject != null && magneticObject != targetMagneticObject)
                     {
-                        _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+                        _magneticUIController.UnLockOnTarget();
                         targetMagneticObject = null;
                     }
                 
                     _isDetectedMagnetic = true;
                     targetMagneticObject = magneticObject;
-                    _magneticUIController.InLockOnTarget(targetMagneticObject.transform);
+                    _magneticUIController.InLockOnTarget(targetMagneticObject.magneticPoint);
                     StartCoroutine(_magneticUIController.SetTargetMagneticTypeColor(targetMagneticObject.GetMagneticType()));
                     
                     return;
@@ -379,7 +385,7 @@ public class MagneticController : MagneticObject
 
         if (targetMagneticObject != null)
         {
-            _magneticUIController.UnLockOnTarget(targetMagneticObject.transform);
+            _magneticUIController.UnLockOnTarget();
         }
         _isDetectedMagnetic = false;
         targetMagneticObject = null;

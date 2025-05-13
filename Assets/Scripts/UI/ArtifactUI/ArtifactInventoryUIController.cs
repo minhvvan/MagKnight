@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using hvvan;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,7 +15,8 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
     [SerializeField] private GameObject Right_ArtifactInventory;
     [SerializeField] private GameObject SlotPrefab;
     [SerializeField] private GameObject ArtifactUIPrefab;
-    
+    [SerializeField] RectTransform rectTransform;
+
     private List<ArtifactSlot> Left_ArtifactSlots = new List<ArtifactSlot>();
     private List<ArtifactSlot> Right_ArtifactSlots = new List<ArtifactSlot>();
     
@@ -64,6 +66,8 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
 
     public void ShowUI()
     {
+        rectTransform.DOKill();
+        rectTransform.DOScale(1, 0.1f);
         GameManager.Instance.Player.InputHandler.ReleaseControl();
         gameObject.SetActive(true);
     }
@@ -82,6 +86,8 @@ public class ArtifactInventoryUIController : MonoBehaviour, IBasePopupUIControll
         {
             artifact.GetComponent<ArtifactUI>().DumpArtifact();
         }
+        rectTransform.DOKill();
+        rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
         gameObject.SetActive(false);
         GameManager.Instance.Player.InputHandler.GainControl();
     }
