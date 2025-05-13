@@ -556,9 +556,13 @@ MonoBehaviour:
   restartButton: {fileID: 8435055917469150138}
   artifactImageObj: {fileID: 5437976029280434123, guid: eb92a2adf01f1074dbeae4cef09c91d9,
     type: 3}
+  gameOverText: {fileID: 0}
   resultImage:
   - {fileID: 21300000, guid: 96dfab196730f421ca071a8689beef2d, type: 3}
   - {fileID: 21300000, guid: 1cb45cf4d349c4b7cb4a11d3a8302915, type: 3}
+  backgroundCanvasGroup: {fileID: 0}
+  resultUIRectTransform: {fileID: 0}
+  gameOverTextRectTransform: {fileID: 0}
 --- !u!1 &2391888972420005442
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,8 +630,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC8FD\uC5C8\uC2B5\uB2C8\uB2E4!"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: adb4c89cd3ba14fff8ab0e909d0ac667, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1032,9 +1036,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC7AC\uC2DC\uC791"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 3266036449564707099, guid: 1ee3f21609bb3427fa87a59076ce03c8,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

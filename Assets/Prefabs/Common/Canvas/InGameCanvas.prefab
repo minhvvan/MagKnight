@@ -2473,6 +2473,7 @@ MonoBehaviour:
   healthBar: {fileID: 1927986375041766172}
   skillBar: {fileID: 9208399133153667542}
   magnetIcon: {fileID: 5609911837545595349}
+  magnetIconRectTransform: {fileID: 8040422162354428697}
 --- !u!1 &6309899718315147236
 GameObject:
   m_ObjectHideFlags: 0

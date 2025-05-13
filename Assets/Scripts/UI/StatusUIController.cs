@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Jun;
 using Moon;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class StatusUIController : MonoBehaviour
     [SerializeField] public BarController healthBar;
     [SerializeField] private BarController skillBar;
     [SerializeField] private Image magnetIcon;
+    [SerializeField] private RectTransform magnetIconRectTransform;
     
     private PlayerAttributeSet _attributeSet;
     
@@ -123,13 +125,21 @@ public class StatusUIController : MonoBehaviour
 
     public void SetPolarityChange(MagneticType magneticType)
     {
+        magnetIconRectTransform.DOKill();
+        magnetIconRectTransform.localScale = Vector3.one;
+        magnetIconRectTransform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f).OnComplete(() =>
+        {
+            magnetIconRectTransform.localScale = Vector3.one;
+        });
+
         if (magneticType == MagneticType.S)
         {
-            magnetIcon.color = new Color(0, 0.4f, 1f, 1f);
+            magnetIcon.DOColor(new Color(0, 0.4f, 1f, 1f), 0.5f);
         }
         else
         {
-            magnetIcon.color = Color.red;
+            //magnetIcon.color = Color.red;
+            magnetIcon.DOColor(new Color(1f, 0.1f, 0, 1f), 0.5f);
         }
     }
 }
