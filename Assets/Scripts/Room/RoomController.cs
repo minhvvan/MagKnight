@@ -126,6 +126,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         {
             controller.TeleportByTransform(player.gameObject, gates[gateDirection].playerSpawnPoint);
         }
+        player.AbilitySystem.ClearTag();
         
         //함정방 입장 연출
         if (Room.roomType is RoomType.TrapRoom)
@@ -233,7 +234,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private void Reward()
     {
         //TODO: 파츠도 생성되도록 랜덤 추가
-        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), Quaternion.identity);
+        var rotation = Quaternion.Euler(0, 180, 0);
+        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), rotation);
     }
 
     public void SetRoomReady(bool isEnable)

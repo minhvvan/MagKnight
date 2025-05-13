@@ -139,7 +139,7 @@ public abstract class AttributeSet
     
     public void ClearTag()
     {
-        tag = null;
+        tag.Clear();
     }
 
     public bool HasTag(string tag)

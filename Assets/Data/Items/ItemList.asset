@@ -63,7 +63,7 @@ MonoBehaviour:
     type: 3}
   magnetSwitchVfxPrefab: {fileID: 339158821923109191, guid: a1f942e8bcc523a46a1e8e41538d0871,
     type: 3}
-  lootCratePrefab: {fileID: 8193618553645803866, guid: 0a472726e2aaad449bb68d4efa88bf52,
+  lootCratePrefab: {fileID: 8193618553645803866, guid: 9d2a5bf286a0e4a979bc5c59e43c6535,
     type: 3}
   artifactPrefab: {fileID: 5023272368703363778, guid: 1976de0664897a34bb6080b27334ac7e,
     type: 3}

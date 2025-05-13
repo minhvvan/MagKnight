@@ -1059,7 +1059,7 @@ namespace Moon
             return _inputHandler.Attack1 || _inputHandler.Attack2;
         }
 
-        public void MeleeAttackStart(int damageLevel = 0)
+        public void MeleeAttackStart(int throwing = 0)
         {
             _weaponHandler.AttackStart();
         }        
