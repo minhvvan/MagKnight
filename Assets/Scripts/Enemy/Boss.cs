@@ -120,6 +120,8 @@ public class Boss : Enemy
         MagneticController targetMC = bossBlackboard.target.GetComponent<MagneticController>();
         gameObject.GetComponent<EnemyMagnetActionController>().StartMagneticPull(targetMC);
         SetAnimTrigger("PullSucceed");
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Magnetic.MagneticForce);
     }
 
     public void Missile(GameObject missileEffect)

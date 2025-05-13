@@ -44,6 +44,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         startParent = transform.parent;
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         transform.SetParent(onDragParent);
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.Artifact.PickUp);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -53,6 +54,7 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.Artifact.Drop);
         if (!EventSystem.current.IsPointerOverGameObject())
         {
             // TODO: 아이템 버리기

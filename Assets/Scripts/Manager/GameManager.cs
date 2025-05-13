@@ -120,8 +120,11 @@ namespace hvvan
                     AudioManager.Instance.PlayBGM(AudioBase.BGM.BaseCamp.Main);
                     AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.BaseCamp.Environment);
                     break;
-
-                case GameState.DungeonEnter:
+                case GameState.RoomEnter:
+                    AudioManager.Instance.PlayBGM(AudioBase.BGM.Dungeon.Stage1.MainBattle);
+                    AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.Dungeon.Stage1.Environment);
+                    break;
+                case GameState.RoomClear:
                     AudioManager.Instance.PlayBGM(AudioBase.BGM.Dungeon.Stage1.MainBattle);
                     AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.Dungeon.Stage1.Environment);
                     break;

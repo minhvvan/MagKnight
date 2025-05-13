@@ -30,6 +30,7 @@ public class AudioManager : Singleton<AudioManager>
     private float bgmVolume = 0.0f;
     private float sfxVolume = 0.0f;
     
+    private string _currentBgmKey; //중복 재생 방지
     
     private void Start()
     {
@@ -185,17 +186,31 @@ public class AudioManager : Singleton<AudioManager>
 // 배경음악 재생
     public void PlayBGM(string clipName)
     {
-        for (int i = 0; i < bgmClips.Length; i++)
+        // 정지 전용
+        if (string.IsNullOrEmpty(clipName))
         {
-            if (bgmClips[i].name.Equals(clipName))
+            bgmSource.Stop();
+            _currentBgmKey = null;
+            return;
+        }
+
+        // 이미 같은 곡이 플레이 중이면 재생 건너뜀
+        if (_currentBgmKey == clipName && bgmSource.isPlaying) return;
+
+        // 새 곡 찾기
+        foreach (var clip in bgmClips)
+        {
+            if (clip.name == clipName)
             {
-                bgmSource.clip = bgmClips[i];
+                bgmSource.clip = clip;
                 bgmSource.loop = true;
                 bgmSource.Play();
+                _currentBgmKey = clipName;
                 return;
             }
         }
-        Debug.LogWarning("BGM 클립을 찾을 수 없습니다: " + clipName);
+
+        Debug.LogWarning($"[AudioManager] BGM clip not found: {clipName}");
     }
 
     public void StopBGM()
