@@ -178,6 +178,15 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         SetState(deadState);
         OnDead?.Invoke(this);
         
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.PowerDown1);
+        }
+        else
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.SignalLost);
+        }
+        
         //죽으면 일정 확률로 힐팩 생성
         if(ItemManager.Instance.CheckProbability(ItemCategory.HealthPack, ItemRarity.Common))
         {
@@ -194,16 +203,6 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             GameManager.Instance.CurrentRunData.scrap += dropScrap;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
         }
-
-        if (blackboard.aiType == EnemyAIType.Boss)
-        {
-            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.PowerDown1);
-        }
-        else
-        {
-            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.SignalLost);
-        }
-        
     }
 
     public void OnStagger()
@@ -397,6 +396,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     {
         GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.identity);
         effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Boom.Impact);
     }
 
     public void CreateAttackEffectAtTarget(GameObject effectPrefab)
