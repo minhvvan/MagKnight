@@ -330,6 +330,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         // 피격 효과
         VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType, transform);
 
+        //콤보시스템 카운팅 추가
+        UIManager.Instance.inGameUIController.AddCombo();
+
         if(extraData.isCritical)
         {
             CinemachineImpulseController.GenerateImpulse();
