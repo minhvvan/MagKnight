@@ -106,10 +106,10 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 1
+          amount: 3
           duration: 5
           period: 0.5
-          damageType: 0
+          damageType: 6
           tracking: 0
           maxStack: 0
           extraData:
@@ -148,10 +148,10 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 2
+          amount: 5
           duration: 5
           period: 0.5
-          damageType: 0
+          damageType: 6
           tracking: 0
           maxStack: 0
           extraData:
