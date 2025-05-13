@@ -25,6 +25,7 @@ public enum VFXType
     PARRY,
     CHARGING_ARCHER_SKILL,
     MAGNET_AIM_SHOCKWAVE,
+    GET_SCRAP
 }
 
 public enum DAMAGEType

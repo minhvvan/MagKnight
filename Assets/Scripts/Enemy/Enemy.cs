@@ -188,6 +188,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         //죽으면 scrap 흭득
         if (GameManager.Instance.CurrentRunData is { } currentRunData)// is { } => 왼쪽 데이터가 null이 아니라면.
         {
+            VFXManager.Instance.TriggerVFX(VFXType.GET_SCRAP,transform.position,Quaternion.identity);
+            
             var dropScrap = Random.Range(scrapMinValue, scrapMaxValue);
             GameManager.Instance.CurrentRunData.scrap += dropScrap;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
