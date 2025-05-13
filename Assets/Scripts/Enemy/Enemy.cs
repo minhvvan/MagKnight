@@ -178,6 +178,16 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             ItemManager.Instance.CreateItem(ItemCategory.HealthPack, ItemRarity.Common, 
                 MainCollider.bounds.center + Vector3.up, Quaternion.identity);
         }
+
+        if (blackboard.aiType == EnemyAIType.Boss)
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.PowerDown1);
+        }
+        else
+        {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Dead.SignalLost);
+        }
+        
     }
 
     public void OnStagger()
@@ -490,4 +500,16 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
             isFalling = false;
         }
     }
+    
+    void PlayMeleeAttack()
+    {
+        var EnemyMeleeAttackSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Enemy.Attack.HurtL);
+        AudioManager.Instance.PlaySFX(EnemyMeleeAttackSfxRandomClip);
+    }
+    
+    void PlayRangedAttack()
+    {
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Attack.Cannon.ShotP1);
+    }
+    
 }
