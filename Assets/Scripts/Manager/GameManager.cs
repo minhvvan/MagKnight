@@ -316,7 +316,7 @@ namespace hvvan
             var floorData = await DataManager.Instance.LoadScriptableObjectAsync<FloorDataSO>(Addresses.Data.Room.Floor);
 
             //다음층 시작룸 로드
-            var startRoom = floorData.Floor[CurrentRunData.currentFloor].rooms[RoomType.StartRoom];
+            var startRoom = floorData.Floor[CurrentRunData.currentFloor].rooms[RoomType.StartRoom][0];
             SceneController.TransitionToScene(startRoom.sceneName, true, NextFloorSceneLoaded);
         }
 

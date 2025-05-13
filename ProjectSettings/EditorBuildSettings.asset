@@ -41,12 +41,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameScenes/boss 2.unity
     guid: f88774cc7f24fea4e9ee247df2b80bd8
-  - enabled: 0
-    path: Assets/Scenes/LoadSceneTest/boss 2.unity
-    guid: 35e5972db2c115949826f3353d123526
-  - enabled: 0
-    path: Assets/Scenes/LoadSceneTest/start 2.unity
-    guid: 46cbd60e3baaff445808a7bbb842bf45
+  - enabled: 1
+    path: Assets/Scenes/GameScenes/battle_1.unity
+    guid: d7dc9240fc7a040babc85500b291c217
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: c5a98a86e03b2dc4dbaaf10ca6de3a1b,
       type: 2}

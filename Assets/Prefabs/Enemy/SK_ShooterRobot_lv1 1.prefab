@@ -186,8 +186,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: -0.02291013}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7333345327658275340}
   m_Father: {fileID: 7010780069197500311}
@@ -1050,8 +1050,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -1.7763568e-15, y: 0, z: -0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: -0.0000000018626451}
-  m_LocalScale: {x: 1.0000004, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7010780069197500311}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1507,6 +1507,8 @@ MonoBehaviour:
   isMagneticHighlight: 1
   magneticPoint: {fileID: 5038158113086590374}
   magneticTargetPoint: {fileID: 891192344551721887}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
   blackboard: {fileID: 3918791580375778709}
   hpBarController: {fileID: 133048197641694031}
   isDashing: 0
