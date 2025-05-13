@@ -21,7 +21,7 @@ public enum RoomType
 {
     None,
     StartRoom,
-    BoosRoom,
+    BossRoom,
     ShopRoom,
     BattleRoom,
     TreasureRoom,
@@ -204,8 +204,8 @@ public class RoomGenerator
     private bool TryConnect(Room lhs, Room rhs)
     {
         //start <-> boss 연결 방지
-        if(lhs.roomType == RoomType.StartRoom && rhs.roomType == RoomType.BoosRoom) return false;
-        if(rhs.roomType == RoomType.StartRoom && lhs.roomType == RoomType.BoosRoom) return false;
+        if(lhs.roomType == RoomType.StartRoom && rhs.roomType == RoomType.BossRoom) return false;
+        if(rhs.roomType == RoomType.StartRoom && lhs.roomType == RoomType.BossRoom) return false;
         
         //중복 연결 방지
         if (lhs.connectedRooms.Contains(_rooms.IndexOf(rhs))) return false;
