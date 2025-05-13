@@ -24,8 +24,8 @@ public enum ItemCategory
 public class ItemManager : Singleton<ItemManager>
 {
     public SerializedDictionary<ItemRarity, List<ArtifactDataSO>> artifactList = new  SerializedDictionary<ItemRarity, List<ArtifactDataSO>>();
-    public Dictionary<ItemRarity, List<MagCoreSO>> magCoreList = new Dictionary<ItemRarity, List<MagCoreSO>>();
-    public Dictionary<ItemRarity, List<HealthPackSO>> healthPackList = new Dictionary<ItemRarity, List<HealthPackSO>>();
+    public SerializedDictionary<ItemRarity, List<MagCoreSO>> magCoreList = new SerializedDictionary<ItemRarity, List<MagCoreSO>>();
+    public SerializedDictionary<ItemRarity, List<HealthPackSO>> healthPackList = new SerializedDictionary<ItemRarity, List<HealthPackSO>>();
     
     //아이템 프리팹
     private GameObject _artifactPrefab; 
@@ -350,14 +350,15 @@ public class ItemManager : Singleton<ItemManager>
     }
 
     //지정한 등급의 상자 생성.
-    public void SpawnLootCrate(ItemCategory category, ItemRarity rarity, Vector3 position, Quaternion rotation)
+    public void SpawnLootCrate(ItemCategory category, ItemRarity rarity, Vector3 position, Quaternion rotation, bool isBoss = false)
     {
         var currentRoom = RoomSceneController.Instance.CurrentRoomController;
         
         var obj = Instantiate(_lootCratePrefab, position, rotation, 
             currentRoom != null ? currentRoom.transform : null);
         var lootCrate = obj.GetComponent<LootCrate>();
-        lootCrate.SetLootCrate(category, rarity);
+        lootCrate.SetLootCrate(category, rarity, isBoss);
         lootCrate.rarityVfxObjects = _lootVfxPrefabs;
+        
     }
 }
