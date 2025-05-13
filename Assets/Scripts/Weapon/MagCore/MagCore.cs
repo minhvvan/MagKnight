@@ -12,6 +12,7 @@ public enum WeaponType
     None = 0,
     GreatSword = 1,
     Bow = 2,
+    Hammer = 3,
 }
 
 public enum PartsType
@@ -147,7 +148,7 @@ public class MagCore: MonoBehaviour, IInteractable
         {
             GameManager.Instance.CurrentRunData.scrap += scrapValue;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
-            _= GameManager.Instance.SaveData(Constants.CurrentRun);
+            //_= GameManager.Instance.SaveData(Constants.CurrentRun);
             Dismantling();
         }
     }

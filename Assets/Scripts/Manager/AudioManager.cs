@@ -255,6 +255,30 @@ public class AudioManager : Singleton<AudioManager>
             StartCoroutine(ReturnSFXSources(source));
         }
     }
+    
+    public AudioSource PlayLoopSFX(string clipName)
+    { 
+        AudioClip clip = Array.Find(sfxClips, c => c.name == clipName); 
+        if (clip == null)
+        {
+            Debug.LogWarning($"[AudioManager] SFX not found: {clipName}");
+            return null;
+        }
+        
+        var src = GetSFXSources(); 
+        src.clip  = clip; 
+        src.loop  = true; 
+        src.Play(); 
+        return src;                     // 호출 측에서 Stop 시켜야 함
+    }
+    /// <summary>루프 SFX 정지 후 풀에 반납.</summary>
+    public void StopLoopSFX(AudioSource src)
+    { 
+        if (src == null) return; 
+        src.Stop(); 
+        src.loop = false; 
+        StartCoroutine(ReturnSFXSources(src)); 
+    }
 
     /// <summary>
     /// readonly List로 저장된 사운드를 랜덤하게 재생하고 싶을 때 사용합니다.
@@ -268,5 +292,6 @@ public class AudioManager : Singleton<AudioManager>
 
         return randomClip;
     }
+
     #endregion
 }

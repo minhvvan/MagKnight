@@ -338,6 +338,7 @@ GameObject:
   - component: {fileID: 6560641043861436522}
   - component: {fileID: 2565219511521583649}
   - component: {fileID: 4625389493525641592}
+  - component: {fileID: 5893804037069412374}
   m_Layer: 5
   m_Name: Continue Button
   m_TagString: Untagged
@@ -361,9 +362,9 @@ RectTransform:
   - {fileID: 1267158088827647460}
   m_Father: {fileID: 3402976018821494188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6560641043861436522
@@ -448,6 +449,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5893804037069412374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351217824132922333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &381953280893224448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,6 +1391,7 @@ GameObject:
   - component: {fileID: 4398677129019488492}
   - component: {fileID: 8398234674575720052}
   - component: {fileID: 3636558106616441070}
+  - component: {fileID: 9001530008177638806}
   m_Layer: 5
   m_Name: Exit Button
   m_TagString: Untagged
@@ -1485,6 +1501,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9001530008177638806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244395984632666073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &1322267560002219157
 GameObject:
   m_ObjectHideFlags: 0
@@ -2821,6 +2851,7 @@ GameObject:
   - component: {fileID: 3754331219686332967}
   - component: {fileID: 5803171190901880958}
   - component: {fileID: 8647178928233881454}
+  - component: {fileID: 6518505854560218780}
   m_Layer: 5
   m_Name: Continue Button
   m_TagString: Untagged
@@ -2930,6 +2961,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6518505854560218780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3019399845216549906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &3118381525874906068
 GameObject:
   m_ObjectHideFlags: 0
@@ -3132,6 +3177,7 @@ GameObject:
   - component: {fileID: 8222991783536825166}
   - component: {fileID: 7923910192268019684}
   - component: {fileID: 5710754069221603156}
+  - component: {fileID: 487886191288426196}
   m_Layer: 5
   m_Name: Exit Button
   m_TagString: Untagged
@@ -3155,9 +3201,9 @@ RectTransform:
   - {fileID: 1043641441865425604}
   m_Father: {fileID: 3402976018821494188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190, y: -212.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8222991783536825166
@@ -3242,6 +3288,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &487886191288426196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3365260022929895014}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &3464733618730580745
 GameObject:
   m_ObjectHideFlags: 0
@@ -3254,6 +3314,7 @@ GameObject:
   - component: {fileID: 2029815100161992939}
   - component: {fileID: 8063161154077599318}
   - component: {fileID: 2718814941939296740}
+  - component: {fileID: 5006068452347764678}
   m_Layer: 5
   m_Name: Continue Button
   m_TagString: Untagged
@@ -3363,6 +3424,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5006068452347764678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3464733618730580745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &3500985131992543052
 GameObject:
   m_ObjectHideFlags: 0
@@ -6028,6 +6103,7 @@ GameObject:
   - component: {fileID: 4527800549189165152}
   - component: {fileID: 1143564256062218142}
   - component: {fileID: 6736291668437178490}
+  - component: {fileID: 3651151585666085306}
   m_Layer: 5
   m_Name: Confirm Button
   m_TagString: Untagged
@@ -6050,9 +6126,9 @@ RectTransform:
   - {fileID: 7504208467343758433}
   m_Father: {fileID: 4290281420609213320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 355, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4527800549189165152
@@ -6137,6 +6213,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3651151585666085306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5937727026795308937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &5953416659148197098
 GameObject:
   m_ObjectHideFlags: 0
@@ -6990,6 +7080,7 @@ GameObject:
   - component: {fileID: 2348254507011264125}
   - component: {fileID: 8844036200610206181}
   - component: {fileID: 286542362630342886}
+  - component: {fileID: 5120469966894424226}
   m_Layer: 5
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -7012,9 +7103,9 @@ RectTransform:
   - {fileID: 7819735287275408222}
   m_Father: {fileID: 4290281420609213320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 545, y: -25}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2348254507011264125
@@ -7099,6 +7190,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5120469966894424226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6996754562182344943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &7106591592256207919
 GameObject:
   m_ObjectHideFlags: 0
@@ -7342,6 +7447,7 @@ GameObject:
   - component: {fileID: 4170350006020506445}
   - component: {fileID: 3964785960159684195}
   - component: {fileID: 3811823232253120562}
+  - component: {fileID: 2630913866754774549}
   m_Layer: 5
   m_Name: Give up Button
   m_TagString: Untagged
@@ -7365,9 +7471,9 @@ RectTransform:
   - {fileID: 2920647977230878094}
   m_Father: {fileID: 3402976018821494188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190, y: -87.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4170350006020506445
@@ -7452,6 +7558,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2630913866754774549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7400675570020519232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &7518629018229741245
 GameObject:
   m_ObjectHideFlags: 0
@@ -7464,6 +7584,7 @@ GameObject:
   - component: {fileID: 3602059271812079534}
   - component: {fileID: 2925257653909238596}
   - component: {fileID: 3479708196432473635}
+  - component: {fileID: 288484282241736514}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -7574,6 +7695,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &288484282241736514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7518629018229741245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &7647890685219820938
 GameObject:
   m_ObjectHideFlags: 0
@@ -7766,6 +7901,7 @@ GameObject:
   - component: {fileID: 7152849766140039110}
   - component: {fileID: 1278131677777160093}
   - component: {fileID: 8440920076441460747}
+  - component: {fileID: 8656438465655076433}
   m_Layer: 5
   m_Name: Option Button
   m_TagString: Untagged
@@ -7789,9 +7925,9 @@ RectTransform:
   - {fileID: 274666833390249078}
   m_Father: {fileID: 3402976018821494188}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190, y: -150}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7152849766140039110
@@ -7876,6 +8012,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8656438465655076433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8089135889344312250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &8348706219860201648
 GameObject:
   m_ObjectHideFlags: 0
@@ -8425,6 +8575,7 @@ GameObject:
   - component: {fileID: 5346661973519866456}
   - component: {fileID: 4968612619273247051}
   - component: {fileID: 7308112899218184281}
+  - component: {fileID: 5615255238438829573}
   m_Layer: 5
   m_Name: Exit Button
   m_TagString: Untagged
@@ -8534,6 +8685,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5615255238438829573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843462665037856508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1 &8913463461512042364
 GameObject:
   m_ObjectHideFlags: 0
@@ -9282,20 +9447,168 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6191277464039457007, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9096343325031878753}
+    - targetCorrespondingSourceObject: {fileID: 2907317566037465171, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7307634166030813232}
+    - targetCorrespondingSourceObject: {fileID: 4378457995815345976, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7908626796804724138}
+    - targetCorrespondingSourceObject: {fileID: 306414810728396897, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3357932906278984708}
+    - targetCorrespondingSourceObject: {fileID: 3915608477006342619, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1139339422038931580}
+    - targetCorrespondingSourceObject: {fileID: 8502465137079080783, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1869752279263257676}
+    - targetCorrespondingSourceObject: {fileID: 450038552136799967, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6139085137354674917}
+    - targetCorrespondingSourceObject: {fileID: 5341628377736428814, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8473330228122476232}
+    - targetCorrespondingSourceObject: {fileID: 2531064674810969059, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2445148952326665254}
+    - targetCorrespondingSourceObject: {fileID: 1684920004658091105, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2956235882224948393}
+    - targetCorrespondingSourceObject: {fileID: 3869484375962662238, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1594389090742421192}
+    - targetCorrespondingSourceObject: {fileID: 3403738109463095274, guid: e9b6a24773146cf409f4c229310a1bba,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2822016616215372857}
   m_SourcePrefab: {fileID: 100100000, guid: e9b6a24773146cf409f4c229310a1bba, type: 3}
+--- !u!1 &40838519931359372 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1684920004658091105, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2956235882224948393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 40838519931359372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!114 &691955810084035293 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2191368040956993072, guid: e9b6a24773146cf409f4c229310a1bba,
     type: 3}
   m_PrefabInstance: {fileID: 1725757973742028013}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2468029985355248051}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1282897067947676210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 450038552136799967, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6139085137354674917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282897067947676210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &1419624672694336652 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 306414810728396897, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3357932906278984708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419624672694336652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &2424087316529786166 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3915608477006342619, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1139339422038931580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2424087316529786166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &2468029985355248051 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3869484375962662238, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1594389090742421192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2468029985355248051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!114 &2568056386561437366 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3769669116422253147, guid: e9b6a24773146cf409f4c229310a1bba,
@@ -9314,12 +9627,152 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1725757973742028013}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4093664846182146823}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3112119158041205717 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4378457995815345976, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7908626796804724138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3112119158041205717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &3806450236278488846 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2531064674810969059, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2445148952326665254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3806450236278488846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &4093664846182146823 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3403738109463095274, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2822016616215372857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4093664846182146823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &4587974328181300414 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2907317566037465171, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7307634166030813232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4587974328181300414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &4762778394511606786 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6191277464039457007, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &9096343325031878753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4762778394511606786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &6760563909583780323 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5341628377736428814, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8473330228122476232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6760563909583780323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
+--- !u!1 &7065529088052351906 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8502465137079080783, guid: e9b6a24773146cf409f4c229310a1bba,
+    type: 3}
+  m_PrefabInstance: {fileID: 1725757973742028013}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1869752279263257676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7065529088052351906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!224 &7396715961460044459 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8166563524784993862, guid: e9b6a24773146cf409f4c229310a1bba,
@@ -10513,7 +10966,11 @@ PrefabInstance:
     - {fileID: 2711845955255358154, guid: 1b6b294d00b9add45a55881d07609686, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2435307024440470857, guid: 1b6b294d00b9add45a55881d07609686,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3616983924194199743}
   m_SourcePrefab: {fileID: 100100000, guid: 1b6b294d00b9add45a55881d07609686, type: 3}
 --- !u!114 &135848910317593090 stripped
 MonoBehaviour:
@@ -10575,7 +11032,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 6873489681498592480}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 9126677304859228585}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
@@ -10635,6 +11092,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &9126677304859228585 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2435307024440470857, guid: 1b6b294d00b9add45a55881d07609686,
+    type: 3}
+  m_PrefabInstance: {fileID: 6873489681498592480}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3616983924194199743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9126677304859228585}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2ceef2cb73fde4f908b93813ef56c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hoverKey: gun_submachine_auto_magazine_safety_switch_02
+  clickKey: gun_submachine_auto_magazine_load_01
 --- !u!1001 &8632992622986249982
 PrefabInstance:
   m_ObjectHideFlags: 0

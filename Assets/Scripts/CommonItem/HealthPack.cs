@@ -63,6 +63,8 @@ public class HealthPack : MonoBehaviour, IInteractable
             );
             abilitySystem.ApplyEffect(healEffect);
             
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Health.Recovery);
+            
             onChooseItem?.Invoke();
             Destroy(gameObject);
         }

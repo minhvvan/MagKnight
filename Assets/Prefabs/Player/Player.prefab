@@ -276,7 +276,7 @@ MonoBehaviour:
     RenderingBoundsMinDistanceFix: 0
   findRenderers: 0
   renderers: []
-  id: -1
+  id: 1
   showRenderBounds: 0
   showScreenAdjustedRenderBounds: 0
   highlighterName: 
@@ -3326,6 +3326,8 @@ MonoBehaviour:
       Value: {fileID: 6575478012002503276}
     - Key: 2
       Value: {fileID: 5320577145862287676}
+    - Key: 3
+      Value: {fileID: 6575478012002503276}
   _currentWeapon: {fileID: 0}
   currentMagCore: {fileID: 0}
 --- !u!114 &3871821562387904727
@@ -3356,6 +3358,8 @@ MonoBehaviour:
       Value: {fileID: 9100000, guid: b7c146d79b5d0df4bbddbb87906b0bc6, type: 2}
     - Key: 2
       Value: {fileID: 9100000, guid: 0fa7b19c9c9aa164aa68bcd8e2611daa, type: 2}
+    - Key: 3
+      Value: {fileID: 9100000, guid: 9df9ad061858b46b79025abe334b653d, type: 2}
   cameraSettings: {fileID: 0}
   parryWindow: 0.2
   parrySlowAmount: 0.2
