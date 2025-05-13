@@ -43,12 +43,24 @@ public class Boss : Enemy
                 blackboard.enemyRenderer.material.SetFloat("_Intensity", 1);
                 SetAnimFloat("AttackSpeed", 2f);
             }
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Growl.Growl1);
         }
     }    
 
     public void PatternAttackStart(int patternIndex)
     {
         patternController.AttackStart(patternIndex);
+
+        switch (patternIndex)
+        {
+            case 0:
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Attack.Impact);
+                break;
+            case 1:
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Boom.Impact);
+                break;
+        }
     }
 
     public void PatternAttackEnd(int patternIndex)
@@ -89,6 +101,8 @@ public class Boss : Enemy
             GameObject vfxObject = VFXManager.Instance.TriggerVFX(VFXType.MAGNETIC_SHIELD_S, transform, barrierPos, Quaternion.identity, returnAutomatically:false);
             CheckBuffEndTime("BarrierS", VFXType.MAGNETIC_SHIELD_S, vfxObject).Forget();
         }
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Shield.Shield1);
     }
 
     private async UniTask CheckBuffEndTime(string tag, VFXType type, GameObject vfxObject)
@@ -127,6 +141,8 @@ public class Boss : Enemy
     public void Missile(GameObject missileEffect)
     {
         float duration = 1.5f;
+        
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Enemy.Attack.ShortVulcan.BurstShot);
         
         _missileCancellationToken = new CancellationTokenSource();
         GameObject effect = Instantiate(missileEffect, blackboard.target.transform.position, Quaternion.identity);
