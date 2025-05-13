@@ -75,6 +75,7 @@ public class StatusUIController : MonoBehaviour
         
         //현재 체력 변경
         healthBar.SetFillAmount(currentHealth / newMaxHealth, true);
+        healthBar.SetValue(currentHealth, newMaxHealth);
     }
 
     private void ChangedCurrentHealth(float newHealth)
@@ -88,7 +89,8 @@ public class StatusUIController : MonoBehaviour
         var maxHealth = _attributeSet.GetValue(AttributeType.MaxHP);
         
         //현재 체력 변경
-        healthBar.SetFillAmount(newHealth / maxHealth, true);
+        healthBar.SetFillAmount(newHealth / maxHealth, true);   
+        healthBar.SetValue(newHealth, maxHealth);     
     }
     
     private void ChangedMaxSkillGauge(float newMaxSkillGauge)
@@ -101,8 +103,8 @@ public class StatusUIController : MonoBehaviour
 
         var currentSkillGauge = _attributeSet.GetValue(AttributeType.SkillGauge);
         
-        //현재 체력 변경
         skillBar.SetFillAmount(currentSkillGauge / newMaxSkillGauge, true);
+        skillBar.SetValue(currentSkillGauge, newMaxSkillGauge);
     }
 
     private void ChangedCurrentSkillGauge(float newSkillGauge)
@@ -115,8 +117,8 @@ public class StatusUIController : MonoBehaviour
 
         var maxSkillGauge = _attributeSet.GetValue(AttributeType.MaxSkillGauge);
         
-        //현재 체력 변경
         skillBar.SetFillAmount(newSkillGauge / maxSkillGauge, true);
+        skillBar.SetValue(newSkillGauge, maxSkillGauge);
     }
 
     public void SetPolarityChange(MagneticType magneticType)
