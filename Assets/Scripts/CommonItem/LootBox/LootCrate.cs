@@ -87,6 +87,8 @@ public class LootCrate : MonoBehaviour, IInteractable
             vfxObj.transform.localScale = new Vector3(4,4,4);
         }
         
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.Item.LootCreate);
+        
         await UniTask.WaitUntil(()=>_animator.GetCurrentAnimatorStateInfo(0).IsName(Constants.CrateOpen) 
                                     && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f, cancellationToken: _cts.Token);
         
@@ -98,7 +100,9 @@ public class LootCrate : MonoBehaviour, IInteractable
                 (crateCategory,crateRarity,itemPoint[i].position,Quaternion.identity, parent: itemPoint[i]);
             item.TryGetComponent(out Rigidbody rb);
             rb.isKinematic = true;
-
+            
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.Item.ItemCreate);
+            
             if (!rarityVfxObjects.IsUnityNull())
             {
                 var flashVfx = Instantiate(rarityVfxObjects[crateRarity][2], item.transform);
