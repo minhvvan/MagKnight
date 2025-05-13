@@ -159,7 +159,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
                 {
                     var target = new GameObject()
                     {
-                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
+                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 3 }
                     };
             
                     playerController.MoveForce(target.transform);
