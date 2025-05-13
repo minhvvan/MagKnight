@@ -1062,6 +1062,11 @@ namespace Moon
         public void MeleeAttackStart(int throwing = 0)
         {
             _weaponHandler.AttackStart();
+        }        
+        
+        public void SetAttackLevel(float damageLevel)
+        {
+            _weaponHandler.SetAttackLevel(damageLevel);
         }
 
         public void MeleeAttackEnd()
