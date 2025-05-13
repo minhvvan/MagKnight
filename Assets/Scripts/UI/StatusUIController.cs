@@ -4,14 +4,27 @@ using System.Collections.Generic;
 using Jun;
 using Moon;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StatusUIController : MonoBehaviour
 {
     [SerializeField] public BarController healthBar;
     [SerializeField] private BarController skillBar;
+    [SerializeField] private Image magnetIcon;
     
     private PlayerAttributeSet _attributeSet;
     
+
+    void OnEnable()
+    {
+        PlayerEvent.OnPolarityChange += SetPolarityChange;
+    }
+
+    void OnDisable()
+    {
+        PlayerEvent.OnPolarityChange -= SetPolarityChange;
+    }
+
     public void BindAttributeChanges(AbilitySystem abilitySystem)
     {
         //attributeSet 받아오기
@@ -104,5 +117,17 @@ public class StatusUIController : MonoBehaviour
         
         //현재 체력 변경
         skillBar.SetFillAmount(newSkillGauge / maxSkillGauge, true);
+    }
+
+    public void SetPolarityChange(MagneticType magneticType)
+    {
+        if (magneticType == MagneticType.S)
+        {
+            magnetIcon.color = new Color(0, 0.4f, 1f, 1f);
+        }
+        else
+        {
+            magnetIcon.color = Color.red;
+        }
     }
 }

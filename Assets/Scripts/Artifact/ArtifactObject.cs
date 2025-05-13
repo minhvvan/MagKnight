@@ -16,7 +16,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     public string itemDescription;
     public int scrapValue;
     
-    public Action onChooseItem;
+    public Action<GameObject> onChooseItem;
     private Rigidbody rb;
     private Collider col;
     private bool _isStake;
@@ -53,7 +53,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
             UIManager.Instance.ShowArtifactInventoryUI(artifactDataSO);
-            onChooseItem?.Invoke();
+            onChooseItem?.Invoke(gameObject);
             Destroy(gameObject);
         }
     }
@@ -73,7 +73,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
     //제거 연출 넣는 곳
     private void Dismantling()
     {
-        onChooseItem?.Invoke();
+        onChooseItem?.Invoke(gameObject);
         Destroy(gameObject);
     }
 

@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameScenes/battle.unity
     guid: 0bff03f5d1606914eb902e051bf06527
   - enabled: 1
+    path: Assets/Scenes/GameScenes/battle_1.unity
+    guid: d7dc9240fc7a040babc85500b291c217
+  - enabled: 1
     path: Assets/Scenes/GameScenes/trap.unity
     guid: 33681117567606b489b40f0a7d826c84
   - enabled: 1
