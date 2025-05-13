@@ -139,14 +139,12 @@ public class UpgradeStatPanelController : MonoBehaviour
                 break;
         }
         
-
-        if(statType == AttributeType.MaxHP)
-            OnClickButton?.Invoke(new GameplayEffect(EffectType.Instant, AttributeType.HP, 10f));
-        
         playerData.Currency -= upgradeCosts[currentLevel];
         currentLevel++;
         
         OnClickButton?.Invoke(upgradeEffect);
+        if(statType == AttributeType.MaxHP)
+            OnClickButton?.Invoke(new GameplayEffect(EffectType.Instant, AttributeType.HP, 10f));
     }
 
     public void UpdateLevel(PlayerData playerData)
