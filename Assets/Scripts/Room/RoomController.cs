@@ -81,7 +81,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         _roomIndex = index;
         Room = roomData;
         
-        if (Room is { roomType: RoomType.BattleRoom } or { roomType: RoomType.BoosRoom })
+        if (Room is { roomType: RoomType.BattleRoom } or { roomType: RoomType.BossRoom })
         {
             if (_enemyController)
             {
@@ -92,10 +92,20 @@ public class RoomController : MonoBehaviour, IObserver<bool>
 
     public void SetGateOpen(bool isOpen)
     {
+        var roomSceneController = RoomSceneController.Instance;
+        var currentData = GameManager.Instance.CurrentRunData;
+        
         //연결이 된 gate만 제어
         for (var dir = RoomDirection.East; dir < RoomDirection.Max; dir++)
         {
-            if(Room.connectedRooms[(int)dir] == Room.Empty || Room.connectedRooms[(int)dir] == Room.Blocked) continue; 
+            if(Room.connectedRooms[(int)dir] == Room.Empty || Room.connectedRooms[(int)dir] == Room.Blocked) continue;
+
+            if (isOpen)
+            {
+                var connectRoom = roomSceneController.GetRoom(Room.connectedRooms[(int)dir]);
+                gates[dir].ActiveGateSign(connectRoom.roomType, currentData.clearedRooms.Contains(Room.connectedRooms[(int)dir]));
+            }
+
             gates[dir].gameObject.SetActive(isOpen);
         }
         
@@ -149,7 +159,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
                 {
                     var target = new GameObject()
                     {
-                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 5 }
+                        transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 3 }
                     };
             
                     playerController.MoveForce(target.transform);
@@ -161,13 +171,13 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         BindGateIndicator();
         
         SetRoomReady(true);
-        if (Room.roomType is RoomType.BattleRoom or RoomType.BoosRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
+        if (Room.roomType is RoomType.BattleRoom or RoomType.BossRoom && !GameManager.Instance.CurrentRunData.clearedRooms.Contains(_roomIndex))
         {
             cancelTokenSource = new CancellationTokenSource();
             ChargeSkillGauge(cancelTokenSource.Token).Forget();
         }
 
-        if (Room.roomType is RoomType.BoosRoom)
+        if (Room.roomType is RoomType.BossRoom)
         {
             GameManager.Instance.ChangeGameState(GameState.BossRoom);
         }
