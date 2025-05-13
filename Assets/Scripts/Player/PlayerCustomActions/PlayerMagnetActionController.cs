@@ -405,7 +405,8 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
             //평타 공격,  plate의 hold가 해제될때
             if (_playerController.CanMagneticPlateHoldCancel())
             {
-                ElectricLine.HideEffect();
+                _electricLine.HideEffect();
+                plate.isHold = false;
                 plate.rb.isKinematic = false;
                 yield break;
             }
