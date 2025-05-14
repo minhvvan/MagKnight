@@ -62,6 +62,10 @@ MonoBehaviour:
         sceneName: trap
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 6
+      - roomTitle: "\uD568\uC815\uBC29"
+        sceneName: trap 1
+        connectedRooms: ffffffffffffffffffffffffffffffff
+        roomType: 6
   roomNumLimit:
     _serializedList:
     - Key: 1
