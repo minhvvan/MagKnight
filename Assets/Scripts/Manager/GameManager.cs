@@ -116,6 +116,9 @@ namespace hvvan
 
             switch (_currentState)
             {
+                case GameState.Title:
+                    AudioManager.Instance.PlayBGM(AudioBase.BGM.Title.Main);
+                    break;
                 case GameState.BaseCamp:
                     AudioManager.Instance.PlayBGM(AudioBase.BGM.BaseCamp.Main);
                     AudioManager.Instance.PlayBGMEnvironment(AudioBase.BGM.BaseCamp.Environment);
