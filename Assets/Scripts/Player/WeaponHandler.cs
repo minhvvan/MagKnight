@@ -80,7 +80,7 @@ public class WeaponHandler : MonoBehaviour
         var prevWeaponRarity = currentMagCore.rarity;
         var dropObj =
             ItemManager.Instance.CreateItem(prevWeaponCategory, prevWeaponRarity, newCorePos.position,
-                Quaternion.identity);
+                Quaternion.identity, itemName: currentMagCore.itemName);
 
         //TODO: 추후 MagCore강화수치 같은게 생길 시 아래를 통해 접근하여 반영
         var magCoreData = dropObj.GetComponent<MagCore>();
