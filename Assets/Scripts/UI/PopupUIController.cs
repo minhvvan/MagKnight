@@ -32,8 +32,7 @@ namespace Moon
                    confirmPopupUIController.isActiveAndEnabled ||
                    artifactInventoryUIController.isActiveAndEnabled ||
                    playerDetailUIController.isActiveAndEnabled ||
-                   upgradeStatUIController.isActiveAndEnabled ||
-                   productUIController.isActiveAndEnabled;
+                   upgradeStatUIController.isActiveAndEnabled;
                    
         }
 
