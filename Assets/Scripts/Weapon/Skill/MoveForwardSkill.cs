@@ -26,7 +26,7 @@ public class MoveForwardSkill : Skill
             GameplayEffect damageEffect = _damageEffect.DeepCopy();
             GameplayEffect resistanceEffect = _resistanceEffect.DeepCopy();
             
-            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage(3f);
+            (damageEffect.amount, damageEffect.extraData.isCritical) = GameManager.Instance.Player.GetAttackDamage(5f);
             damageEffect.extraData.hitInfo = hitInfo;
 
             var enemyASC = hitInfo.collider.gameObject.GetComponent<Enemy>().blackboard.abilitySystem;
