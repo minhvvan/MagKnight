@@ -9999,6 +9999,8 @@ MonoBehaviour:
   isMagneticHighlight: 1
   magneticPoint: {fileID: 6611125928177060321}
   magneticTargetPoint: {fileID: 9167112241919883350}
+  magnetPlate: {fileID: 0}
+  isGetPlate: 0
   blackboard: {fileID: -9020590846429547873}
   hpBarController: {fileID: 3013951018701927365}
   isDashing: 0
@@ -13278,6 +13280,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 672337549358336575}
     m_Modifications:
+    - target: {fileID: 4851554442916438182, guid: 236395a2a863a4344a559b65e86ea863,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5840411751001267297, guid: 236395a2a863a4344a559b65e86ea863,
         type: 3}
       propertyPath: m_Pivot.x
@@ -13382,6 +13389,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7015401879001805223, guid: 236395a2a863a4344a559b65e86ea863,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
