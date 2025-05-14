@@ -76,7 +76,7 @@ ModelImporter:
         intParameter: 0
         messageOptions: 0
       - time: 0.85683763
-        functionName: NewEvent
+        functionName: PlayFootStep
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

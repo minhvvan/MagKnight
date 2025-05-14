@@ -23,7 +23,7 @@ public class CurrencyUIController : MonoBehaviour
     public void UpdateScrap()
     {
         var currentRunData = GameManager.Instance.CurrentRunData;
-        var prevScrap = int.Parse(scrapText.text);
+        int.TryParse(scrapText.text, out int prevScrap);
         var newScrap = currentRunData.scrap;
         StartCoroutine(UpdateScrapAnim(prevScrap, newScrap));
     }

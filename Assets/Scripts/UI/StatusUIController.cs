@@ -1,17 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Jun;
 using Moon;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StatusUIController : MonoBehaviour
 {
     [SerializeField] public BarController healthBar;
     [SerializeField] private BarController skillBar;
+    [SerializeField] private Image magnetIcon;
+    [SerializeField] private RectTransform magnetIconRectTransform;
     
     private PlayerAttributeSet _attributeSet;
     
+
+    void OnEnable()
+    {
+        PlayerEvent.OnPolarityChange += SetPolarityChange;
+    }
+
+    void OnDisable()
+    {
+        PlayerEvent.OnPolarityChange -= SetPolarityChange;
+    }
+
     public void BindAttributeChanges(AbilitySystem abilitySystem)
     {
         //attributeSet 받아오기
@@ -62,6 +77,7 @@ public class StatusUIController : MonoBehaviour
         
         //현재 체력 변경
         healthBar.SetFillAmount(currentHealth / newMaxHealth, true);
+        healthBar.SetValue(currentHealth, newMaxHealth);
     }
 
     private void ChangedCurrentHealth(float newHealth)
@@ -75,7 +91,8 @@ public class StatusUIController : MonoBehaviour
         var maxHealth = _attributeSet.GetValue(AttributeType.MaxHP);
         
         //현재 체력 변경
-        healthBar.SetFillAmount(newHealth / maxHealth, true);
+        healthBar.SetFillAmount(newHealth / maxHealth, true);   
+        healthBar.SetValue(newHealth, maxHealth);     
     }
     
     private void ChangedMaxSkillGauge(float newMaxSkillGauge)
@@ -88,8 +105,8 @@ public class StatusUIController : MonoBehaviour
 
         var currentSkillGauge = _attributeSet.GetValue(AttributeType.SkillGauge);
         
-        //현재 체력 변경
         skillBar.SetFillAmount(currentSkillGauge / newMaxSkillGauge, true);
+        skillBar.SetValue(currentSkillGauge, newMaxSkillGauge);
     }
 
     private void ChangedCurrentSkillGauge(float newSkillGauge)
@@ -102,7 +119,27 @@ public class StatusUIController : MonoBehaviour
 
         var maxSkillGauge = _attributeSet.GetValue(AttributeType.MaxSkillGauge);
         
-        //현재 체력 변경
         skillBar.SetFillAmount(newSkillGauge / maxSkillGauge, true);
+        skillBar.SetValue(newSkillGauge, maxSkillGauge);
+    }
+
+    public void SetPolarityChange(MagneticType magneticType)
+    {
+        magnetIconRectTransform.DOKill();
+        magnetIconRectTransform.localScale = Vector3.one;
+        magnetIconRectTransform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 1, 0.5f).OnComplete(() =>
+        {
+            magnetIconRectTransform.localScale = Vector3.one;
+        });
+
+        if (magneticType == MagneticType.S)
+        {
+            magnetIcon.DOColor(new Color(0, 0.4f, 1f, 1f), 0.5f);
+        }
+        else
+        {
+            //magnetIcon.color = Color.red;
+            magnetIcon.DOColor(new Color(1f, 0.1f, 0, 1f), 0.5f);
+        }
     }
 }

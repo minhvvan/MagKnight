@@ -319,6 +319,8 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     
     public void OnDamaged(ExtraData extraData)
     {
+        if(blackboard.isDead) return;
+        
         // 체력바 감소
         hpBarController.SetHP(blackboard.abilitySystem.GetValue(AttributeType.HP)/blackboard.abilitySystem.GetValue(AttributeType.MaxHP));
         
@@ -326,6 +328,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
 
         // 피격 효과
         VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType, transform);
+
+        //콤보시스템 카운팅 추가
+        UIManager.Instance.inGameUIController.AddCombo();
 
         if(extraData.isCritical)
         {

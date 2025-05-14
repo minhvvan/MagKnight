@@ -365,6 +365,8 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
         var playerCollider = transform.GetComponent<Collider>();
         var playerCenterPos = Vector3.zero;
         var handle = _playerController.WeaponHandler.GetHandTransform();
+        plateTransform.gameObject.layer = LayerMask.NameToLayer("Environment");
+        
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -397,21 +399,24 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
     //철판 전방에 홀딩
     IEnumerator MagnetPlateHoldCoroutine(Transform plateTransform, MagnetPlate plate)
     {
+        LayerMask magneticLayer = LayerMask.NameToLayer("Magnetic");
         var playerCollider = transform.GetComponent<Collider>();
         var handle = _playerController.WeaponHandler.GetHandTransform();
         plate.rb.isKinematic = true;
         while (true)
         {
             //평타 공격,  plate의 hold가 해제될때
-            if (_playerController.CanMagneticPlateHoldCancel())
+            if (_playerController.CanMagneticPlateHoldCancel() || !plate.gameObject.activeInHierarchy )
             {
                 _electricLine.HideEffect();
+                plate.gameObject.layer =  magneticLayer;
                 plate.isHold = false;
                 plate.rb.isKinematic = false;
                 yield break;
             }
             if (!plate.isHold)
             {
+                plate.gameObject.layer =  magneticLayer;
                 plate.rb.isKinematic = false;
                 yield break;
             }
@@ -431,12 +436,10 @@ public void StartMagnetPlate(MagneticObject caster, MagneticObject target, bool 
         float elapsed = 0f;
         var handle = _playerController.WeaponHandler.GetHandTransform();
         var plateTransform = plate.magneticPoint;
-        plate.OnHitDetect(true);
-
-        var rotationSpeed = 10f;
-        
         plate.transform.Rotate(new Vector3(45f,0,0));
         var rotateSpeed = new Vector3(0,0,600f);
+        
+        plate.OnHitDetect(true);
         
         while (elapsed < duration)
         {

@@ -65,6 +65,7 @@ public class BossStatusUIController : MonoBehaviour
         
         //현재 체력 변경
         _healthBar.SetFillAmount(currentHealth / newMaxHealth, false);
+        _healthBar.SetValue(currentHealth, newMaxHealth);
     }
 
     private void ChangedCurrentHealth(float newHealth)
@@ -85,6 +86,7 @@ public class BossStatusUIController : MonoBehaviour
         }
 
         _healthBar.SetFillAmount(newHealth / maxHealth, isSmooth);
+        _healthBar.SetValue(newHealth, maxHealth);
     }
 
     public void Show()

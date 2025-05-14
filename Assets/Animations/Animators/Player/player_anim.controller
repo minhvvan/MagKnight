@@ -4043,7 +4043,7 @@ AnimatorStateMachine:
     m_Position: {x: 180, y: -240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3812310177599965562}
-    m_Position: {x: 990, y: -130, z: 0}
+    m_Position: {x: 990, y: -100, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: 1107267585127195014}

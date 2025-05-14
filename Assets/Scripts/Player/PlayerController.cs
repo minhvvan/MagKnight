@@ -179,6 +179,8 @@ namespace Moon
             _inputHandler.SwitchMagneticInput = SwitchMagneticInput;
             
             _originalFixedDeltaTime = Time.fixedDeltaTime; // 패링 슬로우모션 용
+
+            PlayerEvent.TriggerPolarityChange(_magneticController.GetMagneticType());
         }
         
         //명시적 초기화
@@ -1099,6 +1101,7 @@ namespace Moon
             _weaponHandler.ActivateMagnetSwitchEffect(_abilitySystem, magneticType);
 
             _effect.SwitchPolarity(magneticType, .5f);
+            PlayerEvent.TriggerPolarityChange(magneticType);
         }
 
         public void UpgradeParts()

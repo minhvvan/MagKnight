@@ -364,45 +364,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028098493031917629, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4842937009704941497, guid: 1d73c9e6a276341e18e169bc156354ff,
         type: 3}
       propertyPath: m_Name
       value: InGameCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7628206049506123805, guid: 1d73c9e6a276341e18e169bc156354ff,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1561,8 +1526,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC774\uC5B4\uD558\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 0a252b898cff6470b80d0cf9ac45a65a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1958,8 +1923,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uCC98\uC74C\uBD80\uD130"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 0a252b898cff6470b80d0cf9ac45a65a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

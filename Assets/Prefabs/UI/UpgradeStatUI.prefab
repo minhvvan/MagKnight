@@ -150,6 +150,9 @@ MonoBehaviour:
   moveSpeedPanel: {fileID: 311868875569942692}
   magneticRangePanel: {fileID: 7877526146321831497}
   magneticPowerPanel: {fileID: 6417827876650924491}
+  rectTransform: {fileID: 0}
+  confirmButton: {fileID: 0}
+  returnButton: {fileID: 0}
   _playerData:
     PlayerStat:
       MaxHP:
@@ -719,9 +722,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB418\uB3CC\uB9AC\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 3266036449564707099, guid: 1ee3f21609bb3427fa87a59076ce03c8,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -745,8 +747,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -854,9 +856,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 3266036449564707099, guid: 1ee3f21609bb3427fa87a59076ce03c8,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1064,9 +1065,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uACB0 \uC815"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 3266036449564707099, guid: 1ee3f21609bb3427fa87a59076ce03c8,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1090,8 +1090,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 16
-  m_fontSizeBase: 16
+  m_fontSize: 19
+  m_fontSizeBase: 19
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

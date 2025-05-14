@@ -18,9 +18,9 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     [SerializeField] private LastGate nextFloorGate;
     [SerializeField] private ClearRoomField clearRoomField;
     [SerializeField] private bool hasReward;
+    [SerializeField] private NavMeshData _loadedNavMeshData;
 
     private EnemyController _enemyController;
-    private NavMeshData _loadedNavMeshData;
     private NavMeshSurface _navMeshSurface;
     
     private int _roomIndex;
@@ -120,7 +120,6 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     {
         if (_navMeshSurface)
         {
-            await LoadNavMeshData();
             _navMeshSurface.navMeshData = _loadedNavMeshData;
         }
         
@@ -245,7 +244,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     {
         //TODO: 파츠도 생성되도록 랜덤 추가
         var rotation = Quaternion.Euler(0, 180, 0);
-        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), rotation);
+        ItemManager.Instance.SpawnLootCrate(ItemCategory.Artifact, ItemRarity.Common, new Vector3(0,1f,0), rotation, Room.roomType is RoomType.BossRoom);
     }
 
     public void SetRoomReady(bool isEnable)
