@@ -113,6 +113,8 @@ public class InteractionController : MonoBehaviour
     private void FindClosestInteractable()
     {
         if (!_mainCamera) return;
+        if (UIManager.Instance.inGameUIController == null) return;
+        
         var targetPoint = GetStartPoint();
         
         //범위 내 감지
