@@ -1103,11 +1103,7 @@ namespace Moon
             _effect.SwitchPolarity(magneticType, .5f);
             PlayerEvent.TriggerPolarityChange(magneticType);
         }
-
-        public void UpgradeParts()
-        {
-            _weaponHandler.UpgradeCurrentParts();
-        }
+        
         #endregion
         
         private void RecoverArtifact(CurrentRunData currentRunData)

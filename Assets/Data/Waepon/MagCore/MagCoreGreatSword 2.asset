@@ -15,8 +15,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 169d45648e00348038299fc345aa6b4f, type: 3}
   itemName: "\uBCF4\uAE09\uD615 \uB300\uAC80 - \uD761\uD608"
   description: "\uB300\uAC80 \uAE30\uBCF8\uD615. - \uD761\uD608 \uCE7C\uB0A0"
-  scrapValue: 35
-  maxUpgradeLevel: 3
+  scrapValue: 400
+  maxUpgradeLevel: 4
   weaponType: 1
   partsType: 3
   passiveEffects:
@@ -28,7 +28,7 @@ MonoBehaviour:
         effect:
           effectType: 0
           attributeType: 1
-          amount: 3
+          amount: 1
           duration: 5
           period: 0
           damageType: 0
@@ -50,7 +50,7 @@ MonoBehaviour:
         effect:
           effectType: 0
           attributeType: 1
-          amount: 5
+          amount: 3
           duration: 5
           period: 0
           damageType: 0
@@ -66,6 +66,28 @@ MonoBehaviour:
         hasCount: 0
         triggerCount: 0
     - Key: 2
+      Value:
+      - triggerChance: 0.07
+        triggerEvent: 0
+        effect:
+          effectType: 0
+          attributeType: 1
+          amount: 5
+          duration: 5
+          period: 0
+          damageType: 0
+          tracking: 1
+          maxStack: 4
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+    - Key: 3
       Value:
       - triggerChance: 0.07
         triggerEvent: 0
@@ -95,6 +117,8 @@ MonoBehaviour:
       Value: []
     - Key: 2
       Value: []
+    - Key: 3
+      Value: []
   magnetEffectDuration: 5
   magnetPassiveEffects:
     _serializedList:
@@ -105,7 +129,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 3
+          amount: 1
           duration: 5
           period: 0.5
           damageType: 6
@@ -147,7 +171,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 5
+          amount: 2
           duration: 5
           period: 0.5
           damageType: 6
@@ -189,10 +213,10 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 8
-          amount: 0.7
+          amount: 3
           duration: 5
           period: 0.5
-          damageType: 0
+          damageType: 6
           tracking: 0
           maxStack: 0
           extraData:
@@ -209,7 +233,49 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 1
-          amount: 0.35
+          amount: 0.3
+          duration: 5
+          period: 0.5
+          damageType: 0
+          tracking: 0
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+    - Key: 3
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 8
+          amount: 5
+          duration: 5
+          period: 0.5
+          damageType: 6
+          tracking: 0
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 1
+        hasCount: 0
+        triggerCount: 0
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 1
+          amount: 0.5
           duration: 5
           period: 0.5
           damageType: 0
@@ -231,4 +297,6 @@ MonoBehaviour:
     - Key: 1
       Value: []
     - Key: 2
+      Value: []
+    - Key: 3
       Value: []

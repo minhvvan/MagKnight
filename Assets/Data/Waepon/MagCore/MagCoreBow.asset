@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: "\uBCF4\uAE09\uD615 \uD65C - \uC2E0\uC18D"
   description: "\uAD6C\uC2DC\uB300\uC758 \uC0B0\uBB3C\uC774\uC9C0\uB9CC \uC5EC\uC804\uD788
     \uC704\uD611\uC801\uC778 \uC7A5\uBE44\uB2E4."
-  scrapValue: 25
-  maxUpgradeLevel: 3
+  scrapValue: 200
+  maxUpgradeLevel: 4
   weaponType: 2
   partsType: 1
   passiveEffects:
@@ -51,7 +51,7 @@ MonoBehaviour:
         effect:
           effectType: 1
           attributeType: 6
-          amount: 0.2
+          amount: 0.15
           duration: 2
           period: 0
           damageType: 0
@@ -67,6 +67,28 @@ MonoBehaviour:
         hasCount: 0
         triggerCount: 0
     - Key: 2
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 6
+          amount: 0.2
+          duration: 3
+          period: 0
+          damageType: 0
+          tracking: 1
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
+    - Key: 3
       Value:
       - triggerChance: 1
         triggerEvent: 0
@@ -95,6 +117,8 @@ MonoBehaviour:
     - Key: 1
       Value: []
     - Key: 2
+      Value: []
+    - Key: 3
       Value: []
   magnetEffectDuration: 5
   magnetPassiveEffects:
@@ -165,6 +189,28 @@ MonoBehaviour:
         isTarget: 1
         hasCount: 1
         triggerCount: 3
+    - Key: 3
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 0
+          attributeType: 8
+          amount: 30
+          duration: 0
+          period: 0
+          damageType: 0
+          tracking: 0
+          maxStack: 0
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 1
+        hasCount: 1
+        triggerCount: 5
   magnetGameplayEffects:
     _serializedList:
     - Key: 0
@@ -172,4 +218,6 @@ MonoBehaviour:
     - Key: 1
       Value: []
     - Key: 2
+      Value: []
+    - Key: 3
       Value: []

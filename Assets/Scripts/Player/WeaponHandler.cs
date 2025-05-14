@@ -96,12 +96,6 @@ public class WeaponHandler : MonoBehaviour
         
         Destroy(currentMagCore.gameObject);
     }
-
-    //착용중인 파츠의 레벨 업그레이드
-    public void UpgradeCurrentParts()
-    {
-        if(currentMagCore != null) currentMagCore.Upgrade(_abilitySystem);
-    }
     
     //극성 전환 효과 활성화
     public void ActivateMagnetSwitchEffect(AbilitySystem abilitySystem, MagneticType type)

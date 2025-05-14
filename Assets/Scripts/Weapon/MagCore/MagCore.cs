@@ -82,6 +82,8 @@ public class MagCore: MonoBehaviour, IInteractable
     public void SetItemClass((ItemCategory, ItemRarity) itemClass)
     {
         (category, rarity) = itemClass;
+        currentUpgradeValue = (int)rarity;
+        scrapValue *= (int)(rarity+1);
     }
     
     public void SetPartsEffect(AbilitySystem abilitySystem)
@@ -100,20 +102,7 @@ public class MagCore: MonoBehaviour, IInteractable
     {
         return _magCoreSO;
     }
-
-    public void Upgrade(AbilitySystem abilitySystem)
-    {
-        if (currentUpgradeValue == _magCoreSO.maxUpgradeLevel)
-        {
-            Debug.Log("Upgrade Part Max Level");
-            return;
-        }
-        RemovePartsEffect(abilitySystem);
-        currentUpgradeValue += 1;
-        //Debug.Log("LEVEL: " + currentUpgradeValue);
-        SetPartsEffect(abilitySystem);
-    }
-
+    
     public async void Interact(IInteractor interactor)
     {
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))

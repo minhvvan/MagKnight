@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: "\uBCF4\uAE09\uD615 \uD65C - \uC18D\uACF5"
   description: "\uAD6C\uC2DC\uB300\uC758 \uC0B0\uBB3C\uC774\uC9C0\uB9CC \uC5EC\uC804\uD788
     \uC704\uD611\uC801\uC778 \uC7A5\uBE44\uB2E4."
-  scrapValue: 25
-  maxUpgradeLevel: 3
+  scrapValue: 200
+  maxUpgradeLevel: 4
   weaponType: 2
   partsType: 2
   passiveEffects:
@@ -88,6 +88,28 @@ MonoBehaviour:
         isTarget: 0
         hasCount: 0
         triggerCount: 0
+    - Key: 3
+      Value:
+      - triggerChance: 1
+        triggerEvent: 0
+        effect:
+          effectType: 1
+          attributeType: 7
+          amount: 0.1
+          duration: 6
+          period: 0
+          damageType: 0
+          tracking: 1
+          maxStack: 4
+          extraData:
+            sourceTransform: {fileID: 0}
+            weaponRange: 0
+            isCritical: 0
+            damageType: 0
+            finalAmount: 0
+        isTarget: 0
+        hasCount: 0
+        triggerCount: 0
   gameplayEffects:
     _serializedList:
     - Key: 0
@@ -95,6 +117,8 @@ MonoBehaviour:
     - Key: 1
       Value: []
     - Key: 2
+      Value: []
+    - Key: 3
       Value: []
   magnetEffectDuration: 5
   magnetPassiveEffects:
@@ -105,13 +129,15 @@ MonoBehaviour:
       Value: []
     - Key: 2
       Value: []
+    - Key: 3
+      Value: []
   magnetGameplayEffects:
     _serializedList:
     - Key: 0
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 0.5
+        amount: 0.3
         duration: 0
         period: 0
         damageType: 0
@@ -127,7 +153,7 @@ MonoBehaviour:
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 0.55
+        amount: 0.35
         duration: 0
         period: 0
         damageType: 0
@@ -143,7 +169,23 @@ MonoBehaviour:
       Value:
       - effectType: 2
         attributeType: 7
-        amount: 0.6
+        amount: 0.4
+        duration: 0
+        period: 0
+        damageType: 0
+        tracking: 0
+        maxStack: 0
+        extraData:
+          sourceTransform: {fileID: 0}
+          weaponRange: 0
+          isCritical: 0
+          damageType: 0
+          finalAmount: 0
+    - Key: 3
+      Value:
+      - effectType: 2
+        attributeType: 7
+        amount: 0.5
         duration: 0
         period: 0
         damageType: 0
