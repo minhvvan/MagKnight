@@ -1,6 +1,7 @@
 using System;
 using AYellowpaper.SerializedCollections;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 public enum GateSignType
@@ -21,14 +22,7 @@ public class Gate : MonoBehaviour
     public Transform indicatorPoint;
     public SerializedDictionary<GateSignType, GameObject> gateSigns = new();
 
-    void OnEnable()
-    {
-        GetComponent<Collider>().enabled = false;
-        _ = UniTask.Delay(3000).ContinueWith(() =>
-        {
-            GetComponent<Collider>().enabled = true;
-        });
-    }
+    public int gateOpenDuration = 3;
 
     void OnTriggerEnter(Collider other)
     {
@@ -52,7 +46,24 @@ public class Gate : MonoBehaviour
         
         foreach (var (type, sign) in gateSigns)
         {
-            sign.SetActive(type == activeSign);
+            if (type == activeSign)
+            {
+                sign.SetActive(true);
+                
+                GetComponent<Collider>().enabled = false;
+                _ = UniTask.Delay(gateOpenDuration * 1000).ContinueWith(() =>
+                {
+                    GetComponent<Collider>().enabled = true;
+                });
+                
+                var particle = sign.GetComponentInChildren<ParticleSystem>();
+                particle.transform.DOScale(0f, 0f);
+                particle.transform.DOScale(2f, gateOpenDuration);
+            }
+            else
+            {
+                sign.SetActive(false);
+            }
         }
     }
 }
