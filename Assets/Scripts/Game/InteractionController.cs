@@ -65,7 +65,6 @@ public class InteractionController : MonoBehaviour
                     artifactObject.Dismantle(_interactor);
                 }
             }
-            AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.Dismantle);
         }
         else
         {

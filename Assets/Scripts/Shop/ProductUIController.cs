@@ -124,6 +124,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin, inputGuidePanel.rect.height);
         }
         
+        itemPrice.gameObject.SetActive(true);
+        
         itemEffectSubRectTr.gameObject.SetActive(true);
         inputGuidePanel.gameObject.SetActive(true);
         
@@ -172,6 +174,14 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             ConvertSort(magCore.category);
             ConvertSort(magCore.rarity);
             itemSpec.text += magCore.itemDescription;
+
+            if (magCore.IsStarterCore)
+            {
+                inputInteract.text = "습득(E)";
+                inputCancel.text = "";
+                inputCancelPanel.gameObject.SetActive(false);
+                inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin - guidePanelWidthOffset, inputGuidePanel.rect.height);
+            }
             
             (itemEffect.text, itemEffectSub.text) = ConvertMagCoreEffectToText(magCore.GetMagCoreSO(), magCore.currentUpgradeValue);
             itemPrice.text = magCore.scrapValue.ToString();
@@ -187,6 +197,15 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             
             itemEffect.text = $"체력을 {healthPack.healValue}회복합니다.";
             itemPrice.text = healthPack.scrapValue.ToString();
+            
+
+            if (!isProduct)
+            {
+                itemPrice.gameObject.SetActive(false);
+                inputCancel.text = "";
+                inputCancelPanel.gameObject.SetActive(false);//힐팩은 분해로직이 없음.
+                inputGuidePanel.sizeDelta = new Vector2(guidePanelWidthOrigin - guidePanelWidthOffset, inputGuidePanel.rect.height);
+            }
             
             //힐팩 출력시 필요없는 영역 비활성화
             itemEffectSubRectTr.gameObject.SetActive(false);
