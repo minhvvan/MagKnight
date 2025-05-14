@@ -97,6 +97,7 @@ public class UpgradeStatUIController : MonoBehaviour, IBasePopupUIController
         rectTransform.DOKill();
         rectTransform.DOScale(0, 0.1f).OnComplete(() => { gameObject.SetActive(false); });
         GameManager.Instance.Player.InputHandler.GainControl();
+        UIManager.Instance.EnableCursor();
     }
 
     private async void OnClickConfirmButton()
