@@ -15,6 +15,10 @@ public static class AudioBase
 {
     public static class BGM
     {
+        public static class Title
+        {
+            public const string Main = "Epikton - Collapsed Control";
+        }
         public static class BaseCamp
         { 
             public const string Environment = "AMBIENCE_Ferry_Car_Deck_02_loop_stereo";
