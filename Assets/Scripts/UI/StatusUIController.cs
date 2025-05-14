@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using DG.Tweening;
 using Jun;
 using Moon;
@@ -10,9 +11,10 @@ using UnityEngine.UI;
 public class StatusUIController : MonoBehaviour
 {
     [SerializeField] public BarController healthBar;
-    [SerializeField] private BarController skillBar;
-    [SerializeField] private Image magnetIcon;
-    [SerializeField] private RectTransform magnetIconRectTransform;
+    [SerializeField] BarController skillBar;
+    [SerializeField] Image magnetIcon;
+    [SerializeField] RectTransform magnetIconRectTransform;
+    [SerializeField] SerializedDictionary<WeaponType, RectTransform> weaponDictionary;
     
     private PlayerAttributeSet _attributeSet;
     
@@ -20,11 +22,13 @@ public class StatusUIController : MonoBehaviour
     void OnEnable()
     {
         PlayerEvent.OnPolarityChange += SetPolarityChange;
+        PlayerEvent.OnWeaponChange += SetWeaponIcon;
     }
 
     void OnDisable()
     {
         PlayerEvent.OnPolarityChange -= SetPolarityChange;
+        PlayerEvent.OnWeaponChange -= SetWeaponIcon;
     }
 
     public void BindAttributeChanges(AbilitySystem abilitySystem)
@@ -140,6 +144,21 @@ public class StatusUIController : MonoBehaviour
         {
             //magnetIcon.color = Color.red;
             magnetIcon.DOColor(new Color(1f, 0.1f, 0, 1f), 0.5f);
+        }
+    }
+
+    public void SetWeaponIcon(WeaponType weaponType)
+    {
+        foreach (var weapon in weaponDictionary)
+        {
+            if (weapon.Key == weaponType)
+            {
+                weapon.Value.gameObject.SetActive(true);
+            }
+            else
+            {
+                weapon.Value.gameObject.SetActive(false);
+            }
         }
     }
 }

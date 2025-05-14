@@ -80,10 +80,12 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
             Instantiate(magCorePrefab, weaponBackGround).GetComponent<MagCoreUI>().SetIcon();
         }
         
-        hpBarController.SetFillAmount(playerASC.GetValue(AttributeType.HP) / playerASC.GetValue(AttributeType.MaxHP), false);
-        HpText.text = "[" + playerASC.GetValue(AttributeType.HP) + "/" + playerASC.GetValue(AttributeType.MaxHP) + "]";
-        skillBarController.SetFillAmount(playerASC.GetValue(AttributeType.SkillGauge)/playerASC.GetValue(AttributeType.MaxSkillGauge), false);
-        SkillText.text = "[" + playerASC.GetValue(AttributeType.SkillGauge) + "/" + playerASC.GetValue(AttributeType.MaxSkillGauge) + "]";
+        hpBarController.SetFillAmount(playerASC.GetValue(AttributeType.HP) / playerASC.GetValue(AttributeType.MaxHP), true);
+        //HpText.text = "[" + playerASC.GetValue(AttributeType.HP) + "/" + playerASC.GetValue(AttributeType.MaxHP) + "]";
+        skillBarController.SetFillAmount(playerASC.GetValue(AttributeType.SkillGauge)/playerASC.GetValue(AttributeType.MaxSkillGauge), true);
+        //SkillText.text = "[" + playerASC.GetValue(AttributeType.SkillGauge) + "/" + playerASC.GetValue(AttributeType.MaxSkillGauge) + "]";
+        hpBarController.SetValue(playerASC.GetValue(AttributeType.HP), playerASC.GetValue(AttributeType.MaxHP));
+        skillBarController.SetValue(playerASC.GetValue(AttributeType.SkillGauge), playerASC.GetValue(AttributeType.MaxSkillGauge));
         
         StrengthText.text = playerASC.GetValue(AttributeType.Strength).ToString();
         if (playerASC.GetValue(AttributeType.Strength) > _baseStrength)

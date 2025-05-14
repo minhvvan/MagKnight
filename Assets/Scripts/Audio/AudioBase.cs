@@ -135,6 +135,19 @@ public static class AudioBase
                 };
             }
 
+            public static class Skill
+            {
+                public static class GreatSword
+                {
+                    public const string Cast = "buffer-spell";
+                    public const string Wind = "smooth-cold-wind-looped-135538";
+                }
+                public static class Hammer
+                {
+                    public const string Cast = "sci-fi-energy-gun";
+                    public const string EnergyField = "force-field-14688";
+                }
+            }
             public static class Movement
             {
                 public static readonly List<string> Step =new List<string>()
@@ -277,6 +290,47 @@ public static class AudioBase
                         "sci-fi_driod_robot_emote_12"
                     };
                 }
+            }
+        }
+
+        public static class Boss
+        {
+            public static class Attack
+            {
+                public const string Impact = "rock_impact_heavy_slam_04";
+            }
+            public static class BarrelGun
+            {
+                public const string Barrel = "gun_auto_barrel_spin_fast_loop";
+            }
+
+            public static class Bomb
+            {
+                public const string Impact = "explosion_large_04";
+            }
+
+            public static class Boom
+            {
+                public const string Impact = "rock_impact_heavy_slam_01";
+            }
+            
+            public static class Growl
+            {
+                public const string Growl1 = "large-creature-or-machinery-sound-83952";
+            }
+
+            public static class Shield
+            {
+                public const string Shield1 = "sci-fi_shield_power_deflect_boom_03";
+            }
+
+            public static class Movement
+            {
+                public static readonly List<string> BossMove = new List<string>()
+                {
+                    "metal_robot_impact_med_step_01",
+                    "metal_robot_large_impact_step_01"
+                };
             }
         }
 

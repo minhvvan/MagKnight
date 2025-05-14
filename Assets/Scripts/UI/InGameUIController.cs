@@ -17,6 +17,7 @@ public class InGameUIController : Singleton<InGameUIController>
     [SerializeField] public GateIndicatorUIController gateIndicatorUIController;
     [SerializeField] public CurrencyUIController currencyUIController;
     [SerializeField] public InteractIndicator interactIndicator;
+    [SerializeField] public ComboUIController comboUIController;
 
     protected override void Initialize()
     {
@@ -82,5 +83,10 @@ public class InGameUIController : Singleton<InGameUIController>
     public void ImmediateHideInGameUI()
     {
         bossStatusUIController.gameObject.SetActive(false);
+    }
+
+    public void AddCombo()
+    {
+        comboUIController.AddCombo();
     }
 }
