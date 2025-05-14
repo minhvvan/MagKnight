@@ -39,7 +39,10 @@ namespace Moon
 
         public void SetFillAmount(float amount, bool smoothly)
         {   
-            if(_rectTransform == null) return;
+            if(_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
 
             if(smoothly)
             {
