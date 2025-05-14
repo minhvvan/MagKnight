@@ -386,6 +386,7 @@ public static class AudioBase
                 public const string PickUp = "foley_object_grab_pickup_02";
                 public const string Drop = "foley_object_grab_pickup_01";
                 public const string Swap = "item_pickup_swipe_01";
+                public const string Hover = "ui_button_simple_click_01";
             }
         }
     }
