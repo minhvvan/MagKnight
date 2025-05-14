@@ -29,7 +29,7 @@ public class UpgradeStatPanelController : MonoBehaviour
     private readonly float _baseMagneticPower = 0;
     private readonly float _baseMagneticRange = 0;
 
-    private readonly int maxLevel = 9;
+    private readonly int maxLevel = 10;
 
     private int currentLevel = 0;
     private GameplayEffect upgradeEffect;
@@ -150,15 +150,20 @@ public class UpgradeStatPanelController : MonoBehaviour
     public void UpdateLevel(PlayerData playerData)
     {
         if (currentLevel == maxLevel)
+        {
             levelText.text = "Lv.MAX";
+            upgradeCostText.text = "MAX";
+        }
         else
-            levelText.text = $"Lv.{currentLevel+1}";
+        {
+            levelText.text = $"Lv.{currentLevel + 1}";
+            upgradeCostText.text = upgradeCosts[currentLevel] + "$";
+        }
         if (currentLevel > 0)
             statText.color = Color.green;
         else
             statText.color = Color.white;
         fillImage.fillAmount = currentLevel/10f;
-        upgradeCostText.text = upgradeCosts[currentLevel] + "$";
         
         if(currentLevel == maxLevel || playerData.Currency < upgradeCosts[currentLevel])
             upgradeButton.interactable = false;

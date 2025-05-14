@@ -74,6 +74,11 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         
         var playerASC = GameManager.Instance.Player.AbilitySystem;
         // TODO : WeaponImage 연결
+
+        var child = GetChild();
+        if(!child.IsUnityNull())
+            Destroy(child);
+        
         var magCore = GameManager.Instance.Player.WeaponHandler.currentMagCore;
         if (!magCore.IsUnityNull())
         {
@@ -212,5 +217,12 @@ public class PlayerDetailUIController : MonoBehaviour, IBasePopupUIController
         {
             MagneticRangeText.color = Color.white;
         }
+    }
+    
+    private GameObject GetChild()
+    {
+        if(weaponBackGround.childCount > 1)
+            return weaponBackGround.GetChild(1).gameObject;
+        return null;
     }
 }
