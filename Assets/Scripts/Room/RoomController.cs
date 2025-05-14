@@ -192,6 +192,7 @@ public class RoomController : MonoBehaviour, IObserver<bool>
     private IEnumerator LookClearField(CameraSettings cameraSettings)
     {
         GameManager.Instance.Player.InputHandler.ReleaseControl();
+        cameraSettings.SetCinemachineColliderEnabled(false);
         
         yield return new WaitForSeconds(1f);
         
@@ -225,6 +226,8 @@ public class RoomController : MonoBehaviour, IObserver<bool>
         
         // 코루틴에서는 시퀀스가 완료될 때까지 대기
         yield return sequence.WaitForCompletion();
+
+        cameraSettings.SetCinemachineColliderEnabled(true);
     }
     
     private async UniTask LoadNavMeshData()

@@ -155,5 +155,15 @@ namespace Moon
             }
             Current.m_Lens.FieldOfView = to;
         }
+
+        public void SetCinemachineColliderEnabled(bool isEnabled)
+        {
+            var collider = Current.GetComponent<CinemachineCollider>();
+
+            if (collider != null)
+            {
+                collider.enabled = isEnabled;
+            }
+        }
     } 
 }
