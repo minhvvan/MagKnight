@@ -9,7 +9,11 @@ public class EnemyAnimatorStateSelfDestruct : StateMachineBehaviour
 {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.gameObject.GetComponent<Enemy>().blackboard.enemyRenderer.enabled = false;
+        Enemy enemy = animator.gameObject.GetComponent<Enemy>();
+
+        enemy.blackboard.enemyRenderer.enabled = false;
+        enemy.blackboard.isDead = true;
+        
         DelayedDestroy(animator.gameObject).Forget();
     }
 

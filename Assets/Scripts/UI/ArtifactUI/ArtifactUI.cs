@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using hvvan;
 using Moon;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -81,6 +82,8 @@ public class ArtifactUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         var instanceArtifact = Instantiate(artifactPrefab).GetComponent<ArtifactObject>();
         instanceArtifact.SetArtifactData(artifact);
         instanceArtifact.transform.position = player.transform.position + player.transform.forward.normalized;
+        if(!RoomSceneController.Instance.CurrentRoomController.IsUnityNull())
+            instanceArtifact.gameObject.transform.SetParent(RoomSceneController.Instance.CurrentRoomController.gameObject.transform);
         ItemManager.Instance.AddArtifact(artifact);
         var currentRunData = GameManager.Instance.CurrentRunData;
         currentRunData.artifactsId.Remove(artifact.itemID);
