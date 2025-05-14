@@ -765,7 +765,7 @@ namespace Moon
                 yield return null;
             }
 
-            if (currentPosition != targetTransform.position)
+            if ((currentPosition - targetTransform.position).sqrMagnitude > .5f)
             {
                 onFail?.Invoke();
             }

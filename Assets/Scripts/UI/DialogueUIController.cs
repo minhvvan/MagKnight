@@ -40,7 +40,7 @@ public class DialogueUIController : MonoBehaviour
     void Update()
     {
         //테스트
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.anyKeyDown)
         {
             if (IsTyping)
             {

@@ -39,7 +39,10 @@ namespace Moon
 
         public void SetFillAmount(float amount, bool smoothly)
         {   
-            if(_rectTransform == null) return;
+            if(_rectTransform == null)
+            {
+                _rectTransform = GetComponent<RectTransform>();
+            }
 
             if(smoothly)
             {
@@ -97,19 +100,20 @@ namespace Moon
 
         public void SetValue(float value, float maxValue)
         {
+            value = Mathf.Clamp(value, 0, maxValue);
             _currentValueTarget = value;
             _currentMaxValueTarget = maxValue;
 
             try
             {
-                if (_currentValueTarget != _currentValue)
-                {
-                    _ = UpdateValue(_currentValueTarget);    
-                }
-
                 if (_currentMaxValueTarget != _currentMaxValue)
                 {
                     _ = UpdateMaxValue(_currentMaxValueTarget);
+                }
+
+                if (_currentValueTarget != _currentValue)
+                {
+                    _ = UpdateValue(_currentValueTarget);    
                 }
             }
             catch

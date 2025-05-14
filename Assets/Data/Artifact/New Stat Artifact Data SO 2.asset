@@ -16,8 +16,8 @@ MonoBehaviour:
   itemName: "\uC78A\uD600\uC9C4 \uB3C4\uAD6C"
   description: "\uC774\uAC70\uBA74 \uBB50\uB4E0 \uCC0D\uC5B4 \uAC00\uB97C \uC218
     \uC788\uC744 \uAC83 \uAC19\uB2E4."
-  scrapValue: 150
-  itemID: 19
+  scrapValue: 500
+  itemID: 18
   rarity: 0
   N_ArtifactEffect:
   - effectType: 2
@@ -25,13 +25,27 @@ MonoBehaviour:
     amount: 10
     duration: 0
     period: 0
+    damageType: 0
     tracking: 0
     maxStack: 0
+    extraData:
+      sourceTransform: {fileID: 0}
+      weaponRange: 0
+      isCritical: 0
+      damageType: 0
+      finalAmount: 0
   S_ArtifactEffect:
   - effectType: 2
     attributeType: 4
     amount: 0.1
     duration: 0
     period: 0
+    damageType: 0
     tracking: 0
     maxStack: 1
+    extraData:
+      sourceTransform: {fileID: 0}
+      weaponRange: 0
+      isCritical: 0
+      damageType: 0
+      finalAmount: 0
