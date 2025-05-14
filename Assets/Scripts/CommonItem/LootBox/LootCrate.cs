@@ -19,7 +19,7 @@ public class LootCrate : MonoBehaviour, IInteractable
     public int maxSpawnCount;
 
     public bool IsOpen => _isOpen;
-    
+    private bool _isBase;
     
     private Animator _animator;
     private List<GameObject> _items = new List<GameObject>();
@@ -72,10 +72,13 @@ public class LootCrate : MonoBehaviour, IInteractable
         vfxObj.transform.localScale = new Vector3(2,2,2);
     }
     
-    public void SetLootCrate(ItemCategory category, ItemRarity rarity, bool isBoss = false)
+    public void SetLootCrate(ItemCategory category, ItemRarity rarity, bool isBoss = false, bool isBase = false)
     {
         crateCategory = category;
         crateRarity = rarity;
+        
+        if(isBase) _isBase = true;
+        
         if (isBoss)
         {
             randomRarity.Clear();
@@ -177,7 +180,9 @@ public class LootCrate : MonoBehaviour, IInteractable
                     item.GetComponent<ArtifactObject>().onChooseItem = CloseCrate;
                     break;
                 case ItemCategory.MagCore:
-                    item.GetComponent<MagCore>().onChooseItem = CloseCrate;
+                    var magCore = item.GetComponent<MagCore>();
+                    magCore.onChooseItem = CloseCrate;
+                    if(_isBase) magCore.IsStarterCore = true;
                     break;
                 case ItemCategory.HealthPack:
                     item.GetComponent<HealthPack>().onChooseItem = CloseCrate;
