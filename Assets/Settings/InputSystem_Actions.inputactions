@@ -596,7 +596,7 @@
                 {
                     "name": "",
                     "id": "3a5b7c17-a405-4a09-98c6-ef7528d3dadc",
-                    "path": "<Keyboard>/backquote",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
