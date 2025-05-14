@@ -25,6 +25,17 @@ namespace Moon
             productUIController.Initialized();
         }
 
+        public bool IsAnyPopupUIActive()
+        {
+            return pauseMenuUIController.isActiveAndEnabled ||
+                   optionUIController.isActiveAndEnabled ||
+                   confirmPopupUIController.isActiveAndEnabled ||
+                   artifactInventoryUIController.isActiveAndEnabled ||
+                   playerDetailUIController.isActiveAndEnabled ||
+                   upgradeStatUIController.isActiveAndEnabled;
+                   
+        }
+
         public void HideAllPopupAvailableUI()
         {
             pauseMenuUIController.HideUI();

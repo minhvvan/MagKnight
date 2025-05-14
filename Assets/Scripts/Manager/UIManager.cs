@@ -26,14 +26,14 @@ public class UIManager : Singleton<UIManager>
             ShowPlayerDetailUI();
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if(popupUIController != null)
-            {
-                popupUIController.HideAllPopupAvailableUI();
-                DisableCursor();
-            }
-        }
+        // if (Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     if(popupUIController != null)
+        //     {
+        //         popupUIController.HideAllPopupAvailableUI();
+        //         DisableCursor();
+        //     }
+        // }
     }
 
     public void SetInGameUIController(InGameUIController inGameUIController)
