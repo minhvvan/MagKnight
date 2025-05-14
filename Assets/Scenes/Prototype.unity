@@ -2284,61 +2284,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.size
-      value: 142
-      objectReference: {fileID: 0}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[132]
-      value: 
-      objectReference: {fileID: 8300000, guid: 6a0a93b700e93f54ba43fab306ee3a4c, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[133]
-      value: 
-      objectReference: {fileID: 8300000, guid: ba1646c2c6e3b854c95cd7a050baf745, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[134]
-      value: 
-      objectReference: {fileID: 8300000, guid: 8c562925a63fa5348b04ae5d8b80820d, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[135]
-      value: 
-      objectReference: {fileID: 8300000, guid: d8532da27935faa47b7fbf87ab143978, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[136]
-      value: 
-      objectReference: {fileID: 8300000, guid: 3d61ab44e1a15be4bb84ec9709e6944c, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[137]
-      value: 
-      objectReference: {fileID: 8300000, guid: 770d4d048e48d6d4dadefac3414bfe30, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[138]
-      value: 
-      objectReference: {fileID: 8300000, guid: 402a185aa9ed42f4bb6c4b16d4a713d7, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[139]
-      value: 
-      objectReference: {fileID: 8300000, guid: de92fd20a9021874893aaa001b94108b, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[140]
-      value: 
-      objectReference: {fileID: 8300000, guid: a1b4ad1086522c547b2595977bd015a3, type: 3}
-    - target: {fileID: 2263035252173081550, guid: 1d7991d2760a26f46b5405c77cb37f46,
-        type: 3}
-      propertyPath: sfxClips.Array.data[141]
-      value: 
-      objectReference: {fileID: 8300000, guid: ee8cfafc2a9a51741896a96713d06017, type: 3}
     - target: {fileID: 4106000166795721619, guid: 1d7991d2760a26f46b5405c77cb37f46,
         type: 3}
       propertyPath: m_Name
@@ -7597,37 +7542,37 @@ PrefabInstance:
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.090881184
+      value: 0.048056867
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.2988863
+      value: 4.298886
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.045138136
+      value: 0.0893722
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.52694607
+      value: -0.3012065
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.51465446
+      value: -0.2941806
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.48386663
+      value: 0.6489019
       objectReference: {fileID: 0}
     - target: {fileID: 3826025189100221224, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.47258
+      value: -0.6337656
       objectReference: {fileID: 0}
     - target: {fileID: 4050224717561007378, guid: 32cffd128548f4efb98acf7a2c11b595,
         type: 3}
@@ -7738,14 +7683,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8168119490c74b4dbc54cc049f0f7634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  category: 0
+  category: 1
   rarity: 0
   icon: {fileID: 0}
   itemName: 
   itemDescription: 
   currentUpgradeValue: 0
   scrapValue: 0
-  _magCoreSO: {fileID: 11400000, guid: f8bebf5d51b2348cb83f8d2a403e38bc, type: 2}
+  _magCoreSO: {fileID: 11400000, guid: aba892e430c68d345ba7b8c343e65212, type: 2}
   weaponType: 1
   partsType: 0
 --- !u!54 &1777030537

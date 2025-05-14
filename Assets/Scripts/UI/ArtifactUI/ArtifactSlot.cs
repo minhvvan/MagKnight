@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class ArtifactSlot : MonoBehaviour, IDropHandler
+public class ArtifactSlot : MonoBehaviour, IDropHandler, IPointerEnterHandler
 {
     [SerializeField] private Image backgroundSprite;
     [SerializeField] private Image glowSprite;
@@ -68,5 +68,11 @@ public class ArtifactSlot : MonoBehaviour, IDropHandler
         eventData.pointerDrag.GetComponent<ArtifactUI>().SetArtifactIcon(transform);
         ModifyArtifact();
         eventData.pointerDrag.GetComponent<ArtifactUI>().startParent.GetComponent<ArtifactSlot>().ModifyArtifact();
+    }
+    
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // 원하는 SFX 키나 AudioBase 상수 사용
+        AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.Artifact.Hover);
     }
 }
