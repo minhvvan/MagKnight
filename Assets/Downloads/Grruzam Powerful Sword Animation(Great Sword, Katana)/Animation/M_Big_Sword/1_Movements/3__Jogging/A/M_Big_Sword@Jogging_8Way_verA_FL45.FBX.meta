@@ -1012,14 +1012,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0.3476612
-        functionName: PlayFootStep
+        functionName: PlayFootStep8
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.8856862
-        functionName: NewEvent
+        functionName: PlayFootStep8
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

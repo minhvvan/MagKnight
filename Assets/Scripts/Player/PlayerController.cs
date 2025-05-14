@@ -74,6 +74,8 @@ namespace Moon
         [SerializeField] private float parrySlowDuration = 0.5f;   // 슬로우모션 실제 지속시간
         private float _originalFixedDeltaTime;
         private Coroutine _parrySlowCoroutine;
+        
+        private int _lastFootstepFrame = -1; // 발자국 중복 방지
 
         #endregion
 
@@ -1321,6 +1323,14 @@ namespace Moon
 
         void PlayFootStep()
         {
+            var footStepSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Step);
+            AudioManager.Instance.PlaySFX(footStepSfxRandomClip);
+        }
+
+        void PlayFootStep8(AnimationEvent animationEvent)
+        {
+            if (animationEvent.animatorClipInfo.weight < 0.55f) return;
+            
             var footStepSfxRandomClip = AudioManager.Instance.GetRandomClip(AudioBase.SFX.Player.Movement.Step);
             AudioManager.Instance.PlaySFX(footStepSfxRandomClip);
         }
