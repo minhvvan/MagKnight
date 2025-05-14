@@ -17,13 +17,13 @@ MonoBehaviour:
     - Key: 1
       Value:
       - roomTitle: "2\uCE35 \uC2DC\uC791\uBC29"
-        sceneName: start 2
+        sceneName: floor2_start
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 1
     - Key: 2
       Value:
       - roomTitle: "\uBCF4\uC2A4\uBC29"
-        sceneName: boss 2
+        sceneName: floor2_boss
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 2
     - Key: 3
@@ -35,19 +35,11 @@ MonoBehaviour:
     - Key: 4
       Value:
       - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle
+        sceneName: floor2_battle_1
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
       - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle_1
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle_1
+        sceneName: floor2_battle_2
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
     - Key: 5
