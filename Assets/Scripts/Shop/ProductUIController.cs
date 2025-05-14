@@ -66,6 +66,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     private RectTransform _rectTransform;
     private CanvasScaler  _canvasScaler;
     
+    private bool isHide = false;
+    
     public void Initialized()
     {
         _rectTransform = GetComponent<RectTransform>();
@@ -83,6 +85,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
     
     public void ShowUI()
     {
+        isHide = false;
         _rectTransform.DOKill();
         
         _rectTransform.DOScale(1, 0.1f);
@@ -91,6 +94,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
 
     public void HideUI()
     {
+        if(isHide) return;
         _rectTransform.DOKill();
         
         _rectTransform.DOScale(0, 0.1f).OnComplete(() =>
@@ -99,6 +103,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
             gameObject.SetActive(false); 
             inputGuidePanel.gameObject.SetActive(true);
         });
+        isHide = true;
     }
 
     //팝업 레이아웃 기본값으로 초기화.
