@@ -15,7 +15,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
     private RoomController _currentRoomController;
     public RoomController CurrentRoomController => _currentRoomController;
     
-    public async UniTask EnterFloor(bool loadConnect = true)
+    public async UniTask EnterFloor(bool loadConnect = true, bool moveForce = true)
     {
         _loadedRoomControllers.Clear();
         
@@ -37,7 +37,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
         }
 
         //시작방 입장 
-        await _currentRoomController.OnPlayerEnter(RoomDirection.North, true);
+        await _currentRoomController.OnPlayerEnter(RoomDirection.North, moveForce);
     }
 
     public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
@@ -160,9 +160,10 @@ public class RoomSceneController: Singleton<RoomSceneController>
     public async UniTask TeleportToSavedRoom()
     {
         var currentRunData = GameManager.Instance.CurrentRunData;
+        var targetRoom = _roomGenerator.GetRoom(currentRunData.currentRoomIndex);
+        
         if (currentRunData.currentRoomIndex != 0)
         {
-            var targetRoom = _roomGenerator.GetRoom(currentRunData.currentRoomIndex);
             var operation = SceneManager.LoadSceneAsync(targetRoom.sceneName, LoadSceneMode.Additive);
             await operation.ToUniTask();
 
@@ -185,10 +186,10 @@ public class RoomSceneController: Singleton<RoomSceneController>
                     await loadedSceneController.OnPlayerEnter();
                 }
             }
-            
-            //최종 클리어 방 타이틀 출력
-            SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);
         }
+        
+        //최종 클리어 방 타이틀 출력
+        SceneTransitionEvent.TriggerSceneTransitionComplete(targetRoom.roomTitle, true);
         
         //연결된 룸 load 시도
         await LoadConnectedRooms(_roomGenerator.GetRoom(currentRunData.currentRoomIndex).connectedRooms);
