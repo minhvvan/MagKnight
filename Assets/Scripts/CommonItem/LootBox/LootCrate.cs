@@ -82,7 +82,6 @@ public class LootCrate : MonoBehaviour, IInteractable
             for (int i = 0; i < maxSpawnCount; i++)
             {
                 randomRarity.Add(RaritySelector.GetRandomRarityExcluding(ItemRarity.Common));
-                Debug.Log(randomRarity[i]);
             }
             crateRarity = randomRarity.Max();
             InitializeCrate();
