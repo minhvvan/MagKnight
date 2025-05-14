@@ -15,7 +15,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
     private RoomController _currentRoomController;
     public RoomController CurrentRoomController => _currentRoomController;
     
-    public async UniTask EnterFloor(bool loadConnect = true)
+    public async UniTask EnterFloor(bool loadConnect = true, bool moveForce = true)
     {
         _loadedRoomControllers.Clear();
         
@@ -37,7 +37,7 @@ public class RoomSceneController: Singleton<RoomSceneController>
         }
 
         //시작방 입장 
-        await _currentRoomController.OnPlayerEnter(RoomDirection.North, true);
+        await _currentRoomController.OnPlayerEnter(RoomDirection.North, moveForce);
     }
 
     public async UniTask EnterRoom(int currentRoomIndex, RoomDirection direction)
