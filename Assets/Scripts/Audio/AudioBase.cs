@@ -135,6 +135,19 @@ public static class AudioBase
                 };
             }
 
+            public static class Skill
+            {
+                public static class GreatSword
+                {
+                    public const string Cast = "buffer-spell";
+                    public const string Wind = "smooth-cold-wind-looped-135538";
+                }
+                public static class Hammer
+                {
+                    public const string Cast = "sci-fi-energy-gun";
+                    public const string EnergyField = "force-field-14688";
+                }
+            }
             public static class Movement
             {
                 public static readonly List<string> Step =new List<string>()
