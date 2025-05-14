@@ -85,6 +85,7 @@ public class ProductCase : MonoBehaviour, IInteractable
         if (CheckItemValue())
         {
             GameManager.Instance.CurrentRunData.scrap -= itemPrice;
+            UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
             
             AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.BuyItem);
         }

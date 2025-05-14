@@ -28,6 +28,14 @@ namespace Jun
         {
             float returnValue = newValue;
 
+            if (type == AttributeType.CriticalRate)
+            {
+                if (GetValue(AttributeType.CriticalRate) + newValue > 1)
+                {
+                    returnValue = 1 - GetValue(AttributeType.CriticalRate); 
+                }
+            }
+            
             if (type == AttributeType.MoveSpeed)
             {
                 if (GetValue(AttributeType.MoveSpeed) + newValue <= minMoveSpeed)
@@ -97,12 +105,6 @@ namespace Jun
             if (effect.attributeType == AttributeType.HP)
             {
                 SetValue(AttributeType.HP,Mathf.Clamp(GetValue(AttributeType.HP), 0f, GetValue(AttributeType.MaxHP)));
-                
-            }
-
-            if (effect.attributeType == AttributeType.CriticalRate)
-            {
-                SetValue(AttributeType.CriticalRate, Mathf.Clamp(GetValue(AttributeType.CriticalRate), 0f, 1));
                 
             }
             
