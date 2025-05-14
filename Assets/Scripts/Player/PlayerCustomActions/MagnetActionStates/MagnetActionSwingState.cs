@@ -9,7 +9,7 @@ public class MagnetActionSwingState : BaseMagnetActionState
     //values
     private float gravity = 9.81f;          // 중력 가속도
     private float maxTangentialSpeed = 25f; // 최대 접선 속도
-    private float maxSwingAngle = 240;     //최대 스윙 각도를 올리면 끊어질때 위로 올라감 (260이 재미있었음)
+    private float maxSwingAngle = 260;     //최대 스윙 각도를 올리면 끊어질때 위로 올라감 (260이 재미있었음)
     private const float MIN_DELTA_TIME = 0.001f;  // 최소 deltaTime
 
     //local variables

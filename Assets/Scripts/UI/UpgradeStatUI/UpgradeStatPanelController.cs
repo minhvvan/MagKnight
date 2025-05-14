@@ -19,7 +19,7 @@ public class UpgradeStatPanelController : MonoBehaviour
     public Action<GameplayEffect> OnClickButton;
     
     private readonly float _baseMaxHp = 200f;
-    private readonly float _baseStrength = 20;
+    private readonly float _baseStrength = 10;
     private readonly float _baseDefense = 0;
     private readonly float _baseEndureImpulse = 0;
     private readonly float _baseCriticalRate = 0.1f;
