@@ -2617,7 +2617,7 @@ MonoBehaviour:
   fillImage: {fileID: 6290522726424167334}
   delayFillImage: {fileID: 0}
   frameActiveCanvasGroup: {fileID: 0}
-  _valueText: {fileID: 0}
+  _valueText: {fileID: 3510588634103851000}
   damageTextRectTransform: {fileID: 0}
   isPunch: 0
 --- !u!1 &3322086035338552407
@@ -3211,7 +3211,7 @@ MonoBehaviour:
   fillImage: {fileID: 8875693350582828725}
   delayFillImage: {fileID: 0}
   frameActiveCanvasGroup: {fileID: 0}
-  _valueText: {fileID: 0}
+  _valueText: {fileID: 383251260811636860}
   damageTextRectTransform: {fileID: 0}
   isPunch: 0
 --- !u!1 &3913934738856685139

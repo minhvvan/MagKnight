@@ -17,4 +17,10 @@ public static class PlayerEvent
     {
         OnPolarityChange?.Invoke(magneticType);
     }
+
+    public static event Action<WeaponType> OnWeaponChange;
+    public static void TriggerWeaponChange(WeaponType weaponType)
+    {
+        OnWeaponChange?.Invoke(weaponType);
+    }
 }

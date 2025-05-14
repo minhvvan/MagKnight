@@ -39,14 +39,6 @@ MonoBehaviour:
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
       - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle_1
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
         sceneName: battle_1
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
@@ -60,6 +52,10 @@ MonoBehaviour:
       Value:
       - roomTitle: "\uD568\uC815\uBC29"
         sceneName: trap
+        connectedRooms: ffffffffffffffffffffffffffffffff
+        roomType: 6
+      - roomTitle: "\uD568\uC815\uBC29"
+        sceneName: trap 1
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 6
   roomNumLimit:

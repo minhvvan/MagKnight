@@ -161,7 +161,14 @@ public class RoomController : MonoBehaviour, IObserver<bool>
                         transform = { position = player.transform.position + gates[gateDirection].playerSpawnPoint.forward * 3 }
                     };
             
-                    playerController.MoveForce(target.transform);
+                    playerController.MoveForce(target.transform, () => 
+                    {
+                        Destroy(target);
+                    },
+                    () =>
+                    {
+                        Destroy(target);
+                    });
                 }
             }
         }
