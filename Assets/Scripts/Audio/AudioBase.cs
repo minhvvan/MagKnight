@@ -137,6 +137,11 @@ public static class AudioBase
                     "bullet_leave_barrel_effect_04",
                     "bullet_leave_barrel_effect_05"
                 };
+
+                public static class Tick
+                {
+                    public const string Tick1 = "Minecraft Hit - Sound Effect (HD)";
+                }
             }
 
             public static class Skill
