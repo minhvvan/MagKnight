@@ -70,6 +70,8 @@ public class WeaponHandler : MonoBehaviour
 
         //사거리 설정
         _damageEffect.extraData.weaponRange = _weaponDataDictionary.weapons[weaponType].range;
+
+        PlayerEvent.TriggerWeaponChange(weaponType);
     }
 
     public void DropPrevWeapon(Transform newCorePos)
