@@ -179,7 +179,7 @@ public class MagCore: MonoBehaviour, IInteractable
     {
         foreach (var crateRenderer in _renderers)
         {
-            highlighter.Renderers.Remove(new HighlighterRenderer(crateRenderer, 1));
+            highlighter.Renderers.RemoveAll(highlightRenderer => highlightRenderer.renderer == crateRenderer);
         }
         
         var uiController =  UIManager.Instance.popupUIController.productUIController;
