@@ -162,7 +162,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
 
         if (isDashing) return;
+        
         Vector3 dir = Agent.desiredVelocity;
+
         if (dir.sqrMagnitude > 0.1f)
         {
             Quaternion targetRot = Quaternion.LookRotation(dir);
@@ -359,12 +361,12 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         
     }
 
-    public void OnNext(HitInfo hitInfo)
+    public virtual void OnNext(HitInfo hitInfo)
     {
         GiveDamageEffect(hitInfo);
     }
 
-    public void GiveDamageEffect(HitInfo hitInfo)
+    public virtual void GiveDamageEffect(HitInfo hitInfo)
     {
         float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
         GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
@@ -403,7 +405,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public void CreateAttackEffect(GameObject effectPrefab)
     {
         GameObject effect = Instantiate(effectPrefab, transform.position, Quaternion.identity);
-        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
+        AttackEffect attackEffect = effect.GetComponent<AttackEffect>();
+        float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength);
+        float impulse = 10000;
+        attackEffect.SetAttackDamageImpulse(damage, impulse);
         
         AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Boom.Impact);
     }
@@ -411,7 +416,7 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
     public void CreateAttackEffectAtTarget(GameObject effectPrefab)
     {
         GameObject effect = Instantiate(effectPrefab, blackboard.target.transform.position, Quaternion.identity);
-        effect.GetComponent<AttackEffect>().GetAbilitySystem(blackboard.abilitySystem);
+        effect.GetComponent<AttackEffect>().SetAttackDamageImpulse(blackboard.abilitySystem.GetValue(AttributeType.Strength), 30);
     }
 
     
