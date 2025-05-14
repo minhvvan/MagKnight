@@ -15,8 +15,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 51a7990e8c6f343048b3905e2b9c363d, type: 3}
   itemName: "\uC815\uCCB4\uBD88\uBA85\uC758 \uC774\uBE68"
   description: "\uC694\uC0C1\uD55C \uC774\uBE68\uC774\uB2E4"
-  scrapValue: 0
-  itemID: 15
+  scrapValue: 1200
+  itemID: 14
   rarity: 3
   N_passiveArtifacts:
   - triggerChance: 0.7
@@ -27,8 +27,15 @@ MonoBehaviour:
       amount: 5
       duration: 5
       period: 0
+      damageType: 0
       tracking: 1
       maxStack: 5
+      extraData:
+        sourceTransform: {fileID: 0}
+        weaponRange: 0
+        isCritical: 0
+        damageType: 0
+        finalAmount: 0
     isTarget: 0
     hasCount: 0
     triggerCount: 0
@@ -41,8 +48,15 @@ MonoBehaviour:
       amount: 3
       duration: 0
       period: 0
+      damageType: 0
       tracking: 0
       maxStack: 0
+      extraData:
+        sourceTransform: {fileID: 0}
+        weaponRange: 0
+        isCritical: 0
+        damageType: 0
+        finalAmount: 0
     isTarget: 0
     hasCount: 0
     triggerCount: 0
