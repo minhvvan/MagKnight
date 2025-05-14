@@ -63,6 +63,7 @@ public class ArtifactObject : MonoBehaviour, IInteractable
         //TODO: 아이템 재활용(판매,분해) 로직 수행.
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         { 
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.Dismantle);
             GameManager.Instance.CurrentRunData.scrap += scrapValue;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
             //_= GameManager.Instance.SaveData(Constants.CurrentRun);
