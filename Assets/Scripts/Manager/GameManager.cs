@@ -7,6 +7,7 @@ using Jun;
 using Managers;
 using Moon;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace hvvan
 {
@@ -64,7 +65,14 @@ namespace hvvan
             _states[GameState.GameClear] = new GameClearState();
             _states[GameState.GameOver] = new GameOverState();
 
-            ChangeGameState(GameState.Title);
+            
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            ChangeGameState(GameState.Title);            
         }
 
         private void Start()
