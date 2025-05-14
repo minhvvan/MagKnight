@@ -287,8 +287,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1.2
-      minScalar: 0.8
+      scalar: 1.8
+      minScalar: 1.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4885,17 +4885,15 @@ MonoBehaviour:
     isActive: 0
     hitboxes:
     - referenceTransform: {fileID: 1580055021997397629}
-      offset: {x: 0, y: 0, z: 0}
-      radius: 1
+      offset: {x: 0, y: 1, z: 0}
+      radius: 2
     - referenceTransform: {fileID: 1580055021997397629}
-      offset: {x: 0, y: 1.5, z: 0}
-      radius: 1
+      offset: {x: 0, y: 3.5, z: 0}
+      radius: 2
     - referenceTransform: {fileID: 1580055021997397629}
-      offset: {x: 0, y: 3, z: 0}
-      radius: 1
-    - referenceTransform: {fileID: 1580055021997397629}
-      offset: {x: 0, y: 4.5, z: 0}
-      radius: 1
+      offset: {x: 0, y: 6, z: 0}
+      radius: 2
+    hitInterval: 0
   _layerMask:
     serializedVersion: 2
     m_Bits: 128
@@ -4911,20 +4909,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c24825f874115b469df38353d0b30a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageEffect:
-    effectType: 0
-    attributeType: 9
-    amount: 30
-    duration: 0
-    period: 0
-    tracking: 0
-    maxStack: 0
-  _resEffect:
-    effectType: 0
-    attributeType: 11
-    amount: 10
-    duration: 0
-    period: 0
-    tracking: 0
-    maxStack: 0
-  moveSpeed: 5
