@@ -330,7 +330,10 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         VFXManager.Instance.TriggerDamageNumber(transform.position, extraData.finalAmount, damageType, transform);
 
         //콤보시스템 카운팅 추가
-        UIManager.Instance.inGameUIController.AddCombo();
+        if(damageType == DAMAGEType.NORMAL || damageType == DAMAGEType.CRITICAL)
+        {
+            UIManager.Instance.inGameUIController.AddCombo();
+        }
 
         if(extraData.isCritical)
         {

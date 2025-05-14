@@ -39,14 +39,6 @@ MonoBehaviour:
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
       - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
-        sceneName: battle_1
-        connectedRooms: ffffffffffffffffffffffffffffffff
-        roomType: 4
-      - roomTitle: "\uC804\uD22C\uBC29"
         sceneName: battle_1
         connectedRooms: ffffffffffffffffffffffffffffffff
         roomType: 4
