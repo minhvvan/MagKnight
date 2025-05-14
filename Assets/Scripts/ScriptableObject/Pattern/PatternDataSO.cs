@@ -20,6 +20,7 @@ public abstract class PatternDataSO : ScriptableObject
 {
     public string patternName;
     public float damageMultiplier;
+    public float impulseMultiplier;
     public float range;
     public float priority;
     public float cooldown;

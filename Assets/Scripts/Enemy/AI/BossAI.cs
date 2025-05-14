@@ -30,13 +30,6 @@ public class BossAI : IEnemyAI
 
     public void OnUpdate()
     {
-        PatternDataSO patternDataSO = _patternController.GetAvailablePattern(_enemy.transform, _blackboard.target.transform);
-        if(patternDataSO != null)
-        {
-            _enemy.SetState(_enemy.actionState);
-            return;
-        }
-        
         _destinationTimer += Time.deltaTime;
         if (_destinationTimer >= destinationUpdateInterval)
         {
@@ -46,6 +39,13 @@ public class BossAI : IEnemyAI
             }
 
             _destinationTimer = 0f;
+        }
+        
+        PatternDataSO patternDataSO = _patternController.GetAvailablePattern(_enemy.transform, _blackboard.target.transform);
+        if(patternDataSO != null)
+        {
+            _enemy.SetState(_enemy.actionState);
+            return;
         }
         
         if (!_enemy.Agent.pathPending)
@@ -66,6 +66,7 @@ public class BossAI : IEnemyAI
     public void OnExit()
     {
         _enemy.SetAnimBool("Trace", false);
+        _destinationTimer = destinationUpdateInterval;
         // _enemy.Anim.SetBool("Trace", false);
     }
 }

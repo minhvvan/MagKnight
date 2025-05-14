@@ -10,11 +10,14 @@ public class AttackEffect : MonoBehaviour, IObserver<HitInfo>
     [SerializeField] private float _duration;
     [SerializeField] private float _lifeTime;
 
-    private AbilitySystem _abilitySystem;
+    // private AbilitySystem _abilitySystem;
     private HitDetector _hitDetector;
     private float _startTime;
     private float _endTime;
     private float _destroyTime;
+
+    private float _damage;
+    private float _impulse;
     
     void Awake()
     {
@@ -24,11 +27,7 @@ public class AttackEffect : MonoBehaviour, IObserver<HitInfo>
         _endTime = _startTime + _duration;
         _destroyTime = Time.time + _lifeTime;
     }
-
-    public void GetAbilitySystem(AbilitySystem abilitySystem)
-    {
-        _abilitySystem = abilitySystem;
-    }
+    
 
     void Update()
     {
@@ -52,13 +51,18 @@ public class AttackEffect : MonoBehaviour, IObserver<HitInfo>
     
     public void OnNext(HitInfo hitInfo)
     {
-        float damage = _abilitySystem.GetValue(AttributeType.Strength);
-        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
-        GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, 30);
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, _damage);
+        GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, _impulse);
         damageEffect.extraData.sourceTransform = transform;
         impulseEffect.extraData.sourceTransform = transform;
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(damageEffect);
         hitInfo.collider.gameObject.GetComponent<AbilitySystem>().ApplyEffect(impulseEffect);
+    }
+
+    public void SetAttackDamageImpulse(float damage, float impulse)
+    {
+        _damage = damage;
+        _impulse = impulse;
     }
 
     public void OnError(Exception error)

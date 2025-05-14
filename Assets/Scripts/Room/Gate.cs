@@ -1,5 +1,6 @@
 using System;
 using AYellowpaper.SerializedCollections;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public enum GateSignType
@@ -19,6 +20,15 @@ public class Gate : MonoBehaviour
     public Action<RoomDirection> OnEnter;
     public Transform indicatorPoint;
     public SerializedDictionary<GateSignType, GameObject> gateSigns = new();
+
+    void OnEnable()
+    {
+        GetComponent<Collider>().enabled = false;
+        _ = UniTask.Delay(3000).ContinueWith(() =>
+        {
+            GetComponent<Collider>().enabled = true;
+        });
+    }
 
     void OnTriggerEnter(Collider other)
     {
