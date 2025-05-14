@@ -162,7 +162,9 @@ public class Enemy : MagneticObject, IObserver<HitInfo>
         }
 
         if (isDashing) return;
+        
         Vector3 dir = Agent.desiredVelocity;
+
         if (dir.sqrMagnitude > 0.1f)
         {
             Quaternion targetRot = Quaternion.LookRotation(dir);

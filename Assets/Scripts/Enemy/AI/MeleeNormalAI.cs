@@ -22,12 +22,6 @@ public class MeleeNormalAI : IEnemyAI
 
     public void OnUpdate()
     {
-        if (TargetInRay())
-        {
-            _enemy.SetState(_enemy.actionState);
-            return;
-        }
-
         _destinationTimer += Time.deltaTime;
         if (_destinationTimer >= destinationUpdateInterval)
         {
@@ -37,6 +31,12 @@ public class MeleeNormalAI : IEnemyAI
             }
 
             _destinationTimer = 0f;
+        }
+        
+        if (TargetInRay())
+        {
+            _enemy.SetState(_enemy.actionState);
+            return;
         }
         
         if (!_enemy.Agent.pathPending)
@@ -54,6 +54,7 @@ public class MeleeNormalAI : IEnemyAI
 
     public void OnExit()
     {
+        _destinationTimer = destinationUpdateInterval;
         _enemy.SetAnimBool("Trace", false);
     }
     

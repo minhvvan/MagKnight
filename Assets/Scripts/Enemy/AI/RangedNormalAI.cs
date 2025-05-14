@@ -14,26 +14,14 @@ public class RangedNormalAI : IEnemyAI
     {
         _enemy = enemy;
         _blackboard = _enemy.blackboard;
-        // _targetCollider = _blackboard.target.GetComponent<Collider>();
     }
     
     public void OnEnter()
     {
-        // _enemy.Anim.SetBool("Trace", true);
-        // if(_enemy.IsAvailableTarget())
-        // {
-        //     _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        // }
     }
 
     public void OnUpdate()
     {
-        if (TargetInRayAndVisible())
-        {
-            _enemy.SetState(_enemy.actionState);
-            return;
-        }
-        
         _destinationTimer += Time.deltaTime;
         if (_destinationTimer >= destinationUpdateInterval)
         {
@@ -45,38 +33,29 @@ public class RangedNormalAI : IEnemyAI
             _destinationTimer = 0f;
         }
         
+        if (TargetInRayAndVisible())
+        {
+            _enemy.SetState(_enemy.actionState);
+            return;
+        }
+        
         if (!_enemy.Agent.pathPending)
         {
             if (_enemy.Agent.hasPath && _enemy.Agent.pathStatus == NavMeshPathStatus.PathComplete)
             {
                 _enemy.SetAnimBool("Trace", true);
-                // _enemy.Anim.SetBool("Trace", true);
             }
             else
             {
                 _enemy.SetAnimBool("Trace", false);
-                // _enemy.Anim.SetBool("Trace", false);
             }
         } 
-        
-        // else
-        // {
-        //     _destinationTimer += Time.deltaTime;
-        //     if (_destinationTimer >= destinationUpdateInterval)
-        //     {
-        //         if(_enemy.IsAvailableTarget())
-        //         {
-        //             _enemy.Agent.SetDestination(_blackboard.target.transform.position);
-        //         }
-        //
-        //         _destinationTimer = 0f;
-        //     }
-        // }
     }
 
     public void OnExit()
     {
         _enemy.SetAnimBool("Trace", false);
+        _destinationTimer = destinationUpdateInterval;
         // _enemy.Anim.SetBool("Trace", false);
     }
     
