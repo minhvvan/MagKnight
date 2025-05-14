@@ -92,7 +92,7 @@ public class LootCrate : MonoBehaviour, IInteractable
     public async UniTask OpenCrate()
     {
         _isOpen = true;
-        _animator.SetBool("Open", true);
+        _animator.SetTrigger("Open");
         
         _cts?.Cancel();
         _cts?.Dispose();
@@ -128,6 +128,7 @@ public class LootCrate : MonoBehaviour, IInteractable
                 {
                     item = ItemManager.Instance.CreateItem
                         (ItemCategory.MagCore, randomRarity[i], itemPoint[i].position, Quaternion.identity, parent: itemPoint[i]);
+                    crateCategory = ItemCategory.MagCore;
                 }
                 item.TryGetComponent(out Rigidbody rb);
                 rb.isKinematic = true;
@@ -196,7 +197,8 @@ public class LootCrate : MonoBehaviour, IInteractable
 
     private async UniTask Closing()
     {
-        _animator.SetBool("Open", false);
+        Debug.Log("Close Closing");
+        _animator.SetTrigger("Close");
         foreach (var item in _items)
         {
             if(item != null) item.GetComponent<Collider>().enabled = false;

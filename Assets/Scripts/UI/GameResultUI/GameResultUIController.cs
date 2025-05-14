@@ -52,6 +52,7 @@ public class GameResultUIController : MonoBehaviour, IBasePopupUIController
             resultText.text = "클리어하였습니다";
             gameOverText.text = "게임 클리어";
             clearedImage.sprite = resultImage[1];
+            currentRunData.currentFloor++;
         }
         int totalSeconds = Mathf.FloorToInt(currentRunData.playTime);
         
