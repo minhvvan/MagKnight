@@ -17,7 +17,7 @@ public class WeaponNPCController : BaseNPCController
     protected void Start()
     {
         //랜덤 무기 생성
-        lootCrate.SetLootCrate(ItemCategory.MagCore, ItemRarity.Common);
+        lootCrate.SetLootCrate(ItemCategory.MagCore, ItemRarity.Common, isBase: true);
         baseCampGate.OnEnterWithoutWeapon += BlockGateAccess;
     }
 

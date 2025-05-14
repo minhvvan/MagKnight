@@ -34,6 +34,7 @@ public class MagCore: MonoBehaviour, IInteractable
     public int currentUpgradeValue;
     public int scrapValue;
     public bool IsProduct { get; set; }
+    public bool IsStarterCore { get; set; }
     
     [SerializeField] private MagCoreSO _magCoreSO; //필드 배치시 여기에 임의로 SO할당 해주시면 됩니다.
     [SerializeField] private WeaponType weaponType;
@@ -105,6 +106,9 @@ public class MagCore: MonoBehaviour, IInteractable
     
     public async void Interact(IInteractor interactor)
     {
+        //베이스에서 먹었다면 이제 다시 분해가능하도록.
+        if (IsStarterCore) IsStarterCore = false;
+        
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
             transform.SetParent(player.transform);
@@ -133,8 +137,10 @@ public class MagCore: MonoBehaviour, IInteractable
 
     public void Dismantle(IInteractor interactor)
     {
+        if (IsStarterCore) return; //베이스 시작무기면 분해 방지
         if (interactor.GetGameObject().TryGetComponent<PlayerController>(out var player))
         {
+            AudioManager.Instance.PlaySFX(AudioBase.SFX.UI.FieldItem.Dismantle);
             GameManager.Instance.CurrentRunData.scrap += scrapValue;
             UIManager.Instance.inGameUIController.currencyUIController.UpdateScrap();
             //_= GameManager.Instance.SaveData(Constants.CurrentRun);

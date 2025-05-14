@@ -129,19 +129,10 @@ public class RoomGenerator
             //min 개수만큼 생성
             generatedRoomCount.Add((RoomType)roomType, 0);
 
-            int currentSeed = seed + (roomType * 1000);
-
-            var genNum = Random.Range(_floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].min, _floorData.Floor[currentFloor].roomNumLimit[(RoomType)roomType].max);
             var roomList = _floorData.Floor[currentFloor].rooms[(RoomType)roomType];
 
-            for (int j = 0; j < genNum; j++)
+            foreach (var room in roomList)
             {
-                // 각 반복마다 시드 변경 (j에 따라)
-                currentSeed += (j * 137); // 137은 임의의 소수로 분포를 좋게 함
-                Random.InitState(currentSeed);
-        
-                var room = roomList[Random.Range(0, roomList.Count)];
-        
                 _rooms.Add(new Room(room));
                 generatedRoomCount[(RoomType)roomType]++;
             }
