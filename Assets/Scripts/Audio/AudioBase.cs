@@ -15,6 +15,10 @@ public static class AudioBase
 {
     public static class BGM
     {
+        public static class Title
+        {
+            public const string Main = "Epikton - Collapsed Control";
+        }
         public static class BaseCamp
         { 
             public const string Environment = "AMBIENCE_Ferry_Car_Deck_02_loop_stereo";
@@ -133,6 +137,11 @@ public static class AudioBase
                     "bullet_leave_barrel_effect_04",
                     "bullet_leave_barrel_effect_05"
                 };
+
+                public static class Tick
+                {
+                    public const string Tick1 = "Minecraft Hit - Sound Effect (HD)";
+                }
             }
 
             public static class Skill
@@ -377,6 +386,7 @@ public static class AudioBase
                 public const string PickUp = "foley_object_grab_pickup_02";
                 public const string Drop = "foley_object_grab_pickup_01";
                 public const string Swap = "item_pickup_swipe_01";
+                public const string Hover = "ui_button_simple_click_01";
             }
         }
     }
