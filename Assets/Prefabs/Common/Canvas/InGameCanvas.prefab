@@ -575,6 +575,7 @@ GameObject:
   - component: {fileID: 3410359291019446671}
   - component: {fileID: 4696666118222089128}
   - component: {fileID: 6546913466563298169}
+  - component: {fileID: 7346641153720742789}
   m_Layer: 5
   m_Name: Next
   m_TagString: Untagged
@@ -596,11 +597,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2693041404188740260}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -30, y: 30}
-  m_SizeDelta: {x: 36, y: 36}
-  m_Pivot: {x: 1, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 601, y: -144}
+  m_SizeDelta: {x: 64, y: 64}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4696666118222089128
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -622,16 +623,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2ddf0348701148a4d8a7c6a0f7f146b3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06fda027ee8ec4c5bb95609c6d51450e, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -639,6 +640,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7346641153720742789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1490837597138253697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3c3181a0f7d49c89b4243f088cfaf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _blinkDuration: 0.4
 --- !u!1 &1550320443388548790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,8 +1229,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "NPC \uC774\uB984"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1ee3f21609bb3427fa87a59076ce03c8, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 77a2e6fbbb9014840b472fbbeb583eb8, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 992dbeb9bad3a4607a024dcf423b8bbb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2491,7 +2505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7248029400985739206
 RectTransform:
   m_ObjectHideFlags: 0
