@@ -264,6 +264,9 @@ namespace Moon
 
             playerInput.actions["Skill"].performed -= _pressSkillOnCallback;
             playerInput.actions["Skill"].canceled -= _releaseSkillOnCallback;
+
+            playerInput.actions["Pause"].performed -= _pressPauseCallback;
+            playerInput.actions["Pause"].canceled -= _releasePauseCallback;
             
             InteractionEvent.OnDialogueStart -= ReleaseControl;
             InteractionEvent.OnDialogueEnd -= GainControlDelayed;
@@ -402,19 +405,18 @@ namespace Moon
 
         private void PressPauseInput(InputAction.CallbackContext ctx)
         {
-            //GameManager.Instance.ChangeGameState(GameState.Pause);
-
-            // var currentGameState = GameManager.Instance.CurrentGameState;
-            // if (currentGameState != GameState.Pause)
-            // {
-            //     GameManager.Instance.ChangeGameState(GameState.Pause);
-            // }
-            // else
-            // {
-            //     GameManager.Instance.RecoverPreviousState();
-            // }
-
-            UIManager.Instance.ShowPauseMenuUI();
+            if(UIManager.Instance.popupUIController.IsAnyPopupUIActive())
+            {
+                if(UIManager.Instance.popupUIController != null)
+                {
+                    UIManager.Instance.popupUIController.HideAllPopupAvailableUI();
+                    UIManager.Instance.DisableCursor();
+                }
+            }
+            else
+            {
+                UIManager.Instance.ShowPauseMenuUI();
+            }
         }
 
         void PressSkillInput(InputAction.CallbackContext ctx)
