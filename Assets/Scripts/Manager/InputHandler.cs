@@ -373,6 +373,8 @@ namespace Moon
 
         void PressMagneticInput(InputAction.CallbackContext context)
         {
+            if(Time.timeScale == 0) return;
+
             _magnetic = true;
             magneticInput?.Invoke();
             if(_magneticWaitCoroutine != null) StopCoroutine(_magneticWaitCoroutine);
@@ -381,6 +383,8 @@ namespace Moon
 
         void ReleaseMagneticInput(InputAction.CallbackContext context)
         {
+            if(Time.timeScale == 0) return;
+
             _magnetic = false;
             magneticOutput?.Invoke(_magneticSecond);
             _magneticSecond = false;
@@ -388,12 +392,16 @@ namespace Moon
 
         void PressSwitchMagneticInput(InputAction.CallbackContext context)
         {
+            if(Time.timeScale == 0) return;
+
             _switchMangetic = true;
             SwitchMagneticInput?.Invoke();
         }
 
         void ReleaseSwitchMagneticInput(InputAction.CallbackContext context)
         {
+            if(Time.timeScale == 0) return;
+            
             _switchMangetic = false;
             //SwitchMangeticInput?.Invoke(); //Press시에만 호출 필요
         }
