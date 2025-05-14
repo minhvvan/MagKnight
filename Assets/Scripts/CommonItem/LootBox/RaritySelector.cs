@@ -9,9 +9,9 @@ public static class RaritySelector
     {
         (ItemRarity.Common, 0.7f),
         (ItemRarity.Uncommon, 0.15f),
-        (ItemRarity.Rare, 0.07f),
-        (ItemRarity.Epic, 0.05f),
-        (ItemRarity.Legendary, 0.03f)
+        (ItemRarity.Rare, 0.11f),
+        (ItemRarity.Epic, 0.03f),
+        (ItemRarity.Legendary, 0.01f)
     };
 
     public static ItemRarity GetRandomRarity()
