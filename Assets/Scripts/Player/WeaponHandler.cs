@@ -235,6 +235,18 @@ public class WeaponHandler : MonoBehaviour
         else
         {
             Instantiate(skillObj, transform.position, transform.rotation);
+
+            if (CurrentWeaponType == WeaponType.GreatSword)
+            {
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Skill.GreatSword.Cast);
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Skill.GreatSword.Wind);
+            }
+
+            else
+            {
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Skill.Hammer.Cast);
+                AudioManager.Instance.PlaySFX(AudioBase.SFX.Player.Skill.Hammer.EnergyField);
+            }
         }
     }
 
