@@ -28,11 +28,29 @@ public class RangedNormalAction : IEnemyAction
 
     public void OnUpdate()
     {
+        // 준비시간동안 player의 움직임을 따라가도록
+        if (!_shot)
+        {
+            Vector3 dir = _blackboard.target.transform.position - _blackboard.transform.position;
+            dir.y = 0f;
+            if (dir.sqrMagnitude > 0.1f)
+            {
+                Quaternion targetRot = Quaternion.LookRotation(dir);
+                _enemy.transform.rotation = Quaternion.Slerp(_enemy.transform.rotation, targetRot, Time.deltaTime * 20f);
+            }
+        }
+        
         if (!_shot && _startupDuration > _blackboard.startupTime)
         {
+            // agent의 desiredvelocity에 의해 이상한곳으로 rotation이 돌아가지 않도록 막음
+            if(_enemy.IsAvailableTarget())
+            {
+                _enemy.Agent.SetDestination(_blackboard.target.transform.position);
+            }
+            
             _enemy.SetAnimTrigger("ActionRun");
             _shot = true;
-            _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
+            // _enemy.transform.LookAt(_blackboard.target.GetComponent<PlayerController>().cameraSettings.follow);
             ProjectileLaunchData launchData = new ProjectileLaunchData(_blackboard.target.GetComponent<Collider>());
             
             var rot = _blackboard.target.transform.position - _enemy.transform.position;

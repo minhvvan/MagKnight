@@ -12,6 +12,8 @@ public class PatternController : MonoBehaviour
     private int currentPhase;
 
     private PatternDataSO _currentPattern;
+    private float _currentPatternDamage;
+    private float _currentPatternImpulse;
     
     private PatternContext patternContext;
 
@@ -55,6 +57,8 @@ public class PatternController : MonoBehaviour
     public void ExecutePattern(Animator anim)
     {
         _currentPattern.Execute(anim);
+        _currentPatternDamage = _currentPattern.damageMultiplier;
+        _currentPatternImpulse = _currentPattern.impulseMultiplier;
         _activePatterns[_currentPattern] = Time.time + _currentPattern.cooldown;
         _currentPattern = null;
     }
@@ -77,6 +81,16 @@ public class PatternController : MonoBehaviour
         {
             pattern.UpdatePriority(executorTransform, targetTransform);
         }
+    }
+
+    public float GetCuurrentPatternDamage()
+    {
+        return _currentPatternDamage;
+    }
+
+    public float GetCurrentPatternImpulse()
+    {
+        return _currentPatternImpulse;
     }
     
     

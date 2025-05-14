@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using hvvan;
@@ -46,8 +47,30 @@ public class Boss : Enemy
             
             AudioManager.Instance.PlaySFX(AudioBase.SFX.Boss.Growl.Growl1);
         }
-    }    
+    }
 
+    public override void OnNext(HitInfo hitInfo)
+    {
+        GiveDamageEffect(hitInfo);
+    }
+    
+    public override void GiveDamageEffect(HitInfo hitInfo)
+    {
+        float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength) * patternController.GetCuurrentPatternDamage();
+        float impulse = 30 * patternController.GetCurrentPatternImpulse();
+        GameplayEffect damageEffect = new GameplayEffect(EffectType.Instant, AttributeType.Damage, damage);
+        GameplayEffect impulseEffect = new GameplayEffect(EffectType.Instant, AttributeType.Impulse, impulse);
+        damageEffect.extraData.sourceTransform = transform;
+        impulseEffect.extraData.sourceTransform = transform;
+
+        if (hitInfo.collider.gameObject.TryGetComponent(out AbilitySystem abilitySystem))
+        {
+            abilitySystem.ApplyEffect(damageEffect);
+            abilitySystem.ApplyEffect(impulseEffect);
+        }
+    }
+    
+    #region patternAnimationEvent
     public void PatternAttackStart(int patternIndex)
     {
         patternController.AttackStart(patternIndex);
@@ -147,7 +170,10 @@ public class Boss : Enemy
         _missileCancellationToken = new CancellationTokenSource();
         GameObject effect = Instantiate(missileEffect, blackboard.target.transform.position, Quaternion.identity);
         AttackEffect attackEffect = effect.GetComponent<AttackEffect>();
-        attackEffect.GetAbilitySystem(blackboard.abilitySystem);
+        float damage = blackboard.abilitySystem.GetValue(AttributeType.Strength) *
+                       patternController.GetCuurrentPatternDamage();
+        float impulse = 30 * patternController.GetCurrentPatternImpulse();
+        attackEffect.SetAttackDamageImpulse(damage, impulse);
         
         ParticleSystem warningParticleSystem = effect.GetComponent<ParticleSystem>();
         var main = warningParticleSystem.main;
@@ -172,6 +198,7 @@ public class Boss : Enemy
         }
         catch (OperationCanceledException){ }
     }
+    #endregion
 
     void OnDisable()
     {
