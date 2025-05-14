@@ -53,7 +53,7 @@ public class InitGameState: IGameState
 
     private IEnumerator MoveToLastRoom()
     {
-        var enterFloorTask = RoomSceneController.Instance.EnterFloor(false);
+        var enterFloorTask = RoomSceneController.Instance.EnterFloor(false, false);
         while (!enterFloorTask.Status.IsCompleted())
         {
             yield return null;

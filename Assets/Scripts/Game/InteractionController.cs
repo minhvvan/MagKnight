@@ -73,7 +73,6 @@ public class InteractionController : MonoBehaviour
             _currentInteractable.UnSelect(_interactHighlighter);
         }
         
-        FindClosestInteractable();
         _currentInteractable = null;
     }
     
