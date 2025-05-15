@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1<size=-1.5>Hit</size>
+  m_text: <size=-24>HIT</size>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
@@ -75,8 +75,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4283233023
+  m_fontColor: {r: 1, g: 0.9488276, b: 0.2971698, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 1<size=-1.5>Hit</size>
+  m_text: <size=-24>HIT</size>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
@@ -210,8 +210,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4283233023
+  m_fontColor: {r: 1, g: 0.9488276, b: 0.2971698, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -339,7 +339,7 @@ MonoBehaviour:
   defaultFov: 60
   fovCamera: {fileID: 0}
   cameraOverride: {fileID: 0}
-  enableNumber: 1
+  enableNumber: 0
   number: 1
   numberSettings:
     bold: 0
@@ -390,7 +390,7 @@ MonoBehaviour:
     characterSpacing: 0
     size: 0
   enableRightText: 1
-  rightText: Hit
+  rightText: ' HIT'
   rightTextSettings:
     bold: 0
     italic: 0
@@ -404,7 +404,7 @@ MonoBehaviour:
     horizontal: 0
     vertical: 0
     characterSpacing: 0
-    size: -1.5
+    size: -24
   enableTopText: 0
   topText: 
   topTextSettings:
@@ -606,7 +606,7 @@ MonoBehaviour:
   spamGroup: Combo
   enableCombination: 1
   combinationSettings:
-    method: 0
+    method: 1
     maxDistance: 3
     spawnDelay: 0.1
     absorbDuration: 0.4
