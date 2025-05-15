@@ -474,7 +474,7 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
                 foreach (var data in keyPair.Value)
                 {
                     if (data == null) break;
-                    partsEffectText += ParsePassiveEffectData(data);
+                    partsEffectText += $"{ParsePassiveEffectData(data)}\n";
                 }
             }
         }
@@ -621,12 +621,12 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
 
         if (effectType == EffectType.Duration)
         {
-            if (maxStack > 0) completeText += $"\n이 효과는 최대 {maxStack}번 중첩됩니다.";
+            if (maxStack > 0) completeText += $" 이 효과는 최대 {maxStack}번 중첩됩니다.";
         }
 
         if (hasCount)
         {
-            completeText += $"\n 이 효과는 {triggerCount}번만 사용할 수 있습니다.";
+            completeText += $"이 효과는 {triggerCount}번만 활성화 됩니다.";
         }
         
         
@@ -680,8 +680,8 @@ public class ProductUIController : MonoBehaviour, IBasePopupUIController
         string addText = string.Empty;
         if (effectType != EffectType.Duration)
         {
-            if (amount > 0) addText += "+";
-            else if (amount < 0) addText += "-";
+            // if (amount > 0) addText += "+";
+            // else if (amount < 0) addText += "-";
 
             if(!isPercent) completeText += $" {addText}{amount}";
             else if(isPercent) completeText += $" {addText}{amount*100f}%";
