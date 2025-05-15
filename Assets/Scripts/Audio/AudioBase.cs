@@ -39,6 +39,11 @@ public static class AudioBase
                 public const string Boss = "Epikton - Artery Of Steel";
             }
         }
+
+        public static class Ending
+        {
+            public const string Main = "Ending";
+        }
     }
     
     public static class SFX
