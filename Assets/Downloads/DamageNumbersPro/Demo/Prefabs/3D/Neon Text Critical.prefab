@@ -100,7 +100,7 @@ MonoBehaviour:
     suffixDecimals: 1
     suffixDecimalChar: .
     suffixHideZeros: 0
-  enableLeftText: 1
+  enableLeftText: 0
   leftText: "\uCE58\uBA85\uD0C0"
   leftTextSettings:
     bold: 0
@@ -116,8 +116,8 @@ MonoBehaviour:
     vertical: 0
     characterSpacing: 0
     size: 0
-  enableRightText: 0
-  rightText: 
+  enableRightText: 1
+  rightText: '!!'
   rightTextSettings:
     bold: 0
     italic: 0
@@ -133,7 +133,7 @@ MonoBehaviour:
     characterSpacing: 0
     size: 0
   enableTopText: 0
-  topText: 
+  topText: Critical
   topTextSettings:
     bold: 0
     italic: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
     horizontal: 0
     vertical: 0
     characterSpacing: 0
-    size: 0
+    size: -3
   enableBottomText: 0
   bottomText: 
   bottomTextSettings:
@@ -475,7 +475,7 @@ MonoBehaviour:
   enablePooling: 1
   poolSize: 20
   disableOnSceneLoad: 1
-  editorLastFont: RiaSans-ExtraBold SDF3D
+  editorLastFont: Neon-Orange3D
   position: {x: 0, y: 0, z: 0}
 --- !u!210 &3603192418188866010
 SortingGroup:
@@ -546,7 +546,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  - {fileID: 5276284244843499962, guid: 042cc6b3bab28e143b3e278e2fb63f12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -588,10 +588,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<space=0.2em>\uCE58\uBA85\uD0C0<space=0.2em>"
+  m_text: '!!'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 042cc6b3bab28e143b3e278e2fb63f12, type: 2}
+  m_sharedMaterial: {fileID: 5276284244843499962, guid: 042cc6b3bab28e143b3e278e2fb63f12,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -625,9 +626,9 @@ MonoBehaviour:
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 6
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: -10
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
@@ -713,7 +714,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  - {fileID: 5276284244843499962, guid: 042cc6b3bab28e143b3e278e2fb63f12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -796,7 +797,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  - {fileID: 5276284244843499962, guid: 042cc6b3bab28e143b3e278e2fb63f12, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
