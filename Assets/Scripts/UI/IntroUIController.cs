@@ -3,6 +3,7 @@ using DG.Tweening;
 using hvvan;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Moon
@@ -14,11 +15,13 @@ namespace Moon
         [SerializeField] CanvasGroup _canvasGroup;
         [SerializeField] Button _continueButton;
         [SerializeField] Button _restartButton;
+        [SerializeField] Button _creditButton;
 
         void Awake()
         {
             _continueButton.onClick.AddListener(OnClickContinue);
             _restartButton.onClick.AddListener(OnClickRestart);
+            _creditButton.onClick.AddListener(OnClickCredit);
 
             _buttonRectTransform.gameObject.SetActive(false);
             _pressAnyKeyText.gameObject.SetActive(true);
@@ -33,6 +36,11 @@ namespace Moon
         {
             GameManager.Instance.DeleteData(Constants.CurrentRun);
             GameManager.Instance.ChangeGameState(GameState.InitGame);
+        }
+
+        private void OnClickCredit()
+        {
+            SceneManager.LoadScene("Credits");
         }
 
         void Update()
