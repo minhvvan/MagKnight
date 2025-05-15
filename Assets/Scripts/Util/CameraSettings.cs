@@ -32,6 +32,13 @@ namespace Moon
         public InvertSettings controllerInvertSettings;
         public bool allowRuntimeCameraSettingsChanges;
 
+
+
+        [NonSerialized] float mouseXSensitivity; //range 0.1f - 1000f
+        [NonSerialized] float mouseYSensitivity; //range 0.1f - 20f
+
+
+
         public CinemachineFreeLook Current
         {
             get { return inputChoice == InputChoice.KeyboardAndMouse ? keyboardAndMouseCamera : controllerCamera; }
@@ -71,6 +78,11 @@ namespace Moon
 
             Current.m_XAxis.m_InputAxisName = "";
             Current.m_YAxis.m_InputAxisName = "";
+
+            mouseXSensitivity = PlayerPrefs.GetFloat(Constants.MouseXSensitivity, 500f);
+            mouseYSensitivity = PlayerPrefs.GetFloat(Constants.MouseYSensitivity, 10f);
+
+            ApplyMouseSensitivity();
         }
 
         void Awake()
@@ -164,6 +176,47 @@ namespace Moon
             {
                 collider.enabled = isEnabled;
             }
+        }
+
+        void ApplyMouseSensitivity()
+        {
+            if (keyboardAndMouseCamera != null)
+            {
+                keyboardAndMouseCamera.m_XAxis.m_MaxSpeed = mouseXSensitivity;
+                keyboardAndMouseCamera.m_YAxis.m_MaxSpeed = mouseYSensitivity;
+            }
+
+            if (controllerCamera != null)
+            {
+                controllerCamera.m_XAxis.m_MaxSpeed = mouseXSensitivity;
+                controllerCamera.m_YAxis.m_MaxSpeed = mouseYSensitivity;
+            }            
+        }
+
+        public void SetMouseXSensitivity(float value)
+        {
+            mouseXSensitivity = value;
+            PlayerPrefs.SetFloat(Constants.MouseXSensitivity, value);
+            PlayerPrefs.Save();
+            ApplyMouseSensitivity();
+        }
+
+        public void SetMouseYSensitivity(float value)
+        {
+            mouseYSensitivity = value;
+            PlayerPrefs.SetFloat(Constants.MouseYSensitivity, value);
+            PlayerPrefs.Save();
+            ApplyMouseSensitivity();
+        }
+
+        public float GetMouseXSensitivity()
+        {
+            return mouseXSensitivity;
+        }
+
+        public float GetMouseYSensitivity()
+        {
+            return mouseYSensitivity;
         }
     } 
 }
