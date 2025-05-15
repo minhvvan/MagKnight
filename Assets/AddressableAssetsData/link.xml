@@ -1,0 +1,112 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="ArtifactDataMappingSO" preserve="all" />
+    <type fullname="ArtifactObject" preserve="all" />
+    <type fullname="AttackEffect" preserve="all" />
+    <type fullname="Bow" preserve="all" />
+    <type fullname="FloorDataSO" preserve="all" />
+    <type fullname="HealthPack" preserve="all" />
+    <type fullname="HealthPackSO" preserve="all" />
+    <type fullname="HitDetector" preserve="all" />
+    <type fullname="InteractTextSO" preserve="all" />
+    <type fullname="ItemListSO" preserve="all" />
+    <type fullname="Katana" preserve="all" />
+    <type fullname="LootCrate" preserve="all" />
+    <type fullname="MagCore" preserve="all" />
+    <type fullname="MagCoreSO" preserve="all" />
+    <type fullname="MagneticSetupSO" preserve="all" />
+    <type fullname="MasterStylizedExplosion.BillBoardParticles" preserve="all" />
+    <type fullname="PassiveArtifactDataSO" preserve="all" />
+    <type fullname="PlayerStatSO" preserve="all" />
+    <type fullname="Projectile" preserve="all" />
+    <type fullname="RoomDataSO" preserve="all" />
+    <type fullname="SceneMappingSO" preserve="all" />
+    <type fullname="StatArtifactDataSO" preserve="all" />
+    <type fullname="VFXDataSO" preserve="all" />
+    <type fullname="VFXLoadSO" preserve="all" />
+    <type fullname="WeaponDataDictSO" preserve="all" />
+    <type fullname="WeaponDataSO" preserve="all" />
+    <type fullname="WeaponTrail" preserve="all" />
+    <type fullname="AttributePair" preserve="nothing" serialized="true" />
+    <type fullname="ExtraData" preserve="nothing" serialized="true" />
+    <type fullname="GameplayEffect" preserve="nothing" serialized="true" />
+    <type fullname="Hitbox" preserve="nothing" serialized="true" />
+    <type fullname="HitboxesGroup" preserve="nothing" serialized="true" />
+    <type fullname="Limit" preserve="nothing" serialized="true" />
+    <type fullname="PassiveEffectData" preserve="nothing" serialized="true" />
+    <type fullname="PlayerStat" preserve="nothing" serialized="true" />
+    <type fullname="Room" preserve="nothing" serialized="true" />
+    <type fullname="SceneData" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Rendering.Universal.UniversalAdditionalLightData" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.LegacyResourcesProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AIModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AI.NavMeshData" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AnimationClip" preserve="all" />
+    <type fullname="UnityEngine.Animator" preserve="all" />
+    <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Light" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Mesh" preserve="all" />
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.ParticleSystem" preserve="all" />
+    <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+    <type fullname="UnityEngine.CapsuleCollider" preserve="all" />
+    <type fullname="UnityEngine.MeshCollider" preserve="all" />
+    <type fullname="UnityEngine.Rigidbody" preserve="all" />
+    <type fullname="UnityEngine.SphereCollider" preserve="all" />
+  </assembly>
+  <assembly fullname="AYellowpaper.SerializedCollections">
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[InteractType,System.String]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[ItemRarity,System.Collections.Generic.List`1[HealthPackSO]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[ItemRarity,System.Collections.Generic.List`1[MagCoreSO]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[ItemRarity,System.Collections.Generic.List`1[UnityEngine.GameObject]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[ItemRarity,UnityEngine.GameObject]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[RoomType,Limit]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[RoomType,System.Collections.Generic.List`1[Room]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[System.Int32,ArtifactDataSO]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[System.Int32,System.Collections.Generic.List`1[GameplayEffect]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[System.Int32,System.Collections.Generic.List`1[PassiveEffectData]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[System.String,SceneData]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedDictionary`2[WeaponType,WeaponDataSO]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[InteractType,System.String]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[ItemRarity,System.Collections.Generic.List`1[HealthPackSO]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[ItemRarity,System.Collections.Generic.List`1[MagCoreSO]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[ItemRarity,System.Collections.Generic.List`1[UnityEngine.GameObject]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[ItemRarity,UnityEngine.GameObject]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[RoomType,Limit]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[RoomType,System.Collections.Generic.List`1[Room]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[System.Int32,ArtifactDataSO]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[System.Int32,System.Collections.Generic.List`1[GameplayEffect]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[System.Int32,System.Collections.Generic.List`1[PassiveEffectData]]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[System.String,SceneData]" preserve="nothing" serialized="true" />
+    <type fullname="AYellowpaper.SerializedCollections.SerializedKeyValuePair`2[WeaponType,WeaponDataSO]" preserve="nothing" serialized="true" />
+  </assembly>
+</linker>
