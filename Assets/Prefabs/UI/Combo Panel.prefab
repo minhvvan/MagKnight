@@ -88,6 +88,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f33d3f32510234b00811c88e23dea88a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damageNumberPrefab: {fileID: 8690564695306702212, guid: a95b5bae3c63b4c58bd999ac7bd2228d,
+  _damageNumberPrefab: {fileID: 3055095217153070619, guid: ccbdf1947509f4b73a2c7e3879078c4d,
     type: 3}
   _comboDuration: 2
