@@ -51,6 +51,11 @@ public class Effector : MonoBehaviour
 
     public void Dissolve(float duration = 2f, Action onComplete = null)
     {
+        if(_renderer == null)
+        {
+            _renderer = GetComponentInChildren<Renderer>();
+        }
+
         if (!_visualEffects.ContainsKey(VisualEffectType.Dissolve)) return;
         _renderer.material = _visualEffects[VisualEffectType.Dissolve];
         
@@ -62,6 +67,11 @@ public class Effector : MonoBehaviour
     
     public void Phase(float duration = 2f, Action onComplete = null)
     {
+        if(_renderer == null)
+        {
+            _renderer = GetComponentInChildren<Renderer>();
+        }
+
         if (!_visualEffects.ContainsKey(VisualEffectType.Phase)) return;
         _renderer.material = _visualEffects[VisualEffectType.Phase];
 
