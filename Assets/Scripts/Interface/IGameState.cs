@@ -20,5 +20,4 @@ public enum GameState
     GameOver,
     Pause,
     Max,
-    
 }
