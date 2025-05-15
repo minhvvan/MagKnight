@@ -413,6 +413,8 @@ namespace Moon
 
         private void PressPauseInput(InputAction.CallbackContext ctx)
         {
+            if(ScreenFader.IsFading) return;
+
             if(UIManager.Instance.popupUIController.IsAnyPopupUIActive())
             {
                 if(UIManager.Instance.popupUIController != null)
