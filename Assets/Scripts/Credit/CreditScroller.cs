@@ -75,7 +75,7 @@ public class CreditScroller : MonoBehaviour
         {
             scrollGroup.anchoredPosition += Vector2.up * scrollSpeed * Time.deltaTime;
 
-            if (scrollGroup.anchoredPosition.y > 8880f)
+            if (scrollGroup.anchoredPosition.y > 9000f)
             {
                 StopCoroutine(Sequence());
                 StartCoroutine(Wait());
