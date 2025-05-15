@@ -1,4 +1,5 @@
 using System.Collections;
+using hvvan;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,8 +61,13 @@ public class CreditScroller : MonoBehaviour
         yield return new WaitForSeconds(5f);
         theend.SetActive(true);
         yield return new WaitForSeconds(10f);
-        SceneManager.LoadScene("StartUpScene");
+        theend.SetActive(false);
+        
+        yield return new WaitForSeconds(8f);
+        AudioManager.Instance.PlayBGM(AudioBase.BGM.Title.Main);
         AudioManager.Instance.SetBGMVolume(0.5f);
+        SceneManager.LoadScene("StartUpScene");
+        
     }
     void Update()
     {
