@@ -65,12 +65,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 123<size=-1.5>Hit</size>
+  m_text: 1<size=-1.5>Hit</size>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
-  m_sharedMaterial: {fileID: 756211683999214522, guid: e2d08af5e055146dbb7e9f33b105b3c5,
-    type: 2}
-  m_fontSharedMaterials: []
+  m_sharedMaterial: {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -200,12 +200,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 123<size=-1.5>Hit</size>
+  m_text: 1<size=-1.5>Hit</size>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
-  m_sharedMaterial: {fileID: 756211683999214522, guid: e2d08af5e055146dbb7e9f33b105b3c5,
-    type: 2}
-  m_fontSharedMaterials: []
+  m_sharedMaterial: {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
+  m_fontSharedMaterials:
+  - {fileID: 2100000, guid: d4059b00ab80a4644bf743b8c934ae04, type: 2}
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -228,8 +228,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -493,9 +493,9 @@ MonoBehaviour:
   shakeFrequencyFadeOut: 4
   enableLerp: 1
   lerpSettings:
-    speed: 5
-    minX: -0.4
-    maxX: 0.4
+    speed: 7
+    minX: 0
+    maxX: 0
     minY: 0.7
     maxY: 1
     randomFlip: 0
@@ -511,8 +511,8 @@ MonoBehaviour:
     gravity: 3
   enableShaking: 0
   shakeSettings:
-    offset: {x: 0.005, y: 0.005}
-    frequency: 50
+    offset: {x: 0.05, y: 0.05}
+    frequency: 200
   enableFollowing: 0
   followedTarget: {fileID: 0}
   followSettings:
