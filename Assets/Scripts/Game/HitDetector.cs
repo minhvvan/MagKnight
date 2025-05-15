@@ -134,7 +134,7 @@ public class HitDetector: MonoBehaviour, IObservable<HitInfo>
                 Vector3 direction = currentPos - previousPos;
                 float distance = direction.magnitude;
                 
-                if (distance > 0)
+                if (distance > 0.001f)
                 {
                     direction.Normalize();
                     if (group.isSingle) // 단일 공격
