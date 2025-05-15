@@ -35,7 +35,7 @@ public class ComboUIController : MonoBehaviour
 
         // Create a damage number
         DamageNumber damageNumber = Instantiate(_damageNumberPrefab, _rectTransform);
-        damageNumber.SpawnGUI(_rectTransform, Vector2.zero, $"콤보 {_comboCount}");
+        damageNumber.SpawnGUI(_rectTransform, Vector2.zero, _comboCount);
 
     }
 

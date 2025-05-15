@@ -205,8 +205,7 @@ MonoBehaviour:
   m_fontAsset: {fileID: 11400000, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
   m_sharedMaterial: {fileID: 756211683999214522, guid: e2d08af5e055146dbb7e9f33b105b3c5,
     type: 2}
-  m_fontSharedMaterials:
-  - {fileID: 756211683999214522, guid: e2d08af5e055146dbb7e9f33b105b3c5, type: 2}
+  m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
@@ -341,7 +340,7 @@ MonoBehaviour:
   fovCamera: {fileID: 0}
   cameraOverride: {fileID: 0}
   enableNumber: 1
-  number: 123
+  number: 1
   numberSettings:
     bold: 0
     italic: 0
@@ -604,7 +603,7 @@ MonoBehaviour:
   defaultOrthographicSize: 5
   maxOrthographicSize: 1.5
   orthographicCamera: {fileID: 0}
-  spamGroup: Experience
+  spamGroup: Combo
   enableCombination: 1
   combinationSettings:
     method: 0
