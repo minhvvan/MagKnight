@@ -519,7 +519,7 @@
                 {
                     "name": "",
                     "id": "b3f66d0b-7751-423f-908b-a11c5bd95930",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
@@ -606,6 +606,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8b730369-9bb8-48ef-a7a6-e71a43a47a6c",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "995d3286-c48a-4445-8694-5d43665f5cbc",
                     "path": "<Mouse>/middleButton",
                     "interactions": "",
@@ -630,6 +641,17 @@
                     "name": "",
                     "id": "643b65bf-9ac9-463f-a7d6-bdf8eb1060a1",
                     "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "820cc8dc-02b3-4d20-a69b-1b4b3cd3265f",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
