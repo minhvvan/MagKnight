@@ -21,6 +21,9 @@ public static class Constants
     public const string BGMMute = "BGMMute";
     public const string SFXMute = "SFXMute";
 
+    public const string MouseXSensitivity = "MouseX";
+    public const string MouseYSensitivity = "MouseY";
+
     #endregion
     
     #region SceneName
